@@ -281,6 +281,40 @@ def test_formal_graph_evaluation_rejects_development_planner_config(tmp_path: Pa
     assert not output_root.exists()
 
 
+def test_formal_graph_evaluation_rejects_an_unfrozen_formal_interface(
+    tmp_path: Path,
+) -> None:
+    output_root = tmp_path / "formal-evaluation"
+    result = CliRunner().invoke(
+        app,
+        [
+            "experiment",
+            "graph-evaluate",
+            str(PROJECT_ROOT / "scenarios/formal_v1/test"),
+            "--planner-config",
+            str(PROJECT_ROOT / "configs/planners/gpt-oss-20b-vllm.yaml"),
+            "--model-weight-sha256",
+            "a" * 64,
+            "--seed",
+            "1701",
+            "--seed",
+            "1702",
+            "--seed",
+            "1703",
+            "--seed",
+            "1704",
+            "--seed",
+            "1705",
+            "--output-root",
+            str(output_root),
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert "requires the frozen formal graph interface" in result.stderr
+    assert not output_root.exists()
+
+
 def test_formal_graph_evaluation_rejects_missing_provenance(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ) -> None:
@@ -341,6 +375,15 @@ def test_formal_graph_evaluation_writes_private_attempts_and_aggregate_report(
         "routebench.cli.app.LocalJsonPlanner.create", lambda _config: CertificatePlanner()
     )
     monkeypatch.setattr(
+        "routebench.cli.app._probe_formal_vllm",
+        lambda _config: {
+            "implementation": "vllm",
+            "version": "test-version",
+            "endpoint": "http://127.0.0.1:8000/v1",
+            "served_model": "test-model",
+        },
+    )
+    monkeypatch.setattr(
         "routebench.cli.app.build_private_run_metadata",
         lambda **_kwargs: {
             "controller": "none",
@@ -396,6 +439,8 @@ def test_formal_graph_evaluation_writes_private_attempts_and_aggregate_report(
     assert summary["overall"]["capable_cases"] == 1
     assert "cases" not in summary
     assert len(tuple((output_root / "attempts").rglob("manifest.json"))) == 5
+    run_manifest = json.loads((output_root / "run-manifest.json").read_text(encoding="utf-8"))
+    assert run_manifest["metadata"]["inference_runtime"]["version"] == "test-version"
     report = (output_root / "experiment-report.md").read_text(encoding="utf-8")
     assert "formal_prefix" in report
     assert "Raw prompts, raw model responses" in report

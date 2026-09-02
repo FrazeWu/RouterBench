@@ -123,6 +123,11 @@ def test_formal_summary_counts_model_and_infrastructure_failures_separately(
         "dependency_lock_hash": "lock-hash",
         "git": {"commit": "b" * 40, "dirty": False},
         "model_weight_hash": "c" * 64,
+        "inference_runtime": {
+            "implementation": "vllm",
+            "version": "test-version",
+            "served_model": "test-model",
+        },
         "rootfs_status": "not_applicable",
         "publishable": True,
     }

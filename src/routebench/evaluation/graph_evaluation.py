@@ -235,6 +235,7 @@ def write_formal_graph_report(summary: dict[str, object], path: str | Path) -> P
     planner = _require_dict(metadata, "planner")
     material = _require_dict(metadata, "material_passport")
     git = _require_dict(metadata, "git")
+    inference_runtime = _require_dict(metadata, "inference_runtime")
     effect_rows = _require_dict(summary, "by_primary_effect_family")
     length_rows = _require_dict(summary, "by_route_length")
     summary_seeds = summary["seeds"]
@@ -307,6 +308,9 @@ def write_formal_graph_report(summary: dict[str, object], path: str | Path) -> P
         f"- Endpoint: `{planner['endpoint']}`",
         f"- Planner config hash: `{planner['config_hash']}`",
         f"- Model weight hash: `{metadata['model_weight_hash']}`",
+        f"- Inference runtime: `{inference_runtime['implementation']}`",
+        f"- Inference runtime version: `{inference_runtime['version']}`",
+        f"- Served model identity: `{inference_runtime['served_model']}`",
         f"- Dependency lock hash: `{metadata['dependency_lock_hash']}`",
         f"- Git commit: `{git['commit']}`",
         f"- Git worktree dirty: `{str(git['dirty']).lower()}`",

@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Annotated
 
 import typer
-from httpx import HTTPError
+from httpx import Client, HTTPError
 from rich.console import Console
 from rich.table import Table
 
@@ -88,7 +88,12 @@ from routebench.evaluation.pilot import (
     write_private_guided_manifest,
     write_private_manifest,
 )
-from routebench.planners import LocalJsonPlanner, PlannerResponseError, load_planner_config
+from routebench.planners import (
+    LocalJsonPlanner,
+    PlannerConfig,
+    PlannerResponseError,
+    load_planner_config,
+)
 from routebench.runtime.graph import GraphAuditError, audit_candidate_graph
 from routebench.runtime.runner import ReferenceController, run_reference_route
 from routebench.sandbox import create_micro_rootfs, probe_sandbox
@@ -106,6 +111,41 @@ app.add_typer(experiment_app)
 app.add_typer(sandbox_app)
 console = Console()
 PROJECT_ROOT = Path(__file__).parents[3]
+
+
+def _probe_formal_vllm(config: PlannerConfig) -> dict[str, str]:
+    """Verify and identify the local formal backend without sending scenario content."""
+
+    if config.backend != "vllm":
+        raise ValueError("formal graph evaluation requires the vllm backend")
+    endpoint = config.endpoint.rstrip("/")
+    server_root = endpoint.removesuffix("/v1")
+    with Client(timeout=5.0) as client:
+        health = client.get(f"{server_root}/health")
+        health.raise_for_status()
+        models_response = client.get(f"{endpoint}/models")
+        models_response.raise_for_status()
+        version_response = client.get(f"{server_root}/version")
+        version_response.raise_for_status()
+        models_payload = models_response.json()
+        version_payload = version_response.json()
+    if not isinstance(models_payload, dict) or not isinstance(models_payload.get("data"), list):
+        raise ValueError("formal vLLM model inventory has an invalid response shape")
+    model_ids = {
+        item["id"]
+        for item in models_payload["data"]
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    }
+    if config.model not in model_ids:
+        raise ValueError("formal vLLM backend does not serve the configured model identity")
+    if not isinstance(version_payload, dict) or not isinstance(version_payload.get("version"), str):
+        raise ValueError("formal vLLM version endpoint has an invalid response shape")
+    return {
+        "implementation": "vllm",
+        "version": version_payload["version"],
+        "endpoint": config.endpoint,
+        "served_model": config.model,
+    }
 
 
 def _version_callback(value: bool) -> None:
@@ -769,6 +809,21 @@ def graph_evaluate_experiment(
     config = load_planner_config(planner_config)
     if not config.formal_run:
         raise typer.BadParameter("graph-evaluate requires planner configuration formal_run: true")
+    if (
+        config.backend != "vllm"
+        or config.generation.temperature != 0.0
+        or config.generation.top_p != 1.0
+        or config.generation.max_tokens != 2048
+        or not config.disable_thinking
+        or not config.anonymize_graph_labels
+        or config.vllm_object_only_schema
+        or config.protocol_version != "v11"
+    ):
+        raise typer.BadParameter(
+            "graph-evaluate requires the frozen formal graph interface: vllm, temperature "
+            "0.0, top_p 1.0, max_tokens 2048, thinking disabled, anonymized labels, full "
+            "schema decoding, and protocol v11"
+        )
 
     scenario_paths = tuple(path.parent for path in sorted(scenario_root.rglob("scenario.yaml")))
     if not scenario_paths:
@@ -862,6 +917,10 @@ def graph_evaluate_experiment(
         raise typer.BadParameter(
             "formal provenance gate failed: " + ", ".join(str(field) for field in missing_fields)
         )
+    try:
+        metadata["inference_runtime"] = _probe_formal_vllm(config)
+    except (HTTPError, json.JSONDecodeError, ValueError) as error:
+        raise typer.BadParameter(f"formal backend identity gate failed: {error}") from error
 
     attempts: list[FormalGraphAttempt] = []
     output_root.mkdir(parents=True, exist_ok=False)

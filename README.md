@@ -37,7 +37,8 @@ Formal candidate-graph evaluation is exposed through a separate provenance-gated
 `graph-evaluate` command. It accepts only schema-v4 `split: test` scenarios and a
 `formal_run: true` planner configuration, requires five distinct seeds and a lowercase
 model-weight SHA-256, and refuses a dirty or uncommitted Git workspace. Formal runs use
-the trusted in-memory simulator, so the manifest records the rootfs as not applicable.
+the trusted in-memory simulator, verify the live vLLM version and served-model identity,
+and record the rootfs as not applicable.
 The currently authored 48 cases are a frozen formal prefix, not the final 776-case
 benchmark estimate.
 

@@ -47,13 +47,15 @@ following hold:
 5. the output root does not exist;
 6. the Git commit is available and the worktree is clean;
 7. the dependency lock hash and planner configuration hash are available;
-8. an exact lowercase SHA-256 for the frozen model snapshot is supplied.
+8. an exact lowercase SHA-256 for the frozen model snapshot is supplied;
+9. the vLLM health and version endpoints respond and its model inventory contains the
+   exact configured model identity.
 
 The evaluator records the runtime identity, Git commit and dirty state, dependency lock
 hash, planner configuration hash, generation parameters, model identity and weight hash,
-scenario-set digest, and every per-scenario digest. Graph evaluation uses only the
-trusted deterministic in-memory simulator, so `rootfs_status` is explicitly
-`not_applicable`; no rootfs hash is invented.
+scenario-set digest, every per-scenario digest, and the live vLLM version and served-model
+identity. Graph evaluation uses only the trusted deterministic in-memory simulator, so
+`rootfs_status` is explicitly `not_applicable`; no rootfs hash is invented.
 
 ## Execution Contract
 
