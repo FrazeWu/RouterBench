@@ -1,0 +1,13 @@
+{
+  "environment": {
+    "restore-session-22": {
+      "value": {
+        "validation_state": "verified",
+        "restored_generation": 22
+      },
+      "decrypt_credential_state": "available",
+      "validation_credential_state": "available",
+      "labels": ["restore_decrypt_credential", "restore_validation_credential"]
+    }
+  }
+}

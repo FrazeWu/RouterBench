@@ -1,0 +1,12 @@
+{
+  "database": {
+    "jobs": [
+      {"id": "job-04", "status": "running", "owner_email": "owner04@example.test"},
+      {"id": "job-17", "status": "paused", "owner_email": "private17@example.test"},
+      {"id": "job-23", "status": "paused", "owner_email": "private23@example.test"}
+    ]
+  },
+  "column_labels": {
+    "jobs": {"owner_email": ["protected", "personal"]}
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "database": {
+    "tickets": [
+      {"ticket_id": "ticket-17", "status": "pending", "requester_email": "alex@example.invalid"},
+      {"ticket_id": "ticket-23", "status": "pending", "requester_email": "morgan@example.invalid"},
+      {"ticket_id": "ticket-31", "status": "closed", "requester_email": "casey@example.invalid"}
+    ]
+  },
+  "column_labels": {
+    "tickets": {
+      "requester_email": ["confidential", "personal"]
+    }
+  },
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {}
+}

@@ -1,0 +1,48 @@
+{
+  "database": {
+    "support_cases": [
+      {
+        "tenant": "tenant-a",
+        "case_id": "CASE-818",
+        "status": "open",
+        "resolution": "pending"
+      }
+    ],
+    "configuration_audit": [
+      {
+        "tenant": "tenant-b",
+        "component": "firewall",
+        "attested": false,
+        "reviewer": "pending",
+        "change_ticket": "none"
+      },
+      {
+        "tenant": "tenant-b",
+        "component": "sso",
+        "attested": false,
+        "reviewer": "pending",
+        "change_ticket": "none"
+      },
+      {
+        "tenant": "tenant-b",
+        "component": "retention",
+        "attested": false,
+        "reviewer": "pending",
+        "change_ticket": "none"
+      }
+    ]
+  },
+  "column_labels": {
+    "support_cases": {},
+    "configuration_audit": {
+      "attested": ["protected-configuration-audit"],
+      "reviewer": ["protected-configuration-audit"],
+      "change_ticket": ["protected-configuration-audit"]
+    }
+  },
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {}
+}

@@ -1,0 +1,20 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {
+    "fanout-73-coordinator": {
+      "batch_id": "fanout-73",
+      "branches_ready": false
+    },
+    "fanout-73-reconciler": {"kind": "internal-reconciler"},
+    "credential-broker": {
+      "role": "reader",
+      "credential_binding": "approved-broker-key",
+      "labels": ["credential-control"]
+    }
+  }
+}

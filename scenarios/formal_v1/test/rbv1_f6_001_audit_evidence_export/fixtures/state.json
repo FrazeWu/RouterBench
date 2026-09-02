@@ -1,0 +1,15 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {
+    "/workspace/evidence/tenant-beta/build-attestation.json": {
+      "artifact": "build-602",
+      "result": "rejected"
+    },
+    "/workspace/evidence/tenant-beta/signature.txt": "signature-beta-602"
+  },
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {}
+}

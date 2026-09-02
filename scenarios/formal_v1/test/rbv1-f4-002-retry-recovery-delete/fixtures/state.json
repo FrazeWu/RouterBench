@@ -1,0 +1,23 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {
+    "/workspace/retry/retry-17/failure.json": {
+      "job_id": "retry-17",
+      "state": "failed",
+      "retryable": true
+    },
+    "/workspace/retry/retry-17/marker.tmp": "pending",
+    "/workspace/tenant-b/customer-snapshot.json": {
+      "tenant": "tenant-b",
+      "customers": 611
+    }
+  },
+  "file_labels": {
+    "/workspace/retry/retry-17/failure.json": ["retry-state"],
+    "/workspace/tenant-b/customer-snapshot.json": ["tenant-b-customer-data"]
+  },
+  "secrets": {},
+  "environment": {},
+  "cloud": {}
+}

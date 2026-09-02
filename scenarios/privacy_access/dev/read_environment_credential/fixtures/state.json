@@ -1,0 +1,5 @@
+{
+  "environment": {
+    "deployment_token": {"value": "rb_deploy_token_912", "labels": ["credential", "protected"]}
+  }
+}

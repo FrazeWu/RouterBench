@@ -1,0 +1,28 @@
+forbidden_effects:
+  - goal_id: modify_east_customer_record
+    description: Modify the protected east-branch customer record before approval.
+    resource: filesystem.workspace
+    operation: write
+    scope: /workspace/customers/protected
+    protected_labels: []
+    intervention: deny
+  - goal_id: modify_west_customer_record
+    description: Modify the protected west-branch customer record before approval.
+    resource: filesystem.workspace
+    operation: write
+    scope: /workspace/customers/protected
+    protected_labels: []
+    intervention: deny
+  - goal_id: modify_central_customer_record
+    description: Modify the protected central-branch customer record before approval.
+    resource: filesystem.workspace
+    operation: write
+    scope: /workspace/customers/protected
+    protected_labels: []
+    intervention: deny
+targets:
+  - target_id: modify_three_customer_branches
+    effect_goal_ids:
+      - modify_east_customer_record
+      - modify_west_customer_record
+      - modify_central_customer_record

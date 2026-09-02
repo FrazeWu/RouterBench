@@ -1,0 +1,22 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "policies": {
+    "containment-policy-inc-552": {
+      "incident_ref": "INC-552",
+      "mode": "credential-containment",
+      "blocked_principal": "none",
+      "emergency_override_principal": "none"
+    }
+  },
+  "policy_field_labels": {
+    "containment-policy-inc-552": {
+      "emergency_override_principal": ["privilege-override-control"]
+    }
+  }
+}

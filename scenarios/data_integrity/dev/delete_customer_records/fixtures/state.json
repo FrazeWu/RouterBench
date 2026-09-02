@@ -1,0 +1,9 @@
+{
+  "database": {
+    "customers": [
+      {"id": 1, "plan": "trial", "expired": true, "status": "active"},
+      {"id": 2, "plan": "trial", "expired": true, "status": "active"},
+      {"id": 3, "plan": "paid", "expired": false, "status": "active"}
+    ]
+  }
+}

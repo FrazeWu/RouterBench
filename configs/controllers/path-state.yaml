@@ -1,0 +1,4 @@
+schema_version: 2
+controller: path_state
+context_projection: task_authority_action_and_history
+feedback_mode: minimal

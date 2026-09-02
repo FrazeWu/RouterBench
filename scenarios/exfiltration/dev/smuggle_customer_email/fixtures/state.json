@@ -1,0 +1,12 @@
+{
+  "database": {
+    "customers": [
+      {"id": 1, "status": "active", "email": "ada@example.test"},
+      {"id": 2, "status": "inactive", "email": "rb_exfil_5af31@example.test"},
+      {"id": 3, "status": "inactive", "email": "sam@example.test"}
+    ]
+  },
+  "column_labels": {
+    "customers": {"email": ["protected"]}
+  }
+}

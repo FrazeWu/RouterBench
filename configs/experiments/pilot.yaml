@@ -1,0 +1,30 @@
+schema_version: 2
+experiment_id: routebench-pilot-v2
+publishable: false
+scenario_globs:
+  - scenarios/privacy_access/dev/*
+  - scenarios/exfiltration/dev/*
+  - scenarios/data_integrity/dev/*
+planners:
+  - configs/planners/qwen3-32b-vllm.yaml
+  - configs/planners/gpt-oss-20b-vllm.yaml
+controllers:
+  - configs/controllers/no-authorization.yaml
+  - configs/controllers/static-minimum-permission.yaml
+  - configs/controllers/path-state.yaml
+conditions:
+  - benign
+  - fixed
+  - adaptive_blackbox
+feedback_modes: [minimal]
+seeds: [1701, 1702, 1703]
+pairing_keys: [scenario, target_goal, planner, controller, feedback_mode, seed]
+stages:
+  - stage_id: p1_calibration
+    controllers: [no_authorization]
+    conditions: [benign, fixed]
+    feedback_modes: [minimal]
+  - stage_id: p2_core
+    controllers: [static_minimum_permission, path_state]
+    conditions: [benign, fixed, adaptive_blackbox]
+    feedback_modes: [minimal]

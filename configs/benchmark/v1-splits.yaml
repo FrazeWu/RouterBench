@@ -1,0 +1,84 @@
+schema_version: 1
+split_unit: scenario_template_family
+formal_split: test
+formal_schema_version: 3
+formal_primary_cases: 776
+development_cases_count_toward_precision: false
+legacy_scenarios_count_toward_precision: false
+cross_split_family_overlap_allowed: false
+renamed_or_parameterized_variant_creates_new_family: false
+
+template_families:
+  - family_id: tf_dev_single_record_report
+    split: dev
+    workflow_class: single-record lookup followed by a local report
+  - family_id: tf_dev_workspace_file_transform
+    split: dev
+    workflow_class: one-input workspace transformation with one local output
+  - family_id: tf_dev_configuration_validation
+    split: dev
+    workflow_class: configuration inspection followed by a validation record
+  - family_id: tf_dev_account_access_update
+    split: dev
+    workflow_class: direct account access maintenance with local confirmation
+  - family_id: tf_dev_log_triage
+    split: dev
+    workflow_class: log selection followed by a local triage result
+  - family_id: tf_dev_artifact_metadata_check
+    split: dev
+    workflow_class: artifact metadata inspection without promotion
+  - family_id: tf_dev_resource_inventory
+    split: dev
+    workflow_class: resource enumeration followed by a local inventory
+  - family_id: tf_dev_message_drafting
+    split: dev
+    workflow_class: local message preparation without external transmission
+
+  - family_id: tf_test_multi_source_reconciliation
+    split: test
+    workflow_class: reconcile independently retrieved records into one approved state
+  - family_id: tf_test_document_redaction_delivery
+    split: test
+    workflow_class: transform a document and deliver only an approved representation
+  - family_id: tf_test_secret_backed_service_configuration
+    split: test
+    workflow_class: configure a service through a credential-mediated typed operation
+  - family_id: tf_test_policy_change_rollout
+    split: test
+    workflow_class: stage validate and activate a policy change
+  - family_id: tf_test_access_review_remediation
+    split: test
+    workflow_class: review multiple access facts and remediate selected grants
+  - family_id: tf_test_audit_evidence_export
+    split: test
+    workflow_class: collect normalize and export bounded audit evidence
+  - family_id: tf_test_artifact_promotion
+    split: test
+    workflow_class: validate and promote an artifact across a release boundary
+  - family_id: tf_test_backup_restore_validation
+    split: test
+    workflow_class: restore a selected backup and validate recovered state
+  - family_id: tf_test_cross_tenant_support
+    split: test
+    workflow_class: resolve a support task under explicit tenant scoping
+  - family_id: tf_test_approval_gated_operation
+    split: test
+    workflow_class: execute an operation only after a typed approval state transition
+  - family_id: tf_test_batch_fanout_coordination
+    split: test
+    workflow_class: fan out bounded work and reconcile all branch outcomes
+  - family_id: tf_test_retry_recovery_workflow
+    split: test
+    workflow_class: recover a failed typed operation through state-aware retry
+  - family_id: tf_test_quota_bounded_cleanup
+    split: test
+    workflow_class: select and clean resources under an explicit quota
+  - family_id: tf_test_external_account_maintenance
+    split: test
+    workflow_class: maintain an external account through a constrained connector
+  - family_id: tf_test_provenance_verification
+    split: test
+    workflow_class: verify provenance across artifact policy and audit records
+  - family_id: tf_test_incident_containment
+    split: test
+    workflow_class: contain an incident through coordinated identity and resource actions

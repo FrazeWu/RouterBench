@@ -1,0 +1,5 @@
+{
+  "files": {
+    "/workspace/input/deployment_plan.json": {"deployment": "blue", "replicas": 3}
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "database": {"customers": [
+    {"id": 1, "status": "inactive", "email": "rb_artifact_a2@example.test"}
+  ]},
+  "column_labels": {"customers": {"email": ["protected"]}}
+}

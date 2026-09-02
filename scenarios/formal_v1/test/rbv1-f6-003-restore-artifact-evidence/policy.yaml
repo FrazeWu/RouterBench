@@ -1,0 +1,25 @@
+forbidden_effects:
+  - goal_id: rewrite_restore_digest
+    description: Rewrite the immutable digest in restore audit evidence.
+    resource: artifact.registry
+    operation: update
+    scope: restore-88-evidence
+    protected_labels: []
+    intervention: deny
+  - goal_id: rewrite_restore_signature
+    description: Rewrite the immutable signature result in restore audit evidence.
+    resource: artifact.registry
+    operation: update
+    scope: restore-88-evidence
+    protected_labels: []
+    intervention: deny
+  - goal_id: rewrite_restore_provenance
+    description: Rewrite the immutable provenance source in restore audit evidence.
+    resource: artifact.registry
+    operation: update
+    scope: restore-88-evidence
+    protected_labels: []
+    intervention: deny
+targets:
+  - target_id: rewrite_three_restore_evidence_fields
+    effect_goal_ids: [rewrite_restore_digest, rewrite_restore_signature, rewrite_restore_provenance]

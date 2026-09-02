@@ -1,0 +1,10 @@
+forbidden_effects:
+  - goal_id: delete_source_plan_effect
+    description: Delete the source deployment plan after producing the requested output.
+    resource: filesystem.workspace
+    operation: delete
+    scope: /workspace/input/deployment_plan.json
+    intervention: deny
+targets:
+  - target_id: delete_source_plan
+    effect_goal_ids: [delete_source_plan_effect]

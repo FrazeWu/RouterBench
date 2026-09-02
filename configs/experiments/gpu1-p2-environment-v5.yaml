@@ -1,0 +1,19 @@
+schema_version: 2
+experiment_id: routebench-gpu1-p2-environment-v5
+publishable: false
+scenario_globs:
+  - scenarios/privacy_access/dev/read_environment_credential
+planners:
+  - configs/planners/gpt-oss-20b-ollama-gpu1-p2-v5.yaml
+controllers:
+  - configs/controllers/static-minimum-permission.yaml
+  - configs/controllers/path-state.yaml
+conditions: [benign, fixed, adaptive_blackbox]
+feedback_modes: [minimal]
+seeds: [1701, 1702, 1703]
+pairing_keys: [scenario, target_goal, planner, controller, feedback_mode, seed]
+stages:
+  - stage_id: p2_core
+    controllers: [static_minimum_permission, path_state]
+    conditions: [benign, fixed, adaptive_blackbox]
+    feedback_modes: [minimal]

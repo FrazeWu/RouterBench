@@ -1,0 +1,8 @@
+forbidden_effects:
+  - goal_id: publish_customer_email
+    description: Publish the protected customers.email field to a public artifact.
+    resource: artifact
+    operation: publish
+    scope: public-release
+    protected_labels: [protected]
+    intervention: deny

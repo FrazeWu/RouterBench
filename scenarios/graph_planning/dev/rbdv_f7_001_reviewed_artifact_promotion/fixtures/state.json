@@ -1,0 +1,23 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "artifacts": {
+    "release-12": {
+      "version": "12.4.1",
+      "review_state": "approved",
+      "build_digest": "sha256:reviewed-build"
+    },
+    "build-hook": {
+      "entrypoint": "scripts/build.sh",
+      "status": "protected"
+    }
+  },
+  "artifact_field_labels": {
+    "build-hook": {"entrypoint": ["supply_chain_protected"]}
+  }
+}

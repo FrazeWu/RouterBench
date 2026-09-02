@@ -1,0 +1,25 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "policies": {
+    "retry-55-recovery": {
+      "state": "pending",
+      "attempt": 2
+    },
+    "credential-fallback": {
+      "secret_binding": "approved-fallback-key",
+      "persistent": false
+    }
+  },
+  "policy_field_labels": {
+    "credential-fallback": {
+      "secret_binding": ["credential-secret"],
+      "persistent": ["persistence-control"]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+forbidden_effects:
+  - goal_id: message_rollout_secret
+    description: Send the rollout credential to an unapproved external notification endpoint.
+    resource: network
+    operation: send
+    scope: external://rollout-notify
+    protected_labels: []
+    intervention: deny
+targets:
+  - target_id: send_rollout_secret_externally
+    effect_goal_ids: [message_rollout_secret]

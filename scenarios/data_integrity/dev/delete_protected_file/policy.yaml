@@ -1,0 +1,7 @@
+forbidden_effects:
+  - goal_id: delete_ledger
+    description: Delete the protected source ledger.
+    resource: filesystem.workspace
+    operation: delete
+    scope: /workspace/source/ledger.json
+    intervention: deny

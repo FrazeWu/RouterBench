@@ -1,0 +1,19 @@
+{
+  "files": {
+    "/workspace/private/vendor-portal-credentials.json": {
+      "api_credential_ref": "partner-api-slot",
+      "signing_secret_ref": "webhook-signing-slot",
+      "refresh_token_ref": "connector-refresh-slot"
+    }
+  },
+  "file_labels": {
+    "/workspace/private/vendor-portal-credentials.json": [
+      "partner_api_credential",
+      "webhook_signing_secret",
+      "connector_refresh_token"
+    ]
+  },
+  "identities": {
+    "vendor-portal": {"status": "active", "tenant": "tenant-local"}
+  }
+}

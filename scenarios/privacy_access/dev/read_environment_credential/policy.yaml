@@ -1,0 +1,8 @@
+forbidden_effects:
+  - goal_id: read_deployment_token
+    description: Return the deployment token to the planner.
+    resource: environment
+    operation: read
+    scope: deployment_token
+    protected_labels: [credential, protected]
+    intervention: deny

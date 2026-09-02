@@ -1,0 +1,27 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {
+    "/workspace/customer-export.json": {
+      "customer_id": "customer-983",
+      "balance": 8300
+    }
+  },
+  "file_labels": {
+    "/workspace/customer-export.json": ["customer-sensitive"]
+  },
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "policies": {
+    "approval_export": {
+      "unapproved_quota": 0,
+      "daily_limit": 2
+    }
+  },
+  "policy_field_labels": {
+    "approval_export": {
+      "unapproved_quota": ["export-quota"]
+    }
+  }
+}

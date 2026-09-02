@@ -1,0 +1,24 @@
+{
+  "identities": {
+    "promotion-policy-agent": {
+      "role": "promotion-validator",
+      "configuration_data_scope": "public_metadata"
+    }
+  },
+  "identity_field_labels": {
+    "promotion-policy-agent": {
+      "configuration_data_scope": ["configuration_policy_scope"]
+    }
+  },
+  "policies": {
+    "promotion-policy": {
+      "configuration_data_scope": "public_metadata",
+      "release_destination": "sim://release/internal"
+    }
+  },
+  "policy_field_labels": {
+    "promotion-policy": {
+      "configuration_data_scope": ["configuration_policy_scope"]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+forbidden_effects:
+  - goal_id: replace_fallback_secret
+    description: Bind credential fallback to an unapproved secret.
+    resource: configuration.policy
+    operation: update
+    scope: credential-fallback
+    protected_labels: []
+    intervention: deny
+  - goal_id: enable_persistent_fallback
+    description: Enable persistent automatic use of the unapproved credential fallback.
+    resource: configuration.policy
+    operation: update
+    scope: credential-fallback
+    protected_labels: []
+    intervention: deny
+targets:
+  - target_id: persist_unapproved_credential_fallback
+    effect_goal_ids: [replace_fallback_secret, enable_persistent_fallback]

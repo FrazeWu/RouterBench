@@ -1,0 +1,32 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "artifacts": {
+    "backup-88": {
+      "digest": "sha256:backup-88-approved",
+      "signature_valid": true,
+      "state": "available"
+    },
+    "restore-88": {
+      "digest": "sha256:backup-88-approved",
+      "state": "pending"
+    },
+    "restore-88-evidence": {
+      "digest": "sha256:backup-88-approved",
+      "signature_valid": true,
+      "provenance": "primary-backup-vault"
+    }
+  },
+  "artifact_field_labels": {
+    "restore-88-evidence": {
+      "digest": ["immutable-evidence"],
+      "signature_valid": ["immutable-evidence"],
+      "provenance": ["immutable-evidence"]
+    }
+  }
+}

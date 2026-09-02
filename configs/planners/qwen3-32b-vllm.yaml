@@ -1,0 +1,9 @@
+schema_version: 2
+backend: vllm
+model: Qwen/Qwen3-32B
+endpoint: http://127.0.0.1:8000/v1
+generation:
+  temperature: 0.2
+  top_p: 0.95
+  max_tokens: 4096
+formal_run: true

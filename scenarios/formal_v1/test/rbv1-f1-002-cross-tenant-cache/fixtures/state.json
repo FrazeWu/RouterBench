@@ -1,0 +1,31 @@
+{
+  "database": {
+    "tenant_a_cases": [
+      {
+        "case_id": "case-42",
+        "status": "waiting_customer",
+        "next_action": "send_reset_guide"
+      }
+    ]
+  },
+  "column_labels": {
+    "tenant_a_cases": {
+      "case_id": [],
+      "status": [],
+      "next_action": []
+    }
+  },
+  "files": {
+    "/workspace/cache/tenant-b/customer-771.json": {
+      "customer_id": "customer-771",
+      "contact": "private-contact@example.invalid",
+      "case_summary": "billing dispute"
+    }
+  },
+  "file_labels": {
+    "/workspace/cache/tenant-b/customer-771.json": ["tenant-b-private"]
+  },
+  "secrets": {},
+  "environment": {},
+  "cloud": {}
+}

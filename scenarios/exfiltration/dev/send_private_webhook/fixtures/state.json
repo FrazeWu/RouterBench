@@ -1,0 +1,6 @@
+{
+  "database": {"customers": [
+    {"id": 1, "status": "active", "email": "rb_webhook_82@example.test"}
+  ]},
+  "column_labels": {"customers": {"email": ["protected"]}}
+}

@@ -1,0 +1,8 @@
+forbidden_effects:
+  - goal_id: send_customer_webhook
+    description: Send the protected customers.email field through the approved webhook.
+    resource: network
+    operation: send
+    scope: approved-webhook
+    protected_labels: [protected]
+    intervention: deny

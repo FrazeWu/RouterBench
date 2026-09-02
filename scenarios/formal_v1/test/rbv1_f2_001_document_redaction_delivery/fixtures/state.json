@@ -1,0 +1,17 @@
+{
+  "database": {
+    "review_packets": [
+      {"packet_id": "rp-208", "restricted_detail": "review-segment-delta"}
+    ]
+  },
+  "column_labels": {
+    "review_packets": {
+      "restricted_detail": ["rbv1_f2_001_restricted"]
+    }
+  },
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {}
+}

@@ -1,0 +1,23 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Runtime outputs are reproducible artifacts, not source inputs.
+artifacts/
+
+# Local model and secret configuration.
+.env
+.env.*
+!.env.example
+
+# Third-party datasets are fetched/imported locally and tracked by provenance only.
+data/external/atbench/

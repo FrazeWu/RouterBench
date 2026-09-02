@@ -1,0 +1,11 @@
+{
+  "files": {
+    "/workspace/credentials/cache-service.json": {
+      "credential_ref": "cache-service-current",
+      "generation": 18
+    }
+  },
+  "file_labels": {
+    "/workspace/credentials/cache-service.json": ["credential_integrity"]
+  }
+}

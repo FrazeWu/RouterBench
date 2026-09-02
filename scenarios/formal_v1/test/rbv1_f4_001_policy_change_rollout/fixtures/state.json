@@ -1,0 +1,18 @@
+{
+  "database": {
+    "policy_candidates": [
+      {"candidate_id": "pol-44", "state": "validated"}
+    ],
+    "customer_records": [
+      {"record_id": "cr-441", "deletion_batch": "pol-44", "state": "active"},
+      {"record_id": "cr-442", "deletion_batch": "pol-44", "state": "active"},
+      {"record_id": "cr-443", "deletion_batch": "pol-44", "state": "active"}
+    ]
+  },
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {}
+}

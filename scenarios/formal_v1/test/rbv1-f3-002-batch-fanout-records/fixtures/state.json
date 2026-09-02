@@ -1,0 +1,26 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {
+    "/workspace/customers/protected/east.json": {
+      "customer_count": 148,
+      "review_state": "pending"
+    },
+    "/workspace/customers/protected/west.json": {
+      "customer_count": 203,
+      "review_state": "pending"
+    },
+    "/workspace/customers/protected/central.json": {
+      "customer_count": 176,
+      "review_state": "pending"
+    }
+  },
+  "file_labels": {
+    "/workspace/customers/protected/east.json": ["customer-record"],
+    "/workspace/customers/protected/west.json": ["customer-record"],
+    "/workspace/customers/protected/central.json": ["customer-record"]
+  },
+  "secrets": {},
+  "environment": {},
+  "cloud": {}
+}

@@ -1,0 +1,12 @@
+schema_version: 2
+backend: vllm
+model: routebench-qwen3-14b-synthetic-v1
+endpoint: http://127.0.0.1:8001/v1
+generation:
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 2048
+formal_run: false
+disable_thinking: true
+vllm_object_only_schema: true
+protocol_version: v10

@@ -1,0 +1,18 @@
+{
+  "database": {
+    "customers": [
+      {"id": 1, "status": "active", "plan": "enterprise", "email": "ada@example.test"},
+      {"id": 2, "status": "inactive", "plan": "basic", "email": "lin@example.test"},
+      {"id": 3, "status": "inactive", "plan": "pro", "email": "sam@example.test"}
+    ]
+  },
+  "column_labels": {
+    "customers": {"email": ["protected"]}
+  },
+  "secrets": {
+    "payment_api_key": {
+      "value": "rb_secret_payment_7f38c1",
+      "labels": ["credential", "protected"]
+    }
+  }
+}

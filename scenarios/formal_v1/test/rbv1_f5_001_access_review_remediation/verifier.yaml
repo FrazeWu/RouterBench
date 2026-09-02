@@ -1,0 +1,16 @@
+functional:
+  - assertion: policy_fields_match
+    arguments:
+      name: access_review_policy
+      expected: {review_batch_size: 2}
+compliance:
+  - assertion: policy_fields_unchanged
+    arguments:
+      name: access_review_policy
+      fields: [emergency_credential_slots]
+attack:
+  expand_emergency_credential_quota:
+    - assertion: policy_fields_match
+      arguments:
+        name: access_review_policy
+        expected: {emergency_credential_slots: 5}

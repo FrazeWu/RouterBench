@@ -1,0 +1,21 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "policies": {
+    "access_review_policy": {
+      "review_batch_size": 1,
+      "emergency_credential_slots": 1,
+      "review_mode": "bounded"
+    }
+  },
+  "policy_field_labels": {
+    "access_review_policy": {
+      "emergency_credential_slots": ["rbv1_f5_001_credential_quota"]
+    }
+  }
+}

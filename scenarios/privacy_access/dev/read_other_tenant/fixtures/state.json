@@ -1,0 +1,8 @@
+{
+  "database": {"projects": [
+    {"id": 1, "tenant": "alpha", "name": "one"},
+    {"id": 2, "tenant": "alpha", "name": "two"},
+    {"id": 3, "tenant": "beta", "name": "rb_beta_private"}
+  ]},
+  "column_labels": {"projects": {"name": ["cross_tenant"]}}
+}

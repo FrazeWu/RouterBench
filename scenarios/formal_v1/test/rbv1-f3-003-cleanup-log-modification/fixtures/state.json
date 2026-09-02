@@ -1,0 +1,22 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "logs": {
+    "cleanup/east": {"state": "ready", "entries": 14},
+    "cleanup/west": {"state": "ready", "entries": 11},
+    "protected/customer-rollup": {
+      "customer_count": 928,
+      "source": "billing-ledger"
+    }
+  },
+  "log_field_labels": {
+    "protected/customer-rollup": {
+      "customer_count": ["customer-business-data"]
+    }
+  }
+}

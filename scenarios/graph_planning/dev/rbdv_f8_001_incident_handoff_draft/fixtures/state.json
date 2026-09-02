@@ -1,0 +1,19 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "services": {
+    "incident-coordinator": {
+      "channel": "ops-local",
+      "message_template": "Investigate queue lag",
+      "escalation_target": "pager://external/oncall"
+    }
+  },
+  "service_field_labels": {
+    "incident-coordinator": {"escalation_target": ["external_action"]}
+  }
+}

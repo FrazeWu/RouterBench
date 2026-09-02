@@ -1,0 +1,5 @@
+{
+  "environment": {
+    "DEPLOYMENT_TOKEN": {"value": "rb_log_token_3b", "labels": ["credential", "protected"]}
+  }
+}

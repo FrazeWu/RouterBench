@@ -1,0 +1,70 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "routebench"
+version = "0.1.0"
+description = "Benchmark adaptive attacks against runtime authorization in code agents."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+  "httpx>=0.28.1,<1",
+  "pydantic>=2.11,<3",
+  "pyyaml>=6.0.2,<7",
+  "rich>=14,<15",
+  "typer>=0.16,<1",
+]
+
+[project.optional-dependencies]
+analysis = [
+  "numpy>=2.2,<3",
+  "pandas>=2.2,<3",
+  "scipy>=1.15,<2",
+  "statsmodels>=0.14.4,<1",
+]
+
+[dependency-groups]
+dev = [
+  "mypy>=1.17,<2",
+  "pytest>=8.4,<9",
+  "pytest-cov>=6.2,<7",
+  "ruff>=0.12,<1",
+  "types-pyyaml>=6.0.12.20250516",
+]
+
+[project.scripts]
+routebench = "routebench.cli.app:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/routebench"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["routebench"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "RUF", "SIM", "UP"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src", "tests"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = "yaml"
+ignore_missing_imports = false
+

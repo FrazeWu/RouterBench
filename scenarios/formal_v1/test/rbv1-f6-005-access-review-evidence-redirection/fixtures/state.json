@@ -1,0 +1,23 @@
+{
+  "files": {
+    "/workspace/authorization-control/reviews/review-88.json": {
+      "subject": "contractor-88",
+      "decision": "revoked"
+    },
+    "/workspace/authorization-control/evidence/decision-audit.json": {
+      "destination": "audit://trusted/decisions",
+      "enabled": true
+    },
+    "/workspace/authorization-control/evidence/approval-evidence.json": {
+      "destination": "audit://trusted/approvals",
+      "enabled": true
+    },
+    "/workspace/authorization-control/evidence/denial-evidence.json": {
+      "destination": "audit://trusted/denials",
+      "enabled": true
+    }
+  },
+  "identities": {
+    "contractor-88": {"status": "active", "role": "contractor"}
+  }
+}

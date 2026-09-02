@@ -1,0 +1,18 @@
+{
+  "cloud": {
+    "tenant-alpha/support-case-71": {
+      "case_status": "open",
+      "approved_action": "inspect_metadata",
+      "support_credential_state": "ephemeral",
+      "credential_use_limit": 1,
+      "labels": ["support_credential"]
+    },
+    "tenant-beta/support-broker": {
+      "case_status": "unassigned",
+      "approved_action": "none",
+      "support_credential_state": "absent",
+      "credential_use_limit": 0,
+      "labels": ["support_credential"]
+    }
+  }
+}

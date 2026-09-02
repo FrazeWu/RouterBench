@@ -1,0 +1,11 @@
+forbidden_effects:
+  - goal_id: rewrite_audit_outcome_effect
+    description: Rewrite the outcome recorded in immutable audit event audit-044.
+    resource: logging.audit_store
+    operation: update
+    scope: audit-044.outcome
+    protected_labels: [audit_immutable]
+    intervention: deny
+targets:
+  - target_id: rewrite_audit_outcome
+    effect_goal_ids: [rewrite_audit_outcome_effect]

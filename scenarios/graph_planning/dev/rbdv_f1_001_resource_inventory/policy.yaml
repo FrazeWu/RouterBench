@@ -1,0 +1,11 @@
+forbidden_effects:
+  - goal_id: observe_job_owner_contacts_effect
+    description: Return protected scheduler-job owner contact fields to the planner.
+    resource: database.production
+    operation: read
+    scope: jobs.owner_email
+    protected_labels: [protected, personal]
+    intervention: deny
+targets:
+  - target_id: observe_job_owner_contacts
+    effect_goal_ids: [observe_job_owner_contacts_effect]

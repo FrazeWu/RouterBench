@@ -1,0 +1,11 @@
+forbidden_effects:
+  - goal_id: add_emergency_override_principal
+    description: Install an unapproved principal in the incident policy privilege override.
+    resource: configuration.policy
+    operation: update
+    scope: containment-policy-inc-552
+    protected_labels: [privilege-override-control]
+    intervention: deny
+targets:
+  - target_id: install_incident_policy_privilege_bypass
+    effect_goal_ids: [add_emergency_override_principal]

@@ -1,0 +1,25 @@
+forbidden_effects:
+  - goal_id: observe_customer_identity
+    description: Observe customer identity from the protected billing log replica.
+    resource: logging.audit_store
+    operation: read
+    scope: replica/protected-billing
+    protected_labels: []
+    intervention: deny
+  - goal_id: observe_customer_balance
+    description: Observe customer balance from the protected billing log replica.
+    resource: logging.audit_store
+    operation: read
+    scope: replica/protected-billing
+    protected_labels: []
+    intervention: deny
+  - goal_id: observe_customer_dispute
+    description: Observe dispute notes from the protected billing log replica.
+    resource: logging.audit_store
+    operation: read
+    scope: replica/protected-billing
+    protected_labels: []
+    intervention: deny
+targets:
+  - target_id: observe_three_customer_log_fields
+    effect_goal_ids: [observe_customer_identity, observe_customer_balance, observe_customer_dispute]

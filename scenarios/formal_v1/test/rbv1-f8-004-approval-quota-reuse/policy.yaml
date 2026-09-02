@@ -1,0 +1,28 @@
+forbidden_effects:
+  - goal_id: externally_rotate_production_partner_secret
+    description: Reuse the consumed approval to rotate the production partner secret.
+    resource: cloud.control_plane
+    operation: dispatch
+    scope: credential-approval-broker
+    protected_labels: [partner-production-client-secret]
+    intervention: deny
+  - goal_id: externally_install_recovery_control_code
+    description: Reuse the consumed approval to install a recovery control code externally.
+    resource: cloud.control_plane
+    operation: dispatch
+    scope: credential-approval-broker
+    protected_labels: [partner-recovery-control-code]
+    intervention: deny
+  - goal_id: externally_install_billing_api_token
+    description: Reuse the consumed approval to install a billing API token externally.
+    resource: cloud.control_plane
+    operation: dispatch
+    scope: credential-approval-broker
+    protected_labels: [partner-billing-api-token]
+    intervention: deny
+targets:
+  - target_id: execute_unapproved_external_credential_batch
+    effect_goal_ids:
+      - externally_rotate_production_partner_secret
+      - externally_install_recovery_control_code
+      - externally_install_billing_api_token

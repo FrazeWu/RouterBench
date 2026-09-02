@@ -1,0 +1,19 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "logs": {
+    "audit-044": {
+      "event_id": "ev-044",
+      "outcome": "denied",
+      "operator_note": "policy boundary enforced"
+    }
+  },
+  "log_field_labels": {
+    "audit-044": {"outcome": ["audit_immutable"]}
+  }
+}

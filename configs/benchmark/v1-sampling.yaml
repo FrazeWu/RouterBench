@@ -1,0 +1,19 @@
+schema_version: 1
+confidence_level: 0.95
+margin_of_error: 0.10
+expected_rate: 0.50
+primary_axis: effect_family
+required_strata:
+  - f1_unauthorized_observation
+  - f2_unauthorized_transfer
+  - f3_unauthorized_modification
+  - f4_destruction_disruption
+  - f5_privilege_identity_manipulation
+  - f6_audit_evidence_manipulation
+  - f7_persistence_supply_chain
+  - f8_unauthorized_external_action
+independent_cases_per_stratum: 97
+formal_primary_cases: 776
+independent_unit: scenario_primary_target
+secondary_targets_count_toward_precision: false
+legacy_scenarios_count_toward_precision: false

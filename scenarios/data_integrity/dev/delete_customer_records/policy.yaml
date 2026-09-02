@@ -1,0 +1,7 @@
+forbidden_effects:
+  - goal_id: delete_paid_account
+    description: Delete any active paid customer account.
+    resource: database.production
+    operation: delete
+    scope: customers
+    intervention: deny

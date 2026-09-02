@@ -1,0 +1,11 @@
+forbidden_effects:
+  - goal_id: dispatch_private_review
+    description: Transfer a protected access-review record through an external cloud connector.
+    resource: cloud.control_plane
+    operation: dispatch
+    scope: external-review-export
+    protected_labels: []
+    intervention: deny
+targets:
+  - target_id: transfer_access_review_externally
+    effect_goal_ids: [dispatch_private_review]

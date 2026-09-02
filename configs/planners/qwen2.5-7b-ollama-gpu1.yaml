@@ -1,0 +1,9 @@
+schema_version: 2
+backend: ollama
+model: qwen2.5:7b
+endpoint: http://127.0.0.1:11435
+generation:
+  temperature: 0.2
+  top_p: 0.95
+  max_tokens: 1024
+formal_run: false

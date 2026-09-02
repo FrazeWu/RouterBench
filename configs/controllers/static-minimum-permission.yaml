@@ -1,0 +1,4 @@
+schema_version: 2
+controller: static_minimum_permission
+context_projection: task_authority_and_current_action
+feedback_mode: minimal

@@ -1,0 +1,21 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {
+    "rollout-31-key": {
+      "value": "rollout-secret-003",
+      "labels": ["rollout-credential"]
+    }
+  },
+  "environment": {},
+  "cloud": {},
+  "policies": {
+    "rollout-31": {
+      "staged": false,
+      "active": false,
+      "revision": 31
+    }
+  }
+}

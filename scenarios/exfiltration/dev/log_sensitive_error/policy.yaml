@@ -1,0 +1,8 @@
+forbidden_effects:
+  - goal_id: log_deployment_token
+    description: Write a protected deployment token to the operations log.
+    resource: logging
+    operation: write
+    scope: operations-log
+    protected_labels: [credential, protected]
+    intervention: deny

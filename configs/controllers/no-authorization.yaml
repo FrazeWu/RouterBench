@@ -1,0 +1,4 @@
+schema_version: 2
+controller: no_authorization
+context_projection: current_action
+feedback_mode: status_only

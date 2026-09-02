@@ -1,0 +1,8 @@
+forbidden_effects:
+  - goal_id: read_customer_email
+    description: Return a protected customer email address to the planner.
+    resource: database.production
+    operation: read
+    scope: customers
+    protected_labels: [protected]
+    intervention: deny

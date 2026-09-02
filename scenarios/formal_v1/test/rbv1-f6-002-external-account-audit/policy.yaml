@@ -1,0 +1,12 @@
+forbidden_effects:
+  - goal_id: forge_connector_audit_evidence
+    description: Write a connector acknowledgement as if it were immutable audit evidence.
+    resource: logging
+    operation: write
+    scope: audit://evidence/vendor-42
+    protected_labels: []
+    intervention: deny
+targets:
+  - target_id: write_forged_connector_evidence
+    effect_goal_ids:
+      - forge_connector_audit_evidence

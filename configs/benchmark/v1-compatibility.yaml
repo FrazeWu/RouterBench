@@ -1,0 +1,91 @@
+schema_version: 1
+minimum_primary_cases_per_allowed_triple: 2
+
+effect_assets:
+  f1_unauthorized_observation:
+    [a1_user_business_data, a2_credentials_secrets, a3_files_code_artifacts,
+     a4_configuration_policy, a5_identity_permissions, a6_logs_audit_evidence,
+     a7_compute_cloud_resources, a8_external_channels_accounts]
+  f2_unauthorized_transfer:
+    [a1_user_business_data, a2_credentials_secrets, a3_files_code_artifacts,
+     a4_configuration_policy, a5_identity_permissions, a6_logs_audit_evidence]
+  f3_unauthorized_modification:
+    [a1_user_business_data, a2_credentials_secrets, a3_files_code_artifacts,
+     a4_configuration_policy, a5_identity_permissions, a6_logs_audit_evidence,
+     a7_compute_cloud_resources, a8_external_channels_accounts]
+  f4_destruction_disruption:
+    [a1_user_business_data, a2_credentials_secrets, a3_files_code_artifacts,
+     a4_configuration_policy, a5_identity_permissions, a6_logs_audit_evidence,
+     a7_compute_cloud_resources, a8_external_channels_accounts]
+  f5_privilege_identity_manipulation:
+    [a2_credentials_secrets, a4_configuration_policy, a5_identity_permissions,
+     a7_compute_cloud_resources, a8_external_channels_accounts]
+  f6_audit_evidence_manipulation:
+    [a3_files_code_artifacts, a4_configuration_policy, a6_logs_audit_evidence]
+  f7_persistence_supply_chain:
+    [a2_credentials_secrets, a3_files_code_artifacts, a4_configuration_policy,
+     a5_identity_permissions, a7_compute_cloud_resources, a8_external_channels_accounts]
+  f8_unauthorized_external_action:
+    [a1_user_business_data, a2_credentials_secrets, a3_files_code_artifacts,
+     a4_configuration_policy, a5_identity_permissions, a7_compute_cloud_resources,
+     a8_external_channels_accounts]
+
+effect_tools:
+  f1_unauthorized_observation:
+    [u1_database, u2_filesystem, u3_secrets_environment, u4_configuration_policy,
+     u6_logging_audit, u7_code_artifact_package, u8_identity_access,
+     u9_cloud_control_plane, u10_service_automation]
+  f2_unauthorized_transfer:
+    [u5_network_messaging, u6_logging_audit, u7_code_artifact_package,
+     u9_cloud_control_plane]
+  f3_unauthorized_modification:
+    [u1_database, u2_filesystem, u4_configuration_policy, u6_logging_audit,
+     u7_code_artifact_package, u8_identity_access, u9_cloud_control_plane,
+     u10_service_automation]
+  f4_destruction_disruption:
+    [u1_database, u2_filesystem, u3_secrets_environment, u4_configuration_policy,
+     u7_code_artifact_package, u8_identity_access, u9_cloud_control_plane,
+     u10_service_automation]
+  f5_privilege_identity_manipulation:
+    [u4_configuration_policy, u8_identity_access, u9_cloud_control_plane,
+     u10_service_automation]
+  f6_audit_evidence_manipulation:
+    [u1_database, u2_filesystem, u4_configuration_policy, u6_logging_audit,
+     u7_code_artifact_package]
+  f7_persistence_supply_chain:
+    [u2_filesystem, u3_secrets_environment, u4_configuration_policy,
+     u7_code_artifact_package, u8_identity_access, u9_cloud_control_plane,
+     u10_service_automation]
+  f8_unauthorized_external_action:
+    [u5_network_messaging, u7_code_artifact_package, u9_cloud_control_plane,
+     u10_service_automation]
+
+asset_tools:
+  a1_user_business_data:
+    [u1_database, u2_filesystem, u5_network_messaging, u6_logging_audit,
+     u9_cloud_control_plane]
+  a2_credentials_secrets:
+    [u2_filesystem, u3_secrets_environment, u4_configuration_policy,
+     u5_network_messaging, u6_logging_audit, u8_identity_access,
+     u9_cloud_control_plane]
+  a3_files_code_artifacts:
+    [u2_filesystem, u5_network_messaging, u6_logging_audit,
+     u7_code_artifact_package, u9_cloud_control_plane, u10_service_automation]
+  a4_configuration_policy:
+    [u1_database, u2_filesystem, u4_configuration_policy, u5_network_messaging,
+     u6_logging_audit, u7_code_artifact_package, u8_identity_access,
+     u9_cloud_control_plane, u10_service_automation]
+  a5_identity_permissions:
+    [u1_database, u4_configuration_policy, u5_network_messaging, u6_logging_audit,
+     u8_identity_access, u9_cloud_control_plane, u10_service_automation]
+  a6_logs_audit_evidence:
+    [u1_database, u2_filesystem, u5_network_messaging, u6_logging_audit,
+     u7_code_artifact_package, u9_cloud_control_plane]
+  a7_compute_cloud_resources:
+    [u4_configuration_policy, u5_network_messaging, u6_logging_audit,
+     u7_code_artifact_package, u8_identity_access, u9_cloud_control_plane,
+     u10_service_automation]
+  a8_external_channels_accounts:
+    [u3_secrets_environment, u4_configuration_policy, u5_network_messaging,
+     u6_logging_audit, u7_code_artifact_package, u8_identity_access,
+     u9_cloud_control_plane, u10_service_automation]

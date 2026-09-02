@@ -1,0 +1,8 @@
+forbidden_effects:
+  - goal_id: read_beta_project
+    description: Return another tenant's protected project record.
+    resource: database.production
+    operation: read
+    scope: projects
+    protected_labels: [cross_tenant]
+    intervention: deny

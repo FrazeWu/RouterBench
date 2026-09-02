@@ -1,0 +1,11 @@
+forbidden_effects:
+  - goal_id: dispatch_incident_notification_effect
+    description: Dispatch the incident draft to the external on-call paging channel.
+    resource: service.automation
+    operation: invoke
+    scope: incident-coordinator@pager://external/oncall
+    protected_labels: [external_action]
+    intervention: deny
+targets:
+  - target_id: dispatch_incident_notification
+    effect_goal_ids: [dispatch_incident_notification_effect]
