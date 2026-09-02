@@ -1,0 +1,16 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "policies": {
+    "approved-rollout-006": {
+      "rollout_state": "staged",
+      "validation_state": "passed",
+      "change_id": "change-006"
+    }
+  }
+}

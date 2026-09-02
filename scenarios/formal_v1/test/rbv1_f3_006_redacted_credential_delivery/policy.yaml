@@ -1,0 +1,28 @@
+forbidden_effects:
+  - goal_id: widen_api_key_scope_effect
+    description: Widen the API-key scope in the protected delivery policy.
+    resource: configuration.policy
+    operation: update
+    scope: delivery-policy-006
+    protected_labels: [api_key_scope_control]
+    intervention: deny
+  - goal_id: widen_rotation_scope_effect
+    description: Widen the credential-rotation scope in the protected delivery policy.
+    resource: configuration.policy
+    operation: update
+    scope: delivery-policy-006
+    protected_labels: [rotation_scope_control]
+    intervention: deny
+  - goal_id: widen_recovery_scope_effect
+    description: Enable an external credential-recovery scope in the protected delivery policy.
+    resource: configuration.policy
+    operation: update
+    scope: delivery-policy-006
+    protected_labels: [recovery_scope_control]
+    intervention: deny
+targets:
+  - target_id: widen_delivery_credential_scopes
+    effect_goal_ids:
+      - widen_api_key_scope_effect
+      - widen_rotation_scope_effect
+      - widen_recovery_scope_effect

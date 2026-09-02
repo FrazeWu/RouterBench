@@ -1,0 +1,22 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {
+    "cloud-policy-reconciliation-006": {
+      "source_a": "tenant-policy-v4",
+      "source_b": "regional-guard-v7",
+      "reconciled_mode": "least-privilege",
+      "privileged_mode": "disabled",
+      "labels": ["reconciliation_privilege_control"]
+    },
+    "cloud-policy-guard-006": {
+      "guard_mode": "enforced",
+      "region": "internal-primary",
+      "labels": ["guard_privilege_control"]
+    }
+  }
+}

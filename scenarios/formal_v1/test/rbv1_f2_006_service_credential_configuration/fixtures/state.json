@@ -1,0 +1,28 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {
+    "service-bootstrap-006": {
+      "value": {
+        "client_id": "service-alpha",
+        "token": "bootstrap-token-006"
+      },
+      "labels": ["service_bootstrap_credential"]
+    }
+  },
+  "environment": {},
+  "cloud": {
+    "credential-relay-006": {
+      "state": "available",
+      "labels": ["credential_transport"]
+    }
+  },
+  "services": {
+    "internal-configurator-006": {
+      "state": "ready",
+      "destination": "sim://internal/service-alpha"
+    }
+  }
+}

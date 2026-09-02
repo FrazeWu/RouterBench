@@ -53,7 +53,7 @@ def test_validate_p0_command_checks_full_inventory() -> None:
     result = CliRunner().invoke(app, ["scenario", "validate-p0", str(PROJECT_ROOT / "scenarios")])
 
     assert result.exit_code == 0
-    assert '"scenarios": 60' in result.stdout
+    assert '"scenarios": 68' in result.stdout
     assert '"status": "valid"' in result.stdout
 
 
@@ -62,11 +62,11 @@ def test_inventory_command_reports_aggregate_counts_without_exposing_contents() 
 
     assert result.exit_code == 0
     payload = json.loads(result.stdout)
-    assert payload["scenario_files"] == 60
+    assert payload["scenario_files"] == 68
     assert payload["legacy_scenarios"] == 12
-    assert payload["benchmark_cases"] == 48
+    assert payload["benchmark_cases"] == 56
     assert payload["development_primary_cases"] == 8
-    assert payload["formal_primary_cases"] == 40
+    assert payload["formal_primary_cases"] == 48
 
 
 def test_inventory_command_audits_the_frozen_sampling_contract() -> None:
@@ -88,19 +88,19 @@ def test_inventory_command_audits_the_frozen_sampling_contract() -> None:
     assert result.exit_code == 0
     payload = json.loads(result.stdout)
     assert payload["sampling_contract"]["formal_primary_cases"] == 776
-    assert payload["sampling_audit"]["remaining_primary_cases"] == 736
+    assert payload["sampling_audit"]["remaining_primary_cases"] == 728
     assert payload["compatibility_audit"]["status"] == "undercovered"
-    assert payload["compatibility_audit"]["primary_cases_checked"] == 40
-    assert payload["compatibility_audit"]["primary_replication_deficit"] == 432
+    assert payload["compatibility_audit"]["primary_cases_checked"] == 48
+    assert payload["compatibility_audit"]["primary_replication_deficit"] == 424
     assert payload["allocation_plan"]["status"] == "complete"
     assert payload["allocation_plan"]["formal_primary_slots"] == 776
     assert set(payload["allocation_plan"]["per_effect_slots"].values()) == {97}
     assert payload["template_family_plan"]["status"] == "complete"
     assert payload["template_family_plan"]["formal_primary_assignments"] == 776
     assert payload["authorship_audit"]["status"] == "incomplete"
-    assert payload["authorship_audit"]["formal_cases_checked"] == 40
+    assert payload["authorship_audit"]["formal_cases_checked"] == 48
     assert payload["authorship_audit"]["taxonomy_assignment_mismatches"] == 0
-    assert payload["authorship_audit"]["missing_formal_slots"] == 736
+    assert payload["authorship_audit"]["missing_formal_slots"] == 728
 
 
 def test_plan_experiment_command_expands_without_running_models() -> None:
@@ -215,6 +215,223 @@ def test_graph_calibration_runs_a_development_scenario_matrix(
     assert summary["overall"]["assessed_cases"] == 8
     assert summary["overall"]["capable_cases"] == 8
     assert len(tuple((output_root / "attempts").rglob("manifest.json"))) == 24
+
+
+def test_formal_graph_evaluation_rejects_development_scenarios(tmp_path: Path) -> None:
+    output_root = tmp_path / "formal-evaluation"
+    result = CliRunner().invoke(
+        app,
+        [
+            "experiment",
+            "graph-evaluate",
+            str(PROJECT_ROOT / "scenarios/graph_planning/dev"),
+            "--planner-config",
+            str(PROJECT_ROOT / "configs/planners/gpt-oss-20b-vllm-formal-graph-v1.yaml"),
+            "--model-weight-sha256",
+            "a" * 64,
+            "--seed",
+            "1701",
+            "--seed",
+            "1702",
+            "--seed",
+            "1703",
+            "--seed",
+            "1704",
+            "--seed",
+            "1705",
+            "--output-root",
+            str(output_root),
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert "test scenarios only" in result.stderr
+    assert not output_root.exists()
+
+
+def test_formal_graph_evaluation_rejects_development_planner_config(tmp_path: Path) -> None:
+    output_root = tmp_path / "formal-evaluation"
+    result = CliRunner().invoke(
+        app,
+        [
+            "experiment",
+            "graph-evaluate",
+            str(PROJECT_ROOT / "scenarios/formal_v1/test/rbv1_f1_001_multi_source_reconciliation"),
+            "--planner-config",
+            str(PROJECT_ROOT / "configs/planners/gpt-oss-20b-ollama-gpu1-graph-anonymous-v2.yaml"),
+            "--model-weight-sha256",
+            "a" * 64,
+            "--seed",
+            "1701",
+            "--seed",
+            "1702",
+            "--seed",
+            "1703",
+            "--seed",
+            "1704",
+            "--seed",
+            "1705",
+            "--output-root",
+            str(output_root),
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert "requires planner configuration formal_run" in result.stderr
+    assert not output_root.exists()
+
+
+def test_formal_graph_evaluation_rejects_missing_provenance(
+    monkeypatch: MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.setattr(
+        "routebench.cli.app.build_private_run_metadata",
+        lambda **_kwargs: {
+            "planner": {},
+            "publishable": False,
+            "missing_formal_fields": ["git_worktree_clean"],
+        },
+    )
+    output_root = tmp_path / "formal-evaluation"
+    result = CliRunner().invoke(
+        app,
+        [
+            "experiment",
+            "graph-evaluate",
+            str(PROJECT_ROOT / "scenarios/formal_v1/test/rbv1_f1_001_multi_source_reconciliation"),
+            "--planner-config",
+            str(PROJECT_ROOT / "configs/planners/gpt-oss-20b-vllm-formal-graph-v1.yaml"),
+            "--model-weight-sha256",
+            "a" * 64,
+            "--seed",
+            "1701",
+            "--seed",
+            "1702",
+            "--seed",
+            "1703",
+            "--seed",
+            "1704",
+            "--seed",
+            "1705",
+            "--output-root",
+            str(output_root),
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert "git_worktree_clean" in result.stderr
+    assert not output_root.exists()
+
+
+def test_formal_graph_evaluation_writes_private_attempts_and_aggregate_report(
+    monkeypatch: MonkeyPatch, tmp_path: Path
+) -> None:
+    scenario = PROJECT_ROOT / "scenarios/formal_v1/test/rbv1_f1_001_multi_source_reconciliation"
+
+    class CertificatePlanner:
+        async def aclose(self) -> None:
+            return None
+
+        async def select_graph_path(
+            self, _task: object, _graph: CandidateGraph, _seed: int
+        ) -> GraphPathSelection:
+            return GraphPathSelection(edge_ids=("record_acknowledgement",))
+
+    monkeypatch.setattr(
+        "routebench.cli.app.LocalJsonPlanner.create", lambda _config: CertificatePlanner()
+    )
+    monkeypatch.setattr(
+        "routebench.cli.app.build_private_run_metadata",
+        lambda **_kwargs: {
+            "controller": "none",
+            "feedback_mode": "minimal",
+            "planner": {"model": "test-model", "config_hash": "config-hash"},
+            "controller_config": {"path": "controller.yaml", "hash": "controller-hash"},
+            "dependency_lock_hash": "lock-hash",
+            "git": {"commit": "b" * 40, "dirty": False},
+            "runtime": {"python": "3.12", "platform": "test", "executable": "python"},
+            "model_weight_hash": "a" * 64,
+            "rootfs_hash": None,
+            "rootfs_required": False,
+            "rootfs_status": "not_applicable",
+            "publishable": True,
+            "missing_formal_fields": [],
+        },
+    )
+    output_root = tmp_path / "formal-evaluation"
+    result = CliRunner().invoke(
+        app,
+        [
+            "experiment",
+            "graph-evaluate",
+            str(scenario),
+            "--planner-config",
+            str(PROJECT_ROOT / "configs/planners/gpt-oss-20b-vllm-formal-graph-v1.yaml"),
+            "--model-weight-sha256",
+            "a" * 64,
+            "--seed",
+            "1701",
+            "--seed",
+            "1702",
+            "--seed",
+            "1703",
+            "--seed",
+            "1704",
+            "--seed",
+            "1705",
+            "--output-root",
+            str(output_root),
+        ],
+    )
+
+    assert result.exit_code == 0, result.stderr
+    summary = json.loads((output_root / "formal-graph-summary.json").read_text(encoding="utf-8"))
+    assert summary["scope"] == {
+        "benchmark_case_target": 776,
+        "evaluated_cases": 1,
+        "kind": "formal_prefix",
+        "precision_contract_satisfied": False,
+    }
+    assert summary["overall"]["planned_attempts"] == 5
+    assert summary["overall"]["capable_cases"] == 1
+    assert "cases" not in summary
+    assert len(tuple((output_root / "attempts").rglob("manifest.json"))) == 5
+    report = (output_root / "experiment-report.md").read_text(encoding="utf-8")
+    assert "formal_prefix" in report
+    assert "Raw prompts, raw model responses" in report
+    assert "rbv1_f1_001_multi_source_reconciliation" not in report
+
+
+def test_formal_graph_evaluation_rejects_an_existing_output_root(tmp_path: Path) -> None:
+    output_root = tmp_path / "formal-evaluation"
+    output_root.mkdir()
+    result = CliRunner().invoke(
+        app,
+        [
+            "experiment",
+            "graph-evaluate",
+            str(PROJECT_ROOT / "scenarios/formal_v1/test"),
+            "--planner-config",
+            str(PROJECT_ROOT / "configs/planners/gpt-oss-20b-vllm-formal-graph-v1.yaml"),
+            "--model-weight-sha256",
+            "a" * 64,
+            "--seed",
+            "1701",
+            "--seed",
+            "1702",
+            "--seed",
+            "1703",
+            "--seed",
+            "1704",
+            "--seed",
+            "1705",
+            "--output-root",
+            str(output_root),
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert "must not already exist" in result.stderr
 
 
 def test_p1_calibration_records_an_invalid_seed_and_continues_batch(

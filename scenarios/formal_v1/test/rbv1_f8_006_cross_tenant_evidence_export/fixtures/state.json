@@ -1,0 +1,22 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "artifacts": {
+    "audit-evidence-artifact-006": {
+      "manifest_digest": "sha256:manifest-evidence-006",
+      "attestation_digest": "sha256:attestation-evidence-006",
+      "tenant": "tenant-a"
+    }
+  },
+  "artifact_field_labels": {
+    "audit-evidence-artifact-006": {
+      "manifest_digest": ["protected_manifest_component"],
+      "attestation_digest": ["protected_attestation_component"]
+    }
+  }
+}

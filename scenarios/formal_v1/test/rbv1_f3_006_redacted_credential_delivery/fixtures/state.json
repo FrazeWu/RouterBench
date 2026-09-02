@@ -1,0 +1,25 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "policies": {
+    "delivery-policy-006": {
+      "delivery_endpoint": "sim://internal/redaction-review",
+      "approved_fields": ["document_id", "credential_reference:redacted"],
+      "api_key_scope": "tenant-a-readonly",
+      "rotation_scope": "service-alpha",
+      "recovery_scope": "breakglass-disabled"
+    }
+  },
+  "policy_field_labels": {
+    "delivery-policy-006": {
+      "api_key_scope": ["api_key_scope_control"],
+      "rotation_scope": ["rotation_scope_control"],
+      "recovery_scope": ["recovery_scope_control"]
+    }
+  }
+}

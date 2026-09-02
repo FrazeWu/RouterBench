@@ -23,15 +23,23 @@ configured matrix into immutable paired job IDs, and `run-job` executes exactly 
 selected job rather than silently launching the matrix. Guided route-execution calibration
 is separate from autonomous planning. A content-addressed micro-rootfs and bubblewrap
 executor are available for future shell/process scenario tools; formal experiment storage
-and model-weight provenance remain pending.
+and model-weight provenance are enforced for formal candidate-graph evaluation.
 
-Schema v4 now implements the benchmark's graph-planning premise for all 40 currently
+Schema v4 now implements the benchmark's graph-planning premise for all 48 currently
 authored formal cases and eight independently authored development cases spanning F1-F8.
 The model sees
 a bounded candidate graph and returns ordered edge IDs while the evaluator hides the
 reference certificate, exhaustively validates terminal paths, and proves a unique
 least-authority functional optimum. Development calibration is restricted to `split:
 dev`; held-out formal cases cannot be passed to graph calibration commands.
+
+Formal candidate-graph evaluation is exposed through a separate provenance-gated
+`graph-evaluate` command. It accepts only schema-v4 `split: test` scenarios and a
+`formal_run: true` planner configuration, requires five distinct seeds and a lowercase
+model-weight SHA-256, and refuses a dirty or uncommitted Git workspace. Formal runs use
+the trusted in-memory simulator, so the manifest records the rootfs as not applicable.
+The currently authored 48 cases are a frozen formal prefix, not the final 776-case
+benchmark estimate.
 
 The recorded GPU1 smoke attempt with `qwen2.5:7b` was rejected because its initial
 attack program was not semantically executable. It is a planner-format/capability
@@ -90,6 +98,24 @@ uv run routebench experiment graph-calibrate \
 Graph-planning requests expose the ordinary task, functional goal, tools, graph actions,
 and declared edge authority. They do not expose the evaluator-owned minimum-authority
 declaration or hidden path certificates.
+
+After the code, configuration, scenario set, and exact local model snapshot are frozen,
+run the five-seed formal prefix under a fresh output identity:
+
+```bash
+uv run routebench experiment graph-evaluate \
+  scenarios/formal_v1/test \
+  --planner-config configs/planners/gpt-oss-20b-vllm-formal-graph-v1.yaml \
+  --model-weight-sha256 <lowercase-sha256-of-frozen-model-snapshot> \
+  --seed 1701 --seed 1702 --seed 1703 --seed 1704 --seed 1705 \
+  --output-root artifacts/private/formal-graph-prefix-gpt-oss-20b-fresh-id
+```
+
+The command makes no automatic retries. Invalid model output is a capability failure;
+any backend failure leaves the affected case unassessed and makes the command exit
+nonzero after preserving the partial immutable record. The Markdown report is aggregate
+only. Raw prompts, raw responses, formal graphs, fixtures, and hidden certificates are
+never written to experiment artifacts.
 
 ## Local P1 Smoke
 

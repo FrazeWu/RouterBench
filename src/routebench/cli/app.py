@@ -53,6 +53,18 @@ from routebench.evaluation.graph_calibration import (
     write_graph_calibration_report,
     write_private_graph_attempt_manifest,
 )
+from routebench.evaluation.graph_evaluation import (
+    FORMAL_BENCHMARK_PRIMARY_CASES,
+    FORMAL_GRAPH_MINIMUM_SUCCESSES,
+    FORMAL_GRAPH_SEED_COUNT,
+    FormalGraphAttempt,
+    build_formal_graph_summary,
+    formal_failure_counts,
+    formal_graph_case_labels,
+    write_formal_graph_report,
+    write_formal_graph_run_manifest,
+    write_private_formal_graph_attempt_manifest,
+)
 from routebench.evaluation.graph_selection import GraphSelectionResult, run_graph_selection
 from routebench.evaluation.pilot import (
     GUIDED_ROUTE_EXECUTION_MINIMUM_JOINT_SUCCESSES,
@@ -83,7 +95,7 @@ from routebench.sandbox import create_micro_rootfs, probe_sandbox
 from routebench.scenarios import load_scenario
 from routebench.scenarios.loader import ScenarioBundle
 from routebench.scenarios.schema import RouteSpec, ScenarioSplit
-from routebench.storage.manifests import build_private_run_metadata
+from routebench.storage.manifests import build_private_run_metadata, file_sha256
 
 app = typer.Typer(name="routebench", no_args_is_help=True, pretty_exceptions_show_locals=False)
 scenario_app = typer.Typer(name="scenario", no_args_is_help=True)
@@ -667,7 +679,7 @@ def graph_calibrate_experiment(
                     failure_kind="planner_response_invalid",
                     response_hash=error.response_hash,
                 )
-            except HTTPError:
+            except (HTTPError, json.JSONDecodeError):
                 attempt = GraphCalibrationAttempt(
                     scenario_id=bundle.definition.metadata.scenario_id,
                     scenario_digest=bundle.digest,
@@ -731,6 +743,232 @@ def graph_calibrate_experiment(
             sort_keys=True,
         )
     )
+
+
+@experiment_app.command("graph-evaluate")
+def graph_evaluate_experiment(
+    scenario_root: Annotated[Path, typer.Argument(exists=True, file_okay=False, resolve_path=True)],
+    planner_config: Annotated[
+        Path,
+        typer.Option("--planner-config", exists=True, dir_okay=False, resolve_path=True),
+    ],
+    model_weight_hash: Annotated[str, typer.Option("--model-weight-sha256")],
+    seeds: Annotated[list[int], typer.Option("--seed")],
+    output_root: Annotated[Path, typer.Option("--output-root", resolve_path=True)],
+) -> None:
+    """Run a provenance-gated formal candidate-graph evaluation."""
+
+    if len(seeds) != FORMAL_GRAPH_SEED_COUNT or len(set(seeds)) != len(seeds):
+        raise typer.BadParameter(
+            "formal graph evaluation requires exactly five distinct --seed values"
+        )
+    if output_root.exists():
+        raise typer.BadParameter(
+            "output-root must not already exist; formal evaluation artifacts are immutable"
+        )
+    config = load_planner_config(planner_config)
+    if not config.formal_run:
+        raise typer.BadParameter("graph-evaluate requires planner configuration formal_run: true")
+
+    scenario_paths = tuple(path.parent for path in sorted(scenario_root.rglob("scenario.yaml")))
+    if not scenario_paths:
+        raise typer.BadParameter("formal graph evaluation requires at least one scenario")
+    bundles = tuple(load_scenario(path) for path in scenario_paths)
+    bundles = tuple(sorted(bundles, key=lambda bundle: bundle.definition.metadata.scenario_id))
+    scenario_ids = tuple(bundle.definition.metadata.scenario_id for bundle in bundles)
+    if len(set(scenario_ids)) != len(scenario_ids):
+        raise typer.BadParameter("formal graph evaluation scenario IDs must be unique")
+    if len(bundles) > FORMAL_BENCHMARK_PRIMARY_CASES:
+        raise typer.BadParameter("formal graph scenario count exceeds the benchmark case target")
+    for bundle in bundles:
+        if bundle.definition.metadata.split is not ScenarioSplit.TEST:
+            raise typer.BadParameter(
+                "graph-evaluate accepts held-out test scenarios only; development scenarios "
+                "cannot be used for formal evaluation"
+            )
+        if bundle.definition.metadata.schema_version != 4:
+            raise typer.BadParameter(
+                f"formal graph evaluation requires schema v4: "
+                f"{bundle.definition.metadata.scenario_id}"
+            )
+        try:
+            audit_candidate_graph(bundle)
+        except GraphAuditError as error:
+            raise typer.BadParameter(str(error)) from error
+
+    scenario_set_digest = hashlib.sha256(
+        "\n".join(
+            f"{bundle.definition.metadata.scenario_id}:{bundle.digest}" for bundle in bundles
+        ).encode("utf-8")
+    ).hexdigest()
+    benchmark_contract_path = PROJECT_ROOT / "configs/benchmark/v1-sampling.yaml"
+    try:
+        metadata = build_private_run_metadata(
+            workspace_root=PROJECT_ROOT,
+            scenario_digest=scenario_set_digest,
+            planner_config=planner_config,
+            controller_config=_controller_config_path("none"),
+            controller="none",
+            feedback_mode=FeedbackMode.MINIMAL.value,
+            model=config.model,
+            formal_run=config.formal_run,
+            model_weight_hash=model_weight_hash,
+            rootfs_required=False,
+        )
+    except ValueError as error:
+        raise typer.BadParameter(str(error)) from error
+    metadata.pop("scenario_digest", None)
+    planner_metadata = metadata["planner"]
+    if not isinstance(planner_metadata, dict):
+        raise typer.BadParameter("formal run metadata has an invalid planner record")
+    planner_metadata.update(
+        {
+            "backend": config.backend,
+            "endpoint": config.endpoint,
+            "protocol_version": config.protocol_version,
+            "anonymize_graph_labels": config.anonymize_graph_labels,
+            "generation": config.generation.model_dump(mode="json"),
+        }
+    )
+    metadata["material_passport"] = {
+        "scenario_root": str(scenario_root),
+        "scenario_count": len(bundles),
+        "scenario_set_digest": scenario_set_digest,
+        "scenario_digests": {
+            bundle.definition.metadata.scenario_id: bundle.digest for bundle in bundles
+        },
+        "benchmark_contract_path": str(benchmark_contract_path),
+        "benchmark_contract_hash": file_sha256(benchmark_contract_path),
+    }
+    metadata["formal_evaluation_contract"] = {
+        "case_decision": (
+            f">={FORMAL_GRAPH_MINIMUM_SUCCESSES}/{FORMAL_GRAPH_SEED_COUNT} OptimalPathSuccess"
+        ),
+        "controller": "none",
+        "feedback_mode": FeedbackMode.MINIMAL.value,
+        "invalid_output": "capability_failure",
+        "backend_failure": "case_unassessed",
+        "automatic_retries": 0,
+        "execution_order": "sequential",
+        "executor": "trusted_in_memory_simulator",
+        "raw_prompt_storage": False,
+        "raw_response_storage": False,
+        "raw_graph_storage": False,
+    }
+    missing_fields = metadata.get("missing_formal_fields")
+    if missing_fields or metadata.get("publishable") is not True:
+        if not isinstance(missing_fields, list):
+            missing_fields = ["invalid_provenance_metadata"]
+        raise typer.BadParameter(
+            "formal provenance gate failed: " + ", ".join(str(field) for field in missing_fields)
+        )
+
+    attempts: list[FormalGraphAttempt] = []
+    output_root.mkdir(parents=True, exist_ok=False)
+    write_formal_graph_run_manifest(metadata, output_root / "run-manifest.json")
+    total_attempts = len(bundles) * len(seeds)
+    for bundle in bundles:
+        effect_family, route_length = formal_graph_case_labels(bundle)
+        for seed in seeds:
+
+            async def execute_one(
+                run_bundle: ScenarioBundle, run_seed: int
+            ) -> GraphSelectionResult:
+                planner = LocalJsonPlanner.create(config)
+                try:
+                    return await run_graph_selection(
+                        run_bundle,
+                        planner,
+                        NoAuthorizationController(),
+                        FeedbackMode.MINIMAL,
+                        run_seed,
+                    )
+                finally:
+                    await planner.aclose()
+
+            started = time.monotonic()
+            try:
+                result = asyncio.run(execute_one(bundle, seed))
+            except PlannerResponseError as error:
+                attempt = FormalGraphAttempt(
+                    scenario_id=bundle.definition.metadata.scenario_id,
+                    scenario_digest=bundle.digest,
+                    seed=seed,
+                    primary_effect_family=effect_family,
+                    route_length=route_length,
+                    duration_seconds=time.monotonic() - started,
+                    status="invalid_output",
+                    failure_kind="planner_response_invalid",
+                    response_hash=error.response_hash,
+                )
+            except HTTPError:
+                attempt = FormalGraphAttempt(
+                    scenario_id=bundle.definition.metadata.scenario_id,
+                    scenario_digest=bundle.digest,
+                    seed=seed,
+                    primary_effect_family=effect_family,
+                    route_length=route_length,
+                    duration_seconds=time.monotonic() - started,
+                    status="backend_failure",
+                    failure_kind="planner_backend_error",
+                )
+            else:
+                attempt = FormalGraphAttempt(
+                    scenario_id=bundle.definition.metadata.scenario_id,
+                    scenario_digest=bundle.digest,
+                    seed=seed,
+                    primary_effect_family=effect_family,
+                    route_length=route_length,
+                    duration_seconds=time.monotonic() - started,
+                    status="valid",
+                    result=result,
+                )
+            attempts.append(attempt)
+            write_private_formal_graph_attempt_manifest(attempt, output_root, metadata)
+            typer.echo(
+                json.dumps(
+                    {
+                        "completed": len(attempts),
+                        "planned": total_attempts,
+                        "seed": attempt.seed,
+                        "status": attempt.status,
+                    },
+                    sort_keys=True,
+                ),
+                err=True,
+            )
+
+    summary = build_formal_graph_summary(
+        attempts=tuple(attempts),
+        scenario_ids=scenario_ids,
+        seeds=tuple(seeds),
+        metadata=metadata,
+    )
+    summary["failure_kinds"] = formal_failure_counts(tuple(attempts))
+    summary_path = output_root / "formal-graph-summary.json"
+    summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    report_path = write_formal_graph_report(summary, output_root / "experiment-report.md")
+    overall = summary["overall"]
+    scope = summary["scope"]
+    if not isinstance(overall, dict) or not isinstance(scope, dict):
+        raise typer.BadParameter("formal graph summary has an invalid aggregate record")
+    typer.echo(
+        json.dumps(
+            {
+                "scope": scope["kind"],
+                "evaluated_cases": scope["evaluated_cases"],
+                "assessed_cases": overall["assessed_cases"],
+                "capable_cases": overall["capable_cases"],
+                "invalid_outputs": overall["invalid_outputs"],
+                "backend_failures": overall["backend_failures"],
+                "summary": str(summary_path),
+                "report": str(report_path),
+            },
+            sort_keys=True,
+        )
+    )
+    if overall["backend_failures"]:
+        raise typer.Exit(code=2)
 
 
 @experiment_app.command("smoke")

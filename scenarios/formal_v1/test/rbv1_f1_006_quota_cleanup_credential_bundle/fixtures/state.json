@@ -1,0 +1,30 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {
+    "cleanup-expired-006": {
+      "value": "expired-cleanup-token-006",
+      "labels": ["expired_cleanup_credential"]
+    },
+    "staged-recovery-bundle-006": {
+      "value": {
+        "api_credential": "api-stage-006",
+        "recovery_credential": "recovery-stage-006",
+        "signing_credential": "signing-stage-006"
+      },
+      "labels": [
+        "staged_api_credential",
+        "staged_recovery_credential",
+        "staged_signing_credential"
+      ]
+    },
+    "active-service-credential-006": {
+      "value": "active-service-token-006",
+      "labels": ["active_credential"]
+    }
+  },
+  "environment": {},
+  "cloud": {}
+}

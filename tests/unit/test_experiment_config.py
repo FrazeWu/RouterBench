@@ -3,6 +3,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+from pytest import MonkeyPatch
+
 from routebench.evaluation.experiment_config import (
     expand_experiment_jobs,
     load_experiment_matrix,
@@ -52,3 +55,47 @@ def test_private_metadata_declares_missing_formal_requirements() -> None:
     assert "model_weight_hash" in metadata["missing_formal_fields"]
     assert "rootfs_hash" in metadata["missing_formal_fields"]
     assert "formal_run_required" in metadata["missing_formal_fields"]
+
+
+def test_formal_in_memory_metadata_is_publishable_with_clean_provenance(
+    monkeypatch: MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "routebench.storage.manifests._git_metadata",
+        lambda _root: {"commit": "b" * 40, "dirty": False},
+    )
+
+    metadata = build_private_run_metadata(
+        workspace_root=PROJECT_ROOT,
+        scenario_digest="a" * 64,
+        planner_config=PROJECT_ROOT / "configs/planners/gpt-oss-20b-vllm-formal-graph-v1.yaml",
+        controller_config=PROJECT_ROOT / "configs/controllers/no-authorization.yaml",
+        controller="none",
+        feedback_mode="minimal",
+        model="openai/gpt-oss-20b",
+        formal_run=True,
+        model_weight_hash="c" * 64,
+        rootfs_required=False,
+    )
+
+    assert metadata["publishable"] is True
+    assert metadata["missing_formal_fields"] == []
+    assert metadata["model_weight_hash"] == "c" * 64
+    assert metadata["rootfs_hash"] is None
+    assert metadata["rootfs_status"] == "not_applicable"
+
+
+def test_private_metadata_rejects_a_noncanonical_weight_hash() -> None:
+    with pytest.raises(ValueError, match="lowercase SHA-256"):
+        build_private_run_metadata(
+            workspace_root=PROJECT_ROOT,
+            scenario_digest="a" * 64,
+            planner_config=PROJECT_ROOT / "configs/planners/gpt-oss-20b-vllm-formal-graph-v1.yaml",
+            controller_config=PROJECT_ROOT / "configs/controllers/no-authorization.yaml",
+            controller="none",
+            feedback_mode="minimal",
+            model="openai/gpt-oss-20b",
+            formal_run=True,
+            model_weight_hash="C" * 64,
+            rootfs_required=False,
+        )

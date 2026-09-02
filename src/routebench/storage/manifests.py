@@ -24,20 +24,32 @@ def build_private_run_metadata(
     feedback_mode: str,
     model: str,
     formal_run: bool,
+    model_weight_hash: str | None = None,
+    rootfs_hash: str | None = None,
+    rootfs_required: bool = True,
 ) -> dict[str, Any]:
     """Describe a local run and make every formal-manifest gap machine-visible."""
     root = Path(workspace_root).resolve(strict=True)
     planner_path = Path(planner_config).resolve(strict=True)
     controller_path = Path(controller_config).resolve(strict=True)
     lock_path = root / "uv.lock"
-    missing_formal_fields = ["model_weight_hash", "rootfs_hash"]
+    _validate_optional_sha256("model_weight_hash", model_weight_hash)
+    _validate_optional_sha256("rootfs_hash", rootfs_hash)
+    missing_formal_fields: list[str] = []
+    if model_weight_hash is None:
+        missing_formal_fields.append("model_weight_hash")
+    if rootfs_required and rootfs_hash is None:
+        missing_formal_fields.append("rootfs_hash")
     git = _git_metadata(root)
     if git["commit"] is None:
         missing_formal_fields.append("git_commit")
+    if git["dirty"] is not False:
+        missing_formal_fields.append("git_worktree_clean")
     if not lock_path.is_file():
         missing_formal_fields.append("dependency_lock_hash")
     if not formal_run:
         missing_formal_fields.append("formal_run_required")
+    publishable = not missing_formal_fields
     return {
         "controller": controller,
         "feedback_mode": feedback_mode,
@@ -59,11 +71,26 @@ def build_private_run_metadata(
             "platform": platform.platform(),
             "executable": sys.executable,
         },
-        "model_weight_hash": None,
-        "rootfs_hash": None,
-        "publishable": False,
+        "model_weight_hash": model_weight_hash,
+        "rootfs_hash": rootfs_hash,
+        "rootfs_required": rootfs_required,
+        "rootfs_status": (
+            "available"
+            if rootfs_hash is not None
+            else "required_missing"
+            if rootfs_required
+            else "not_applicable"
+        ),
+        "publishable": publishable,
         "missing_formal_fields": sorted(missing_formal_fields),
     }
+
+
+def _validate_optional_sha256(field: str, value: str | None) -> None:
+    if value is None:
+        return
+    if len(value) != 64 or any(character not in "0123456789abcdef" for character in value):
+        raise ValueError(f"{field} must be a lowercase SHA-256 digest")
 
 
 def _git_metadata(workspace_root: Path) -> dict[str, str | bool | None]:

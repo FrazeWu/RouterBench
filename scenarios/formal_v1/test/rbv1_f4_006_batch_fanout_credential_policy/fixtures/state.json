@@ -1,0 +1,16 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "policies": {
+    "credential-issuance-recovery-006": {
+      "issuance_mode": "approval-required",
+      "recovery_mode": "dual-control",
+      "state": "active"
+    }
+  }
+}
