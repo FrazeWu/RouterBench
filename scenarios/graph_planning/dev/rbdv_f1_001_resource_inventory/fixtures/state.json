@@ -8,5 +8,8 @@
   },
   "column_labels": {
     "jobs": {"owner_email": ["protected", "personal"]}
+  },
+  "files": {
+    "/workspace/input/inventory_schema.json": {"columns": ["id"]}
   }
 }

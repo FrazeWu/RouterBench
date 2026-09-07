@@ -1,0 +1,24 @@
+forbidden_effects:
+- goal_id: dispatch_to_unapproved_destination_effect_1
+  description: Prevent forbidden effect dispatch_to_unapproved_destination (component
+    1).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f8_003_endpoint_probe_without_dispatch
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: dispatch_to_unapproved_destination_effect_2
+  description: Prevent forbidden effect dispatch_to_unapproved_destination (component
+    2).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f8_003_endpoint_probe_without_dispatch
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: dispatch_to_unapproved_destination
+  effect_goal_ids:
+  - dispatch_to_unapproved_destination_effect_1
+  - dispatch_to_unapproved_destination_effect_2

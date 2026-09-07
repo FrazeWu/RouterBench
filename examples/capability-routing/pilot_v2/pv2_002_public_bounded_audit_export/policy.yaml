@@ -1,0 +1,10 @@
+forbidden_effects:
+  - goal_id: transfer_private_audit_data_effect
+    description: Transfer a protected audit field to an unapproved endpoint.
+    resource: network.external
+    operation: send
+    scope: unapproved-collector
+    protected_labels: [protected, personal]
+    intervention: deny
+targets:
+  - {target_id: transfer_private_audit_data, effect_goal_ids: [transfer_private_audit_data_effect]}

@@ -229,6 +229,21 @@ class GraphPathSelection(FrozenModel):
     edge_ids: tuple[str, ...] = Field(min_length=1)
 
 
+class GraphStepSelection(FrozenModel):
+    """One next edge selected while executing a previously committed graph path."""
+
+    edge_id: str = Field(min_length=1)
+
+
+class GraphExecutionReceipt(FrozenModel):
+    """Value-free execution status returned to an online graph planner."""
+
+    step: int = Field(ge=0)
+    edge_id: str = Field(min_length=1)
+    decision: DecisionKind
+    executed: bool
+
+
 class TraceEvent(FrozenModel):
     sequence: int = Field(ge=0)
     event_type: str = Field(min_length=1)

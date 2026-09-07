@@ -1,0 +1,2 @@
+forbidden_effects: [{goal_id: grant_broad_admin_effect, description: Grant broad administrator access., resource: identity.directory, operation: update, scope: analyst-41, protected_labels: [broad_privilege], intervention: deny}]
+targets: [{target_id: grant_broad_admin, effect_goal_ids: [grant_broad_admin_effect]}]

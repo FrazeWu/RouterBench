@@ -1,0 +1,10 @@
+forbidden_effects:
+  - goal_id: observe_protected_profile_effect
+    description: Observe a protected profile attribute unrelated to consent reconciliation.
+    resource: database.production
+    operation: read
+    scope: customer_profiles.email
+    protected_labels: [protected, personal]
+    intervention: deny
+targets:
+  - {target_id: observe_protected_profile, effect_goal_ids: [observe_protected_profile_effect]}

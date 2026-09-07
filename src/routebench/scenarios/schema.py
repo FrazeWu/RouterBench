@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from enum import StrEnum
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -132,6 +133,34 @@ class GraphNodeSpec(StrictModel):
     description: str = Field(min_length=1)
 
 
+class CapabilityBindingSpec(StrictModel):
+    """Public author-selected provider binding for one graph transition."""
+
+    binding_id: str = Field(
+        pattern=(
+            r"^[a-z0-9_]+::[a-z0-9_]+(?:\.[a-z0-9_]+){4}::[a-z0-9_]+$"
+        )
+    )
+    adapter: str = Field(min_length=1)
+    skill_ids: tuple[str, ...] = Field(min_length=1)
+    workflow_template: str = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def require_unique_skills(self) -> CapabilityBindingSpec:
+        if len(self.skill_ids) != len(set(self.skill_ids)):
+            raise ValueError("capability binding skill_ids must be unique")
+        return self
+
+
+class PublicRouteAttributes(StrictModel):
+    """Prompt-visible ordinal properties used by the v2 route preference contract."""
+
+    exposure: Literal["isolated", "delegated", "session", "standing_credential"]
+    authority_scope: Literal["exact", "bounded", "workspace", "environment"]
+    evidence_loss: Literal["primary", "corroborated", "rendered", "inferred"]
+    interaction: Literal["direct", "mediated", "interactive", "manual"]
+
+
 class GraphEdgeSpec(StrictModel):
     edge_id: str = Field(pattern=r"^[a-z][a-z0-9_]*$")
     source: str = Field(pattern=r"^[a-z][a-z0-9_]*$")
@@ -139,11 +168,18 @@ class GraphEdgeSpec(StrictModel):
     description: str = Field(min_length=1)
     action: RouteActionSpec
     authority: tuple[AuthorityAtom, ...] = Field(min_length=1)
+    capability_binding: CapabilityBindingSpec | None = None
+    public_route_attributes: PublicRouteAttributes | None = None
 
     @model_validator(mode="after")
     def require_unique_authority_atoms(self) -> GraphEdgeSpec:
         if len(self.authority) != len(set(self.authority)):
             raise ValueError("graph edge authority atoms must be unique")
+        if (
+            self.capability_binding is not None
+            and self.capability_binding.adapter != self.action.tool
+        ):
+            raise ValueError("capability binding adapter must match the graph edge action tool")
         return self
 
 
@@ -193,7 +229,16 @@ class CandidateGraph(StrictModel):
         has_stop_or_continue = any(node_id in out_degree for node_id in self.terminal_nodes)
         if not any(degree >= 2 for degree in out_degree.values()) and not has_stop_or_continue:
             raise ValueError("candidate graph must contain at least one genuine branch")
+        attributes_present = [edge.public_route_attributes is not None for edge in self.edges]
+        if any(attributes_present) and not all(attributes_present):
+            raise ValueError(
+                "public route attributes must be present on every edge or on no graph edges"
+            )
         return self
+
+    @property
+    def uses_public_route_contract(self) -> bool:
+        return bool(self.edges) and self.edges[0].public_route_attributes is not None
 
     def actions_for_path(
         self, edge_ids: tuple[str, ...], *, require_terminal: bool = True
@@ -226,6 +271,15 @@ class GraphPathSpec(StrictModel):
     edge_ids: tuple[str, ...] = Field(min_length=1)
 
 
+class EdgeRouteCost(StrictModel):
+    """Private per-edge costs for scenarios that evaluate capability routing."""
+
+    security_risk: int = Field(ge=0)
+    privilege_scope: int = Field(ge=0)
+    evidence_gap: int = Field(ge=0)
+    execution_cost: int = Field(ge=0)
+
+
 class ReferencePathCertificates(StrictModel):
     safe: GraphPathSpec
     attack: dict[str, GraphPathSpec] = Field(min_length=1)
@@ -235,6 +289,7 @@ class ReferenceRoutes(StrictModel):
     safe: RouteSpec
     attack: dict[str, RouteSpec] = Field(min_length=1)
     certificates: ReferencePathCertificates | None = None
+    edge_route_costs: dict[str, EdgeRouteCost] = Field(default_factory=dict)
 
 
 class ScenarioMetadata(StrictModel):
@@ -244,7 +299,7 @@ class ScenarioMetadata(StrictModel):
     risk_category: RiskCategory | None = None
     split: ScenarioSplit
     template_family_id: str | None = Field(default=None, pattern=r"^[a-z][a-z0-9_]*$")
-    allocation_slot_id: str | None = Field(default=None, pattern=r"^rbv1-f[1-8]-\d{3}$")
+    allocation_slot_id: str | None = Field(default=None, pattern=r"^rbv[12]-f[1-8]-\d{3}$")
     route_tags: tuple[str, ...] = ()
     primary_target_id: str | None = Field(default=None, pattern=r"^[a-z][a-z0-9_]*$")
     case_profiles: dict[str, BenchmarkCaseProfile] = Field(default_factory=dict)
@@ -363,5 +418,14 @@ class ScenarioDefinition(StrictModel):
                 if attack_actions != self.routes.attack[target_id].actions:
                     raise ValueError(
                         f"attack path certificate {target_id!r} does not match its reference route"
+                    )
+            if self.routes.edge_route_costs:
+                graph_edge_ids = {edge.edge_id for edge in self.graph.edges}
+                cost_edge_ids = set(self.routes.edge_route_costs)
+                if cost_edge_ids != graph_edge_ids:
+                    raise ValueError(
+                        "edge_route_costs must cover exactly the candidate graph edges: "
+                        f"missing={sorted(graph_edge_ids - cost_edge_ids)}, "
+                        f"unknown={sorted(cost_edge_ids - graph_edge_ids)}"
                     )
         return self

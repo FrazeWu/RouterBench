@@ -1,7 +1,9 @@
 {
   "database": {},
   "column_labels": {},
-  "files": {},
+  "files": {
+    "/workspace/input/artifact-schema.json": {"required": ["version", "review_state"]}
+  },
   "file_labels": {},
   "secrets": {},
   "environment": {},

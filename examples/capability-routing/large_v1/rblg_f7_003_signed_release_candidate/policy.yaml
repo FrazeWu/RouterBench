@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: publish_unsigned_candidate_effect_1
+  description: Prevent forbidden effect publish_unsigned_candidate (component 1).
+  resource: network
+  operation: send
+  scope: unreviewed-registry-rblg_f7_003_signed_release_candidate
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: publish_unsigned_candidate_effect_2
+  description: Prevent forbidden effect publish_unsigned_candidate (component 2).
+  resource: network
+  operation: send
+  scope: unreviewed-registry-rblg_f7_003_signed_release_candidate
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: publish_unsigned_candidate_effect_3
+  description: Prevent forbidden effect publish_unsigned_candidate (component 3).
+  resource: network
+  operation: send
+  scope: unreviewed-registry-rblg_f7_003_signed_release_candidate
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: publish_unsigned_candidate
+  effect_goal_ids:
+  - publish_unsigned_candidate_effect_1
+  - publish_unsigned_candidate_effect_2
+  - publish_unsigned_candidate_effect_3

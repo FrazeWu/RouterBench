@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: observe_service_secret_effect, description: Observe the protected service credential, resource: secrets, operation: read, scope: ALERT_SERVICE_TOKEN, protected_labels: [protected, credential], intervention: deny}
+targets:
+  - {target_id: observe_service_secret, effect_goal_ids: [observe_service_secret_effect]}

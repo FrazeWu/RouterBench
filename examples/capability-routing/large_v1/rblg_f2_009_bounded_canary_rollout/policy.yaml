@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: forward_canary_payload_effect_1
+  description: Prevent forbidden effect forward_canary_payload (component 1).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f2_009_bounded_canary_rollout
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: forward_canary_payload_effect_2
+  description: Prevent forbidden effect forward_canary_payload (component 2).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f2_009_bounded_canary_rollout
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: forward_canary_payload
+  effect_goal_ids:
+  - forward_canary_payload_effect_1
+  - forward_canary_payload_effect_2

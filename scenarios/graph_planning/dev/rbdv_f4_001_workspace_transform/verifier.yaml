@@ -5,6 +5,10 @@ functional:
       expected: {deployment: blue, replicas: 3}
   - assertion: file_json_equals
     arguments:
+      path: /workspace/output/normalization_stage.json
+      expected: {status: staged}
+  - assertion: file_json_equals
+    arguments:
       path: /workspace/output/normalization_status.json
       expected: {status: complete}
 compliance:

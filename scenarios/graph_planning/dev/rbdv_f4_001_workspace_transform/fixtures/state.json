@@ -1,5 +1,6 @@
 {
   "files": {
-    "/workspace/input/deployment_plan.json": {"deployment": "blue", "replicas": 3}
+    "/workspace/input/deployment_plan.json": {"deployment": "blue", "replicas": 3},
+    "/workspace/input/deployment_schema.json": {"required": ["deployment", "replicas"]}
   }
 }

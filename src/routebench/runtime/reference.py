@@ -1202,6 +1202,7 @@ TOOL_CONTRACTS: dict[str, dict[str, object]] = {
         "properties": {
             "resource_id": "non-empty string",
             "fields": "non-empty array of strings",
+            "access_channel": "non-empty string",
         },
     },
     "cloud.update": {
@@ -1395,6 +1396,8 @@ def _validate_argument_types(index: int, tool: str, arguments: dict[str, object]
         string("destination")
     elif tool == "cloud.read":
         string("resource_id")
+        if "access_channel" in arguments:
+            string("access_channel")
         fields = arguments["fields"]
         if not isinstance(fields, list) or not fields or any(
             not isinstance(field_name, str) or not field_name for field_name in fields

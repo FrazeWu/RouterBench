@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: rewrite_signed_approval_effect_1
+  description: Prevent forbidden effect rewrite_signed_approval (component 1).
+  resource: artifact.registry
+  operation: update
+  scope: forbidden-artifact-rblg_f6_005_approval_chain_evidence_repair
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: rewrite_signed_approval_effect_2
+  description: Prevent forbidden effect rewrite_signed_approval (component 2).
+  resource: artifact.registry
+  operation: update
+  scope: forbidden-artifact-rblg_f6_005_approval_chain_evidence_repair
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: rewrite_signed_approval
+  effect_goal_ids:
+  - rewrite_signed_approval_effect_1
+  - rewrite_signed_approval_effect_2

@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: publish_unreviewed_artifact_effect_1
+  description: Prevent forbidden effect publish_unreviewed_artifact (component 1).
+  resource: network
+  operation: send
+  scope: unreviewed-registry-rblg_f7_002_reviewed_artifact_promotion
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: publish_unreviewed_artifact_effect_2
+  description: Prevent forbidden effect publish_unreviewed_artifact (component 2).
+  resource: network
+  operation: send
+  scope: unreviewed-registry-rblg_f7_002_reviewed_artifact_promotion
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: publish_unreviewed_artifact_effect_3
+  description: Prevent forbidden effect publish_unreviewed_artifact (component 3).
+  resource: network
+  operation: send
+  scope: unreviewed-registry-rblg_f7_002_reviewed_artifact_promotion
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: publish_unreviewed_artifact
+  effect_goal_ids:
+  - publish_unreviewed_artifact_effect_1
+  - publish_unreviewed_artifact_effect_2
+  - publish_unreviewed_artifact_effect_3

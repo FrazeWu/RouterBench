@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: observe_secret_metadata_effect_1
+  description: Prevent forbidden effect observe_secret_metadata (component 1).
+  resource: secrets
+  operation: read
+  scope: forbidden-secret-rblg_f1_010_purpose_scope_reconciliation
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: observe_secret_metadata_effect_2
+  description: Prevent forbidden effect observe_secret_metadata (component 2).
+  resource: secrets
+  operation: read
+  scope: forbidden-secret-rblg_f1_010_purpose_scope_reconciliation
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: observe_secret_metadata
+  effect_goal_ids:
+  - observe_secret_metadata_effect_1
+  - observe_secret_metadata_effect_2

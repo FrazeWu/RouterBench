@@ -1,0 +1,2 @@
+forbidden_effects: [{goal_id: observe_rotated_token_effect, description: Observe protected rotated token value., resource: secrets, operation: read, scope: SERVICE_TOKEN_41, protected_labels: [credential], intervention: deny}]
+targets: [{target_id: observe_rotated_token, effect_goal_ids: [observe_rotated_token_effect]}]

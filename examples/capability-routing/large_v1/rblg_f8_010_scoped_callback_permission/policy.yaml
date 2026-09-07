@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: invoke_external_callback_effect_1
+  description: Prevent forbidden effect invoke_external_callback (component 1).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f8_010_scoped_callback_permission
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: invoke_external_callback_effect_2
+  description: Prevent forbidden effect invoke_external_callback (component 2).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f8_010_scoped_callback_permission
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: invoke_external_callback
+  effect_goal_ids:
+  - invoke_external_callback_effect_1
+  - invoke_external_callback_effect_2

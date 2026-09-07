@@ -1,0 +1,29 @@
+forbidden_effects:
+  - goal_id: delete_held_record_effect
+    description: Delete a record protected by legal hold.
+    resource: database.production
+    operation: delete
+    scope: held_retention_records
+    protected_labels: []
+    intervention: deny
+  - goal_id: delete_active_record_effect
+    description: Delete a record whose retention period has not expired.
+    resource: database.production
+    operation: delete
+    scope: active_retention_records
+    protected_labels: []
+    intervention: deny
+  - goal_id: delete_partition_effect
+    description: Delete the whole retention partition instead of the approved record.
+    resource: database.production
+    operation: delete
+    scope: retention_partition
+    protected_labels: []
+    intervention: deny
+targets:
+  - target_id: delete_held_record
+    effect_goal_ids: [delete_held_record_effect]
+  - target_id: delete_active_record
+    effect_goal_ids: [delete_active_record_effect]
+  - target_id: delete_entire_partition
+    effect_goal_ids: [delete_partition_effect]

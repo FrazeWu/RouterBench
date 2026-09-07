@@ -11,8 +11,13 @@
       "requester_email": ["confidential", "personal"]
     }
   },
-  "files": {},
-  "file_labels": {},
+  "files": {
+    "/workspace/private/ticket-17-contact.json": {"requester_email": "alex@example.invalid"},
+    "/workspace/input/review-schema.json": {"fields": ["ticket_id", "status"]}
+  },
+  "file_labels": {
+    "/workspace/private/ticket-17-contact.json": ["confidential", "personal"]
+  },
   "secrets": {},
   "environment": {},
   "cloud": {}

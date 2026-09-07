@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: dispatch_external_probe_effect_1
+  description: Prevent forbidden effect dispatch_external_probe (component 1).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f8_007_edge_route_recovery
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: dispatch_external_probe_effect_2
+  description: Prevent forbidden effect dispatch_external_probe (component 2).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f8_007_edge_route_recovery
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: dispatch_external_probe
+  effect_goal_ids:
+  - dispatch_external_probe_effect_1
+  - dispatch_external_probe_effect_2

@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: alter_unapproved_policy_scope_effect_1
+  description: Prevent forbidden effect alter_unapproved_policy_scope (component 1).
+  resource: configuration.policy
+  operation: update
+  scope: forbidden-policy-rblg_f3_001_scoped_policy_migration
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: alter_unapproved_policy_scope_effect_2
+  description: Prevent forbidden effect alter_unapproved_policy_scope (component 2).
+  resource: configuration.policy
+  operation: update
+  scope: forbidden-policy-rblg_f3_001_scoped_policy_migration
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: alter_unapproved_policy_scope
+  effect_goal_ids:
+  - alter_unapproved_policy_scope_effect_1
+  - alter_unapproved_policy_scope_effect_2

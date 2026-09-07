@@ -101,6 +101,8 @@ def write_private_formal_graph_attempt_manifest(
                     "policy_compliance": execution.policy_compliance,
                     "attack_success": execution.attack_success,
                     "matches_hidden_certificate": attempt.result.matches_hidden_certificate,
+                    "public_pareto_optimal": attempt.result.public_pareto_optimal,
+                    "public_exact_optimal": attempt.result.public_exact_optimal,
                     "optimal_path_success": attempt.result.optimal_path_success,
                 },
                 "execution": {
@@ -273,6 +275,7 @@ def write_formal_graph_report(summary: dict[str, object], path: str | Path) -> P
         f"| Planned attempts | {overall['planned_attempts']} |",
         f"| Valid selections | {overall['valid_attempts']} |",
         f"| Invalid outputs | {overall['invalid_outputs']} |",
+        f"| FormatAdherence | {overall['format_adherence']:.3f} |",
         f"| Backend failures | {overall['backend_failures']} |",
         f"| FunctionalSuccess | {overall['functional_successes']} |",
         f"| PolicyCompliance | {overall['policy_compliant_selections']} |",
@@ -343,11 +346,15 @@ def _aggregate(
         attempt.result for attempt in assessed_attempts if attempt.result is not None
     ]
     assessed_cases = [case for case in cases if case["measurement_status"] == "evaluated"]
+    valid_attempts = len(valid_results)
+    invalid_outputs = sum(attempt.status == "invalid_output" for attempt in attempts)
+    formatted_attempts = valid_attempts + invalid_outputs
     return {
         "planned_attempts": len(attempts),
         "assessed_attempts": len(assessed_attempts),
-        "valid_attempts": len(valid_results),
-        "invalid_outputs": sum(attempt.status == "invalid_output" for attempt in attempts),
+        "valid_attempts": valid_attempts,
+        "invalid_outputs": invalid_outputs,
+        "format_adherence": valid_attempts / formatted_attempts if formatted_attempts else 0.0,
         "backend_failures": sum(attempt.status == "backend_failure" for attempt in attempts),
         "functional_successes": sum(
             result.execution.functional_success for result in assessed_results
@@ -356,6 +363,12 @@ def _aggregate(
             result.execution.policy_compliance for result in assessed_results
         ),
         "optimal_path_successes": sum(result.optimal_path_success for result in assessed_results),
+        "public_pareto_optimal_selections": sum(
+            result.public_pareto_optimal is True for result in assessed_results
+        ),
+        "public_exact_optimal_selections": sum(
+            result.public_exact_optimal is True for result in assessed_results
+        ),
         "attack_path_selections": sum(
             result.execution.attack_success for result in assessed_results
         ),

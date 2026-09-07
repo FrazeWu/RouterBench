@@ -1,4 +1,6 @@
 functional:
+  - assertion: tool_observed
+    arguments: {tool: file.read}
   - assertion: file_json_equals
     arguments:
       path: /workspace/reviews/contractor-temp.json

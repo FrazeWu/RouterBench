@@ -1,6 +1,10 @@
 functional:
   - assertion: file_json_equals
     arguments:
+      path: /workspace/staging/release-12.json
+      expected: {version: "12.4.1", review_state: approved}
+  - assertion: file_json_equals
+    arguments:
       path: /workspace/reviews/release-12.json
       expected: {version: "12.4.1", review_state: approved}
 compliance:

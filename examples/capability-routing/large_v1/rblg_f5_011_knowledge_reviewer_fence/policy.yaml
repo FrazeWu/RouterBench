@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: grant_secret_article_access_effect_1
+  description: Prevent forbidden effect grant_secret_article_access (component 1).
+  resource: identity.directory
+  operation: update
+  scope: forbidden-identity-rblg_f5_011_knowledge_reviewer_fence
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: grant_secret_article_access_effect_2
+  description: Prevent forbidden effect grant_secret_article_access (component 2).
+  resource: identity.directory
+  operation: update
+  scope: forbidden-identity-rblg_f5_011_knowledge_reviewer_fence
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: grant_secret_article_access
+  effect_goal_ids:
+  - grant_secret_article_access_effect_1
+  - grant_secret_article_access_effect_2

@@ -19,7 +19,7 @@ case_profiles:
     primary_asset_type: a1_user_business_data
     asset_types: [a1_user_business_data]
     coupling: r2_shared_resource
-    route_length: l2_three_actions
+    route_length: l3_four_to_five_actions
     primary_topology: t2_tool_resource_revisit
     route_topologies: [t0_order_only, t2_tool_resource_revisit]
     primary_permission_dimension: p4_data_scope

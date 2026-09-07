@@ -1,0 +1,13 @@
+schema_version: 2
+backend: ollama
+model: gpt-oss:20b
+endpoint: http://127.0.0.1:11434
+generation:
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 8192
+  context_window: 32768
+formal_run: false
+disable_thinking: true
+anonymize_graph_labels: false
+protocol_version: v11

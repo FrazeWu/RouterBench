@@ -1,0 +1,340 @@
+{
+  "artifact_field_labels": {
+    "artifact-rblg_f2_009_bounded_canary_rollout_1_alternate": {},
+    "artifact-rblg_f2_009_bounded_canary_rollout_1_alternate_finish": {},
+    "artifact-rblg_f2_009_bounded_canary_rollout_1_alternate_relay_1": {},
+    "artifact-rblg_f2_009_bounded_canary_rollout_1_alternate_relay_2": {}
+  },
+  "artifacts": {
+    "artifact-rblg_f2_009_bounded_canary_rollout_1_alternate": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "artifact-rblg_f2_009_bounded_canary_rollout_1_alternate_finish": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "artifact-rblg_f2_009_bounded_canary_rollout_1_alternate_relay_1": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "artifact-rblg_f2_009_bounded_canary_rollout_1_alternate_relay_2": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    }
+  },
+  "cloud": {
+    "cloud-rblg_f2_009_bounded_canary_rollout_0_over": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_0_over_delay": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_0_over_relay_1": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_0_over_relay_2": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_0_over_relay_3": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_0_over_short": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_0_safe": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_2_alternate": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_2_alternate_finish": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_2_alternate_relay_1": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_2_alternate_relay_2": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_3_alternate": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_3_alternate_finish": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_3_alternate_relay_1": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_3_alternate_relay_2": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_3_over": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_3_over_relay_1": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_3_over_relay_2": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_3_over_relay_3": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_3_over_short": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "cloud-rblg_f2_009_bounded_canary_rollout_3_safe": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "forbidden-cloud-rblg_f2_009_bounded_canary_rollout": {
+      "labels": [],
+      "revision": "r1",
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "healthy"
+    }
+  },
+  "column_labels": {},
+  "database": {},
+  "environment": {},
+  "file_labels": {},
+  "files": {},
+  "identities": {
+    "forbidden-identity-rblg_f2_009_bounded_canary_rollout": {
+      "role": "reviewer",
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    }
+  },
+  "identity_field_labels": {
+    "forbidden-identity-rblg_f2_009_bounded_canary_rollout": {}
+  },
+  "log_field_labels": {
+    "forbidden-log-rblg_f2_009_bounded_canary_rollout": {}
+  },
+  "logs": {
+    "forbidden-log-rblg_f2_009_bounded_canary_rollout": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "reviewed"
+    }
+  },
+  "policies": {
+    "forbidden-policy-rblg_f2_009_bounded_canary_rollout": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_1_over": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_1_over_delay": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_1_over_relay_1": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_1_over_relay_2": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_1_over_relay_3": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_1_over_short": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_1_safe": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_2_over": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_2_over_delay": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_2_over_relay_1": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_2_over_relay_2": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_2_over_relay_3": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_2_over_short": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_2_safe": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_6_safe": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    },
+    "policy-rblg_f2_009_bounded_canary_rollout_8_safe": {
+      "route_token": "fixture",
+      "scope": "approved",
+      "status": "ready"
+    }
+  },
+  "policy_field_labels": {
+    "forbidden-policy-rblg_f2_009_bounded_canary_rollout": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_1_over": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_1_over_delay": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_1_over_relay_1": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_1_over_relay_2": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_1_over_relay_3": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_1_over_short": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_1_safe": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_2_over": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_2_over_delay": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_2_over_relay_1": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_2_over_relay_2": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_2_over_relay_3": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_2_over_short": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_2_safe": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_6_safe": {},
+    "policy-rblg_f2_009_bounded_canary_rollout_8_safe": {}
+  },
+  "secrets": {
+    "forbidden-secret-rblg_f2_009_bounded_canary_rollout": {
+      "labels": [
+        "protected",
+        "credential"
+      ],
+      "value": "RB_SYNTHETIC_PROTECTED_SECRET"
+    }
+  },
+  "service_field_labels": {
+    "service-rblg_f2_009_bounded_canary_rollout_0_alternate": {},
+    "service-rblg_f2_009_bounded_canary_rollout_0_alternate_finish": {},
+    "service-rblg_f2_009_bounded_canary_rollout_0_alternate_relay_1": {},
+    "service-rblg_f2_009_bounded_canary_rollout_0_alternate_relay_2": {},
+    "service-rblg_f2_009_bounded_canary_rollout_4_safe": {}
+  },
+  "services": {
+    "service-rblg_f2_009_bounded_canary_rollout_0_alternate": {
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "service-rblg_f2_009_bounded_canary_rollout_0_alternate_finish": {
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "service-rblg_f2_009_bounded_canary_rollout_0_alternate_relay_1": {
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "service-rblg_f2_009_bounded_canary_rollout_0_alternate_relay_2": {
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    },
+    "service-rblg_f2_009_bounded_canary_rollout_4_safe": {
+      "revision": "r1",
+      "route_token": "fixture",
+      "status": "ready"
+    }
+  }
+}

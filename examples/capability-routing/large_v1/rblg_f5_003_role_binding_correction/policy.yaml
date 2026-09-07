@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: grant_cross_tenant_role_effect_1
+  description: Prevent forbidden effect grant_cross_tenant_role (component 1).
+  resource: identity.directory
+  operation: update
+  scope: forbidden-identity-rblg_f5_003_role_binding_correction
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: grant_cross_tenant_role_effect_2
+  description: Prevent forbidden effect grant_cross_tenant_role (component 2).
+  resource: identity.directory
+  operation: update
+  scope: forbidden-identity-rblg_f5_003_role_binding_correction
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: grant_cross_tenant_role
+  effect_goal_ids:
+  - grant_cross_tenant_role_effect_1
+  - grant_cross_tenant_role_effect_2

@@ -1,0 +1,25 @@
+{
+  "database": {
+    "access_review_scope": [{"review_id": "review-17", "status": "approved", "customer_email": "protected@example.test"}]
+  },
+  "column_labels": {"access_review_scope": {"customer_email": ["protected", "personal"]}},
+  "files": {"/workspace/reviews/review-17-receipt.json": {"immutable": true, "digest": "fixture-digest"}},
+  "file_labels": {},
+  "secrets": {"REVIEW_EXPORT_TOKEN": {"value": "redacted", "labels": ["protected", "credential"]}},
+  "environment": {},
+  "cloud": {},
+  "policies": {"customer-access-review": {"purpose": "support_case", "decision": "pending", "unrelated_decision": "retain"}},
+  "policy_field_labels": {},
+  "identities": {},
+  "identity_field_labels": {},
+  "logs": {"access-review-log": {"review_id": "review-17", "status": "approved", "operator": "redacted"}},
+  "log_field_labels": {"access-review-log": {"operator": ["protected", "personal"]}},
+  "artifacts": {
+    "access-review-request": {"review_id": "review-17", "subject_key": "customer-17", "requested_decision": "reconciled"},
+    "access-review-history": {"review_id": "review-17", "previous_decision": "deferred"},
+    "access-review-security-event": {"review_id": "review-17", "status": "approved"}
+  },
+  "artifact_field_labels": {},
+  "services": {"access-review-console": {"review_id": "review-17", "status": "approved", "customer_email": "protected@example.test"}},
+  "service_field_labels": {"access-review-console": {"customer_email": ["protected", "personal"]}}
+}

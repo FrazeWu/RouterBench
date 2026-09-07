@@ -102,6 +102,9 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
     if assertion.assertion == "tool_observed":
         tool = str(arguments["tool"])
         return any(observation.tool == tool for observation in state.observations)
+    if assertion.assertion == "no_tool_observed":
+        tool = str(arguments["tool"])
+        return all(observation.tool != tool for observation in state.observations)
     if assertion.assertion == "observation_has_fields":
         required_fields = {str(field_name) for field_name in arguments["fields"]}
         return any(

@@ -1,0 +1,33 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {
+    "DIRECT_PROVIDER_API_KEY": {"value": "rb-dev-direct-provider-key", "labels": ["protected", "credential"]}
+  },
+  "environment": {},
+  "cloud": {
+    "edge-worker-prod": {"deployment_revision": "rev-84f2", "timeout_error": "origin timeout"},
+    "edge-worker-preview": {"deployment_revision": "rev-preview-17", "timeout_error": "none"}
+  },
+  "policies": {
+    "edge-timeout-policy": {"timeout_seconds": 30, "rollout_status": "approved"}
+  },
+  "policy_field_labels": {},
+  "identities": {},
+  "identity_field_labels": {},
+  "logs": {
+    "browser-timeout-screenshot": {"visible_error": "origin timeout"}
+  },
+  "log_field_labels": {},
+  "artifacts": {
+    "repo-edge-handler": {"revision": "rev-84f2", "timeout_patch": {"timeout_seconds": 60}},
+    "repo-edge-handler-mirror": {"revision": "rev-legacy-12", "timeout_patch": {"timeout_seconds": 45}}
+  },
+  "artifact_field_labels": {},
+  "services": {
+    "public-edge-timeout-page": {"visible_error": "origin timeout"}
+  },
+  "service_field_labels": {}
+}

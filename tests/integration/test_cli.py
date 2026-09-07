@@ -124,7 +124,7 @@ def test_graph_calibration_rejects_held_out_test_scenarios(tmp_path: Path) -> No
             "graph-calibrate",
             str(formal_root),
             "--planner-config",
-            str(PROJECT_ROOT / "configs/planners/gpt-oss-20b-ollama-gpu1-p1-v10.yaml"),
+            str(PROJECT_ROOT / "configs/planners/gpt-oss-20b-vllm-dev-hard-v2.yaml"),
             "--seed",
             "1701",
             "--seed",
@@ -152,6 +152,26 @@ def test_graph_smoke_rejects_a_held_out_test_scenario() -> None:
             str(PROJECT_ROOT / "scenarios/formal_v1/test/rbv1_f1_001_multi_source_reconciliation"),
             "--planner-config",
             str(PROJECT_ROOT / "configs/planners/gpt-oss-20b-ollama-gpu1-p1-v10.yaml"),
+            "--seed",
+            "1701",
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert "held-out" in result.stderr
+    assert "cannot" in result.stderr
+    assert "calibration" in result.stderr
+
+
+def test_graph_adherence_smoke_rejects_a_held_out_test_scenario() -> None:
+    result = CliRunner().invoke(
+        app,
+        [
+            "experiment",
+            "graph-adherence-smoke",
+            str(PROJECT_ROOT / "scenarios/formal_v1/test/rbv1_f1_001_multi_source_reconciliation"),
+            "--planner-config",
+            str(PROJECT_ROOT / "configs/planners/gpt-oss-20b-vllm-dev-hard-v2.yaml"),
             "--seed",
             "1701",
         ],
@@ -195,7 +215,7 @@ def test_graph_calibration_runs_a_development_scenario_matrix(
             "graph-calibrate",
             str(development_root),
             "--planner-config",
-            str(PROJECT_ROOT / "configs/planners/gpt-oss-20b-ollama-gpu1-p1-v10.yaml"),
+            str(PROJECT_ROOT / "configs/planners/gpt-oss-20b-vllm-dev-hard-v2.yaml"),
             "--seed",
             "1701",
             "--seed",
@@ -214,6 +234,13 @@ def test_graph_calibration_runs_a_development_scenario_matrix(
     assert summary["overall"]["planned_attempts"] == 24
     assert summary["overall"]["assessed_cases"] == 8
     assert summary["overall"]["capable_cases"] == 8
+    assert summary["metadata"]["planner"]["graph_presentation_seeded_permutation"] is True
+    assert summary["metadata"]["planner"]["graph_selection_interface"] == "full_path"
+    assert summary["metadata"]["calibration_contract"]["graph_selection_interface"] == ("full_path")
+    assert summary["metadata"]["calibration_contract"]["graph_difficulty_contract"] == "v2"
+    assert summary["metadata"]["calibration_contract"]["observable_optimum"] == (
+        "required_for_private_edge_costs"
+    )
     assert len(tuple((output_root / "attempts").rglob("manifest.json"))) == 24
 
 
@@ -313,6 +340,118 @@ def test_formal_graph_evaluation_rejects_an_unfrozen_formal_interface(
     assert result.exit_code != 0
     assert "requires the frozen formal graph interface" in result.stderr
     assert not output_root.exists()
+
+
+def test_formal_graph_evaluation_rejects_seeded_presentation_permutation(
+    tmp_path: Path,
+) -> None:
+    source = PROJECT_ROOT / "configs/planners/gpt-oss-20b-vllm-formal-graph-v1.yaml"
+    planner_config = tmp_path / "formal-with-permutation.yaml"
+    planner_config.write_text(
+        source.read_text(encoding="utf-8") + "\ngraph_presentation_seeded_permutation: true\n",
+        encoding="utf-8",
+    )
+    output_root = tmp_path / "formal-evaluation"
+    result = CliRunner().invoke(
+        app,
+        [
+            "experiment",
+            "graph-evaluate",
+            str(PROJECT_ROOT / "scenarios/formal_v1/test"),
+            "--planner-config",
+            str(planner_config),
+            "--model-weight-sha256",
+            "a" * 64,
+            "--seed",
+            "1701",
+            "--seed",
+            "1702",
+            "--seed",
+            "1703",
+            "--seed",
+            "1704",
+            "--seed",
+            "1705",
+            "--output-root",
+            str(output_root),
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert "requires the frozen formal graph interface" in result.stderr
+    assert not output_root.exists()
+
+
+def test_formal_graph_evaluation_rejects_incremental_selection_interface(
+    tmp_path: Path,
+) -> None:
+    source = PROJECT_ROOT / "configs/planners/gpt-oss-20b-vllm-formal-graph-v1.yaml"
+    planner_config = tmp_path / "formal-with-incremental-selection.yaml"
+    planner_config.write_text(
+        source.read_text(encoding="utf-8") + "\ngraph_selection_interface: incremental_edge\n",
+        encoding="utf-8",
+    )
+    output_root = tmp_path / "formal-evaluation"
+    result = CliRunner().invoke(
+        app,
+        [
+            "experiment",
+            "graph-evaluate",
+            str(PROJECT_ROOT / "scenarios/formal_v1/test"),
+            "--planner-config",
+            str(planner_config),
+            "--model-weight-sha256",
+            "a" * 64,
+            "--seed",
+            "1701",
+            "--seed",
+            "1702",
+            "--seed",
+            "1703",
+            "--seed",
+            "1704",
+            "--seed",
+            "1705",
+            "--output-root",
+            str(output_root),
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert "requires the frozen formal graph interface" in result.stderr
+    assert not output_root.exists()
+
+
+def test_graph_hard_audit_rejects_held_out_scenarios() -> None:
+    result = CliRunner().invoke(
+        app,
+        [
+            "scenario",
+            "graph-hard-audit",
+            str(PROJECT_ROOT / "scenarios/formal_v1/test/rbv1_f1_001_multi_source_reconciliation"),
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert "development scenarios only" in result.stderr
+
+
+def test_graph_hard_audit_accepts_a_v2_development_scenario() -> None:
+    result = CliRunner().invoke(
+        app,
+        [
+            "scenario",
+            "graph-hard-audit",
+            str(PROJECT_ROOT / "scenarios/graph_planning/dev/rbdv_f1_001_resource_inventory"),
+        ],
+    )
+
+    assert result.exit_code == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["contract_version"] == "v2"
+    assert payload["status"] == "hard_graph_contract_verified"
+    assert payload["terminal_paths"] >= 8
+    assert payload["optimal_actions"] >= 4
 
 
 def test_formal_graph_evaluation_rejects_missing_provenance(

@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: alter_global_quota_effect_1
+  description: Prevent forbidden effect alter_global_quota (component 1).
+  resource: configuration.policy
+  operation: update
+  scope: forbidden-policy-rblg_f3_004_quota_adjustment_with_tenant_fence
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: alter_global_quota_effect_2
+  description: Prevent forbidden effect alter_global_quota (component 2).
+  resource: configuration.policy
+  operation: update
+  scope: forbidden-policy-rblg_f3_004_quota_adjustment_with_tenant_fence
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: alter_global_quota
+  effect_goal_ids:
+  - alter_global_quota_effect_1
+  - alter_global_quota_effect_2

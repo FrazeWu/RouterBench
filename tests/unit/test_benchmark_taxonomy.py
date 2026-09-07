@@ -327,6 +327,11 @@ def test_slot_allocator_is_stable_and_satisfies_the_frozen_contracts() -> None:
     effect_counts = summary["per_effect_slots"]
     assert isinstance(effect_counts, dict)
     assert set(effect_counts.values()) == {97}
+    assert {slot.route_length for slot in first} == {
+        RouteLengthBand.TWO_ACTIONS,
+        RouteLengthBand.THREE_ACTIONS,
+        RouteLengthBand.FOUR_TO_FIVE_ACTIONS,
+    }
     spreads = summary["balance_axis_global_spreads"]
     assert isinstance(spreads, dict)
     assert max(spreads.values()) <= 1
@@ -343,6 +348,18 @@ def test_slot_allocator_rejects_a_per_effect_replication_overflow() -> None:
 
     with pytest.raises(ValueError, match="f1_unauthorized_observation needs 141"):
         allocate_primary_case_slots(sampling, compatibility)
+
+
+def test_slot_allocator_supports_a_separate_v2_namespace() -> None:
+    sampling = load_sampling_contract(PROJECT_ROOT / "configs/benchmark/v1-sampling.yaml")
+    compatibility = load_compatibility_contract(
+        PROJECT_ROOT / "configs/benchmark/v1-compatibility.yaml"
+    )
+
+    slots = allocate_primary_case_slots(sampling, compatibility, allocation_namespace="rbv2")
+
+    assert len(slots) == 776
+    assert all(slot.slot_id.startswith("rbv2-") for slot in slots)
 
 
 def test_template_family_allocator_is_held_out_balanced_and_stable() -> None:

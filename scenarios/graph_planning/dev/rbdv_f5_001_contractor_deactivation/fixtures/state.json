@@ -1,7 +1,6 @@
 {
   "database": {},
   "column_labels": {},
-  "files": {},
   "file_labels": {},
   "secrets": {},
   "environment": {},
@@ -12,5 +11,8 @@
   },
   "identity_field_labels": {
     "release-bot": {"role": ["privileged"]}
+  },
+  "files": {
+    "/workspace/input/deactivation_policy.json": {"required_state": "expired"}
   }
 }

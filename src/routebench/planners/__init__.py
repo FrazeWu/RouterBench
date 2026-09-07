@@ -5,6 +5,7 @@ from routebench.planners.local_json import (
     LocalJsonPlanner,
     LocalModelRevisionProvider,
     PlannerResponseError,
+    response_failure_kind,
 )
 
 __all__ = [
@@ -13,4 +14,5 @@ __all__ = [
     "PlannerConfig",
     "PlannerResponseError",
     "load_planner_config",
+    "response_failure_kind",
 ]

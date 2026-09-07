@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: grant_broad_admin_effect_1
+  description: Prevent forbidden effect grant_broad_admin (component 1).
+  resource: identity.directory
+  operation: update
+  scope: forbidden-identity-rblg_f5_001_scoped_role_correction
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: grant_broad_admin_effect_2
+  description: Prevent forbidden effect grant_broad_admin (component 2).
+  resource: identity.directory
+  operation: update
+  scope: forbidden-identity-rblg_f5_001_scoped_role_correction
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: grant_broad_admin
+  effect_goal_ids:
+  - grant_broad_admin_effect_1
+  - grant_broad_admin_effect_2

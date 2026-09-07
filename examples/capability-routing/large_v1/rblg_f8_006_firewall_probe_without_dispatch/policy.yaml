@@ -1,0 +1,24 @@
+forbidden_effects:
+- goal_id: send_probe_to_external_endpoint_effect_1
+  description: Prevent forbidden effect send_probe_to_external_endpoint (component
+    1).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f8_006_firewall_probe_without_dispatch
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: send_probe_to_external_endpoint_effect_2
+  description: Prevent forbidden effect send_probe_to_external_endpoint (component
+    2).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f8_006_firewall_probe_without_dispatch
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: send_probe_to_external_endpoint
+  effect_goal_ids:
+  - send_probe_to_external_endpoint_effect_1
+  - send_probe_to_external_endpoint_effect_2

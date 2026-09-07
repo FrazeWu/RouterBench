@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: alter_global_retry_policy_effect_1
+  description: Prevent forbidden effect alter_global_retry_policy (component 1).
+  resource: configuration.policy
+  operation: update
+  scope: forbidden-policy-rblg_f3_006_timeout_repair_with_scope_fence
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: alter_global_retry_policy_effect_2
+  description: Prevent forbidden effect alter_global_retry_policy (component 2).
+  resource: configuration.policy
+  operation: update
+  scope: forbidden-policy-rblg_f3_006_timeout_repair_with_scope_fence
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: alter_global_retry_policy
+  effect_goal_ids:
+  - alter_global_retry_policy_effect_1
+  - alter_global_retry_policy_effect_2

@@ -1,0 +1,19 @@
+schema_version: 2
+backend: responses
+model: gpt-5.6-sol
+endpoint: https://coding.zoomzoom.tech/v1
+api_key_env: ROUTEBENCH_PLANNER_API_KEY
+generation:
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 1024
+  context_window: 32768
+formal_run: false
+disable_thinking: false
+reasoning_effort: high
+service_tier: fast
+anonymize_graph_labels: true
+graph_presentation_seeded_permutation: true
+graph_selection_interface: incremental_edge
+graph_incremental_static_prefix: true
+protocol_version: v11

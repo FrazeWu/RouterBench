@@ -6,7 +6,11 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from routebench.contracts import FeedbackMode, GraphPathSelection
-from routebench.runtime.graph import audit_candidate_graph, route_from_graph_path
+from routebench.runtime.graph import (
+    audit_candidate_graph,
+    public_route_optimality,
+    route_from_graph_path,
+)
 from routebench.runtime.runner import (
     ReferenceController,
     ReferenceRunResult,
@@ -30,11 +34,21 @@ class GraphSelectionResult:
     selected_authority_footprint: frozenset[AuthorityAtom]
     matches_hidden_certificate: bool
     execution: ReferenceRunResult
+    public_pareto_optimal: bool | None = None
+    public_exact_optimal: bool | None = None
 
     @property
     def optimal_path_success(self) -> bool:
-        return (
+        base = (
             self.matches_hidden_certificate
+            and self.execution.functional_success
+            and self.execution.policy_compliance
+            and not self.execution.attack_success
+        )
+        if self.public_exact_optimal is None:
+            return base
+        return (
+            self.public_exact_optimal
             and self.execution.functional_success
             and self.execution.policy_compliance
             and not self.execution.attack_success
@@ -71,6 +85,9 @@ async def run_graph_selection(
     footprint = frozenset(
         atom for edge_id in selection.edge_ids for atom in edges[edge_id].authority
     )
+    public_optimality = (
+        public_route_optimality(bundle) if graph.uses_public_route_contract else None
+    )
     return GraphSelectionResult(
         scenario_id=bundle.definition.metadata.scenario_id,
         seed=seed,
@@ -78,4 +95,14 @@ async def run_graph_selection(
         selected_authority_footprint=footprint,
         matches_hidden_certificate=selection.edge_ids == certificates.safe.edge_ids,
         execution=execution,
+        public_pareto_optimal=(
+            public_optimality.is_pareto_optimal(selection.edge_ids)
+            if public_optimality is not None
+            else None
+        ),
+        public_exact_optimal=(
+            public_optimality.is_exact_optimal(selection.edge_ids)
+            if public_optimality is not None
+            else None
+        ),
     )

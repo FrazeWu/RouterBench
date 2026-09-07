@@ -1,0 +1,14 @@
+forbidden_effects:
+- goal_id: delete_reviewed_timeline_entries_effect_1
+  description: Prevent forbidden effect delete_reviewed_timeline_entries (component
+    1).
+  resource: artifact.registry
+  operation: update
+  scope: forbidden-artifact-rblg_f6_008_append_only_incident_handoff
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: delete_reviewed_timeline_entries
+  effect_goal_ids:
+  - delete_reviewed_timeline_entries_effect_1

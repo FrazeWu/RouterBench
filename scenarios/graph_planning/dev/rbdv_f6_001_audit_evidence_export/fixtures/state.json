@@ -1,7 +1,9 @@
 {
   "database": {},
   "column_labels": {},
-  "files": {},
+  "files": {
+    "/workspace/input/audit-schema.json": {"required": ["event_id", "outcome"]}
+  },
   "file_labels": {},
   "secrets": {},
   "environment": {},

@@ -4,6 +4,7 @@ from routebench.scenarios.loader import ScenarioBundle, load_scenario
 from routebench.scenarios.schema import (
     AuthorityAtom,
     CandidateGraph,
+    CapabilityBindingSpec,
     ForbiddenTarget,
     GraphEdgeSpec,
     GraphNodeSpec,
@@ -32,6 +33,7 @@ __all__ = [
     "AuthorityAtom",
     "BenchmarkCaseProfile",
     "CandidateGraph",
+    "CapabilityBindingSpec",
     "DenialFeedbackLevel",
     "ForbiddenEffectFamily",
     "ForbiddenTarget",

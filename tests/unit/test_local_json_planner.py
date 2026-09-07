@@ -7,13 +7,25 @@ from pathlib import Path
 import httpx
 import pytest
 
-from routebench.contracts import AttackProgram, Decision, DecisionKind
+from routebench.contracts import (
+    AttackProgram,
+    Decision,
+    DecisionKind,
+    GraphExecutionReceipt,
+    GraphPathSelection,
+)
 from routebench.evaluation.pilot import summarize_private_manifests, write_private_failure_manifest
 from routebench.planners.config import GenerationConfig, PlannerConfig
 from routebench.planners.local_json import (
     LocalJsonPlanner,
     PlannerResponseError,
+    _anonymize_candidate_graph,
+    _graph_path_continuity_failure_kind,
+    _graph_path_response_failure_kind,
+    _graph_step_response_failure_kind,
     _initial_attack_program_schema,
+    _responses_output_text,
+    response_failure_kind,
 )
 from routebench.scenarios import load_scenario
 from routebench.scenarios.schema import AuthorityGrant, RouteActionSpec, RouteSpec, TaskSpec
@@ -112,15 +124,112 @@ def test_vllm_adapter_disables_qwen_thinking_when_configured() -> None:
     asyncio.run(planner.aclose())
 
 
+def test_ollama_adapter_uses_configured_reasoning_effort() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        body = json.loads(request.content)
+        assert body["think"] == "low"
+        return httpx.Response(200, json={"message": {"content": _program_json()}})
+
+    config = PlannerConfig(
+        schema_version=2,
+        backend="ollama",
+        model="gpt-oss:20b",
+        endpoint="http://127.0.0.1:11434",
+        generation=GenerationConfig(temperature=0.0, top_p=1.0, max_tokens=256),
+        formal_run=False,
+        disable_thinking=True,
+        reasoning_effort="low",
+        protocol_version="v4",
+    )
+    planner = LocalJsonPlanner(
+        config=config,
+        client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+    )
+    asyncio.run(planner.commit_attack_program(_task(), "read_payment_api_key"))
+    asyncio.run(planner.aclose())
+
+
+def test_responses_adapter_uses_streaming_structured_outputs(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("TEST_RESPONSES_API_KEY", "secret-test-key")
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/v1/responses"
+        assert request.headers["authorization"] == "Bearer secret-test-key"
+        assert request.headers["accept"] == "text/event-stream"
+        body = json.loads(request.content)
+        assert body["model"] == "remote-test-model"
+        assert body["store"] is False
+        assert body["stream"] is True
+        assert body["service_tier"] == "fast"
+        assert body["reasoning"] == {"effort": "high"}
+        assert "temperature" not in body
+        assert "top_p" not in body
+        assert body["text"]["format"]["type"] == "json_schema"
+        delta_event = {
+            "type": "response.output_text.delta",
+            "delta": '{"goal":"read_payment_api_key",',
+        }
+        done_event = {"type": "response.output_text.done", "text": _program_json()}
+        stream = "\n".join(
+            (
+                "event: response.output_text.delta",
+                f"data: {json.dumps(delta_event)}",
+                "",
+                "event: response.output_text.done",
+                f"data: {json.dumps(done_event)}",
+                "",
+            )
+        )
+        return httpx.Response(200, text=stream)
+
+    config = PlannerConfig(
+        schema_version=2,
+        backend="responses",
+        model="remote-test-model",
+        endpoint="https://provider.example/v1",
+        api_key_env="TEST_RESPONSES_API_KEY",
+        generation=GenerationConfig(temperature=0.0, top_p=1.0, max_tokens=256),
+        formal_run=False,
+        reasoning_effort="high",
+        service_tier="fast",
+        protocol_version="v4",
+    )
+    planner = LocalJsonPlanner(
+        config=config,
+        client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+    )
+    program = asyncio.run(planner.commit_attack_program(_task(), "read_payment_api_key"))
+    asyncio.run(planner.aclose())
+
+    assert program.goal == "read_payment_api_key"
+    assert planner.last_raw_response == _program_json()
+
+
+def test_responses_output_text_falls_back_to_deltas() -> None:
+    stream = "\n".join(
+        (
+            'data: {"type":"response.output_text.delta","delta":"{\\"status\\":"}',
+            'data: {"type":"response.output_text.delta","delta":"true}"}',
+            "data: [DONE]",
+        )
+    )
+
+    assert _responses_output_text(stream) == '{"status":true}'
+
+
 def test_graph_label_anonymization_preserves_actions_and_maps_selected_edges() -> None:
     scenario = load_scenario(
         PROJECT_ROOT / "scenarios/graph_planning/dev/rbdv_f1_001_resource_inventory"
     )
     graph = scenario.definition.graph
-    assert graph is not None
+    certificates = scenario.definition.routes.certificates
+    assert graph is not None and certificates is not None
 
     def handler(request: httpx.Request) -> httpx.Response:
         body = json.loads(request.content)
+        assert '"edge_ids"' in body["messages"][1]["content"]
         payload = json.loads(body["messages"][1]["content"].split("\n\n", 1)[1])
         assert payload["task"] == {
             "prompt": scenario.definition.task.prompt,
@@ -129,24 +238,34 @@ def test_graph_label_anonymization_preserves_actions_and_maps_selected_edges() -
         }
         assert "minimum_authority" not in payload["task"]
         public_graph = payload["candidate_graph"]
+        assert "continuity_rule" in payload["selection_requirement"]
+        adjacency = payload["candidate_graph_adjacency"]
+        public_nodes = set(adjacency)
+        assert public_graph["start_node"] in public_nodes
+        assert all(
+            set(transition) == {"edge_id", "to_node"}
+            for transitions in adjacency.values()
+            for transition in transitions
+        )
         assert public_graph["start_node"] == "node_001"
-        assert all(
-            node["description"].startswith("Candidate state ") for node in public_graph["nodes"]
-        )
-        assert all(
-            edge["description"].startswith("Candidate transition ")
-            for edge in public_graph["edges"]
-        )
+        assert "nodes" not in public_graph
+        assert all("description" not in edge for edge in public_graph["edges"])
         assert public_graph["edges"][0]["action"] == graph.edges[0].action.model_dump(mode="json")
         assert public_graph["edges"][0]["authority"] == [
             atom.model_dump(mode="json") for atom in graph.edges[0].authority
         ]
+        assert "capability_binding" not in public_graph["edges"][0]
         serialized = json.dumps(public_graph, sort_keys=True)
         assert "query_paused_ids" not in serialized
         assert "contacts_observed" not in serialized
+        public_by_original = {
+            original.edge_id: public["edge_id"]
+            for original, public in zip(graph.edges, public_graph["edges"], strict=True)
+        }
+        selected = [public_by_original[edge_id] for edge_id in certificates.safe.edge_ids]
         return httpx.Response(
             200,
-            json={"choices": [{"message": {"content": '{"edge_ids":["edge_001","edge_002"]}'}}]},
+            json={"choices": [{"message": {"content": json.dumps({"edge_ids": selected})}}]},
         )
 
     config = _config().model_copy(update={"anonymize_graph_labels": True})
@@ -157,7 +276,227 @@ def test_graph_label_anonymization_preserves_actions_and_maps_selected_edges() -
     selection = asyncio.run(planner.select_graph_path(scenario.definition.task, graph, 1701))
     asyncio.run(planner.aclose())
 
-    assert selection.edge_ids == ("query_paused_ids", "write_inventory")
+    assert selection.edge_ids == certificates.safe.edge_ids
+
+
+def test_seeded_graph_presentation_is_stable_and_changes_across_seeds() -> None:
+    scenario = load_scenario(GRAPH_SCENARIO)
+    graph = scenario.definition.graph
+    assert graph is not None
+
+    first, first_mapping = _anonymize_candidate_graph(graph, 1701)
+    repeated, repeated_mapping = _anonymize_candidate_graph(graph, 1701)
+    second, second_mapping = _anonymize_candidate_graph(graph, 1702)
+
+    assert first == repeated
+    assert first_mapping == repeated_mapping
+    first_original_order = tuple(first_mapping[edge.edge_id] for edge in first.edges)
+    second_original_order = tuple(second_mapping[edge.edge_id] for edge in second.edges)
+    assert first_original_order != second_original_order
+
+
+def test_public_route_attributes_survive_anonymous_compact_projection() -> None:
+    scenario = load_scenario(
+        PROJECT_ROOT / "examples/capability-routing/pilot_v2/pv2_001_public_timeout_repair"
+    )
+    graph = scenario.definition.graph
+    certificates = scenario.definition.routes.certificates
+    assert graph is not None and certificates is not None
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        payload = json.loads(
+            json.loads(request.content)["messages"][1]["content"].split("\n\n", 1)[1]
+        )
+        public_edges = payload["candidate_graph"]["edges"]
+        assert all("public_route_attributes" in edge for edge in public_edges)
+        serialized = json.dumps(payload["candidate_graph"], sort_keys=True)
+        assert "edge_route_costs" not in serialized
+        assert "certificates" not in serialized
+        selected = [
+            next(
+                edge["edge_id"]
+                for edge in public_edges
+                if edge["action"] == graph_edge.action.model_dump(mode="json")
+            )
+            for graph_edge in graph.edges
+            if graph_edge.edge_id in certificates.safe.edge_ids
+        ]
+        return httpx.Response(
+            200,
+            json={"choices": [{"message": {"content": json.dumps({"edge_ids": selected})}}]},
+        )
+
+    planner = LocalJsonPlanner(
+        config=_config().model_copy(update={"anonymize_graph_labels": True}),
+        client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+    )
+    selection = asyncio.run(planner.select_graph_path(scenario.definition.task, graph, 1701))
+    asyncio.run(planner.aclose())
+    assert selection.edge_ids == certificates.safe.edge_ids
+
+
+def test_seeded_graph_presentation_maps_public_selection_back_to_original_edges() -> None:
+    scenario = load_scenario(GRAPH_SCENARIO)
+    graph = scenario.definition.graph
+    certificates = scenario.definition.routes.certificates
+    assert graph is not None and certificates is not None
+    original_edges = {edge.edge_id: edge for edge in graph.edges}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        body = json.loads(request.content)
+        payload = json.loads(body["messages"][1]["content"].split("\n\n", 1)[1])
+        public_edges = payload["candidate_graph"]["edges"]
+        current = payload["candidate_graph"]["start_node"]
+        selected = []
+        for edge_id in certificates.safe.edge_ids:
+            expected_action = original_edges[edge_id].action.model_dump(mode="json")
+            match = next(
+                edge
+                for edge in public_edges
+                if edge["source"] == current and edge["action"] == expected_action
+            )
+            selected.append(match["edge_id"])
+            current = match["target"]
+        return httpx.Response(
+            200,
+            json={"choices": [{"message": {"content": json.dumps({"edge_ids": selected})}}]},
+        )
+
+    config = _config().model_copy(
+        update={
+            "anonymize_graph_labels": True,
+            "graph_presentation_seeded_permutation": True,
+        }
+    )
+    planner = LocalJsonPlanner(
+        config=config,
+        client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+    )
+    selection = asyncio.run(planner.select_graph_path(scenario.definition.task, graph, 1702))
+    asyncio.run(planner.aclose())
+
+    assert selection.edge_ids == certificates.safe.edge_ids
+
+
+def test_incremental_graph_selection_builds_a_continuous_anonymous_path() -> None:
+    scenario = load_scenario(
+        PROJECT_ROOT / "scenarios/graph_planning/dev/rbdv_f1_001_resource_inventory"
+    )
+    graph = scenario.definition.graph
+    certificates = scenario.definition.routes.certificates
+    assert graph is not None and certificates is not None
+    original_edges = {edge.edge_id: edge for edge in graph.edges}
+    calls = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        body = json.loads(request.content)
+        serialized_payload = body["messages"][1]["content"].split("\n\n", 1)[1]
+        assert serialized_payload.index('"candidate_graph"') < serialized_payload.index(
+            '"available_next_edge_ids"'
+        )
+        payload = json.loads(serialized_payload)
+        assert "minimum_authority" not in payload["task"]
+        assert "hidden" not in json.dumps(payload, sort_keys=True)
+        current_node = payload["current_node"]
+        available = set(payload["available_next_edge_ids"])
+        schema_enum = set(
+            body["response_format"]["json_schema"]["schema"]["properties"]["edge_id"]["enum"]
+        )
+        assert schema_enum == available
+        expected_action = original_edges[certificates.safe.edge_ids[calls]].action.model_dump(
+            mode="json"
+        )
+        selected = next(
+            edge["edge_id"]
+            for edge in payload["candidate_graph"]["edges"]
+            if edge["source"] == current_node and edge["action"] == expected_action
+        )
+        assert selected in available
+        calls += 1
+        return httpx.Response(
+            200,
+            json={"choices": [{"message": {"content": json.dumps({"edge_id": selected})}}]},
+        )
+
+    planner = LocalJsonPlanner(
+        config=_config().model_copy(
+            update={
+                "anonymize_graph_labels": True,
+                "graph_presentation_seeded_permutation": True,
+                "graph_selection_interface": "incremental_edge",
+                "graph_incremental_static_prefix": True,
+            }
+        ),
+        client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+    )
+    selection = asyncio.run(planner.select_graph_path(scenario.definition.task, graph, 1702))
+    asyncio.run(planner.aclose())
+
+    assert calls == len(certificates.safe.edge_ids)
+    assert selection.edge_ids == certificates.safe.edge_ids
+
+
+def test_seeded_online_step_maps_public_edge_back_without_exposing_output_values() -> None:
+    scenario = load_scenario(
+        PROJECT_ROOT / "scenarios/graph_planning/dev/rbdv_f1_001_resource_inventory"
+    )
+    graph = scenario.definition.graph
+    certificates = scenario.definition.routes.certificates
+    assert graph is not None and certificates is not None
+    committed = GraphPathSelection(edge_ids=certificates.safe.edge_ids)
+    completed = committed.edge_ids[:2]
+    receipts = tuple(
+        GraphExecutionReceipt(
+            step=step,
+            edge_id=edge_id,
+            decision=DecisionKind.ALLOW,
+            executed=True,
+        )
+        for step, edge_id in enumerate(completed)
+    )
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        body = json.loads(request.content)
+        payload = json.loads(body["messages"][1]["content"].split("\n\n", 1)[1])
+        public_committed = payload["committed_path"]["edge_ids"]
+        assert len(payload["execution_receipts"]) == len(completed)
+        assert all("output" not in receipt for receipt in payload["execution_receipts"])
+        return httpx.Response(
+            200,
+            json={
+                "choices": [
+                    {
+                        "message": {
+                            "content": json.dumps({"edge_id": public_committed[len(completed)]})
+                        }
+                    }
+                ]
+            },
+        )
+
+    planner = LocalJsonPlanner(
+        config=_config().model_copy(
+            update={
+                "anonymize_graph_labels": True,
+                "graph_presentation_seeded_permutation": True,
+            }
+        ),
+        client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+    )
+    selection = asyncio.run(
+        planner.select_next_graph_edge(
+            scenario.definition.task,
+            graph,
+            committed,
+            completed,
+            receipts,
+            1702,
+        )
+    )
+    asyncio.run(planner.aclose())
+
+    assert selection.edge_id == committed.edge_ids[len(completed)]
 
 
 def test_vllm_adapter_reads_api_key_only_from_named_environment_variable(
@@ -283,11 +622,59 @@ def test_graph_planner_rejects_a_discontinuous_selected_path() -> None:
         config=_config(),
         client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
     )
-    with pytest.raises(PlannerResponseError, match="continuous") as error:
+    with pytest.raises(PlannerResponseError, match="wrong_start_node") as error:
         asyncio.run(planner.select_graph_path(bundle.definition.task, graph))
     asyncio.run(planner.aclose())
 
     assert error.value.raw_response == response
+
+
+def test_graph_path_failure_kind_redacts_model_edge_values() -> None:
+    bundle = load_scenario(GRAPH_SCENARIO)
+    graph = bundle.definition.graph
+    assert graph is not None
+
+    assert _graph_path_response_failure_kind("not json", graph) == "not_json"
+    assert _graph_path_response_failure_kind("[]", graph) == "not_object"
+    assert _graph_path_response_failure_kind("{}", graph) == "missing_edge_ids"
+    assert (
+        _graph_path_response_failure_kind('{"edge_ids":["unrecognized"]}', graph)
+        == "unknown_edge_id"
+    )
+
+
+def test_response_failure_kind_exposes_only_a_bounded_category() -> None:
+    invalid_path = PlannerResponseError("invalid candidate-graph path: not_json")
+    unexpected = PlannerResponseError("unexpected protocol detail")
+
+    assert response_failure_kind(invalid_path) == "not_json"
+    assert response_failure_kind(unexpected) == "schema_validation"
+
+
+def test_incremental_graph_step_failure_kind_redacts_model_values() -> None:
+    available = ("edge_a", "edge_b")
+
+    assert _graph_step_response_failure_kind("", available) == "incremental_empty_response"
+    assert _graph_step_response_failure_kind("not json", available) == "incremental_not_json"
+    assert _graph_step_response_failure_kind("[]", available) == "incremental_not_object"
+    assert _graph_step_response_failure_kind("{}", available) == "incremental_missing_edge_id"
+    assert (
+        _graph_step_response_failure_kind('{"edge_id": 1}', available)
+        == "incremental_invalid_edge_id_type"
+    )
+    assert (
+        _graph_step_response_failure_kind('{"edge_id":"unknown"}', available)
+        == "incremental_unknown_edge_id"
+    )
+
+
+def test_graph_path_continuity_failure_kind() -> None:
+    bundle = load_scenario(GRAPH_SCENARIO)
+    graph = bundle.definition.graph
+    assert graph is not None
+
+    assert _graph_path_continuity_failure_kind((), graph) == "empty_path"
+    assert _graph_path_continuity_failure_kind(("inspect_lifecycle",), graph) == "wrong_start_node"
 
 
 def test_guided_attack_program_must_preserve_the_supplied_route() -> None:

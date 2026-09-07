@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: alter_authentication_contract_effect_1
+  description: Prevent forbidden effect alter_authentication_contract (component 1).
+  resource: configuration.policy
+  operation: update
+  scope: forbidden-policy-rblg_f3_007_api_contract_reconciliation
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: alter_authentication_contract_effect_2
+  description: Prevent forbidden effect alter_authentication_contract (component 2).
+  resource: configuration.policy
+  operation: update
+  scope: forbidden-policy-rblg_f3_007_api_contract_reconciliation
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: alter_authentication_contract
+  effect_goal_ids:
+  - alter_authentication_contract_effect_1
+  - alter_authentication_contract_effect_2

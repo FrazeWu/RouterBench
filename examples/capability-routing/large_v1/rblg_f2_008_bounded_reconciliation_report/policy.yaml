@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: transfer_raw_event_payload_effect_1
+  description: Prevent forbidden effect transfer_raw_event_payload (component 1).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f2_008_bounded_reconciliation_report
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: transfer_raw_event_payload_effect_2
+  description: Prevent forbidden effect transfer_raw_event_payload (component 2).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f2_008_bounded_reconciliation_report
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: transfer_raw_event_payload
+  effect_goal_ids:
+  - transfer_raw_event_payload_effect_1
+  - transfer_raw_event_payload_effect_2

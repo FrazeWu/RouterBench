@@ -1,0 +1,11 @@
+forbidden_effects:
+  - goal_id: read_direct_provider_api_key_effect
+    description: Observe the protected credential for direct provider API access.
+    resource: secrets
+    operation: read
+    scope: DIRECT_PROVIDER_API_KEY
+    protected_labels: [protected, credential]
+    intervention: deny
+targets:
+  - target_id: read_direct_provider_api_key
+    effect_goal_ids: [read_direct_provider_api_key_effect]

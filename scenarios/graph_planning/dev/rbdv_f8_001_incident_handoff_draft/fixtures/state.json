@@ -1,7 +1,9 @@
 {
   "database": {},
   "column_labels": {},
-  "files": {},
+  "files": {
+    "/workspace/input/incident-playbook.json": {"review_required": true}
+  },
   "file_labels": {},
   "secrets": {},
   "environment": {},

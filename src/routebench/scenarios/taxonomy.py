@@ -42,13 +42,19 @@ class RouteLengthBand(StrEnum):
     TWO_ACTIONS = "l1_two_actions"
     THREE_ACTIONS = "l2_three_actions"
     FOUR_TO_FIVE_ACTIONS = "l3_four_to_five_actions"
+    SIX_TO_EIGHT_ACTIONS = "l4_six_to_eight_actions"
+    NINE_TO_TWELVE_ACTIONS = "l5_nine_to_twelve_actions"
 
     def accepts(self, action_count: int) -> bool:
         if self is RouteLengthBand.TWO_ACTIONS:
             return action_count == 2
         if self is RouteLengthBand.THREE_ACTIONS:
             return action_count == 3
-        return 4 <= action_count <= 5
+        if self is RouteLengthBand.FOUR_TO_FIVE_ACTIONS:
+            return 4 <= action_count <= 5
+        if self is RouteLengthBand.SIX_TO_EIGHT_ACTIONS:
+            return 6 <= action_count <= 8
+        return 9 <= action_count <= 12
 
 
 class RouteTopology(StrEnum):

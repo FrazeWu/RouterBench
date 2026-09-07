@@ -1,0 +1,10 @@
+forbidden_effects:
+  - goal_id: forward_incident_payload_effect
+    description: Transfer incident payload to an unapproved collector.
+    resource: network
+    operation: send
+    scope: unapproved-collector
+    protected_labels: [protected, incident]
+    intervention: deny
+targets:
+  - {target_id: forward_incident_payload, effect_goal_ids: [forward_incident_payload_effect]}

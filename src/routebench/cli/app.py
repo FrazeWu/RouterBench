@@ -43,6 +43,10 @@ from routebench.evaluation.experiment_config import (
     load_experiment_matrix,
     write_experiment_plan,
 )
+from routebench.evaluation.graph_adherence import (
+    GraphAdherenceResult,
+    run_graph_adherence,
+)
 from routebench.evaluation.graph_calibration import (
     GRAPH_CALIBRATION_MINIMUM_SUCCESSES,
     GRAPH_CALIBRATION_SEED_COUNT,
@@ -93,8 +97,13 @@ from routebench.planners import (
     PlannerConfig,
     PlannerResponseError,
     load_planner_config,
+    response_failure_kind,
 )
-from routebench.runtime.graph import GraphAuditError, audit_candidate_graph
+from routebench.runtime.graph import GraphAuditError, GraphAuditResult, audit_candidate_graph
+from routebench.runtime.graph_difficulty import (
+    HARD_GRAPH_CONTRACT_VERSION,
+    audit_hard_candidate_graph,
+)
 from routebench.runtime.runner import ReferenceController, run_reference_route
 from routebench.sandbox import create_micro_rootfs, probe_sandbox
 from routebench.scenarios import load_scenario
@@ -111,6 +120,19 @@ app.add_typer(experiment_app)
 app.add_typer(sandbox_app)
 console = Console()
 PROJECT_ROOT = Path(__file__).parents[3]
+
+
+def _require_capability_route_observability(
+    bundle: ScenarioBundle, result: GraphAuditResult
+) -> None:
+    if (
+        bundle.definition.routes.edge_route_costs
+        and result.observable_optimum.decisive_hidden_information
+    ):
+        raise GraphAuditError(
+            "observable-optimum contract failed: prompt-visible ordering does not uniquely "
+            "recover the evaluator-owned optimum"
+        )
 
 
 def _probe_formal_vllm(config: PlannerConfig) -> dict[str, str]:
@@ -232,6 +254,71 @@ def validate_graph(
                 "scenario": result.scenario_id,
                 "status": "unique_least_authority_path_verified",
                 "terminal_paths": result.total_terminal_paths,
+            },
+            sort_keys=True,
+        )
+    )
+
+
+@scenario_app.command("graph-hard-audit")
+def graph_hard_audit(
+    path: Annotated[Path, typer.Argument(exists=True, file_okay=False, resolve_path=True)],
+) -> None:
+    """Audit one development graph against the v2 calibration difficulty contract."""
+
+    bundle = load_scenario(path)
+    if bundle.definition.metadata.split is not ScenarioSplit.DEV:
+        raise typer.BadParameter("graph-hard-audit accepts development scenarios only")
+    try:
+        result = audit_hard_candidate_graph(bundle)
+    except GraphAuditError as error:
+        raise typer.BadParameter(str(error)) from error
+    typer.echo(
+        json.dumps(
+            {
+                "attack_paths": result.base.attack_paths,
+                "baseline_successes": result.baselines.successes,
+                "contract_version": HARD_GRAPH_CONTRACT_VERSION,
+                "functional_overprivileged_paths": result.functional_overprivileged_paths,
+                "nonfunctional_paths": result.nonfunctional_paths,
+                "optimal_actions": len(result.base.unique_optimal_edge_ids),
+                "optimal_branch_points": result.optimal_branch_points,
+                "scenario": result.base.scenario_id,
+                "status": "hard_graph_contract_verified",
+                "terminal_paths": result.base.total_terminal_paths,
+            },
+            sort_keys=True,
+        )
+    )
+
+
+@scenario_app.command("audit-observable-optimum")
+def audit_observable_optimum_command(
+    path: Annotated[Path, typer.Argument(exists=True, file_okay=False, resolve_path=True)],
+) -> None:
+    """Report whether public rules uniquely recover the evaluator-owned optimum."""
+
+    bundle = load_scenario(path)
+    try:
+        result = audit_candidate_graph(bundle).observable_optimum
+    except GraphAuditError as error:
+        raise typer.BadParameter(str(error)) from error
+    typer.echo(
+        json.dumps(
+            {
+                "ambiguity_kind": result.ambiguity_kind,
+                "decisive_hidden_information": result.decisive_hidden_information,
+                "private_optimum_matches_public_optimum": (
+                    result.private_optimum_matches_public_optimum
+                ),
+                "public_candidate_count": result.public_candidate_count,
+                "public_rule_unique": result.public_rule_unique,
+                "scenario": result.scenario_id,
+                "status": (
+                    "observable_optimum_verified"
+                    if not result.decisive_hidden_information
+                    else "observable_optimum_failed"
+                ),
             },
             sort_keys=True,
         )
@@ -444,7 +531,8 @@ def validate_p0(
     for bundle in bundles:
         if bundle.definition.metadata.schema_version >= 4:
             try:
-                audit_candidate_graph(bundle)
+                audit_result = audit_candidate_graph(bundle)
+                _require_capability_route_observability(bundle, audit_result)
             except GraphAuditError as error:
                 raise typer.BadParameter(
                     f"candidate graph failed for {bundle.definition.metadata.scenario_id}: {error}"
@@ -560,6 +648,11 @@ def graph_smoke_experiment(
         typer.echo(
             json.dumps(
                 {
+                    "failure_kind": (
+                        response_failure_kind(error)
+                        if isinstance(error, PlannerResponseError)
+                        else "planner_backend_error"
+                    ),
                     "scenario": bundle.definition.metadata.scenario_id,
                     "status": (
                         "planner_response_invalid"
@@ -579,8 +672,91 @@ def graph_smoke_experiment(
                 "functional_success": result.execution.functional_success,
                 "optimal_path_success": result.optimal_path_success,
                 "policy_compliance": result.execution.policy_compliance,
+                "selected_edge_ids": list(result.selected_edge_ids),
                 "scenario": result.scenario_id,
                 "seed": result.seed,
+                "status": result.execution.status.value,
+                "termination_reason": result.execution.termination_reason,
+            },
+            sort_keys=True,
+        )
+    )
+
+
+@experiment_app.command("graph-adherence-smoke")
+def graph_adherence_smoke_experiment(
+    scenario: Annotated[Path, typer.Argument(exists=True, file_okay=False, resolve_path=True)],
+    planner_config: Annotated[
+        Path,
+        typer.Option("--planner-config", exists=True, dir_okay=False, resolve_path=True),
+    ],
+    controller_name: Annotated[str, typer.Option("--controller")] = "none",
+    feedback: Annotated[FeedbackMode, typer.Option("--feedback")] = FeedbackMode.MINIMAL,
+    seed: Annotated[int, typer.Option("--seed")] = 1701,
+) -> None:
+    """Measure online adherence to one model-committed development graph path."""
+
+    bundle = load_scenario(scenario)
+    if bundle.definition.metadata.split is not ScenarioSplit.DEV:
+        raise typer.BadParameter(
+            "graph-adherence-smoke accepts development scenarios only; held-out test "
+            "content cannot be used for calibration"
+        )
+    config = load_planner_config(planner_config)
+    try:
+        if config.graph_presentation_seeded_permutation:
+            audit_result = audit_hard_candidate_graph(bundle).base
+        else:
+            audit_result = audit_candidate_graph(bundle)
+        _require_capability_route_observability(bundle, audit_result)
+    except GraphAuditError as error:
+        raise typer.BadParameter(str(error)) from error
+
+    async def execute() -> GraphAdherenceResult:
+        planner = LocalJsonPlanner.create(config)
+        try:
+            return await run_graph_adherence(
+                bundle,
+                planner,
+                _reference_controller(controller_name),
+                feedback,
+                seed,
+            )
+        finally:
+            await planner.aclose()
+
+    try:
+        result = asyncio.run(execute())
+    except (PlannerResponseError, HTTPError, json.JSONDecodeError) as error:
+        typer.echo(
+            json.dumps(
+                {
+                    "scenario": bundle.definition.metadata.scenario_id,
+                    "status": (
+                        "planner_response_invalid"
+                        if isinstance(error, PlannerResponseError)
+                        else "planner_backend_error"
+                    ),
+                },
+                sort_keys=True,
+            )
+        )
+        raise typer.Exit(code=2) from error
+    typer.echo(
+        json.dumps(
+            {
+                "attack_success": result.attack_success,
+                "deviation_step": result.deviation_step,
+                "exact_plan_adherence": result.exact_plan_adherence,
+                "functional_success": result.functional_success,
+                "model_calls": result.model_calls,
+                "optimal_plan_execution_success": (result.optimal_plan_execution_success),
+                "plan_matches_hidden_certificate": (result.plan_matches_hidden_certificate),
+                "policy_compliance": result.policy_compliance,
+                "scenario": result.scenario_id,
+                "seed": result.seed,
+                "step_choices_match_plan": result.step_choices_match_plan,
+                "termination_reason": result.termination_reason,
             },
             sort_keys=True,
         )
@@ -608,6 +784,7 @@ def graph_calibrate_experiment(
             "output-root must not already exist; calibration artifacts are immutable"
         )
 
+    config = load_planner_config(planner_config)
     scenario_paths = tuple(path.parent for path in sorted(scenario_root.rglob("scenario.yaml")))
     if not scenario_paths:
         raise typer.BadParameter("graph calibration requires at least one scenario")
@@ -626,11 +803,14 @@ def graph_calibrate_experiment(
                 f"graph calibration requires schema v4: {bundle.definition.metadata.scenario_id}"
             )
         try:
-            audit_candidate_graph(bundle)
+            if config.graph_presentation_seeded_permutation:
+                audit_result = audit_hard_candidate_graph(bundle).base
+            else:
+                audit_result = audit_candidate_graph(bundle)
+            _require_capability_route_observability(bundle, audit_result)
         except GraphAuditError as error:
             raise typer.BadParameter(str(error)) from error
 
-    config = load_planner_config(planner_config)
     scenario_set_digest = hashlib.sha256(
         "\n".join(
             f"{bundle.definition.metadata.scenario_id}:{bundle.digest}" for bundle in bundles
@@ -656,6 +836,11 @@ def graph_calibrate_experiment(
             "endpoint": config.endpoint,
             "protocol_version": config.protocol_version,
             "anonymize_graph_labels": config.anonymize_graph_labels,
+            "graph_presentation_seeded_permutation": (config.graph_presentation_seeded_permutation),
+            "graph_selection_interface": config.graph_selection_interface,
+            "graph_incremental_static_prefix": config.graph_incremental_static_prefix,
+            "reasoning_effort": config.reasoning_effort,
+            "service_tier": config.service_tier,
             "generation": config.generation.model_dump(mode="json"),
         }
     )
@@ -680,6 +865,14 @@ def graph_calibrate_experiment(
         "backend_failure": "case_unassessed",
         "automatic_retries": 0,
         "execution_order": "sequential",
+        "graph_selection_interface": config.graph_selection_interface,
+        "graph_incremental_static_prefix": config.graph_incremental_static_prefix,
+        "graph_difficulty_contract": (
+            HARD_GRAPH_CONTRACT_VERSION
+            if config.graph_presentation_seeded_permutation
+            else "base_v4"
+        ),
+        "observable_optimum": "required_for_private_edge_costs",
     }
 
     attempts: list[GraphCalibrationAttempt] = []
@@ -716,7 +909,7 @@ def graph_calibrate_experiment(
                     route_length=route_length,
                     duration_seconds=time.monotonic() - started,
                     status="invalid_output",
-                    failure_kind="planner_response_invalid",
+                    failure_kind=response_failure_kind(error),
                     response_hash=error.response_hash,
                 )
             except (HTTPError, json.JSONDecodeError):
@@ -816,13 +1009,17 @@ def graph_evaluate_experiment(
         or config.generation.max_tokens != 2048
         or not config.disable_thinking
         or not config.anonymize_graph_labels
+        or config.graph_presentation_seeded_permutation
+        or config.graph_selection_interface != "full_path"
+        or config.graph_incremental_static_prefix
         or config.vllm_object_only_schema
         or config.protocol_version != "v11"
     ):
         raise typer.BadParameter(
             "graph-evaluate requires the frozen formal graph interface: vllm, temperature "
             "0.0, top_p 1.0, max_tokens 2048, thinking disabled, anonymized labels, full "
-            "schema decoding, and protocol v11"
+            "path selection, full schema decoding, no seeded presentation permutation, "
+            "and protocol v11"
         )
 
     scenario_paths = tuple(path.parent for path in sorted(scenario_root.rglob("scenario.yaml")))
@@ -847,7 +1044,8 @@ def graph_evaluate_experiment(
                 f"{bundle.definition.metadata.scenario_id}"
             )
         try:
-            audit_candidate_graph(bundle)
+            audit_result = audit_candidate_graph(bundle)
+            _require_capability_route_observability(bundle, audit_result)
         except GraphAuditError as error:
             raise typer.BadParameter(str(error)) from error
 
@@ -882,6 +1080,11 @@ def graph_evaluate_experiment(
             "endpoint": config.endpoint,
             "protocol_version": config.protocol_version,
             "anonymize_graph_labels": config.anonymize_graph_labels,
+            "graph_presentation_seeded_permutation": (config.graph_presentation_seeded_permutation),
+            "graph_selection_interface": config.graph_selection_interface,
+            "graph_incremental_static_prefix": config.graph_incremental_static_prefix,
+            "reasoning_effort": config.reasoning_effort,
+            "service_tier": config.service_tier,
             "generation": config.generation.model_dump(mode="json"),
         }
     )
@@ -957,7 +1160,7 @@ def graph_evaluate_experiment(
                     route_length=route_length,
                     duration_seconds=time.monotonic() - started,
                     status="invalid_output",
-                    failure_kind="planner_response_invalid",
+                    failure_kind=response_failure_kind(error),
                     response_hash=error.response_hash,
                 )
             except HTTPError:

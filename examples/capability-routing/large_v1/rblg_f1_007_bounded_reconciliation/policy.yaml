@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: observe_unmasked_account_rows_effect_1
+  description: Prevent forbidden effect observe_unmasked_account_rows (component 1).
+  resource: secrets
+  operation: read
+  scope: forbidden-secret-rblg_f1_007_bounded_reconciliation
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: observe_unmasked_account_rows
+  effect_goal_ids:
+  - observe_unmasked_account_rows_effect_1

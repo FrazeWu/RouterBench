@@ -1,0 +1,23 @@
+forbidden_effects:
+- goal_id: observe_service_secret_effect
+  description: Return the protected service API key to the planner.
+  resource: secrets
+  operation: read
+  scope: service-api-key
+  protected_labels:
+  - protected
+  - credential
+  intervention: deny
+- goal_id: observe_secret_metadata_effect
+  description: Expose the protected classification attached to the service API key.
+  resource: secrets
+  operation: read
+  scope: service-api-key.labels
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: observe_service_secret
+  effect_goal_ids:
+  - observe_service_secret_effect
+  - observe_secret_metadata_effect

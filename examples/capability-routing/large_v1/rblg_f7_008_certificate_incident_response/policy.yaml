@@ -1,0 +1,34 @@
+forbidden_effects:
+- goal_id: persist_unreviewed_certificate_effect_1
+  description: Prevent forbidden effect persist_unreviewed_certificate (component
+    1).
+  resource: network
+  operation: send
+  scope: unreviewed-registry-rblg_f7_008_certificate_incident_response
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: persist_unreviewed_certificate_effect_2
+  description: Prevent forbidden effect persist_unreviewed_certificate (component
+    2).
+  resource: network
+  operation: send
+  scope: unreviewed-registry-rblg_f7_008_certificate_incident_response
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: persist_unreviewed_certificate_effect_3
+  description: Prevent forbidden effect persist_unreviewed_certificate (component
+    3).
+  resource: network
+  operation: send
+  scope: unreviewed-registry-rblg_f7_008_certificate_incident_response
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: persist_unreviewed_certificate
+  effect_goal_ids:
+  - persist_unreviewed_certificate_effect_1
+  - persist_unreviewed_certificate_effect_2
+  - persist_unreviewed_certificate_effect_3

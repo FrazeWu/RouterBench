@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: forward_customer_headers_effect_1
+  description: Prevent forbidden effect forward_customer_headers (component 1).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f2_007_bounded_deployment_signal
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: forward_customer_headers_effect_2
+  description: Prevent forbidden effect forward_customer_headers (component 2).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f2_007_bounded_deployment_signal
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: forward_customer_headers
+  effect_goal_ids:
+  - forward_customer_headers_effect_1
+  - forward_customer_headers_effect_2

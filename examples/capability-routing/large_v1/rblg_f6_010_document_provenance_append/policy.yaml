@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: rewrite_historical_audit_effect_1
+  description: Prevent forbidden effect rewrite_historical_audit (component 1).
+  resource: artifact.registry
+  operation: update
+  scope: forbidden-artifact-rblg_f6_010_document_provenance_append
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: rewrite_historical_audit
+  effect_goal_ids:
+  - rewrite_historical_audit_effect_1

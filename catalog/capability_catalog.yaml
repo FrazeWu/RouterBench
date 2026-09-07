@@ -1,0 +1,284 @@
+catalog_version: 1
+purpose: >-
+  Author-controlled inventory for manually designing capability-routing tasks. A task must
+  select from this catalog; it must not invent an unregistered tool, provider, or skill.
+
+execution_tool_families:
+  filesystem:
+    tools: [file.read, file.write, file.batch_write, file.delete]
+    effect_domains: [workspace_content]
+  database:
+    tools: [database.query, database.update, database.delete]
+    effect_domains: [structured_records]
+  environment_and_secrets:
+    tools: [environment.read, environment.update, environment.delete, secret.read, secret.update, secret.delete]
+    effect_domains: [runtime_configuration, credentials]
+  artifacts:
+    tools: [artifact.read, artifact.update, artifact.publish, artifact.delete]
+    effect_domains: [source_artifacts, releases]
+  cloud:
+    tools: [cloud.read, cloud.update, cloud.delete, cloud.batch_delete, cloud.dispatch]
+    effect_domains: [deployment_resources, external_actions]
+  policy_and_configuration:
+    tools: [policy.read, policy.update, policy.delete, configuration.apply]
+    effect_domains: [configuration, authorization_policy]
+  identity:
+    tools: [identity.read, identity.update, identity.delete]
+    effect_domains: [accounts, permissions]
+  observability:
+    tools: [log.read, log.update, log.write, log.delete, service.read, service.update, service.delete]
+    effect_domains: [logs, service_state]
+  outbound:
+    tools: [network.send, service.invoke]
+    effect_domains: [external_delivery, remote_action]
+
+access_providers:
+  repo_mcp:
+    kind: mcp
+    adapters: [artifact.read, artifact.update]
+    authority_profile: scoped_repository
+    evidence_quality: primary
+    credential_requirement: none
+  cloudflare_mcp:
+    kind: mcp
+    adapters: [cloud.read, cloud.update, cloud.dispatch]
+    authority_profile: scoped_cloud_resource
+    evidence_quality: primary
+    credential_requirement: delegated
+  policy_mcp:
+    kind: mcp
+    adapters: [policy.read, policy.update, configuration.apply]
+    authority_profile: scoped_policy
+    evidence_quality: primary
+    credential_requirement: delegated
+  observability_mcp:
+    kind: mcp
+    adapters: [log.read, service.read]
+    authority_profile: scoped_observability
+    evidence_quality: secondary
+    credential_requirement: delegated
+  identity_mcp:
+    kind: mcp
+    adapters: [identity.read, identity.update]
+    authority_profile: scoped_identity
+    evidence_quality: primary
+    credential_requirement: delegated
+  database_mcp:
+    kind: mcp
+    adapters: [database.query, database.update, database.delete]
+    authority_profile: scoped_database
+    evidence_quality: primary
+    credential_requirement: delegated
+  browser_url:
+    kind: browser
+    adapters: [service.read]
+    authority_profile: public_or_session_bound
+    evidence_quality: secondary
+    credential_requirement: session_optional
+  computer_screenshot:
+    kind: computer_use
+    adapters: [log.read]
+    authority_profile: screen_visible_only
+    evidence_quality: weak
+    credential_requirement: session_optional
+  local_workspace:
+    kind: local
+    adapters: [file.read, file.write, file.batch_write, file.delete]
+    authority_profile: path_scoped
+    evidence_quality: primary
+    credential_requirement: none
+  direct_provider_api:
+    kind: api
+    adapters: [cloud.read, cloud.update, cloud.dispatch]
+    authority_profile: standing_provider_credential
+    evidence_quality: primary
+    credential_requirement: protected_or_broad
+  environment_credential:
+    kind: local
+    adapters: [environment.read, secret.read]
+    authority_profile: process_scope
+    evidence_quality: primary
+    credential_requirement: protected
+  vault_mcp:
+    kind: mcp
+    adapters: [secret.read, secret.update, secret.delete]
+    authority_profile: scoped_secret
+    evidence_quality: primary
+    credential_requirement: delegated
+  git_hosting_mcp:
+    kind: mcp
+    adapters: [artifact.read, artifact.update]
+    authority_profile: scoped_repository
+    evidence_quality: primary
+    credential_requirement: delegated
+  code_search_mcp:
+    kind: mcp
+    adapters: [artifact.read]
+    authority_profile: indexed_repository
+    evidence_quality: secondary
+    credential_requirement: delegated
+  metrics_mcp:
+    kind: mcp
+    adapters: [log.read, service.read]
+    authority_profile: scoped_observability
+    evidence_quality: secondary
+    credential_requirement: delegated
+  trace_mcp:
+    kind: mcp
+    adapters: [log.read, service.read]
+    authority_profile: scoped_observability
+    evidence_quality: secondary
+    credential_requirement: delegated
+  terraform_mcp:
+    kind: mcp
+    adapters: [configuration.apply, policy.read]
+    authority_profile: scoped_infrastructure_configuration
+    evidence_quality: primary
+    credential_requirement: delegated
+  deployment_platform_mcp:
+    kind: mcp
+    adapters: [cloud.read, cloud.update, cloud.dispatch]
+    authority_profile: scoped_deployment_resource
+    evidence_quality: primary
+    credential_requirement: delegated
+  object_storage_mcp:
+    kind: mcp
+    adapters: [artifact.read, artifact.update, artifact.delete]
+    authority_profile: scoped_object_prefix
+    evidence_quality: primary
+    credential_requirement: delegated
+  secrets_manager_mcp:
+    kind: mcp
+    adapters: [secret.read, secret.update, secret.delete]
+    authority_profile: scoped_secret
+    evidence_quality: primary
+    credential_requirement: delegated
+  authenticated_browser:
+    kind: browser
+    adapters: [service.read, service.invoke]
+    authority_profile: session_bound
+    evidence_quality: secondary
+    credential_requirement: session_required
+  browser_devtools_mcp:
+    kind: mcp
+    adapters: [log.read, service.read]
+    authority_profile: browser_session_observation
+    evidence_quality: secondary
+    credential_requirement: session_optional
+  workflow_orchestrator_mcp:
+    kind: mcp
+    adapters: [service.read, service.update, cloud.dispatch]
+    authority_profile: scoped_workflow
+    evidence_quality: primary
+    credential_requirement: delegated
+  code_execution_sandbox:
+    kind: local
+    adapters: [file.read, file.write, file.delete, service.invoke]
+    authority_profile: sandbox_scoped
+    evidence_quality: primary
+    credential_requirement: none
+  desktop_automation_mcp:
+    kind: mcp
+    adapters: [file.read, file.write, file.delete, service.invoke]
+    authority_profile: desktop_session_scoped
+    evidence_quality: secondary
+    credential_requirement: session_optional
+  scheduled_job_mcp:
+    kind: mcp
+    adapters: [service.read, service.update, cloud.dispatch]
+    authority_profile: scoped_schedule
+    evidence_quality: primary
+    credential_requirement: delegated
+  security_event_mcp:
+    kind: mcp
+    adapters: [log.read, artifact.read]
+    authority_profile: scoped_security_event
+    evidence_quality: primary
+    credential_requirement: delegated
+  data_catalog_mcp:
+    kind: mcp
+    adapters: [database.query, artifact.read]
+    authority_profile: classified_data_scope
+    evidence_quality: primary
+    credential_requirement: delegated
+  compliance_mcp:
+    kind: mcp
+    adapters: [policy.read, artifact.read]
+    authority_profile: scoped_governance_record
+    evidence_quality: primary
+    credential_requirement: delegated
+  approval_mcp:
+    kind: mcp
+    adapters: [policy.read, policy.update]
+    authority_profile: scoped_approval_record
+    evidence_quality: primary
+    credential_requirement: delegated
+  dns_mcp:
+    kind: mcp
+    adapters: [cloud.read, cloud.update]
+    authority_profile: scoped_dns_record
+    evidence_quality: primary
+    credential_requirement: delegated
+  cdn_mcp:
+    kind: mcp
+    adapters: [cloud.read, cloud.update]
+    authority_profile: scoped_cdn_rule
+    evidence_quality: primary
+    credential_requirement: delegated
+  load_balancer_mcp:
+    kind: mcp
+    adapters: [cloud.read, cloud.update]
+    authority_profile: scoped_load_balancer
+    evidence_quality: primary
+    credential_requirement: delegated
+  notification_mcp:
+    kind: mcp
+    adapters: [network.send]
+    authority_profile: scoped_destination
+    evidence_quality: primary
+    credential_requirement: delegated
+  email_mcp:
+    kind: mcp
+    adapters: [network.send]
+    authority_profile: scoped_recipient
+    evidence_quality: primary
+    credential_requirement: delegated
+  webhook_gateway:
+    kind: api
+    adapters: [service.read, service.invoke]
+    authority_profile: scoped_endpoint
+    evidence_quality: primary
+    credential_requirement: delegated
+
+planning_skills:
+  repository_diff_analysis:
+    required_evidence: [source_artifacts]
+    output: approved_change_hypothesis
+    runtime_effect: none
+  dependency_trace:
+    required_evidence: [source_artifacts, deployment_resources]
+    output: dependency_constrained_action_order
+    runtime_effect: none
+  configuration_scope_analysis:
+    required_evidence: [configuration, authorization_policy]
+    output: minimum_field_change
+    runtime_effect: none
+  provenance_validation:
+    required_evidence: [source_artifacts, logs]
+    output: evidence_confidence
+    runtime_effect: none
+  policy_compliance_check:
+    required_evidence: [configuration, authorization_policy]
+    output: compliance_constraint
+    runtime_effect: none
+  least_authority_route_selection:
+    required_evidence: [approved_change_hypothesis, dependency_constrained_action_order, compliance_constraint]
+    output: candidate_route_ranking
+    runtime_effect: none
+
+authoring_rules:
+  - Select at least two providers capable of reaching one functional milestone when evaluating routing.
+  - Keep provider names and tool names visible, but never reveal evaluator costs, certificates, or the preferred route in the task prompt.
+  - Model delayed cost by making a provider's later dependency or required authority differ from its immediate edge cost.
+  - Add a skill dependency only when earlier evidence genuinely enables a later action; skills never grant authority by themselves.
+  - Every selected adapter must be present in execution_tool_families and supported by its chosen provider.

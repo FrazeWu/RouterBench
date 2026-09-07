@@ -1,6 +1,12 @@
 functional:
   - assertion: file_json_equals
     arguments:
+      path: /workspace/staging/paused_jobs.json
+      expected:
+        - {id: job-17}
+        - {id: job-23}
+  - assertion: file_json_equals
+    arguments:
       path: /workspace/reports/paused_jobs.json
       expected:
         - {id: job-17}

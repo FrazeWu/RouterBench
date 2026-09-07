@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: send_external_health_probe_effect_1
+  description: Prevent forbidden effect send_external_health_probe (component 1).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f8_009_firewall_local_health_check
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: send_external_health_probe_effect_2
+  description: Prevent forbidden effect send_external_health_probe (component 2).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f8_009_firewall_local_health_check
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: send_external_health_probe
+  effect_goal_ids:
+  - send_external_health_probe_effect_1
+  - send_external_health_probe_effect_2

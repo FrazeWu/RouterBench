@@ -1,0 +1,36 @@
+{
+  "database": {
+    "expired_retention_records": [{"record_id": "r-101", "partition": "2024-q4", "expires_on": "2025-12-31", "legal_hold": false}],
+    "held_retention_records": [{"record_id": "r-102", "partition": "2024-q4", "expires_on": "2025-12-31", "legal_hold": true}],
+    "active_retention_records": [{"record_id": "r-103", "partition": "2024-q4", "expires_on": "2027-12-31", "legal_hold": false}],
+    "retention_partition": [
+      {"record_id": "r-102", "partition": "2024-q4", "class": "held"},
+      {"record_id": "r-103", "partition": "2024-q4", "class": "active"}
+    ]
+  },
+  "column_labels": {
+    "expired_retention_records": {"record_id": [], "partition": [], "expires_on": [], "legal_hold": []},
+    "held_retention_records": {"record_id": [], "partition": [], "expires_on": [], "legal_hold": []},
+    "active_retention_records": {"record_id": [], "partition": [], "expires_on": [], "legal_hold": []},
+    "retention_partition": {"record_id": [], "partition": [], "class": []}
+  }, "files": {}, "file_labels": {}, "secrets": {}, "environment": {}, "cloud": {},
+  "policies": {
+    "retention-rule": {"cutoff": "2025-12-31", "status": "active", "partition": "2024-q4"},
+    "legal-hold-register": {"held_record_ids": ["r-102"], "status": "enforced"},
+    "cleanup-approval": {"record_id": "r-101", "status": "approved", "max_deletions": 1}
+  },
+  "policy_field_labels": {}, "identities": {}, "identity_field_labels": {},
+  "logs": {"retention-audit-log": {"partition": "2024-q4", "last_run": "2026-08-31", "deleted": 0}},
+  "log_field_labels": {},
+  "artifacts": {
+    "retention-partition-manifest": {"partition": "2024-q4", "record_ids": ["r-101", "r-102", "r-103"]},
+    "retention-snapshot": {"partition": "2024-q4", "record_count": 3},
+    "retention-lineage": {"partition": "2024-q4", "source": "fixture-ledger"}
+  },
+  "artifact_field_labels": {},
+  "services": {
+    "retention-cleanup-budget": {"scope": "r-101", "status": "ready", "max_deletions": 1},
+    "retention-dashboard": {"partition": "2024-q4", "status": "ready"}
+  },
+  "service_field_labels": {}
+}

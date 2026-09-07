@@ -33,7 +33,7 @@ class PrimaryCaseSlot(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
-    slot_id: str = Field(pattern=r"^rbv1-f[1-8]-\d{3}$")
+    slot_id: str = Field(pattern=r"^rbv[12]-f[1-8]-\d{3}$")
     family_slot: int = Field(ge=1)
     triple_replication: int = Field(ge=1)
     primary_effect_family: ForbiddenEffectFamily
@@ -49,15 +49,25 @@ class PrimaryCaseSlot(BaseModel):
     @model_validator(mode="after")
     def validate_slot_identity(self) -> Self:
         effect_number = list(ForbiddenEffectFamily).index(self.primary_effect_family) + 1
-        expected_id = f"rbv1-f{effect_number}-{self.family_slot:03d}"
+        namespace = self.slot_id.split("-", maxsplit=1)[0]
+        expected_id = f"{namespace}-f{effect_number}-{self.family_slot:03d}"
         if self.slot_id != expected_id:
             raise ValueError("slot_id must encode the effect family and family slot")
         return self
 
 
-_BALANCE_AXES: tuple[tuple[str, type[StrEnum]], ...] = (
+_FORMAL_V1_ROUTE_LENGTH_BANDS: tuple[RouteLengthBand, ...] = (
+    RouteLengthBand.TWO_ACTIONS,
+    RouteLengthBand.THREE_ACTIONS,
+    RouteLengthBand.FOUR_TO_FIVE_ACTIONS,
+)
+
+_BALANCE_AXES: tuple[
+    tuple[str, type[StrEnum] | tuple[StrEnum, ...]], ...
+] = (
     ("coupling", TaskGoalCoupling),
-    ("route_length", RouteLengthBand),
+    # Formal v1 allocation is immutable; L4/L5 belong to later development calibration.
+    ("route_length", _FORMAL_V1_ROUTE_LENGTH_BANDS),
     ("primary_topology", RouteTopology),
     ("primary_permission_dimension", PermissionDimension),
     ("primary_attack_mechanism", AttackMechanism),
@@ -133,7 +143,7 @@ def _pair_key(
 def _choose_level(
     *,
     axis_name: str,
-    enum_type: type[StrEnum],
+    enum_type: type[StrEnum] | tuple[StrEnum, ...],
     context: dict[str, StrEnum],
     marginal_counts: Counter[tuple[str, str]],
     pair_counts: Counter[tuple[str, str, str, str]],
@@ -191,8 +201,11 @@ def _assign_balance_axes(skeletons: tuple[Triple, ...]) -> tuple[dict[str, StrEn
 def allocate_primary_case_slots(
     sampling: FormalSamplingContract,
     compatibility: CompatibilityContract,
+    allocation_namespace: str = "rbv1",
 ) -> tuple[PrimaryCaseSlot, ...]:
     """Reserve deterministic taxonomy slots without generating scenario content."""
+    if allocation_namespace not in {"rbv1", "rbv2"}:
+        raise ValueError("allocation namespace must be rbv1 or rbv2")
     if sampling.primary_axis is not PrimaryCoverageAxis.EFFECT_FAMILY:
         raise ValueError("v1 slot allocation requires effect_family as the primary axis")
     if compatibility.minimum_required_primary_cases > sampling.formal_primary_cases:
@@ -226,7 +239,7 @@ def allocate_primary_case_slots(
         effect_number = list(ForbiddenEffectFamily).index(effect) + 1
         slots.append(
             PrimaryCaseSlot(
-                slot_id=f"rbv1-f{effect_number}-{family_slot_counts[effect]:03d}",
+                slot_id=f"{allocation_namespace}-f{effect_number}-{family_slot_counts[effect]:03d}",
                 family_slot=family_slot_counts[effect],
                 triple_replication=triple_counts[triple],
                 primary_effect_family=effect,

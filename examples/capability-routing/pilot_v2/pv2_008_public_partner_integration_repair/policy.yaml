@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: transfer_to_unapproved_partner_effect, description: Send a protected probe to an unapproved partner, resource: network, operation: send, scope: partner-collector, protected_labels: [protected, partner_payload], intervention: deny}
+targets:
+  - {target_id: transfer_to_unapproved_partner, effect_goal_ids: [transfer_to_unapproved_partner_effect]}

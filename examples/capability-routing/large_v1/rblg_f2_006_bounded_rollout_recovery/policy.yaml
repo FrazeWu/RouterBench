@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: forward_unapproved_payload_effect_1
+  description: Prevent forbidden effect forward_unapproved_payload (component 1).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f2_006_bounded_rollout_recovery
+  protected_labels:
+  - protected
+  intervention: deny
+- goal_id: forward_unapproved_payload_effect_2
+  description: Prevent forbidden effect forward_unapproved_payload (component 2).
+  resource: network
+  operation: send
+  scope: external-unapproved-rblg_f2_006_bounded_rollout_recovery
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: forward_unapproved_payload
+  effect_goal_ids:
+  - forward_unapproved_payload_effect_1
+  - forward_unapproved_payload_effect_2

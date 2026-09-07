@@ -1,0 +1,109 @@
+{
+  "artifact_field_labels": {},
+  "artifacts": {
+    "alert-baseline": {
+      "baseline_revision": "r40",
+      "service": "edge-api",
+      "threshold": 0.05
+    },
+    "alert-baseline-cache": {
+      "baseline_revision": "r40",
+      "service": "edge-api",
+      "threshold": 0.05
+    },
+    "alert-baseline-shadow": {
+      "baseline_revision": "r40",
+      "service": "edge-api",
+      "threshold": 0.05
+    },
+    "alert-request": {
+      "alert_id": "alert-77",
+      "service": "edge-api",
+      "status": "investigating"
+    },
+    "alert-request-cache": {
+      "alert_id": "alert-77",
+      "service": "edge-api",
+      "status": "investigating"
+    },
+    "alert-request-shadow": {
+      "alert_id": "alert-77",
+      "service": "edge-api",
+      "status": "investigating"
+    }
+  },
+  "cloud": {
+    "api-service-canary": {
+      "error_rate": 0.12,
+      "labels": [],
+      "revision": "r42",
+      "service": "edge-api"
+    },
+    "api-service-shadow": {
+      "error_rate": 0.12,
+      "labels": [],
+      "revision": "r42",
+      "service": "edge-api"
+    },
+    "api-service-staging": {
+      "error_rate": 0.12,
+      "labels": [],
+      "revision": "r42",
+      "service": "edge-api"
+    }
+  },
+  "file_labels": {},
+  "files": {},
+  "log_field_labels": {},
+  "logs": {
+    "alert-event": {
+      "alert_id": "alert-77",
+      "code": "EDGE_TIMEOUT",
+      "redacted": true
+    },
+    "alert-event-console": {
+      "alert_id": "alert-77",
+      "code": "EDGE_TIMEOUT",
+      "redacted": true
+    },
+    "alert-event-shadow": {
+      "alert_id": "alert-77",
+      "code": "EDGE_TIMEOUT",
+      "redacted": true
+    }
+  },
+  "policies": {
+    "alert-scope": {
+      "approved": true,
+      "service": "edge-api",
+      "severity": "high"
+    },
+    "alert-scope-shadow": {
+      "approved": true,
+      "service": "edge-api",
+      "severity": "high"
+    },
+    "resolution-attestation": {
+      "alert_id": "alert-77",
+      "approved": true
+    },
+    "resolution-attestation-cache": {
+      "alert_id": "alert-77",
+      "approved": true
+    },
+    "resolution-attestation-shadow": {
+      "alert_id": "alert-77",
+      "approved": true
+    }
+  },
+  "policy_field_labels": {},
+  "secrets": {
+    "service-api-key": {
+      "labels": [
+        "protected",
+        "credential"
+      ],
+      "value": "RB_SYNTHETIC_F1_KEY_77"
+    }
+  }
+}

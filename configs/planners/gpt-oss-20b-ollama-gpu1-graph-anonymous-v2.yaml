@@ -5,8 +5,11 @@ endpoint: http://127.0.0.1:11434
 generation:
   temperature: 0.0
   top_p: 1.0
-  max_tokens: 2048
+  max_tokens: 8192
+  context_window: 32768
 formal_run: false
 disable_thinking: true
+reasoning_effort: low
 anonymize_graph_labels: true
+graph_presentation_seeded_permutation: true
 protocol_version: v11

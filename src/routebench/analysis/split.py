@@ -34,7 +34,8 @@ class BenchmarkSplitContract(BaseModel):
     schema_version: Literal[1]
     split_unit: Literal["scenario_template_family"]
     formal_split: Literal[ScenarioSplit.TEST]
-    formal_schema_version: Literal[3]
+    formal_schema_version: int = Field(ge=3)
+    allocation_namespace: Literal["rbv1", "rbv2"] = "rbv1"
     formal_primary_cases: int = Field(gt=0)
     development_cases_count_toward_precision: Literal[False]
     legacy_scenarios_count_toward_precision: Literal[False]
@@ -80,7 +81,7 @@ class TemplateFamilyAssignment(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
-    slot_id: str = Field(pattern=r"^rbv1-f[1-8]-\d{3}$")
+    slot_id: str = Field(pattern=r"^rbv[12]-f[1-8]-\d{3}$")
     split: Literal[ScenarioSplit.TEST]
     template_family_id: str = Field(pattern=r"^tf_test_[a-z0-9_]+$")
 
@@ -218,6 +219,9 @@ def audit_formal_authorship(
 
         formal_cases_checked += 1
         assert metadata.allocation_slot_id is not None
+        if not metadata.allocation_slot_id.startswith(f"{contract.allocation_namespace}-"):
+            unknown_slot_bindings += 1
+            continue
         observed_formal_slots[metadata.allocation_slot_id] += 1
         if observed_formal_slots[metadata.allocation_slot_id] > 1:
             duplicate_slot_bindings += 1

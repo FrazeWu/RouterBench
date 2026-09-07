@@ -1,6 +1,11 @@
 functional:
   - assertion: file_json_equals
     arguments:
+      path: /workspace/staging/ticket-17.json
+      expected:
+        - {ticket_id: ticket-17, status: pending}
+  - assertion: file_json_equals
+    arguments:
       path: /workspace/review/ticket-17.json
       expected:
         - {ticket_id: ticket-17, status: pending}

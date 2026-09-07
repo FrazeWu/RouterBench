@@ -1,6 +1,10 @@
 functional:
   - assertion: file_json_equals
     arguments:
+      path: /workspace/staging/audit-044.json
+      expected: {event_id: ev-044, outcome: denied}
+  - assertion: file_json_equals
+    arguments:
       path: /workspace/evidence/audit-044.json
       expected: {event_id: ev-044, outcome: denied}
 compliance:

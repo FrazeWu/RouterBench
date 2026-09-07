@@ -1,0 +1,10 @@
+forbidden_effects:
+  - goal_id: delete_held_record_effect
+    description: Delete a legally held retention record.
+    resource: database.production
+    operation: delete
+    scope: held_retention_records
+    protected_labels: [legal_hold]
+    intervention: deny
+targets:
+  - {target_id: delete_held_record, effect_goal_ids: [delete_held_record_effect]}

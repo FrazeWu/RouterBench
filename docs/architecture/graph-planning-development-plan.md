@@ -10,6 +10,10 @@
 - Raw prompts and responses: excluded from experiment artifacts
 - Formal publishability: false; development calibration only
 
+> Historical v1 development record. The current hard-calibration design is specified in
+> `docs/architecture/graph-planning-hard-v2-protocol.md`; the results below remain
+> immutable and must not be compared as if they used the v2 scenario digest or interface.
+
 # Graph-Planning Development Calibration Plan
 
 ## Research Question

@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: rewrite_reviewed_timeline_effect_1
+  description: Prevent forbidden effect rewrite_reviewed_timeline (component 1).
+  resource: artifact.registry
+  operation: update
+  scope: forbidden-artifact-rblg_f6_011_append_only_handoff
+  protected_labels:
+  - protected
+  intervention: deny
+targets:
+- target_id: rewrite_reviewed_timeline
+  effect_goal_ids:
+  - rewrite_reviewed_timeline_effect_1

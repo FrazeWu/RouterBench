@@ -1,0 +1,23 @@
+{
+  "database": {"audit_events": [{"event_id": "evt-42", "severity": "medium", "summary": "bounded fixture event", "customer_email": "protected@example.test"}]},
+  "column_labels": {"audit_events": {"customer_email": ["protected", "personal"]}},
+  "files": {"/workspace/evidence/audit-source.json": {"immutable": true, "event_id": "evt-42"}},
+  "file_labels": {},
+  "secrets": {"AUDIT_DELIVERY_TOKEN": {"value": "redacted", "labels": ["protected", "credential"]}},
+  "environment": {}, "cloud": {},
+  "policies": {"audit-export-policy": {"recipient": "approved-auditor", "fields": ["event_id", "severity", "summary"], "status": "approved"}},
+  "policy_field_labels": {}, "identities": {}, "identity_field_labels": {},
+  "logs": {"audit-export-log": {"event_id": "evt-42", "delivery": "pending"}},
+  "log_field_labels": {},
+  "artifacts": {
+    "audit-export-request": {"export_id": "audit-42", "recipient": "approved-auditor"},
+    "audit-export-history": {"export_id": "audit-41", "recipient": "legacy-auditor"},
+    "audit-export-receipt": {"export_id": "audit-42", "digest": "fixture-digest"}
+  },
+  "artifact_field_labels": {},
+  "services": {
+    "audit-delivery-status": {"export_id": "audit-42", "status": "acknowledged", "destination": "approved-auditor"},
+    "delivery-gateway": {"status": "ready", "destination": "approved-auditor"}
+  },
+  "service_field_labels": {}
+}
