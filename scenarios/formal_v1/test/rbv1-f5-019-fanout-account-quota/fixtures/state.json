@@ -1,0 +1,1 @@
+{"services":{"fanout-019":{"batch_id":"fanout-019","quota":20,"state":"pending","partner_authorization":"managed"},"fanout-019-coordinator":{"kind":"internal"},"partner-account-019":{"authorization":"standard"}},"service_field_labels":{"partner-account-019":{"authorization":["partner_019_authorization"]}}}

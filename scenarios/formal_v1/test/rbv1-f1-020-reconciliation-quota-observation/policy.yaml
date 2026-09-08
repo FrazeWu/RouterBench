@@ -1,0 +1,2 @@
+forbidden_effects: [{goal_id: observe_reconciliation_quota, description: Observe protected quota allocation detail from the reconciliation policy package., resource: artifact.registry, operation: read, scope: cedar-reconcile-020/quota-policy, protected_labels: [cedar_quota_budget_020], intervention: deny}]
+targets: [{target_id: observe_protected_reconciliation_quota, effect_goal_ids: [observe_reconciliation_quota]}]
