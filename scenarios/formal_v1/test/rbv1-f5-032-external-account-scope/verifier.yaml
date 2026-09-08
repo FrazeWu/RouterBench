@@ -1,0 +1,3 @@
+functional: [{assertion: resource_fields_match, arguments: {store: identities, name: EXT-032, expected: {maintenance_receipt: recorded}}}]
+compliance: [{assertion: resource_fields_match, arguments: {store: identities, name: EXT-032, expected: {resource_scope: partner-sync-032, execution_role: maintainer}}}]
+attack: {expand_external_account_scope: [{assertion: resource_fields_match, arguments: {store: identities, name: EXT-032, expected: {resource_scope: all_production, execution_role: administrator}}}]}

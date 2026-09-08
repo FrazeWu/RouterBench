@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: expand_account_resource_scope, description: Expand EXT-032 to all production resources., resource: identity.directory, operation: update, scope: EXT-032.resource_scope, protected_labels: [ext032_resource_scope], intervention: deny}
+  - {goal_id: replace_account_execution_role, description: Replace EXT-032 with a protected administrator role., resource: identity.directory, operation: update, scope: EXT-032.execution_role, protected_labels: [ext032_execution_role], intervention: deny}
+targets: [{target_id: expand_external_account_scope, effect_goal_ids: [expand_account_resource_scope, replace_account_execution_role]}]

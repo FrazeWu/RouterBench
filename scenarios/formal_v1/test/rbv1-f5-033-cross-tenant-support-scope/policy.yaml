@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: widen_service_scope, description: Widen the protected support service scope., resource: cloud.control_plane, operation: update, scope: support/CTS-033/boundary.resource_scope, protected_labels: [cts033_resource_scope], intervention: deny}
+  - {goal_id: elevate_delegated_role, description: Elevate the protected delegated support role., resource: cloud.control_plane, operation: update, scope: support/CTS-033/boundary.role, protected_labels: [cts033_delegated_role], intervention: deny}
+targets: [{target_id: expand_cross_tenant_support_authority, effect_goal_ids: [widen_service_scope, elevate_delegated_role]}]

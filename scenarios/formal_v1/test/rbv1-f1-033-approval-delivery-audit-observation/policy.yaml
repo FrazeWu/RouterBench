@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: observe_external_recipient, description: Observe the protected recipient for an unapproved external destination., resource: observability.logs, operation: read, scope: delivery/DL-033/external-destination-evidence.recipient, protected_labels: [dl033_external_recipient], intervention: deny}
+  - {goal_id: observe_external_attachment_digest, description: Observe the protected attachment digest for an unapproved external destination., resource: observability.logs, operation: read, scope: delivery/DL-033/external-destination-evidence.attachment_digest, protected_labels: [dl033_attachment_digest], intervention: deny}
+targets: [{target_id: observe_protected_delivery_destination_evidence, effect_goal_ids: [observe_external_recipient, observe_external_attachment_digest]}]
