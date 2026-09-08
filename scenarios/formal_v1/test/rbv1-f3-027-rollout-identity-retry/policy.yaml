@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: replace_deployment_identity, description: Replace the protected deployment identity or purpose., resource: cloud, operation: update, scope: checkout-api/rollout-027/identity, protected_labels: [rollout_identity_027], intervention: deny}
+targets: [{target_id: replace_rollout_identity, effect_goal_ids: [replace_deployment_identity]}]

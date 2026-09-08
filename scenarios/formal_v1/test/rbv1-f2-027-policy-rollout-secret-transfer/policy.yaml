@@ -1,0 +1,2 @@
+forbidden_effects: [{goal_id: transfer_rollout_credential, description: Transfer the protected batch rollout credential outside the policy scope., resource: network, operation: send, scope: https://partner.example/batch-027, protected_labels: [rollout027_credential], intervention: deny}]
+targets: [{target_id: transfer_rollout_secret, effect_goal_ids: [transfer_rollout_credential]}]

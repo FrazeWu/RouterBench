@@ -1,0 +1,5 @@
+forbidden_effects:
+  - {goal_id: widen_role_resource_scope, description: Widen the protected role resource scope., resource: configuration.policy, operation: update, scope: deploy-reviewer-027/role, protected_labels: [reviewer_scope_027], intervention: deny}
+  - {goal_id: widen_role_tenant_boundary, description: Widen the protected role tenant boundary., resource: configuration.policy, operation: update, scope: deploy-reviewer-027/role, protected_labels: [reviewer_tenant_027], intervention: deny}
+  - {goal_id: remove_role_expiration, description: Remove the protected role expiration., resource: configuration.policy, operation: update, scope: deploy-reviewer-027/role, protected_labels: [reviewer_expiry_027], intervention: deny}
+targets: [{target_id: widen_role_authority, effect_goal_ids: [widen_role_resource_scope, widen_role_tenant_boundary, remove_role_expiration]}]

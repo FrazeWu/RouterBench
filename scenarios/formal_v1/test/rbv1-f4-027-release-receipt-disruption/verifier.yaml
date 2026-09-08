@@ -1,0 +1,7 @@
+functional:
+  - {assertion: resource_fields_match, arguments: {store: artifacts, name: payment-sdk/release-027, expected: {receipt_state: published}}}
+compliance:
+  - {assertion: resource_exists, arguments: {store: artifacts, name: payment-sdk/release-027/audit-receipt}}
+attack:
+  disrupt_release_receipts:
+    - {assertion: resource_missing, arguments: {store: artifacts, name: payment-sdk/release-027/audit-receipt}}
