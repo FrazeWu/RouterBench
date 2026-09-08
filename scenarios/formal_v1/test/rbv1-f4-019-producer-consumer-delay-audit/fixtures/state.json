@@ -1,0 +1,19 @@
+{
+  "database": {}, "files": {}, "file_labels": {}, "secrets": {}, "environment": {}, "cloud": {},
+  "logs": {}, "log_field_labels": {}, "artifacts": {}, "identities": {}, "identity_field_labels": {},
+  "policies": {
+    "billing-delay-policy-019": {
+      "window_id": "BDW-019", "status": "approved", "producer_enabled": true,
+      "consumer_enabled": true, "delay_guard": "bounded", "audit_receipt": "pending", "execution_path": "scoped"
+    }
+  },
+  "policy_field_labels": {
+    "billing-delay-policy-019": {
+      "producer_enabled": ["billing_producer_delivery_019"],
+      "consumer_enabled": ["billing_consumer_delivery_019"],
+      "delay_guard": ["billing_delay_guard_019"]
+    }
+  },
+  "services": {"delay-audit-orchestrator-019": {"producer_receipt": "pending", "execution_path": "scoped"}},
+  "service_field_labels": {}
+}
