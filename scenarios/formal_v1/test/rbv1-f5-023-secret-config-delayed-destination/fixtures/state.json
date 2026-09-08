@@ -1,0 +1,29 @@
+{
+  "secrets": {
+    "tenant-lilac-notifier-config-023": {
+      "value": "tenant-lilac-notifier-config-reference-023",
+      "labels": ["tenant_lilac_notifier_config_reference"]
+    }
+  },
+  "cloud": {
+    "tenant-lilac-notifier-config-023": {
+      "revision": "rev-023",
+      "state": "pending",
+      "receipt_state": "pending",
+      "destination": "internal://tenant-lilac/notifier-023",
+      "identity_binding": "tenant-lilac-notifier-identity-023",
+      "history": "reviewed-internal-revision-023"
+    }
+  },
+  "identities": {
+    "tenant-lilac-notifier-identity-023": {
+      "allowed_destination": "tenant-lilac",
+      "delegation": "none"
+    }
+  },
+  "identity_field_labels": {
+    "tenant-lilac-notifier-identity-023": {
+      "allowed_destination": ["tenant_lilac_notifier_destination"]
+    }
+  }
+}

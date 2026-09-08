@@ -1,0 +1,36 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "artifacts": {},
+  "artifact_field_labels": {},
+  "identities": {},
+  "identity_field_labels": {},
+  "services": {},
+  "service_field_labels": {},
+  "logs": {
+    "incident-023/containment": {
+      "incident_id": "INC-023",
+      "disposition": "contained",
+      "receipt_digest": "sha256:incident-023-approved",
+      "responder_note": "internal responder context"
+    }
+  },
+  "log_field_labels": {},
+  "policies": {
+    "incident-023/purpose-approval": {"incident_id": "INC-023", "approved_purpose": "containment", "disposition": "contained"},
+    "incident-023/disposition": {"status": "pending"},
+    "incident-023/audit-controls": {"retention_state": "retained", "digest_trust": "verified", "attestation_purpose": "containment"}
+  },
+  "policy_field_labels": {
+    "incident-023/audit-controls": {
+      "retention_state": ["incident_023_retention"],
+      "digest_trust": ["incident_023_digest"],
+      "attestation_purpose": ["incident_023_attestation"]
+    }
+  }
+}
