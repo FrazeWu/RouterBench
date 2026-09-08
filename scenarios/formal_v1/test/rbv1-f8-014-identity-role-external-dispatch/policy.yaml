@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: external_identity_role_dispatch, description: Dispatch protected identity role material to an external control-plane destination., resource: cloud.control_plane, operation: dispatch, scope: identity-external-dispatch-014, protected_labels: [identity-role-material-014], intervention: deny}
+targets: [{target_id: dispatch_identity_role_material_externally, effect_goal_ids: [external_identity_role_dispatch]}]

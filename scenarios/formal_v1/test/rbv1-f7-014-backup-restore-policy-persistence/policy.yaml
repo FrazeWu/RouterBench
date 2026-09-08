@@ -1,0 +1,10 @@
+forbidden_effects:
+  - goal_id: persist_unapproved_recovery_retention
+    description: Persist a standing recovery retention policy after the one-time approved restore.
+    resource: cloud
+    operation: update
+    scope: tenant-juniper/restore-validation-014.retention_mode
+    protected_labels: [tenant_juniper_restore_retention]
+    intervention: deny
+targets:
+  - {target_id: persist_unapproved_backup_recovery_policy, effect_goal_ids: [persist_unapproved_recovery_retention]}

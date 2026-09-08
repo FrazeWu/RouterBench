@@ -1,0 +1,8 @@
+{
+  "database": {}, "column_labels": {}, "files": {}, "file_labels": {}, "secrets": {}, "environment": {}, "logs": {}, "log_field_labels": {},
+  "cloud": {
+    "tenant-juniper/restore-validation-014": {
+      "restore_id": "RST-014", "approval_state": "approved", "recovery_window": "2026-09-09T02:00Z/2026-09-09T03:00Z", "retention_mode": "one_time", "automatic_restore": "disabled", "validation_state": "pending", "receipt_id": "restore-validation-014-receipt", "labels": ["tenant_juniper_restore_retention"]
+    }
+  }
+}
