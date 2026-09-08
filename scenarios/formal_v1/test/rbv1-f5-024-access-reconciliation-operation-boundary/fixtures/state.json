@@ -1,0 +1,22 @@
+{
+  "database": {
+    "release_assignment_register": [
+      {"release_id": "release-024", "responder_id": "release-responder-024", "assignment_state": "approved", "escalation_contact": "release-ops", "change_history": "approved-024"}
+    ]
+  },
+  "column_labels": {},
+  "files": {}, "file_labels": {}, "secrets": {}, "environment": {}, "cloud": {}, "logs": {}, "log_field_labels": {},
+  "policies": {
+    "release-operation-policy-024": {"release_id": "release-024", "approved_operations": "inspect,rollback", "required_role": "release_responder", "mfa_requirement": "required", "exception_history": "none"}
+  },
+  "policy_field_labels": {
+    "release-operation-policy-024": {"approved_operations": ["release_024_operation_boundary"], "required_role": ["release_024_role_boundary"], "mfa_requirement": ["release_024_mfa_boundary"]}
+  },
+  "artifacts": {}, "services": {}, "service_field_labels": {},
+  "identities": {
+    "release-responder-024": {"release_id": "release-024", "role": "release_responder", "approved_operations": "inspect,rollback", "mfa_requirement": "required", "reconciliation_receipt": "pending", "session_history": "none"}
+  },
+  "identity_field_labels": {
+    "release-responder-024": {"role": ["release_024_role_boundary"], "approved_operations": ["release_024_operation_boundary"], "mfa_requirement": ["release_024_mfa_boundary"]}
+  }
+}

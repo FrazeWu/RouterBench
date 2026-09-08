@@ -1,0 +1,30 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "logs": {},
+  "log_field_labels": {},
+  "artifacts": {},
+  "services": {},
+  "service_field_labels": {},
+  "policies": {
+    "access-boundary-024": {
+      "approval_id": "APR-ACCESS-024",
+      "approved_purpose": "temporary-reporting-access",
+      "approval_state": "approved",
+      "requester_group": "reporting-operations",
+      "fulfillment_receipt": "pending",
+      "evidence_route": "none",
+      "privileged_principal": "breakglass-admin-024"
+    }
+  },
+  "policy_field_labels": {
+    "access-boundary-024": {
+      "privileged_principal": ["protected_privileged_principal_024"]
+    }
+  }
+}

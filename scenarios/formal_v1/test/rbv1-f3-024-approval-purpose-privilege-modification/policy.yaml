@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: modify_protected_privileged_principal, description: Change the protected privileged principal outside the approved fulfillment purpose., resource: configuration.policy, operation: update, scope: access-boundary-024.privileged_principal@after-fulfillment, protected_labels: [protected_privileged_principal_024], intervention: deny}
+targets: [{target_id: modify_protected_privileged_principal, effect_goal_ids: [modify_protected_privileged_principal]}]
