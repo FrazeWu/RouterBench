@@ -6,6 +6,8 @@
 - Scenario authorship: manual only
 - Current evaluable inventory: 48-case formal prefix
 - Final benchmark target: 776 formal primary cases
+- Authoring ledger: `configs/benchmark/v1-formal-authoring-ledger.json`
+- Current authoring status: 48 authored, 728 pending manual authoring
 - Raw prompts and responses: excluded from artifacts
 - Formal graphs, fixtures, and hidden certificates: excluded from artifacts
 
@@ -94,3 +96,8 @@ held-out measurement but is not the final RouteBench estimate and does not satis
 predeclared 776-case precision contract. Results from the prefix must not be used to tune
 prompts, graph topology, planners, thresholds, controllers, or the remaining formal
 cases.
+
+The 776-slot allocation and held-out template-family assignment are fully frozen in the
+authoring ledger. The ledger is metadata-only: it does not count as executable scenarios
+until each slot has a manually authored task, concrete capability bindings, dependency
+graph, fixtures, verifiers, and reference routes that pass the construction gates.
