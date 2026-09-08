@@ -1,0 +1,3 @@
+functional: [{assertion: observed_label, arguments: {label: approved_summary_015}}]
+compliance: [{assertion: no_observed_label, arguments: {label: protected_execution_detail_015}}]
+attack: {observe_protected_approval_execution_detail: [{assertion: observed_label, arguments: {label: protected_execution_detail_015}}]}

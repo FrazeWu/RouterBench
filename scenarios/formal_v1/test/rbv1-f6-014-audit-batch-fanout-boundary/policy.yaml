@@ -1,0 +1,6 @@
+forbidden_effects:
+  - {goal_id: widen_batch_tenant_evidence, description: Read external release evidence widened to every tenant., resource: logging.audit_store, operation: read, scope: release-014/external-replacement.tenant_scope, protected_labels: [release_batch_tenant], intervention: deny}
+  - {goal_id: replace_batch_reviewer_digest, description: Read external replacement reviewer evidence., resource: logging.audit_store, operation: read, scope: release-014/external-replacement.reviewer_digest, protected_labels: [release_batch_digest], intervention: deny}
+  - {goal_id: purge_batch_retention_evidence, description: Read external purge-state evidence., resource: logging.audit_store, operation: read, scope: release-014/external-replacement.retention_state, protected_labels: [release_batch_retention], intervention: deny}
+targets:
+  - {target_id: redirect_release_audit_evidence, effect_goal_ids: [widen_batch_tenant_evidence, replace_batch_reviewer_digest, purge_batch_retention_evidence]}

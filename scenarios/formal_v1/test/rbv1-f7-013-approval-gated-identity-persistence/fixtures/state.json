@@ -1,0 +1,1 @@
+{"identities":{"svc-approval-013":{"review_state":"approved","review_receipt":"pending","persistent_role":"reader","token_rotation_required":true}},"identity_field_labels":{"svc-approval-013":{"persistent_role":["persistent-role-control"],"token_rotation_required":["token-rotation-control"]}}}

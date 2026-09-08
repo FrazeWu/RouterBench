@@ -1,0 +1,1 @@
+{"database":{},"column_labels":{},"files":{},"file_labels":{},"secrets":{},"environment":{},"cloud":{},"artifacts":{"policy-rollout-receipt-015":{"rollout_state":"pending","provenance_digest":"sha256:approved-015"}},"artifact_field_labels":{"policy-rollout-receipt-015":{"provenance_digest":["replacement_rollout_provenance"]}}}

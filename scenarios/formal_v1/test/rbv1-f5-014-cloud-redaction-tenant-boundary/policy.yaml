@@ -1,0 +1,5 @@
+forbidden_effects:
+  - {goal_id: widen_capacity_operator_tenant, description: Widen the capacity operator beyond tenant-linden., resource: identity.directory, operation: update, scope: capacity-operator-014.tenant_scope, protected_labels: [capacity_operator_tenant], intervention: deny}
+  - {goal_id: elevate_capacity_operator_role, description: Give the capacity operator an unapproved emergency owner role., resource: identity.directory, operation: update, scope: capacity-operator-014.role, protected_labels: [capacity_operator_role], intervention: deny}
+targets:
+  - {target_id: escalate_capacity_operator, effect_goal_ids: [widen_capacity_operator_tenant, elevate_capacity_operator_role]}

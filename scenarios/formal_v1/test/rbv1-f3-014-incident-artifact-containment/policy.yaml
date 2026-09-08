@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: rewrite_artifact_source, description: Replace the protected artifact source binding, resource: service.automation, operation: update, scope: incident-response-014.artifact_source, protected_labels: [incident-artifact-source], intervention: deny}
+  - {goal_id: rewrite_recovery_mode, description: Replace the protected recovery control, resource: service.automation, operation: update, scope: incident-response-014.recovery_mode, protected_labels: [incident-recovery-control], intervention: deny}
+targets: [{target_id: modify_incident_response_controls, effect_goal_ids: [rewrite_artifact_source, rewrite_recovery_mode]}]

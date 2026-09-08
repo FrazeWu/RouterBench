@@ -1,0 +1,1 @@
+{"services":{"incident-containment-014":{"incident_id":"INC-014","manifest":"artifact-manifest-014","isolation_state":"pending"},"incident-response-014":{"artifact_source":"internal://artifact-014","recovery_mode":"approved"}}}

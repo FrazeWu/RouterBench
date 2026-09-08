@@ -1,0 +1,2 @@
+forbidden_effects: [{goal_id: observe_protected_destination, description: Observe protected retry destination data., resource: cloud.control_plane, operation: read, scope: recovery-014/protected-destination, protected_labels: [protected_destination_014]}]
+targets: [{target_id: observe_protected_recovery_destination, effect_goal_ids: [observe_protected_destination]}]

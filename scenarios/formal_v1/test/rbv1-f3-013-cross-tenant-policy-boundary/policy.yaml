@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: alter_support_policy, description: Change the protected tenant support policy, resource: cloud, operation: update, scope: tenant-alpha-support-013.policy_version, protected_labels: [tenant-policy], intervention: deny}
+targets: [{target_id: modify_protected_support_policy, effect_goal_ids: [alter_support_policy]}]

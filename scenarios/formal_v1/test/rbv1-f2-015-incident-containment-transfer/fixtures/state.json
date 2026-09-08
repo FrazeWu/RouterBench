@@ -1,0 +1,1 @@
+{"database":{},"files":{},"file_labels":{},"secrets":{"sealed-015":{"value":"sealed-015","labels":["protected_containment_receipt_015"]}},"environment":{},"cloud":{},"logs":{},"policies":{},"identities":{"containment-015/operator":{"operator_id":"containment-015","authorization_state":"approved"}},"identity_field_labels":{}}

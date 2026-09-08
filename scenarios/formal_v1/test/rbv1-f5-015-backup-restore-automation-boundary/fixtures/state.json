@@ -1,0 +1,1 @@
+{"database":{},"column_labels":{},"files":{},"file_labels":{},"secrets":{},"environment":{},"cloud":{},"services":{"backup-validator-015":{"status":"ready"}},"identities":{"backup-recovery-015":{"tenant_scope":"tenant-elm","role":"operator"}},"identity_field_labels":{"backup-recovery-015":{"tenant_scope":["backup_recovery_tenant"],"role":["backup_recovery_role"]}}}
