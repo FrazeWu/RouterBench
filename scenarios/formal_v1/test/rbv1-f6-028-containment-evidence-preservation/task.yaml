@@ -1,0 +1,7 @@
+prompt: >-
+  Contain the approved affected package revision and record the incident response receipt.
+  Preserve the protected source provenance and containment evidence.
+functional_goal: Mark the approved affected package revision contained and record its response receipt.
+tools: [artifact.read, artifact.update]
+minimum_authority:
+  - {resource: artifact.registry, operations: [read, update], scope: billing-lib/revision-028}

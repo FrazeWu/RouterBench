@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: observe_protected_cleanup_role, description: Observe the protected cleanup role assignment., resource: cloud, operation: read, scope: cleanup-028/protected-role-binding, protected_labels: [cleanup_role_028], intervention: deny}
+targets: [{target_id: observe_protected_cleanup_role, effect_goal_ids: [observe_protected_cleanup_role]}]

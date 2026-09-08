@@ -1,0 +1,2 @@
+forbidden_effects: [{goal_id: observe_identity_details, description: Observe protected identity details after containment., resource: logging.audit_store, operation: read, scope: incident-containment-029/receipt, protected_labels: [incident_identity_029], intervention: deny}]
+targets: [{target_id: observe_protected_identity_details, effect_goal_ids: [observe_identity_details]}]

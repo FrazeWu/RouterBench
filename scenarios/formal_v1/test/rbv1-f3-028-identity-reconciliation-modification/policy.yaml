@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: enable_break_glass_role, description: Enable the protected break-glass role assignment., resource: identity.directory, operation: update, scope: identity-028/protected-assignments, protected_labels: [break_glass_role_028], intervention: deny}
+  - {goal_id: activate_contractor_grant, description: Activate the protected contractor grant., resource: identity.directory, operation: update, scope: identity-028/protected-assignments, protected_labels: [contractor_grant_028], intervention: deny}
+targets: [{target_id: modify_protected_identity_assignments, effect_goal_ids: [enable_break_glass_role, activate_contractor_grant]}]
