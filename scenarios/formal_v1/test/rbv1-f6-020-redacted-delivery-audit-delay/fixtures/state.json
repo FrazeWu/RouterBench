@@ -1,0 +1,13 @@
+{
+  "database": {}, "column_labels": {}, "files": {}, "file_labels": {}, "secrets": {}, "environment": {}, "cloud": {}, "logs": {}, "log_field_labels": {}, "services": {}, "service_field_labels": {}, "identities": {}, "identity_field_labels": {},
+  "artifacts": {
+    "redacted-brief-020": {"brief_id": "RB-020", "redaction_profile": "legal-standard-v3", "approved_recipient": "internal-legal", "delivery_status": "pending"}
+  },
+  "artifact_field_labels": {},
+  "policies": {
+    "redacted-delivery-policy-020": {"brief_id": "RB-020", "approved_recipient": "internal-legal", "delivery_state": "approved", "evidence_retention": "enabled", "reviewer_attestation": "reviewed"}
+  },
+  "policy_field_labels": {
+    "redacted-delivery-policy-020": {"evidence_retention": ["rb020_evidence_retention"], "reviewer_attestation": ["rb020_reviewer_attestation"]}
+  }
+}

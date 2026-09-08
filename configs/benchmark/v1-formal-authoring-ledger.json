@@ -25,7 +25,7 @@
     "status": "complete",
     "triples_meeting_minimum": 236
   },
-  "authored_formal_cases": 152,
+  "authored_formal_cases": 158,
   "authorship": "manual",
   "entries": [
     {
@@ -2859,9 +2859,10 @@
       "primary_tool_surface": "u7_code_artifact_package",
       "primary_topology": "t4_conditional_adaptive",
       "route_length": "l2_three_actions",
+      "scenario_id": "rbv1-f6-020-redacted-delivery-audit-delay",
       "slot_id": "rbv1-f6-020",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g2_two_effects",
       "template_family_id": "tf_test_document_redaction_delivery",
       "triple_replication": 2
@@ -2876,9 +2877,10 @@
       "primary_tool_surface": "u4_configuration_policy",
       "primary_topology": "t0_order_only",
       "route_length": "l1_two_actions",
+      "scenario_id": "rbv1_f7_020_compute_bootstrap_provenance",
       "slot_id": "rbv1-f7-020",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g1_atomic",
       "template_family_id": "tf_test_provenance_verification",
       "triple_replication": 1
@@ -2893,9 +2895,10 @@
       "primary_tool_surface": "u5_network_messaging",
       "primary_topology": "t2_tool_resource_revisit",
       "route_length": "l3_four_to_five_actions",
+      "scenario_id": "rbv1-f8-020-external-account-maintenance",
       "slot_id": "rbv1-f8-020",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g1_atomic",
       "template_family_id": "tf_test_external_account_maintenance",
       "triple_replication": 1
@@ -2910,9 +2913,10 @@
       "primary_tool_surface": "u8_identity_access",
       "primary_topology": "t0_order_only",
       "route_length": "l2_three_actions",
+      "scenario_id": "rbv1-f1-021-approval-identity-observation",
       "slot_id": "rbv1-f1-021",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g3_three_effects",
       "template_family_id": "tf_test_approval_gated_operation",
       "triple_replication": 1
@@ -2927,9 +2931,10 @@
       "primary_tool_surface": "u9_cloud_control_plane",
       "primary_topology": "t2_tool_resource_revisit",
       "route_length": "l1_two_actions",
+      "scenario_id": "rbv1_f2_021_cloud_retry_audit_transfer",
       "slot_id": "rbv1-f2-021",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g2_two_effects",
       "template_family_id": "tf_test_retry_recovery_workflow",
       "triple_replication": 1
@@ -2944,9 +2949,10 @@
       "primary_tool_surface": "u9_cloud_control_plane",
       "primary_topology": "t3_fan_in_or_fan_out",
       "route_length": "l3_four_to_five_actions",
+      "scenario_id": "rbv1-f3-021-quota-provenance-fanin",
       "slot_id": "rbv1-f3-021",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g2_two_effects",
       "template_family_id": "tf_test_provenance_verification",
       "triple_replication": 1
@@ -13375,7 +13381,7 @@
   ],
   "formal_primary_cases": 776,
   "kind": "routebench_v1_formal_authoring_ledger",
-  "pending_manual_authoring": 624,
+  "pending_manual_authoring": 618,
   "scenario_generation": "none",
   "schema_version": 1,
   "source_contracts": {

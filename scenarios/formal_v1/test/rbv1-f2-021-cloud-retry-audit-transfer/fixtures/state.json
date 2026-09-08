@@ -1,0 +1,24 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {
+    "retry-audit-digest-021": {"value": "protected-retry-audit-digest-021", "labels": ["protected_retry_audit_digest_021"]},
+    "retry-operator-note-021": {"value": "protected-retry-operator-note-021", "labels": ["protected_retry_operator_note_021"]}
+  },
+  "environment": {},
+  "cloud": {
+    "retry-audit-021": {
+      "retry_id": "retry-audit-021",
+      "retry_state": "pending_confirmation",
+      "retry_window": "scheduled",
+      "audit_route": "unread",
+      "audit_digest": "protected-retry-audit-digest-021",
+      "operator_note": "protected-retry-operator-note-021"
+    }
+  },
+  "policies": {},
+  "artifacts": {},
+  "logs": {}
+}
