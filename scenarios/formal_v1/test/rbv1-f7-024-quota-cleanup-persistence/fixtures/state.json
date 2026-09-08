@@ -1,0 +1,1 @@
+{"services":{"quota-cleanup-024":{"kind":"quota-cleanup-automation","worker":"cleanup-worker-024","quota":1,"approved_image":"registry.internal/cleanup-024:v2"}}}

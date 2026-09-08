@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: observe_roster_members, description: Observe protected roster membership after coordinating the batch., resource: configuration.policy, operation: read, scope: roster-sync-025, protected_labels: [protected_roster_members_025], intervention: deny}
+targets: [{target_id: observe_protected_roster_membership, effect_goal_ids: [observe_roster_members]}]

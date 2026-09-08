@@ -1,0 +1,1 @@
+{"artifacts":{"tenant-ember/release-025":{"promotion_state":"pending","bundle_digest":"sha256:ember-025"}},"database":{"promotion_audit_receipts":[{"receipt_id":"ember-025","tenant":"tenant-ember","digest":"sha256:receipt-ember-025"}]}}

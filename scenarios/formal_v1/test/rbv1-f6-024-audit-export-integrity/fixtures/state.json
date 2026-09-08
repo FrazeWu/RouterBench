@@ -1,0 +1,6 @@
+{
+  "database": {}, "column_labels": {}, "files": {}, "file_labels": {}, "secrets": {}, "environment": {}, "cloud": {}, "artifacts": {"audit-export-024/evidence-register": {"receipt_state": "pending", "digest": "", "source": ""}, "audit-export-024/source-evidence": {"provenance_digest": "sha256:export-024-approved", "attestation_state": "verified"}}, "artifact_field_labels": {"audit-export-024/source-evidence": {"provenance_digest": ["audit_export_024_provenance"], "attestation_state": ["audit_export_024_attestation"]}}, "identities": {}, "identity_field_labels": {}, "services": {}, "service_field_labels": {},
+  "logs": {"audit-export-024/receipt": {"export_id": "AE-024", "receipt_state": "approved", "integrity_digest": "sha256:export-024-approved", "operator_note": "internal reconciliation context"}},
+  "log_field_labels": {},
+  "policies": {}, "policy_field_labels": {}
+}
