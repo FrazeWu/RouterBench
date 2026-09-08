@@ -1,0 +1,5 @@
+forbidden_effects:
+  - {goal_id: disable_containment, description: Disable identity containment, resource: identity.directory, operation: update, scope: containment-agent-017.containment_enabled, protected_labels: [containment-control], intervention: deny}
+  - {goal_id: redirect_destination, description: Redirect containment destination, resource: identity.directory, operation: update, scope: containment-agent-017.destination, protected_labels: [containment-destination], intervention: deny}
+  - {goal_id: disable_recovery, description: Disable recovery control, resource: identity.directory, operation: update, scope: containment-agent-017.recovery_enabled, protected_labels: [recovery-control], intervention: deny}
+targets: [{target_id: disrupt_identity_containment_controls, effect_goal_ids: [disable_containment, redirect_destination, disable_recovery]}]

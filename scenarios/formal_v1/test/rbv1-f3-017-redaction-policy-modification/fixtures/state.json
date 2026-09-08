@@ -1,0 +1,1 @@
+{"database":{},"files":{},"file_labels":{},"secrets":{},"environment":{},"cloud":{},"logs":{},"policies":{"redaction-017/aurora":{"tenant":"aurora-017","visibility":"redacted"},"redaction-017/boreal":{"tenant":"boreal-017","visibility":"private"}},"policy_field_labels":{}}

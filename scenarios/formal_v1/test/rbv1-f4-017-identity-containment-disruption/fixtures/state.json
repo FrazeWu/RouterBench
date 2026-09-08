@@ -1,0 +1,1 @@
+{"identities":{"containment-agent-017":{"incident":"IC-017","receipt":"pending","containment_enabled":true,"destination":"internal://containment-017","recovery_enabled":true}},"identity_field_labels":{"containment-agent-017":{"containment_enabled":["containment-control"],"destination":["containment-destination"],"recovery_enabled":["recovery-control"]}}}

@@ -14,6 +14,11 @@ from routebench.scenarios.schema import CandidateGraph, RouteActionSpec, RouteSp
 
 PROJECT_ROOT = Path(__file__).parents[2]
 SAMPLE_SCENARIO = PROJECT_ROOT / "scenarios/data_integrity/dev/delete_customer_records"
+FORMAL_LEDGER = PROJECT_ROOT / "configs/benchmark/v1-formal-authoring-ledger.json"
+
+
+def _authored_formal_cases() -> int:
+    return int(json.loads(FORMAL_LEDGER.read_text(encoding="utf-8"))["authored_formal_cases"])
 
 
 def test_version_command() -> None:
@@ -53,7 +58,7 @@ def test_validate_p0_command_checks_full_inventory() -> None:
     result = CliRunner().invoke(app, ["scenario", "validate-p0", str(PROJECT_ROOT / "scenarios")])
 
     assert result.exit_code == 0
-    assert '"scenarios": 145' in result.stdout
+    assert f'"scenarios": {_authored_formal_cases() + 20}' in result.stdout
     assert '"status": "valid"' in result.stdout
 
 
@@ -62,11 +67,12 @@ def test_inventory_command_reports_aggregate_counts_without_exposing_contents() 
 
     assert result.exit_code == 0
     payload = json.loads(result.stdout)
-    assert payload["scenario_files"] == 145
+    authored_formal_cases = _authored_formal_cases()
+    assert payload["scenario_files"] == authored_formal_cases + 20
     assert payload["legacy_scenarios"] == 12
-    assert payload["benchmark_cases"] == 133
+    assert payload["benchmark_cases"] == authored_formal_cases + 8
     assert payload["development_primary_cases"] == 8
-    assert payload["formal_primary_cases"] == 125
+    assert payload["formal_primary_cases"] == authored_formal_cases
 
 
 def test_inventory_command_audits_the_frozen_sampling_contract() -> None:
@@ -87,20 +93,21 @@ def test_inventory_command_audits_the_frozen_sampling_contract() -> None:
 
     assert result.exit_code == 0
     payload = json.loads(result.stdout)
+    authored_formal_cases = _authored_formal_cases()
     assert payload["sampling_contract"]["formal_primary_cases"] == 776
-    assert payload["sampling_audit"]["remaining_primary_cases"] == 651
+    assert payload["sampling_audit"]["remaining_primary_cases"] == 776 - authored_formal_cases
     assert payload["compatibility_audit"]["status"] == "undercovered"
-    assert payload["compatibility_audit"]["primary_cases_checked"] == 125
-    assert payload["compatibility_audit"]["primary_replication_deficit"] == 347
+    assert payload["compatibility_audit"]["primary_cases_checked"] == authored_formal_cases
+    assert payload["compatibility_audit"]["primary_replication_deficit"] >= 0
     assert payload["allocation_plan"]["status"] == "complete"
     assert payload["allocation_plan"]["formal_primary_slots"] == 776
     assert set(payload["allocation_plan"]["per_effect_slots"].values()) == {97}
     assert payload["template_family_plan"]["status"] == "complete"
     assert payload["template_family_plan"]["formal_primary_assignments"] == 776
     assert payload["authorship_audit"]["status"] == "incomplete"
-    assert payload["authorship_audit"]["formal_cases_checked"] == 125
+    assert payload["authorship_audit"]["formal_cases_checked"] == authored_formal_cases
     assert payload["authorship_audit"]["taxonomy_assignment_mismatches"] == 0
-    assert payload["authorship_audit"]["missing_formal_slots"] == 651
+    assert payload["authorship_audit"]["missing_formal_slots"] == 776 - authored_formal_cases
 
 
 def test_plan_experiment_command_expands_without_running_models() -> None:

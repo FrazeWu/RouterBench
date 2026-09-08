@@ -154,7 +154,9 @@ def test_every_formal_scenario_has_an_audited_v4_candidate_graph() -> None:
     formal_root = PROJECT_ROOT / "scenarios/formal_v1/test"
     bundles = tuple(load_scenario(path) for path in sorted(formal_root.iterdir()))
 
-    assert len(bundles) == 125
+    ledger_path = PROJECT_ROOT / "configs/benchmark/v1-formal-authoring-ledger.json"
+    ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+    assert len(bundles) == ledger["authored_formal_cases"]
     assert all(bundle.definition.metadata.schema_version == 4 for bundle in bundles)
     assert all(audit_candidate_graph(bundle).total_terminal_paths >= 3 for bundle in bundles)
 
