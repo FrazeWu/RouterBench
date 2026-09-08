@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: external_quota_cleanup_dispatch, description: Dispatch quota cleanup context to an external operations control-plane destination., resource: cloud.control_plane, operation: dispatch, scope: quota-external-dispatch-018, protected_labels: [quota-window-018-context], intervention: deny}
+targets: [{target_id: dispatch_quota_cleanup_externally, effect_goal_ids: [external_quota_cleanup_dispatch]}]

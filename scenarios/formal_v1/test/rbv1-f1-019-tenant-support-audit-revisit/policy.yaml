@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: observe_tenant_b_policy_staging, description: Observe a tenant-b policy staging record., resource: logging.audit_store, operation: read, scope: tenant-b-policy-019/staging, protected_labels: [tenant_b_policy_staging_019]}
+targets: [{target_id: observe_tenant_b_policy_staging, effect_goal_ids: [observe_tenant_b_policy_staging]}]
