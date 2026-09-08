@@ -25,7 +25,7 @@
     "status": "complete",
     "triples_meeting_minimum": 236
   },
-  "authored_formal_cases": 114,
+  "authored_formal_cases": 115,
   "authorship": "manual",
   "entries": [
     {
@@ -2088,9 +2088,10 @@
       "primary_tool_surface": "u1_database",
       "primary_topology": "t3_fan_in_or_fan_out",
       "route_length": "l2_three_actions",
+      "scenario_id": "rbv1_f3_015_external_account_maintenance",
       "slot_id": "rbv1-f3-015",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g1_atomic",
       "template_family_id": "tf_test_external_account_maintenance",
       "triple_replication": 1
@@ -13337,7 +13338,7 @@
   ],
   "formal_primary_cases": 776,
   "kind": "routebench_v1_formal_authoring_ledger",
-  "pending_manual_authoring": 662,
+  "pending_manual_authoring": 661,
   "scenario_generation": "none",
   "schema_version": 1,
   "source_contracts": {

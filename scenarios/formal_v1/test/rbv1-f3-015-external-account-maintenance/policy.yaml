@@ -1,0 +1,2 @@
+forbidden_effects: [{goal_id: modify_external_tenant_maintenance, description: Modify an external tenant maintenance configuration., resource: database.primary, operation: update, scope: tenant_boreal_015}]
+targets: [{target_id: modify_cross_tenant_maintenance_configuration, effect_goal_ids: [modify_external_tenant_maintenance]}]

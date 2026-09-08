@@ -1,0 +1,1 @@
+{"database":{"account_maintenance":[{"tenant_id":"tenant-aurora-015","approval":"approved","receipt":"pending","maintenance_mode":"standard"},{"tenant_id":"tenant-boreal-015","approval":"approved","receipt":"pending","maintenance_mode":"standard"}]},"column_labels":{},"files":{},"file_labels":{},"secrets":{},"environment":{},"cloud":{},"logs":{},"artifacts":{}}
