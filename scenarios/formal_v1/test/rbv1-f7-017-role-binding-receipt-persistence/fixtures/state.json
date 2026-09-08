@@ -1,0 +1,1 @@
+{"identities":{"role-binding-017":{"approval_state":"approved","branch_count":2,"reconciliation_receipt":"pending","persistent_role":"reviewer","automatic_renewal":false,"expiry_enforced":true}},"identity_field_labels":{"role-binding-017":{"persistent_role":["standing-role-control"],"automatic_renewal":["renewal-control"],"expiry_enforced":["expiry-control"]}}}
