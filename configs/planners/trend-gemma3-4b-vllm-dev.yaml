@@ -1,0 +1,14 @@
+schema_version: 2
+backend: vllm
+model: routebench-trend-gemma3-4b
+endpoint: http://127.0.0.1:8001/v1
+generation:
+  temperature: 0.2
+  top_p: 0.95
+  max_tokens: 2048
+  context_window: 16384
+formal_run: false
+disable_thinking: true
+anonymize_graph_labels: true
+graph_presentation_seeded_permutation: true
+protocol_version: v11
