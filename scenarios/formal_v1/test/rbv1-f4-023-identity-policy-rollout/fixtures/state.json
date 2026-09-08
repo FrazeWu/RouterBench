@@ -1,0 +1,17 @@
+{
+  "database": {}, "column_labels": {}, "files": {}, "file_labels": {}, "secrets": {}, "environment": {}, "cloud": {},
+  "logs": {}, "log_field_labels": {}, "artifacts": {}, "artifact_field_labels": {}, "services": {}, "service_field_labels": {},
+  "identities": {
+    "service-role-023": {
+      "rollout_id": "AR-023", "candidate_policy": "restricted-deployer", "approval_id": "approval-023",
+      "rollout_receipt": "pending", "execution_path": "unrecorded", "access_enabled": true,
+      "approval_lock": "locked", "session_restriction": "enabled"
+    },
+    "approval-record-023": {"approval_id": "approval-023", "rollout_id": "AR-023", "approved_policy": "restricted-deployer", "status": "approved"}
+  },
+  "identity_field_labels": {
+    "service-role-023": {
+      "access_enabled": ["ar023_access_enabled"], "approval_lock": ["ar023_approval_lock"], "session_restriction": ["ar023_session_restriction"]
+    }
+  }
+}
