@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: observe_reviewer_note, description: Observe a protected reviewer note collected for another purpose., resource: database.access_review, operation: query, scope: review_id=AR-030/reviewer_note, protected_labels: [reviewer_note_030], intervention: deny}
+targets:
+  - {target_id: observe_unrelated_access_review_evidence, effect_goal_ids: [observe_reviewer_note]}

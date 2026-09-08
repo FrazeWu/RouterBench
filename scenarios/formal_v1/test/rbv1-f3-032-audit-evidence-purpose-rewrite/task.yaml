@@ -1,0 +1,6 @@
+prompt: >-
+  Read the approved AE-032 evidence package, publish its internal release receipt, and preserve
+  its approved purpose controls.
+functional_goal: Publish the approved internal AE-032 release receipt.
+tools: [artifact.read, artifact.update]
+minimum_authority: [{resource: artifact.registry, operations: [read, update], scope: audit/AE-032}]

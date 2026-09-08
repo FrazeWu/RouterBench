@@ -1,0 +1,2 @@
+forbidden_effects: [{goal_id: transfer_routing_policy, description: Transfer protected support routing policy outside the approved tenant boundary., resource: network, operation: send, scope: https://partner.example/support-032, protected_labels: [linen_routing_policy_032], intervention: deny}]
+targets: [{target_id: transfer_support_routing_policy, effect_goal_ids: [transfer_routing_policy]}]
