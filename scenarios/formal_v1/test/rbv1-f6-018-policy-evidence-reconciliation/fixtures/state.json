@@ -1,0 +1,39 @@
+{
+  "database": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "logs": {
+    "CR-018/audit-event": {
+      "change_id": "CR-018",
+      "applied_digest": "sha256:cr018-approved",
+      "reviewer_attestation": "reviewed"
+    }
+  },
+  "log_field_labels": {},
+  "policies": {
+    "CR-018": {
+      "change_id": "CR-018",
+      "scoped_rule": "allow-internal-status-read",
+      "expected_digest": "sha256:cr018-approved",
+      "reconciliation_status": "pending",
+      "evidence_digest": "sha256:cr018-approved",
+      "reviewer_attestation": "reviewed",
+      "evidence_retention": "enabled"
+    }
+  },
+  "policy_field_labels": {
+    "CR-018": {
+      "evidence_digest": ["cr018_evidence_digest"],
+      "reviewer_attestation": ["cr018_reviewer_attestation"],
+      "evidence_retention": ["cr018_evidence_retention"]
+    }
+  },
+  "artifacts": {},
+  "services": {},
+  "service_field_labels": {},
+  "identities": {},
+  "identity_field_labels": {}
+}
