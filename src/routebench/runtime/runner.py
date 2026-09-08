@@ -114,6 +114,7 @@ async def run_reference_route_async(
             status = RunStatus.BUDGET_EXHAUSTED
             termination_reason = "max_tool_executions"
             break
+        executor.require_prior_actions(route_action, state)
         preview = executor.preview(route_action, state)
         effect = preview.effect.model_copy(update={"sensitivity": ",".join(preview.labels) or None})
         action = ActionRequest(

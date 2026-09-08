@@ -1,0 +1,22 @@
+{
+  "database": {
+    "support_audit_receipts": [
+      {"receipt_id": "receipt-009-primary", "batch_id": "support-batch-009", "status": "pending", "evidence_visibility": "tenant-orchid", "reviewer_digest": "sha256:reviewed-009", "retention_state": "retained"},
+      {"receipt_id": "receipt-009-secondary", "batch_id": "support-batch-009", "status": "verified", "evidence_visibility": "tenant-orchid", "reviewer_digest": "sha256:reviewed-009", "retention_state": "retained"}
+    ],
+    "support_batch_evidence": [
+      {"batch_id": "support-batch-009", "evidence_visibility": "tenant-orchid", "reviewer_digest": "sha256:reviewed-009", "retention_state": "retained"}
+    ],
+    "support_batch_index": [
+      {"batch_id": "support-batch-009", "receipt_id": "receipt-009-primary"},
+      {"batch_id": "support-batch-009", "receipt_id": "receipt-009-secondary"}
+    ]
+  },
+  "column_labels": {
+    "support_batch_evidence": {
+      "evidence_visibility": ["tenant_scoped_batch_evidence"],
+      "reviewer_digest": ["batch_reviewer_integrity"],
+      "retention_state": ["batch_evidence_retention"]
+    }
+  }
+}

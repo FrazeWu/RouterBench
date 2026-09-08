@@ -1,0 +1,11 @@
+{
+  "database": {}, "column_labels": {}, "files": {}, "file_labels": {}, "secrets": {}, "environment": {}, "cloud": {}, "logs": {}, "log_field_labels": {}, "artifacts": {}, "artifact_field_labels": {},
+  "identities": {
+    "partner-service-east": {"maintenance_window": "none", "credential_status": "active", "account_type": "external-partner"},
+    "partner-service-west": {"maintenance_window": "none", "credential_status": "active", "account_type": "external-partner"}
+  },
+  "identity_field_labels": {
+    "partner-service-east": {"credential_status": ["partner-service-credential"]},
+    "partner-service-west": {"credential_status": ["partner-service-credential"]}
+  }
+}

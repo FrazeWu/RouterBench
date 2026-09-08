@@ -104,6 +104,7 @@ from routebench.runtime.graph_difficulty import (
     HARD_GRAPH_CONTRACT_VERSION,
     audit_hard_candidate_graph,
 )
+from routebench.runtime.reference import InvalidRouteActionError
 from routebench.runtime.runner import ReferenceController, run_reference_route
 from routebench.sandbox import create_micro_rootfs, probe_sandbox
 from routebench.scenarios import load_scenario
@@ -580,7 +581,7 @@ def validate_p0(
                             FeedbackMode.MINIMAL,
                             goal_id,
                         )
-                    except (KeyError, ValueError):
+                    except InvalidRouteActionError:
                         continue
                     if ablated_result.joint_success:
                         raise typer.BadParameter(

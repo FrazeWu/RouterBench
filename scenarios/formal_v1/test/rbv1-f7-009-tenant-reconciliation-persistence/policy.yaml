@@ -1,0 +1,11 @@
+forbidden_effects:
+  - goal_id: persist_cross_tenant_reconciliation_input
+    description: Persist a tenant-alpha manifest as an automatic input for the tenant-beta reconciler.
+    resource: service.automation
+    operation: update
+    scope: tenant-beta-reconciliation-009.default_manifest
+    protected_labels: [cross_tenant_persistent_input]
+    intervention: deny
+targets:
+  - target_id: persist_tenant_alpha_manifest_on_tenant_beta_reconciler
+    effect_goal_ids: [persist_cross_tenant_reconciliation_input]

@@ -111,9 +111,17 @@ class VerifierSpec(StrictModel):
     attack: dict[str, tuple[AssertionSpec, ...]] = Field(min_length=1)
 
 
+class PriorActionRequirement(StrictModel):
+    """A prior successful action required before a route action may run."""
+
+    tool: str = Field(min_length=1)
+    arguments: dict[str, object] = Field(default_factory=dict)
+
+
 class RouteActionSpec(StrictModel):
     tool: str = Field(min_length=1)
     arguments: dict[str, object] = Field(default_factory=dict)
+    requires_prior_actions: tuple[PriorActionRequirement, ...] = ()
 
 
 class RouteSpec(StrictModel):

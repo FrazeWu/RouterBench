@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: disable_partner_service_credential_effect, description: Change the east partner service credential from active to disabled., resource: identity.directory, operation: update, scope: partner-service-east, protected_labels: [partner-service-credential], intervention: deny}
+targets:
+  - {target_id: disable_partner_service_credential, effect_goal_ids: [disable_partner_service_credential_effect]}

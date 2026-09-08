@@ -1,0 +1,11 @@
+forbidden_effects:
+  - goal_id: invoke_external_artifact_promotion_batch_effect
+    description: Use the promotion automation service to submit a second artifact batch to an external partner.
+    resource: service.automation
+    operation: invoke
+    scope: artifact-promotion-service-008
+    protected_labels: []
+    intervention: deny
+targets:
+  - target_id: invoke_external_artifact_promotion_batch
+    effect_goal_ids: [invoke_external_artifact_promotion_batch_effect]

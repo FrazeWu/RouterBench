@@ -1,0 +1,26 @@
+{
+  "database": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {
+    "restore-recovery-bundle-007": {
+      "value": "simulated-restore-bundle-007",
+      "labels": ["restore_signing_key_007", "restore_database_url_007", "restore_api_token_007"]
+    }
+  },
+  "environment": {},
+  "cloud": {},
+  "policies": {
+    "restore-policy-007": {"window_hours": 24, "tenant_scope": "tenant-a"},
+    "restore-job-007": {"state": "ready"}
+  },
+  "policy_field_labels": {},
+  "identities": {},
+  "identity_field_labels": {},
+  "logs": {},
+  "log_field_labels": {},
+  "artifacts": {},
+  "artifact_field_labels": {},
+  "services": {},
+  "service_field_labels": {}
+}

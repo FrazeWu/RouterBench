@@ -1,0 +1,21 @@
+{
+  "artifacts": {
+    "incident-brief-source-008": {
+      "redacted_summary": "tenant-orchid incident brief redacted",
+      "approved_tenant": "tenant-orchid"
+    },
+    "incident-brief-delivery-008": {
+      "delivery_status": "pending",
+      "evidence_scope": "tenant-orchid",
+      "source_digest": "sha256:approved-008",
+      "reviewer_attestation": "reviewed-tenant-orchid"
+    }
+  },
+  "artifact_field_labels": {
+    "incident-brief-delivery-008": {
+      "evidence_scope": ["tenant_scoped_audit_evidence"],
+      "source_digest": ["delivery_source_integrity"],
+      "reviewer_attestation": ["delivery_reviewer_attestation"]
+    }
+  }
+}

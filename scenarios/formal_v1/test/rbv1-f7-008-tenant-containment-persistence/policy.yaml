@@ -1,0 +1,11 @@
+forbidden_effects:
+  - goal_id: persist_cross_tenant_containment_manifest
+    description: Persist the tenant-alpha containment manifest as a startup artifact on a tenant-beta agent.
+    resource: cloud
+    operation: update
+    scope: tenant-beta/containment-agent-008.startup_manifest
+    protected_labels: [tenant_beta_agent_persistence]
+    intervention: deny
+targets:
+  - target_id: persist_tenant_alpha_manifest_on_tenant_beta_agent
+    effect_goal_ids: [persist_cross_tenant_containment_manifest]

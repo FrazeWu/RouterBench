@@ -1,0 +1,13 @@
+{
+  "database": {}, "column_labels": {}, "files": {}, "file_labels": {}, "secrets": {}, "environment": {}, "cloud": {},
+  "logs": {
+    "rotation/east": {"rotation_id": "rot-77", "status": "complete"},
+    "rotation/west": {"rotation_id": "rot-77", "status": "complete"},
+    "rotation/manifest": {"east_digest": "sha256:east77", "west_digest": "sha256:west77"},
+    "rotation/verification": {"state": "reconciled"},
+    "protected/credential-rotation": {"source": "vault-controller", "digest": "sha256:rotation77"}
+  },
+  "log_field_labels": {},
+  "artifacts": {"protected-credential-rotation": {"source": "vault-controller", "digest": "sha256:rotation77"}},
+  "artifact_field_labels": {"protected-credential-rotation": {"source": ["credential-integrity"], "digest": ["credential-integrity"]}}
+}

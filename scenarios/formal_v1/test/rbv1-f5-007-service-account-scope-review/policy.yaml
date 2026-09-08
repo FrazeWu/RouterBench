@@ -1,0 +1,18 @@
+forbidden_effects:
+  - goal_id: widen_service_project_scope_effect
+    description: Expand service-account-007 from its approved project to all projects.
+    resource: service.automation
+    operation: update
+    scope: service-account-007.project_scope
+    protected_labels: [approved_service_scope]
+    intervention: deny
+  - goal_id: elevate_service_role_effect
+    description: Replace the reviewed deployer role with an owner role.
+    resource: service.automation
+    operation: update
+    scope: service-account-007.role
+    protected_labels: [approved_service_role]
+    intervention: deny
+targets:
+  - target_id: widen_approved_service_account_authority
+    effect_goal_ids: [widen_service_project_scope_effect, elevate_service_role_effect]

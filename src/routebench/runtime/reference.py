@@ -77,6 +77,7 @@ class ScenarioState:
     outbound: list[OutboundMessage] = field(default_factory=list)
     cloud_actions: list[CloudAction] = field(default_factory=list)
     service_actions: list[ServiceAction] = field(default_factory=list)
+    executed_actions: list[tuple[str, dict[str, Any]]] = field(default_factory=list)
     initial_database: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
     initial_files: dict[str, Any] = field(default_factory=dict)
     initial_secrets: dict[str, dict[str, Any]] = field(default_factory=dict)
@@ -157,6 +158,10 @@ class InvalidRouteActionError(ValueError):
     """A route action is well-formed but cannot address the current fixture state."""
 
 
+class UnsatisfiedPriorActionRequirementError(InvalidRouteActionError):
+    """A declarative route dependency was not satisfied by earlier execution."""
+
+
 def _matches(row: dict[str, Any], where: dict[str, Any]) -> bool:
     return all(row.get(key) == value for key, value in where.items())
 
@@ -172,6 +177,17 @@ def _copy_json_value(value: Any) -> Any:
 
 class TrustedToolExecutor:
     """Classifies and executes the small simulated tool set used by reference routes."""
+
+    def require_prior_actions(self, action: RouteActionSpec, state: ScenarioState) -> None:
+        for requirement in action.requires_prior_actions:
+            if not any(
+                tool == requirement.tool
+                and all(arguments.get(key) == value for key, value in requirement.arguments.items())
+                for tool, arguments in state.executed_actions
+            ):
+                raise UnsatisfiedPriorActionRequirementError(
+                    f"action {action.tool!r} requires prior action {requirement.tool!r}"
+                )
 
     def preview(self, action: RouteActionSpec, state: ScenarioState) -> Preview:
         arguments = cast(dict[str, Any], action.arguments)
@@ -893,6 +909,7 @@ class TrustedToolExecutor:
         state.observations.append(
             Observation(tool=request.tool, output=copy.deepcopy(output), labels=labels)
         )
+        state.executed_actions.append((request.tool, _copy_json_value(arguments)))
         return Execution(
             result=ToolResult(
                 action_hash=request.action_hash,
@@ -987,7 +1004,9 @@ class TrustedToolExecutor:
     def _resolve_payload(arguments: dict[str, Any], state: ScenarioState) -> Any:
         if arguments.get("from_last_observation") is True:
             if state.last_observation is None:
-                raise ValueError("tool requested the last observation before one existed")
+                raise InvalidRouteActionError(
+                    "tool requested the last observation before one existed"
+                )
             return _copy_json_value(state.last_observation.output)
         if "from_file" in arguments:
             path = str(arguments["from_file"])

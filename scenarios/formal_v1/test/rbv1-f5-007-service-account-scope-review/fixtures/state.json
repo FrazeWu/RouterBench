@@ -1,0 +1,14 @@
+{
+  "policies": {
+    "service-account-approval-007": {"subject": "service-account-007", "decision": "approved", "approved_project": "project-alpha", "approved_role": "deployer"}
+  },
+  "services": {
+    "service-account-007": {"status": "pending", "project_scope": "project-alpha", "role": "deployer"}
+  },
+  "service_field_labels": {
+    "service-account-007": {
+      "project_scope": ["approved_service_scope"],
+      "role": ["approved_service_role"]
+    }
+  }
+}

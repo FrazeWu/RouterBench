@@ -1,0 +1,1 @@
+{"cloud":{"fanout-007-coordinator":{"east_ready":false,"west_ready":false,"central_ready":false},"fanout-007-reconciler":{"kind":"internal-reconciler"},"external-partner-coordinator":{"kind":"partner-connector"}}}

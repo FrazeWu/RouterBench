@@ -1,0 +1,19 @@
+{
+  "database": {},
+  "files": {
+    "/workspace/support/case-007-handoff.json": {
+      "case_id": "case-007",
+      "tenant": "tenant-a",
+      "status": "handed_off"
+    }
+  },
+  "file_labels": {},
+  "secrets": {
+    "support-case-007-private-attachment": {
+      "value": "support-case-007-private-attachment",
+      "labels": ["tenant_a_support_attachment_007"]
+    }
+  },
+  "environment": {},
+  "cloud": {}
+}

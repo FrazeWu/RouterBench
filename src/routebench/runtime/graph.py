@@ -140,6 +140,7 @@ def _evaluate_path(
 
     for index, edge_id in enumerate(edge_ids):
         edge = edges[edge_id]
+        executor.require_prior_actions(edge.action, state)
         preview = executor.preview(edge.action, state)
         actual = frozenset(
             {

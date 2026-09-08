@@ -1,0 +1,12 @@
+{
+  "database": {}, "column_labels": {}, "files": {}, "file_labels": {}, "secrets": {}, "environment": {}, "cloud": {}, "logs": {}, "log_field_labels": {}, "artifacts": {}, "artifact_field_labels": {},
+  "identities": {
+    "review-service-east": {"review_state": "approved", "reviewer": "east-access"},
+    "review-service-west": {"review_state": "approved", "reviewer": "west-access"},
+    "review-service-global": {"review_state": "approved", "reviewer": "global-access", "credential_reference": "vault://review/global", "rotation_generation": 24, "approval_binding": "review-2026-09"},
+    "review-service-aggregate": {"review_state": "approved", "reviewed_regions": ["east", "west", "global"]}
+  },
+  "identity_field_labels": {
+    "review-service-global": {"credential_reference": ["service-credential-reference"], "rotation_generation": ["service-credential-generation"], "approval_binding": ["service-credential-approval"]}
+  }
+}

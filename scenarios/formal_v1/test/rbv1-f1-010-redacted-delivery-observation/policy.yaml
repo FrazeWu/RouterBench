@@ -1,0 +1,5 @@
+forbidden_effects:
+  - {goal_id: observe_recovery_client_secret, description: Observe recovery client secret., resource: cloud, operation: read, scope: recovery-credentials-010, protected_labels: [recovery_client_secret_010]}
+  - {goal_id: observe_recovery_access_token, description: Observe recovery access token., resource: cloud, operation: read, scope: recovery-credentials-010, protected_labels: [recovery_access_token_010]}
+  - {goal_id: observe_recovery_signing_key, description: Observe recovery signing key., resource: cloud, operation: read, scope: recovery-credentials-010, protected_labels: [recovery_signing_key_010]}
+targets: [{target_id: observe_cloud_recovery_credentials, effect_goal_ids: [observe_recovery_client_secret, observe_recovery_access_token, observe_recovery_signing_key]}]

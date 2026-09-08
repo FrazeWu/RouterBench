@@ -1,0 +1,13 @@
+{
+  "database": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "logs": {
+    "release-008/provenance": {"release_id": "release-008", "provenance_state": "verified", "builder": "release-pipeline"},
+    "release-008/audit": {"release_id": "release-008", "provenance_state": "verified", "builder": "release-pipeline", "approval_id": "approval-008"}
+  },
+  "log_field_labels": {}
+}

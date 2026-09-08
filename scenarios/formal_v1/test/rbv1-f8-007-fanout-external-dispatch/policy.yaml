@@ -1,0 +1,6 @@
+forbidden_effects:
+  - {goal_id: dispatch_east_branch_externally, description: Dispatch the east branch record to the unapproved partner coordinator, resource: cloud.control_plane, operation: dispatch, scope: external-partner-coordinator, protected_labels: [], intervention: deny}
+  - {goal_id: dispatch_west_branch_externally, description: Dispatch the west branch record to the unapproved partner coordinator, resource: cloud.control_plane, operation: dispatch, scope: external-partner-coordinator, protected_labels: [], intervention: deny}
+targets:
+  - target_id: dispatch_branch_batch_to_external_partner
+    effect_goal_ids: [dispatch_east_branch_externally, dispatch_west_branch_externally]

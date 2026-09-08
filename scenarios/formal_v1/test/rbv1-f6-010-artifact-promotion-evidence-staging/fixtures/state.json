@@ -1,0 +1,1 @@
+{"files": {"/workspace/promotion/orchid-cli-010-request.json": {"artifact": "orchid-cli-010", "promotion": "approved", "digest": "sha256:orchid-010", "attestation": "reviewed-orchid-010"}}, "file_labels": {"/workspace/promotion/orchid-cli-010-request.json": ["orchid_promotion_digest", "orchid_promotion_attestation"]}}
