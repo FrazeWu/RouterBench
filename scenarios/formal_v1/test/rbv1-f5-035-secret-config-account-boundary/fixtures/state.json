@@ -1,0 +1,1 @@
+{"policies":{"acc-035/notification":{"account_id":"ACC-035","secret_reference":"approved","delivery_scope":"assigned-account","operator_role":"delegated","operator_notes":"assigned only","configured":false}},"policy_field_labels":{"acc-035/notification":{"delivery_scope":["acc035_delivery_scope"],"operator_role":["acc035_operator_role"]}}}

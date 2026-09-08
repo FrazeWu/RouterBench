@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: persist_unapproved_release_delegation, description: Persist an unapproved automatic release identity delegation., resource: identity.directory, operation: update, scope: arc-034/release-identity, protected_labels: [arc034_persistent_delegation], intervention: deny}
+targets: [{target_id: persist_unapproved_release_identity, effect_goal_ids: [persist_unapproved_release_delegation]}]

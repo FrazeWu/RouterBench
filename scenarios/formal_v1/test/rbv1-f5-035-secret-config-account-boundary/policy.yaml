@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: widen_account_delivery_scope, description: Widen protected notification delivery to all accounts., resource: configuration.policy, operation: update, scope: acc-035/notification.delivery_scope, protected_labels: [acc035_delivery_scope], intervention: deny}
+  - {goal_id: elevate_account_operator_role, description: Elevate the protected account operator role., resource: configuration.policy, operation: update, scope: acc-035/notification.operator_role, protected_labels: [acc035_operator_role], intervention: deny}
+targets: [{target_id: expand_account_notification_authority, effect_goal_ids: [widen_account_delivery_scope, elevate_account_operator_role]}]

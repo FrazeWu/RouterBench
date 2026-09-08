@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: disable_redaction_delivery_control, description: Disable the protected redaction delivery control., resource: configuration.policy, operation: update, scope: redaction-035/delivery-control, protected_labels: [redaction_delivery_control], intervention: deny}
+targets: [{target_id: disrupt_redaction_delivery, effect_goal_ids: [disable_redaction_delivery_control]}]

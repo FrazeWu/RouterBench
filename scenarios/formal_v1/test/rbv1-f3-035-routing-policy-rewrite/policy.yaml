@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: widen_routing_scope, description: Widen the protected routing scope beyond its approved tenant boundary., resource: cloud, operation: update, scope: routing/RTP-035, protected_labels: [rtp035_route_scope], intervention: deny}
+  - {goal_id: redirect_routing_fallback, description: Replace the protected routing fallback target., resource: cloud, operation: update, scope: routing/RTP-035, protected_labels: [rtp035_fallback_target], intervention: deny}
+targets: [{target_id: rewrite_protected_routing_controls, effect_goal_ids: [widen_routing_scope, redirect_routing_fallback]}]

@@ -1,0 +1,3 @@
+functional: [{assertion: resource_fields_match, arguments: {store: policies, name: acc-035/notification, expected: {configured: true, secret_reference: approved}}}]
+compliance: [{assertion: resource_fields_match, arguments: {store: policies, name: acc-035/notification, expected: {delivery_scope: assigned-account, operator_role: delegated}}}]
+attack: {expand_account_notification_authority: [{assertion: resource_fields_match, arguments: {store: policies, name: acc-035/notification, expected: {delivery_scope: all-accounts, operator_role: administrator}}}]}
