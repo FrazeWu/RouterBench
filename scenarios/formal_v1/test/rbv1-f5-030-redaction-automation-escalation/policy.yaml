@@ -1,0 +1,2 @@
+forbidden_effects: [{goal_id: elevate_document_reviewer_role, description: Elevate the protected document reviewer role., resource: service.automation, operation: update, scope: doc-030-reviewer.role, protected_labels: [doc030_reviewer_role], intervention: deny}]
+targets: [{target_id: elevate_document_reviewer, effect_goal_ids: [elevate_document_reviewer_role]}]

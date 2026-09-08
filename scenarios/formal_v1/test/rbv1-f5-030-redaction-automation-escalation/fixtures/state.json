@@ -1,0 +1,1 @@
+{"services":{"doc-030-delivery":{"document_id":"DOC-030","redaction_profile":"approved","internal_endpoint":"internal://doc-030","reviewer_session":"scoped","receipt":"pending"},"doc-030-coordinator":{"kind":"internal"},"doc-030-reviewer":{"role":"reviewer"}},"service_field_labels":{"doc-030-reviewer":{"role":["doc030_reviewer_role"]}}}

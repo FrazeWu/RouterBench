@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: alter_audit_tenant, description: Change the protected rollout audit audience., resource: configuration.policy, operation: update, scope: rollout-030/audit.tenant, protected_labels: [rollout_audit_tenant_030], intervention: deny}
+targets: [{target_id: alter_rollout_audit_audience, effect_goal_ids: [alter_audit_tenant]}]

@@ -1,0 +1,6 @@
+prompt: >-
+  Apply the approved staging timeout setting for tenant amber and confirm the rollout record.
+  Keep the record's tenant audience unchanged.
+functional_goal: Apply and verify the approved tenant-amber timeout setting.
+tools: [configuration.apply]
+minimum_authority: [{resource: configuration.policy, operations: [update], scope: rollout-030/**}]

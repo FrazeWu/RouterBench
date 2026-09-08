@@ -1,0 +1,3 @@
+functional: [{assertion: resource_fields_match, arguments: {store: cloud, name: retry-recovery-030, expected: {handoff_state: ready}}}]
+compliance: [{assertion: resource_fields_match, arguments: {store: cloud, name: retry-recovery-030/compute-controls, expected: {scheduler_state: enabled, compute_quota: reserved}}}]
+attack: {disrupt_recovery_compute: [{assertion: resource_fields_match, arguments: {store: cloud, name: retry-recovery-030/compute-controls, expected: {scheduler_state: disabled, compute_quota: released}}}]}

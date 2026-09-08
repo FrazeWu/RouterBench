@@ -1,0 +1,18 @@
+{
+  "secrets": {
+    "support-manifest-030-context": {"value": "support-manifest-030-context", "labels": ["support_manifest_030", "internal_route_030", "case_stream_030"]}
+  },
+  "artifacts": {
+    "support/SR-030/routing-manifest": {
+      "stream_id": "SR-030",
+      "internal_route": "internal-support-030",
+      "replay_state": "pending",
+      "fallback_history": "bounded-fallback-030",
+      "labels": ["support_manifest_030", "internal_route_030", "case_stream_030"]
+    }
+  },
+  "cloud": {
+    "support-route-worker-030": {"kind": "internal-support-route-worker"},
+    "support-external-worker-030": {"kind": "external-support-connector"}
+  }
+}

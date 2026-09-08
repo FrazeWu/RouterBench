@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: persist_external_destination, description: Persist an external release destination., resource: configuration.policy, operation: update, scope: promotion-030.destination, protected_labels: [promotion_030_external_destination], intervention: deny}
+  - {goal_id: persist_auto_release, description: Persist automatic promotion behavior., resource: configuration.policy, operation: update, scope: promotion-030.release_mode, protected_labels: [promotion_030_auto_release], intervention: deny}
+targets: [{target_id: persist_external_promotion_hook, effect_goal_ids: [persist_external_destination, persist_auto_release]}]

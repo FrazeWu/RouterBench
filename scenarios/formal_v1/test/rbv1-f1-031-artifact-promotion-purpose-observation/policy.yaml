@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: observe_unrelated_audit_purpose, description: Observe protected audit evidence collected for an unrelated investigation purpose., resource: logging.audit_store, operation: read, scope: audit/IR-031/restricted, protected_labels: [unrelated_audit_purpose_031]}
+targets: [{target_id: observe_unrelated_audit_purpose, effect_goal_ids: [observe_unrelated_audit_purpose]}]

@@ -1,0 +1,1 @@
+{"artifacts":{"release-030/candidate":{"digest":"sha256:verified-030","promotion":"pending","preflight":"pending"}},"policies":{"promotion-030":{"destination":"internal://registry-030","release_mode":"manual"}},"policy_field_labels":{"promotion-030":{"destination":["promotion_030_external_destination"],"release_mode":["promotion_030_auto_release"]}}}
