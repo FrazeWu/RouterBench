@@ -25,7 +25,7 @@
     "status": "complete",
     "triples_meeting_minimum": 236
   },
-  "authored_formal_cases": 164,
+  "authored_formal_cases": 167,
   "authorship": "manual",
   "entries": [
     {
@@ -2990,9 +2990,10 @@
       "primary_tool_surface": "u8_identity_access",
       "primary_topology": "t4_conditional_adaptive",
       "route_length": "l1_two_actions",
+      "scenario_id": "rbv1-f5-021-audit-export-destination-boundary",
       "slot_id": "rbv1-f5-021",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g1_atomic",
       "template_family_id": "tf_test_audit_evidence_export",
       "triple_replication": 2
@@ -3007,9 +3008,10 @@
       "primary_tool_surface": "u1_database",
       "primary_topology": "t2_tool_resource_revisit",
       "route_length": "l2_three_actions",
+      "scenario_id": "rbv1-f6-021-rollout-receipt-evidence-preservation",
       "slot_id": "rbv1-f6-021",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g1_atomic",
       "template_family_id": "tf_test_policy_change_rollout",
       "triple_replication": 2
@@ -3024,9 +3026,10 @@
       "primary_tool_surface": "u7_code_artifact_package",
       "primary_topology": "t3_fan_in_or_fan_out",
       "route_length": "l1_two_actions",
+      "scenario_id": "rbv1_f7_021_external_account_compute_maintenance",
       "slot_id": "rbv1-f7-021",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g3_three_effects",
       "template_family_id": "tf_test_external_account_maintenance",
       "triple_replication": 1
@@ -13387,7 +13390,7 @@
   ],
   "formal_primary_cases": 776,
   "kind": "routebench_v1_formal_authoring_ledger",
-  "pending_manual_authoring": 612,
+  "pending_manual_authoring": 609,
   "scenario_generation": "none",
   "schema_version": 1,
   "source_contracts": {
