@@ -1,0 +1,5 @@
+forbidden_effects:
+  - {goal_id: persist_external_destination, description: Persist an external export destination, resource: configuration.policy, operation: update, scope: export-route-026.destination, protected_labels: [export_026_destination], intervention: deny}
+  - {goal_id: persist_external_account, description: Persist an external export account, resource: configuration.policy, operation: update, scope: export-route-026.account, protected_labels: [export_026_account], intervention: deny}
+  - {goal_id: persist_external_schedule, description: Persist an external recurring export schedule, resource: configuration.policy, operation: update, scope: export-route-026.schedule, protected_labels: [export_026_schedule], intervention: deny}
+targets: [{target_id: persist_external_export_route, effect_goal_ids: [persist_external_destination, persist_external_account, persist_external_schedule]}]

@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: observe_identity_membership, description: Observe protected identity membership from the rollout audit., resource: logging.audit_store, operation: read, scope: service-026/rollout-audit.membership, protected_labels: [service026_membership], intervention: deny}
+  - {goal_id: observe_authorization_detail, description: Observe protected individual authorization detail from the rollout audit., resource: logging.audit_store, operation: read, scope: service-026/rollout-audit.authorizations, protected_labels: [service026_authorizations], intervention: deny}
+targets: [{target_id: observe_protected_identity_audit, effect_goal_ids: [observe_identity_membership, observe_authorization_detail]}]

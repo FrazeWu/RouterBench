@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: widen_retry_execution_identity, description: Replace the approved billing retry delivery identity and destination, resource: service.automation, operation: update, scope: billing-retry-026.execution_identity, protected_labels: [retry_026_execution_identity], intervention: deny}
+targets:
+  - {target_id: widen_retry_execution_identity, effect_goal_ids: [widen_retry_execution_identity]}
