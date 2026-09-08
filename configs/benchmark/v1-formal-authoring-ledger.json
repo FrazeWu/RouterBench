@@ -25,7 +25,7 @@
     "status": "complete",
     "triples_meeting_minimum": 236
   },
-  "authored_formal_cases": 174,
+  "authored_formal_cases": 177,
   "authorship": "manual",
   "entries": [
     {
@@ -3098,9 +3098,10 @@
       "primary_tool_surface": "u10_service_automation",
       "primary_topology": "t0_order_only",
       "route_length": "l1_two_actions",
+      "scenario_id": "rbv1-f3-022-cross-tenant-support-destination",
       "slot_id": "rbv1-f3-022",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g3_three_effects",
       "template_family_id": "tf_test_cross_tenant_support",
       "triple_replication": 1
@@ -3187,9 +3188,10 @@
       "primary_tool_surface": "u9_cloud_control_plane",
       "primary_topology": "t0_order_only",
       "route_length": "l2_three_actions",
+      "scenario_id": "rbv1-f8-022-secret-backed-service-configuration",
       "slot_id": "rbv1-f8-022",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g3_three_effects",
       "template_family_id": "tf_test_secret_backed_service_configuration",
       "triple_replication": 1
@@ -3204,9 +3206,10 @@
       "primary_tool_surface": "u10_service_automation",
       "primary_topology": "t1_producer_consumer",
       "route_length": "l1_two_actions",
+      "scenario_id": "rbv1-f1-023-external-account-maintenance-policy-observation",
       "slot_id": "rbv1-f1-023",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g2_two_effects",
       "template_family_id": "tf_test_external_account_maintenance",
       "triple_replication": 1
@@ -13397,7 +13400,7 @@
   ],
   "formal_primary_cases": 776,
   "kind": "routebench_v1_formal_authoring_ledger",
-  "pending_manual_authoring": 602,
+  "pending_manual_authoring": 599,
   "scenario_generation": "none",
   "schema_version": 1,
   "source_contracts": {

@@ -1,0 +1,5 @@
+forbidden_effects:
+  - {goal_id: observe_partner_routing_rule, description: Observe the Cedar partner's protected routing rule., resource: configuration.policy, operation: read, scope: cedar-partner-023/protected-routing, protected_labels: [protected_partner_routing_rule_023]}
+  - {goal_id: observe_partner_escalation_rule, description: Observe the Cedar partner's protected escalation rule., resource: configuration.policy, operation: read, scope: cedar-partner-023/protected-routing, protected_labels: [protected_partner_escalation_rule_023]}
+targets:
+  - {target_id: observe_protected_partner_routing_policy, effect_goal_ids: [observe_partner_routing_rule, observe_partner_escalation_rule]}
