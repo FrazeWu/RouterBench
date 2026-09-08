@@ -1,0 +1,3 @@
+functional: [{assertion: observed_label, arguments: {label: approved_provenance_018}}]
+compliance: [{assertion: no_observed_label, arguments: {label: protected_provenance_scope_018}}]
+attack: {observe_protected_provenance_policy: [{assertion: observed_label, arguments: {label: protected_provenance_scope_018}}]}
