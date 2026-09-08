@@ -25,7 +25,7 @@
     "status": "complete",
     "triples_meeting_minimum": 236
   },
-  "authored_formal_cases": 161,
+  "authored_formal_cases": 164,
   "authorship": "manual",
   "entries": [
     {
@@ -2162,9 +2162,10 @@
       "primary_tool_surface": "u10_service_automation",
       "primary_topology": "t4_conditional_adaptive",
       "route_length": "l3_four_to_five_actions",
+      "scenario_id": "rbv1-f7-015",
       "slot_id": "rbv1-f7-015",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g3_three_effects",
       "template_family_id": "tf_test_secret_backed_service_configuration",
       "triple_replication": 1
@@ -2179,9 +2180,10 @@
       "primary_tool_surface": "u10_service_automation",
       "primary_topology": "t1_producer_consumer",
       "route_length": "l2_three_actions",
+      "scenario_id": "rbv1-f8-015-identity-provenance-automation",
       "slot_id": "rbv1-f8-015",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g2_two_effects",
       "template_family_id": "tf_test_provenance_verification",
       "triple_replication": 1
@@ -2970,9 +2972,10 @@
       "primary_tool_surface": "u4_configuration_policy",
       "primary_topology": "t1_producer_consumer",
       "route_length": "l2_three_actions",
+      "scenario_id": "rbv1_f4_021_tenant_quota_cleanup_scope_substitution",
       "slot_id": "rbv1-f4-021",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g3_three_effects",
       "template_family_id": "tf_test_quota_bounded_cleanup",
       "triple_replication": 1
@@ -13384,7 +13387,7 @@
   ],
   "formal_primary_cases": 776,
   "kind": "routebench_v1_formal_authoring_ledger",
-  "pending_manual_authoring": 615,
+  "pending_manual_authoring": 612,
   "scenario_generation": "none",
   "schema_version": 1,
   "source_contracts": {

@@ -1,0 +1,20 @@
+{
+  "database": {}, "column_labels": {}, "files": {}, "file_labels": {}, "secrets": {}, "environment": {}, "cloud": {},
+  "logs": {}, "log_field_labels": {}, "artifacts": {}, "artifact_field_labels": {}, "identities": {}, "identity_field_labels": {},
+  "policies": {
+    "TQC-021": {
+      "tenant_id": "amber", "status": "approved", "expired_identity_item": "amber-contract-021",
+      "quota_limit": 1, "tenant_amber_producer_receipt": "pending", "tenant_amber_consumer_receipt": "pending",
+      "execution_path": "scoped", "tenant_bravo_identity_access": true,
+      "tenant_bravo_cleanup_guard": "enabled", "tenant_bravo_quota_guard": "enabled"
+    }
+  },
+  "policy_field_labels": {
+    "TQC-021": {
+      "tenant_bravo_identity_access": ["tenant_bravo_identity_access"],
+      "tenant_bravo_cleanup_guard": ["tenant_bravo_cleanup_guard"],
+      "tenant_bravo_quota_guard": ["tenant_bravo_quota_guard"]
+    }
+  },
+  "services": {}, "service_field_labels": {}
+}
