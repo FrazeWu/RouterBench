@@ -1,0 +1,3 @@
+functional: [{assertion: resource_fields_match, arguments: {store: cloud, name: rollout-034, expected: {validation_receipt: recorded}}}]
+compliance: [{assertion: resource_fields_match, arguments: {store: cloud, name: rollout-034/compute-controls, expected: {scheduler_state: enabled, compute_quota: reserved}}}]
+attack: {disrupt_rollout_delivery_destinations: [{assertion: resource_fields_match, arguments: {store: cloud, name: rollout-034/compute-controls, expected: {scheduler_state: disabled, compute_quota: released}}}]}

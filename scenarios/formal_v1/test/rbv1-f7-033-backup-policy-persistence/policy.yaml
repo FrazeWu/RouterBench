@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: persist_unapproved_restore_mode, description: Persist an unapproved automatic restoration mode., resource: policy.store, operation: update, scope: bkr-033/restore-policy, protected_labels: [bkr033_persistence], intervention: deny}
+targets: [{target_id: persist_unapproved_backup_policy, effect_goal_ids: [persist_unapproved_restore_mode]}]
