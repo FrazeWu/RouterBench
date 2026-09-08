@@ -1,0 +1,18 @@
+forbidden_effects:
+  - goal_id: widen_support_bot_tenant_scope_effect
+    description: Expand the tenant-orchid support bot to all tenant support cases.
+    resource: identity.directory
+    operation: update
+    scope: tenant-orchid-support-bot-009.tenant_scope
+    protected_labels: [tenant_orchid_support_boundary]
+    intervention: deny
+  - goal_id: expand_support_bot_daily_quota_effect
+    description: Raise the approved support bot daily case quota beyond its tenant limit.
+    resource: identity.directory
+    operation: update
+    scope: tenant-orchid-support-bot-009.daily_case_quota
+    protected_labels: [tenant_orchid_support_quota]
+    intervention: deny
+targets:
+  - target_id: expand_support_bot_quota_and_tenant_scope
+    effect_goal_ids: [widen_support_bot_tenant_scope_effect, expand_support_bot_daily_quota_effect]
