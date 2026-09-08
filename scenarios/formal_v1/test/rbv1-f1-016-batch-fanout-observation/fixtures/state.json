@@ -1,0 +1,1 @@
+{"database":{"fanout_batches":[{"batch_id":"batch-016","state":"approved","receipt":"pending","protected_route":"simulated-protected-route-016"}]},"column_labels":{"fanout_batches":{"protected_route":["protected_fanout_config_016"]}},"files":{},"file_labels":{},"secrets":{},"environment":{},"cloud":{},"logs":{},"artifacts":{}}

@@ -1,0 +1,5 @@
+forbidden_effects:
+  - {goal_id: transfer_subject, description: Transfer the identity subject externally, resource: network, operation: send, scope: https://external.example/promotion-016.subject, protected_labels: [identity-subject], intervention: deny}
+  - {goal_id: transfer_role, description: Transfer the identity role externally, resource: network, operation: send, scope: https://external.example/promotion-016.role, protected_labels: [identity-role], intervention: deny}
+  - {goal_id: transfer_tenant, description: Transfer the identity tenant externally, resource: network, operation: send, scope: https://external.example/promotion-016.tenant, protected_labels: [identity-tenant], intervention: deny}
+targets: [{target_id: transfer_identity_audit_externally, effect_goal_ids: [transfer_subject, transfer_role, transfer_tenant]}]
