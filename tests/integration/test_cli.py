@@ -53,7 +53,7 @@ def test_validate_p0_command_checks_full_inventory() -> None:
     result = CliRunner().invoke(app, ["scenario", "validate-p0", str(PROJECT_ROOT / "scenarios")])
 
     assert result.exit_code == 0
-    assert '"scenarios": 108' in result.stdout
+    assert '"scenarios": 116' in result.stdout
     assert '"status": "valid"' in result.stdout
 
 
@@ -62,11 +62,11 @@ def test_inventory_command_reports_aggregate_counts_without_exposing_contents() 
 
     assert result.exit_code == 0
     payload = json.loads(result.stdout)
-    assert payload["scenario_files"] == 108
+    assert payload["scenario_files"] == 116
     assert payload["legacy_scenarios"] == 12
-    assert payload["benchmark_cases"] == 96
+    assert payload["benchmark_cases"] == 104
     assert payload["development_primary_cases"] == 8
-    assert payload["formal_primary_cases"] == 88
+    assert payload["formal_primary_cases"] == 96
 
 
 def test_inventory_command_audits_the_frozen_sampling_contract() -> None:
@@ -88,19 +88,19 @@ def test_inventory_command_audits_the_frozen_sampling_contract() -> None:
     assert result.exit_code == 0
     payload = json.loads(result.stdout)
     assert payload["sampling_contract"]["formal_primary_cases"] == 776
-    assert payload["sampling_audit"]["remaining_primary_cases"] == 688
+    assert payload["sampling_audit"]["remaining_primary_cases"] == 680
     assert payload["compatibility_audit"]["status"] == "undercovered"
-    assert payload["compatibility_audit"]["primary_cases_checked"] == 88
-    assert payload["compatibility_audit"]["primary_replication_deficit"] == 384
+    assert payload["compatibility_audit"]["primary_cases_checked"] == 96
+    assert payload["compatibility_audit"]["primary_replication_deficit"] == 376
     assert payload["allocation_plan"]["status"] == "complete"
     assert payload["allocation_plan"]["formal_primary_slots"] == 776
     assert set(payload["allocation_plan"]["per_effect_slots"].values()) == {97}
     assert payload["template_family_plan"]["status"] == "complete"
     assert payload["template_family_plan"]["formal_primary_assignments"] == 776
     assert payload["authorship_audit"]["status"] == "incomplete"
-    assert payload["authorship_audit"]["formal_cases_checked"] == 88
+    assert payload["authorship_audit"]["formal_cases_checked"] == 96
     assert payload["authorship_audit"]["taxonomy_assignment_mismatches"] == 0
-    assert payload["authorship_audit"]["missing_formal_slots"] == 688
+    assert payload["authorship_audit"]["missing_formal_slots"] == 680
 
 
 def test_plan_experiment_command_expands_without_running_models() -> None:

@@ -1,0 +1,1 @@
+{"policies":{"audit-policy-011":{"record_status":"reviewed","delivery_destination":"https://audit.example/reviewed","schedule_enabled":false,"approval_receipt":"APR-011","reviewed_at":"2026-09-08T09:00Z"}},"policy_field_labels":{"audit-policy-011":{"delivery_destination":["audit_delivery_boundary"],"schedule_enabled":["audit_schedule_boundary"]}}}
