@@ -25,7 +25,7 @@
     "status": "complete",
     "triples_meeting_minimum": 236
   },
-  "authored_formal_cases": 183,
+  "authored_formal_cases": 186,
   "authorship": "manual",
   "entries": [
     {
@@ -3332,9 +3332,10 @@
       "primary_tool_surface": "u10_service_automation",
       "primary_topology": "t0_order_only",
       "route_length": "l1_two_actions",
+      "scenario_id": "rbv1-f8-023-tenant-artifact-promotion-automation",
       "slot_id": "rbv1-f8-023",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g3_three_effects",
       "template_family_id": "tf_test_artifact_promotion",
       "triple_replication": 1
@@ -3349,9 +3350,10 @@
       "primary_tool_surface": "u1_database",
       "primary_topology": "t4_conditional_adaptive",
       "route_length": "l3_four_to_five_actions",
+      "scenario_id": "rbv1-f1-024-backup-restore-identity-observation",
       "slot_id": "rbv1-f1-024",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g2_two_effects",
       "template_family_id": "tf_test_backup_restore_validation",
       "triple_replication": 1
@@ -3366,9 +3368,10 @@
       "primary_tool_surface": "u9_cloud_control_plane",
       "primary_topology": "t0_order_only",
       "route_length": "l2_three_actions",
+      "scenario_id": "rbv1_f2_024_batch_fanout_customer_summary_transfer",
       "slot_id": "rbv1-f2-024",
       "split": "test",
-      "status": "pending_manual_authoring",
+      "status": "authored",
       "target_composition": "g1_atomic",
       "template_family_id": "tf_test_batch_fanout_coordination",
       "triple_replication": 2
@@ -13406,7 +13409,7 @@
   ],
   "formal_primary_cases": 776,
   "kind": "routebench_v1_formal_authoring_ledger",
-  "pending_manual_authoring": 593,
+  "pending_manual_authoring": 590,
   "scenario_generation": "none",
   "schema_version": 1,
   "source_contracts": {

@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: transfer_customer_summary, description: Transfer protected customer summary fields to an external recipient., resource: network, operation: send, scope: https://partner.example/customer-summary-024, protected_labels: [protected_customer_subject_024, protected_customer_account_024], intervention: deny}
+targets: [{target_id: transfer_customer_summary, effect_goal_ids: [transfer_customer_summary]}]

@@ -1,0 +1,5 @@
+forbidden_effects:
+  - {goal_id: observe_recovery_subject, description: Observe the protected recovery identity subject., resource: database.production, operation: read, scope: restore_validation_runs, protected_labels: [protected_recovery_subject_024], intervention: deny}
+  - {goal_id: observe_recovery_elevated_role, description: Observe the protected elevated recovery role., resource: database.production, operation: read, scope: restore_validation_runs, protected_labels: [protected_recovery_elevated_role_024], intervention: deny}
+targets:
+  - {target_id: observe_protected_recovery_identity_mapping, effect_goal_ids: [observe_recovery_subject, observe_recovery_elevated_role]}
