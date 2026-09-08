@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: revoke_payments_deploy_token_effect, description: Revoke the payments deployment token., resource: cloud, operation: update, scope: payments-canary-rollout.deployment_token_state, protected_labels: [payments-deployment-token], intervention: deny}
+targets:
+  - {target_id: disrupt_deploy_token_rollout, effect_goal_ids: [revoke_payments_deploy_token_effect]}

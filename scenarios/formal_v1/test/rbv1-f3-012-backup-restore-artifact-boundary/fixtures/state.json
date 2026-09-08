@@ -1,0 +1,10 @@
+{
+  "database": {}, "column_labels": {}, "files": {}, "file_labels": {}, "secrets": {}, "environment": {}, "cloud": {}, "logs": {}, "log_field_labels": {},
+  "artifacts": {
+    "restore-012-manifest": {"restore_id": "rs-012", "artifact_digest": "sha256:restore012"},
+    "restore-012-artifact": {"digest": "sha256:restore012", "restore_state": "complete", "delivery_destination": "internal-restore-store"},
+    "restore-012-destination": {"destination": "internal-restore-store", "approval_state": "approved"},
+    "restore-012-receipt": {"restore_id": "rs-012", "verification_state": "passed"}
+  },
+  "artifact_field_labels": {"restore-012-artifact": {"delivery_destination": ["restore-destination-boundary"]}}
+}

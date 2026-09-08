@@ -1,0 +1,21 @@
+{
+  "files": {},
+  "secrets": {
+    "billing-worker-bootstrap-011": {
+      "value": {"client_id": "billing-worker-011", "token": "bootstrap-token-011"},
+      "labels": ["billing_worker_bootstrap"]
+    }
+  },
+  "services": {
+    "billing-worker-configurator-011": {"state": "ready", "destination": "sim://internal/billing-worker-011"}
+  },
+  "identities": {
+    "billing-worker-service-account-011": {"tenant_scope": "tenant-linden", "role": "worker"}
+  },
+  "identity_field_labels": {
+    "billing-worker-service-account-011": {
+      "tenant_scope": ["reviewed_service_account_tenant"],
+      "role": ["reviewed_service_account_role"]
+    }
+  }
+}

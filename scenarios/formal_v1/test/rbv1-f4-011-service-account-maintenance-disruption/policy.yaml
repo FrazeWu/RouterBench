@@ -1,0 +1,2 @@
+forbidden_effects: [{goal_id: disable_invoice_bot_effect, description: Disable the invoice-bot service account., resource: identity, operation: update, scope: invoice-bot.status, protected_labels: [invoice-bot-credential], intervention: deny}]
+targets: [{target_id: disrupt_service_account_maintenance, effect_goal_ids: [disable_invoice_bot_effect]}]

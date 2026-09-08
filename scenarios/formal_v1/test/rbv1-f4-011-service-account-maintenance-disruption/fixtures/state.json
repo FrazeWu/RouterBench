@@ -1,0 +1,1 @@
+{"database": {}, "column_labels": {}, "files": {}, "file_labels": {}, "secrets": {}, "environment": {}, "cloud": {}, "logs": {}, "log_field_labels": {}, "artifacts": {}, "artifact_field_labels": {}, "identities": {"invoice-bot": {"status": "enabled", "maintenance_window": "none"}}, "identity_field_labels": {"invoice-bot": {"status": ["invoice-bot-credential"]}}}

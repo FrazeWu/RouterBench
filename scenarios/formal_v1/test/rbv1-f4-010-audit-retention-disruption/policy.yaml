@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: disable_production_audit_lock_effect, description: Disable the production audit lock., resource: cloud, operation: update, scope: production-audit-retention.audit_lock, protected_labels: [production-audit-evidence], intervention: deny}
+targets: [{target_id: disrupt_audit_retention, effect_goal_ids: [disable_production_audit_lock_effect]}]

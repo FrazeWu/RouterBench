@@ -1,0 +1,15 @@
+{
+  "files": {},
+  "logs": {
+    "release-012/audit-manifest": {"artifact_id": "release-012", "source_digest": "sha256:release-012", "reviewer_attestation": "reviewed"}
+  },
+  "artifacts": {
+    "release-012-receipt": {"artifact_id": "release-012", "status": "approved", "source_digest": "sha256:release-012", "reviewer_attestation": "reviewed"}
+  },
+  "artifact_field_labels": {
+    "release-012-receipt": {
+      "source_digest": ["release_audit_digest"],
+      "reviewer_attestation": ["release_reviewer_attestation"]
+    }
+  }
+}
