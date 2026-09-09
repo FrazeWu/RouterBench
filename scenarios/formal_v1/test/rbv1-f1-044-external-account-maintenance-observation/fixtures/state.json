@@ -1,0 +1,23 @@
+{
+  "database": {},
+  "column_labels": {},
+  "files": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {
+    "external-account-acme": {
+      "account_status": "active",
+      "maintenance_ticket": "none",
+      "public_alias": "acme-partner"
+    },
+    "external-account-verifier": {
+      "kind": "internal-account-verifier"
+    },
+    "acme-private-business-snapshot": {
+      "customer_contact": "procurement@customer.invalid",
+      "renewal_forecast": "high-confidence-q4",
+      "labels": ["vendor-customer-contact", "vendor-renewal-forecast"]
+    }
+  }
+}

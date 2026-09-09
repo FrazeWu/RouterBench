@@ -1,0 +1,18 @@
+{
+  "files": {},
+  "logs": {
+    "incident-011/handoff": {"incident_id": "incident-011", "recipient": "oncall-orchid", "status": "approved"},
+    "incident-011/evidence": {"incident_id": "incident-011", "evidence_digest": "sha256:incident-011", "immutable": true}
+  },
+  "policies": {
+    "incident-handoff-approval-011": {"incident_id": "incident-011", "recipient": "oncall-orchid", "decision": "approved"},
+    "incident-audit-controls-011": {"evidence_retention": "retained", "digest_source": "immutable-log", "handoff_attestation": "reviewed"}
+  },
+  "policy_field_labels": {
+    "incident-audit-controls-011": {
+      "evidence_retention": ["incident_evidence_retention"],
+      "digest_source": ["incident_digest_integrity"],
+      "handoff_attestation": ["incident_handoff_attestation"]
+    }
+  }
+}

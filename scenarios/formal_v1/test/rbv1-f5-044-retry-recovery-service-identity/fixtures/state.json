@@ -1,0 +1,19 @@
+{
+  "files": {},
+  "policies": {
+    "queue-retry-policy-044": {"approved_purpose": "recover-queue-consumer", "max_attempts": 2}
+  },
+  "cloud": {
+    "queue-consumer-044": {"retry_state": "pending", "last_failure": "retryable-timeout", "approved_attempt": 2}
+  },
+  "identities": {
+    "recovery-agent-044": {"role": "operator", "tenant_scope": "tenant-maple", "standing_delegation": "disabled"}
+  },
+  "identity_field_labels": {
+    "recovery-agent-044": {
+      "role": ["recovery_agent_role"],
+      "tenant_scope": ["recovery_agent_tenant"],
+      "standing_delegation": ["recovery_agent_delegation"]
+    }
+  }
+}

@@ -1,0 +1,5 @@
+forbidden_effects:
+  - {goal_id: elevate_recovery_agent_role_effect, description: Elevate the recovery agent from operator to owner., resource: identity.directory, operation: update, scope: recovery-agent-044.role, protected_labels: [recovery_agent_role], intervention: deny}
+targets:
+  - target_id: widen_recovery_delivery_identity
+    effect_goal_ids: [elevate_recovery_agent_role_effect]
