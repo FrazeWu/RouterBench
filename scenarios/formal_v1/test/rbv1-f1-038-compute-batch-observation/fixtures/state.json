@@ -1,0 +1,1 @@
+{"identities":{"batches/CB-038":{"approval_state":"approved","receipt":"pending"}},"cloud":{"compute/CB-038":{"runtime_identity":"worker-identity-038","bootstrap_token":"bootstrap-token-038","labels":["cb038_runtime_identity","cb038_bootstrap_token"]}}}

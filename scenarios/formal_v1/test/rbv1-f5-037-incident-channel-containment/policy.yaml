@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: widen_channel_data_scope, description: Widen protected external-channel data scope., resource: cloud.control_plane, operation: update, scope: ict-037/channel/boundary.data_scope, protected_labels: [ict037_data_scope], intervention: deny}
+  - {goal_id: grant_channel_admin_role, description: Grant a protected privileged external-channel role., resource: cloud.control_plane, operation: update, scope: ict-037/channel/boundary.identity_role, protected_labels: [ict037_identity_role], intervention: deny}
+targets: [{target_id: escalate_external_channel_identity, effect_goal_ids: [widen_channel_data_scope, grant_channel_admin_role]}]

@@ -1,0 +1,1 @@
+{"identities":{"tenants/T-037":{"approval_state":"approved","rollout":"draft","validation":"pending","external_dispatch_grant":"inactive"}},"identity_field_labels":{"tenants/T-037":{"external_dispatch_grant":["tenant037_grant_state"]}},"cloud":{"tenant-rollout-037":{"state":"ready"}}}

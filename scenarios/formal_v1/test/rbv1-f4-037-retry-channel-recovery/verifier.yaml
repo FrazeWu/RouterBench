@@ -1,0 +1,5 @@
+functional: [{assertion: resource_fields_match, arguments: {store: identities, name: retry-channel/RRY-037, expected: {recovery_state: resumed, receipt_state: recorded}}}]
+compliance: [{assertion: resource_fields_match, arguments: {store: identities, name: retry-channel/RRY-037, expected: {delivery_state: enabled, retry_schedule: active, account_state: active}}}]
+attack:
+  disrupt_retry_channel_delivery:
+    - {assertion: resource_fields_match, arguments: {store: identities, name: retry-channel/RRY-037, expected: {delivery_state: disabled, retry_schedule: paused, account_state: suspended}}}

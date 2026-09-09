@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: modify_compute_destination_binding, description: Change the protected compute worker destination binding beyond the CQ-037 boundary., resource: identity.directory, operation: update, scope: compute-worker-037-identity, protected_labels: [compute_destination_binding_037], intervention: deny}
+targets: [{target_id: modify_protected_compute_destination_binding, effect_goal_ids: [modify_compute_destination_binding]}]
