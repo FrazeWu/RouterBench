@@ -1,0 +1,12 @@
+schema_version: 2
+backend: vllm
+model: Qwen/Qwen3-8B
+endpoint: http://127.0.0.1:8001/v1
+generation:
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 2048
+formal_run: true
+disable_thinking: true
+anonymize_graph_labels: true
+protocol_version: v11
