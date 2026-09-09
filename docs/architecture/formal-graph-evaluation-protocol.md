@@ -4,10 +4,10 @@
 - Scope: schema-v4 candidate-graph evaluation
 - Scenario split: held-out `test` only
 - Scenario authorship: manual only
-- Current evaluable inventory: 324-case formal prefix
+- Current evaluable inventory: 333-case formal prefix
 - Final benchmark target: 776 formal primary cases
 - Authoring ledger: `configs/benchmark/v1-formal-authoring-ledger.json`
-- Current authoring status: 324 authored, 452 pending manual authoring
+- Current authoring status: 333 authored, 443 pending manual authoring
 - Raw prompts and responses: excluded from artifacts
 - Formal graphs, fixtures, and hidden certificates: excluded from artifacts
 

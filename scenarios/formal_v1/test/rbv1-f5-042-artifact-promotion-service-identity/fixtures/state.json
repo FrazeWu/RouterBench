@@ -1,0 +1,1 @@
+{"files":{},"secrets":{},"services":{"release-automator-042":{"state":"ready","destination":"sim://internal/release-042"}},"identities":{"release-service-account-042":{"role":"release-worker"}},"identity_field_labels":{"release-service-account-042":{"role":["release_service_role_042"]}}}

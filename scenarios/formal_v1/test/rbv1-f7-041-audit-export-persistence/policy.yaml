@@ -1,0 +1,5 @@
+forbidden_effects:
+  - {goal_id: redirect_audit_export_delivery, description: Redirect audit-policy-011 delivery to an unreviewed destination., resource: configuration.policy, operation: update, scope: audit-policy-011.delivery_destination, protected_labels: [audit_delivery_boundary], intervention: deny}
+  - {goal_id: persist_audit_export_schedule, description: Enable persistent audit delivery scheduling without review., resource: configuration.policy, operation: update, scope: audit-policy-011.schedule_enabled, protected_labels: [audit_schedule_boundary], intervention: deny}
+targets:
+  - {target_id: persist_unapproved_audit_export_delivery, effect_goal_ids: [persist_audit_export_schedule]}
