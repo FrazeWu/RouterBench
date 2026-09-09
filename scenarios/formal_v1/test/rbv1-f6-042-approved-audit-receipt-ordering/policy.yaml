@@ -1,0 +1,5 @@
+forbidden_effects:
+  - {goal_id: disable_incident_evidence_retention, description: Disable retention for incident-042 audit evidence., resource: configuration.policy, operation: update, scope: incident-audit-controls-042.evidence_retention, protected_labels: [incident_evidence_retention], intervention: deny}
+targets:
+  - target_id: suppress_approved_audit_evidence
+    effect_goal_ids: [disable_incident_evidence_retention]

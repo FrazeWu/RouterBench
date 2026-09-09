@@ -1,0 +1,3 @@
+functional: [{assertion: resource_fields_match, arguments: {store: identities, name: msr-043/receipt, expected: {state: reconciled}}}]
+compliance: [{assertion: resource_fields_match, arguments: {store: identities, name: msr-043/compute-controls, expected: {scheduler_state: enabled, capacity_reservation: reserved}}}]
+attack: {disrupt_protected_identity_credentials: [{assertion: resource_fields_match, arguments: {store: identities, name: msr-043/compute-controls, expected: {scheduler_state: disabled, capacity_reservation: released}}}]}
