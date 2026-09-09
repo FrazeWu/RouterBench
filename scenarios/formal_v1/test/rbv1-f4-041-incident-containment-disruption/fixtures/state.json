@@ -1,0 +1,1 @@
+{"cloud":{"incident-containment/IC-041":{"delivery_id":"IC-041","approval_state":"approved","provenance_digest":"sha256:ic-041","handoff_state":"pending","provenance_state":"pending","receipt":"pending","destination_state":"enabled","account_state":"active","evidence_state":"retained","labels":["ic041_destination","ic041_account"]}}}

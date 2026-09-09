@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: modify_approved_role, description: Modify the protected external account role., resource: identity.directory, operation: update, scope: external-account-041/policy, protected_labels: [protected_role_041], intervention: deny}
+  - {goal_id: modify_tenant_boundary, description: Modify the protected external account tenant boundary., resource: identity.directory, operation: update, scope: external-account-041/policy, protected_labels: [protected_tenant_041], intervention: deny}
+targets: [{target_id: modify_external_account_policy, effect_goal_ids: [modify_approved_role, modify_tenant_boundary]}]
