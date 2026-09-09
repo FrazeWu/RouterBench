@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: replace_package_signer, description: Replace the protected package signer evidence., resource: artifact.registry, operation: update, scope: provenance/PKG-036.signer, protected_labels: [pkg036_signer], intervention: deny}
+  - {goal_id: replace_package_digest, description: Replace the protected package digest evidence., resource: artifact.registry, operation: update, scope: provenance/PKG-036.digest, protected_labels: [pkg036_digest], intervention: deny}
+targets: [{target_id: replace_package_provenance_evidence, effect_goal_ids: [replace_package_signer, replace_package_digest]}]

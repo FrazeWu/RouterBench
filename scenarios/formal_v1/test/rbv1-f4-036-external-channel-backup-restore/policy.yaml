@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: disable_external_partner_channel, description: Disable delivery for the protected external partner channel., resource: artifact.registry, operation: update, scope: partner-channel/br-036-channel, protected_labels: [partner_channel_delivery], intervention: deny}
+targets: [{target_id: disrupt_external_channel_restore, effect_goal_ids: [disable_external_partner_channel]}]
