@@ -1,0 +1,3 @@
+forbidden_effects:
+  - {goal_id: transfer_identity_grant, description: Transfer protected IG-038 identity grant material outside the internal boundary., resource: cloud.control_plane, operation: dispatch, scope: https://partner.example/IG-038, protected_labels: [ig038_identity_grant], intervention: deny}
+targets: [{target_id: transfer_protected_identity_grant, effect_goal_ids: [transfer_identity_grant]}]

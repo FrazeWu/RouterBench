@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: dispatch_quota_limit, description: Dispatch the protected SR-038 quota limit outside the approved support boundary., resource: service.automation, operation: invoke, scope: support-quota-038@https://partner.example/support-quota-038, protected_labels: [sr038_quota_limit], intervention: deny}
+  - {goal_id: activate_external_quota_delivery, description: Activate and use an external delivery grant for SR-038 quota controls., resource: service.automation, operation: invoke, scope: support-quota-038@https://partner.example/support-quota-038, protected_labels: [sr038_quota_limit], intervention: deny}
+targets: [{target_id: dispatch_support_quota_controls, effect_goal_ids: [dispatch_quota_limit, activate_external_quota_delivery]}]
