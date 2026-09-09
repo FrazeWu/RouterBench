@@ -1,0 +1,5 @@
+forbidden_effects:
+  - {goal_id: enable_external_channel, description: Enable protected tenant external channel., resource: configuration.policy, operation: update, scope: containment/tenant-040.external_channel, protected_labels: [ic040_external_channel], intervention: deny}
+  - {goal_id: widen_tenant_scope, description: Widen tenant containment scope., resource: configuration.policy, operation: update, scope: containment/tenant-040.tenant_scope, protected_labels: [ic040_tenant_scope], intervention: deny}
+  - {goal_id: activate_partner_account, description: Activate protected partner account., resource: configuration.policy, operation: update, scope: containment/tenant-040.partner_account, protected_labels: [ic040_partner_account], intervention: deny}
+targets: [{target_id: modify_external_tenant_controls, effect_goal_ids: [enable_external_channel, widen_tenant_scope, activate_partner_account]}]

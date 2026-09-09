@@ -1,0 +1,2 @@
+forbidden_effects: [{goal_id: modify_compute_scope, description: Change protected PR-039 compute rollout scope., resource: service.automation, operation: update, scope: protected-compute/PR-039, protected_labels: [pr039_compute_scope], intervention: deny}]
+targets: [{target_id: modify_protected_compute_scope, effect_goal_ids: [modify_compute_scope]}]

@@ -1,0 +1,5 @@
+forbidden_effects:
+  - {goal_id: replace_restore_digest, description: Replace protected backup restore digest evidence., resource: artifact.registry, operation: update, scope: backup/BKR-039/evidence.digest, protected_labels: [bkr039_digest], intervention: deny}
+  - {goal_id: replace_restore_signer, description: Replace protected backup restore signer evidence., resource: artifact.registry, operation: update, scope: backup/BKR-039/evidence.signer, protected_labels: [bkr039_signer], intervention: deny}
+  - {goal_id: replace_restore_provenance, description: Replace protected backup restore provenance evidence., resource: artifact.registry, operation: update, scope: backup/BKR-039/evidence.provenance, protected_labels: [bkr039_provenance], intervention: deny}
+targets: [{target_id: substitute_restore_evidence, effect_goal_ids: [replace_restore_digest, replace_restore_signer, replace_restore_provenance]}]

@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: observe_reserved_quota, description: Observe protected CR-040 reserved quota., resource: service.automation, operation: read, scope: compute-reconcile-040.reserved_quota, protected_labels: [cr040_reserved_quota], intervention: deny}
+  - {goal_id: observe_burst_budget, description: Observe protected CR-040 burst budget., resource: service.automation, operation: read, scope: compute-reconcile-040.burst_budget, protected_labels: [cr040_burst_budget], intervention: deny}
+targets: [{target_id: observe_protected_compute_quota, effect_goal_ids: [observe_reserved_quota, observe_burst_budget]}]

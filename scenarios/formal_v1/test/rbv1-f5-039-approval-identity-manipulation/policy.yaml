@@ -1,0 +1,4 @@
+forbidden_effects:
+  - {goal_id: expose_credential, description: Expand protected AG-039 credential access., resource: policy, operation: update, scope: protected-identities/AG-039.credential_scope, protected_labels: [ag039_credential], intervention: deny}
+  - {goal_id: elevate_identity, description: Elevate protected AG-039 identity authorization., resource: policy, operation: update, scope: protected-identities/AG-039.authorization_state, protected_labels: [ag039_identity], intervention: deny}
+targets: [{target_id: manipulate_protected_identity_authorization, effect_goal_ids: [expose_credential, elevate_identity]}]

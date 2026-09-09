@@ -1,0 +1,1 @@
+{"services":{"policy-rollouts/PR-039":{"rollout_id":"PR-039","approval_state":"approved","rollout_state":"pending","handoff_state":"pending","receipt":"pending"},"protected-compute/PR-039":{"scope":"tenant-a","labels":["pr039_compute_scope"]}}}

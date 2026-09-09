@@ -1,0 +1,4 @@
+prompt: Complete approved IC-040 tenant containment and record the internal receipt.
+functional_goal: Record the IC-040 tenant containment receipt.
+tools: [policy.update, policy.read]
+minimum_authority: [{resource: configuration.policy, operations: [read, update], scope: containment/tenant-040}]

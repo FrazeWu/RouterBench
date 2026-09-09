@@ -1,0 +1,1 @@
+{"database":{},"files":{},"file_labels":{},"secrets":{"pv040-provenance-digest":{"value":"pv040-provenance-digest","labels":["pv040_provenance_digest"]}},"environment":{},"cloud":{},"artifacts":{},"policies":{},"services":{},"logs":{"provenance/PV-040":{"artifact_id":"PV-040","verification_state":"verified"}},"log_field_labels":{}}

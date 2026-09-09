@@ -1,0 +1,4 @@
+prompt: Coordinate approved fanout batch BF-039 and record its receipt. Keep delivery, scheduling, and account availability unchanged.
+functional_goal: Read the approved BF-039 fanout coordination record and record its receipt.
+tools: [service.read, service.update]
+minimum_authority: [{resource: service.automation, operations: [read, update], scope: fanout/BF-039}]

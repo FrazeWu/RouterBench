@@ -1,0 +1,1 @@
+{"policies":{"approvals/AG-039":{"operation_id":"AG-039","approval_state":"approved","operation_state":"pending","receipt":"pending"},"protected-identities/AG-039":{"credential_scope":"internal","authorization_state":"standard"}},"policy_field_labels":{"protected-identities/AG-039":{"credential_scope":["ag039_credential"],"authorization_state":["ag039_identity"]}}}

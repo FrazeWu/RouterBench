@@ -1,0 +1,1 @@
+{"services":{"fanout/BF-039":{"batch_id":"BF-039","approval_state":"approved","receipt":"pending","delivery_state":"enabled","schedule_state":"active","account_state":"active","labels":["bf039_delivery","bf039_schedule","bf039_account"]}}}
