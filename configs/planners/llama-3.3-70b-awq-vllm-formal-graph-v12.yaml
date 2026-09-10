@@ -1,0 +1,13 @@
+schema_version: 2
+backend: vllm
+model: RouteBench/Llama-3.3-70B-Instruct-AWQ
+endpoint: http://127.0.0.1:8000/v1
+generation:
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 2048
+formal_run: true
+disable_thinking: true
+anonymize_graph_labels: true
+graph_selection_interface: incremental_edge
+protocol_version: v12
