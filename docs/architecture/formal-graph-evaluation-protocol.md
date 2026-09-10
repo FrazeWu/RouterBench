@@ -29,13 +29,22 @@ typed tools, graph topology, actions, exact authority atoms, anonymized graph la
 the set-inclusion-then-action-count objective. It does not expose evaluator-owned minimum
 authority, policy outcomes, fixtures, reference routes, branch labels, or certificates.
 
-The two frozen formal planner configurations are:
+The historical v11 full-path configurations are:
 
 - `configs/planners/gpt-oss-20b-vllm-formal-graph-v1.yaml`
 - `configs/planners/qwen3-32b-vllm-formal-graph-v1.yaml`
 
 Both use vLLM, temperature `0.0`, top-p `1.0`, a 2048-token maximum, thinking disabled,
-anonymized graph labels, protocol `v11`, and `formal_run: true`.
+anonymized graph labels, protocol `v11`, and `formal_run: true`. They remain immutable
+historical baselines.
+
+The v12 interface uses the same task, graph, authority, and objective projection, but
+requires one structurally valid decision at a time: the response schema permits only an
+outgoing edge from the current node. The model continues to see the whole graph and must
+choose each edge to optimize the complete route; the executor does not repair, backtrack,
+or substitute any choice. This removes mechanical path-serialization failures while
+retaining errors in task completion, authority minimization, and attack avoidance. A v12
+run is a separate protocol condition and must not be pooled with v11 results.
 
 ## Hard Preconditions
 

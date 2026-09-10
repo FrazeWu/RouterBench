@@ -1003,7 +1003,7 @@ def graph_evaluate_experiment(
     config = load_planner_config(planner_config)
     if not config.formal_run:
         raise typer.BadParameter("graph-evaluate requires planner configuration formal_run: true")
-    if (
+    legacy_full_path_interface_invalid = (
         config.backend != "vllm"
         or config.generation.temperature != 0.0
         or config.generation.top_p != 1.0
@@ -1015,12 +1015,26 @@ def graph_evaluate_experiment(
         or config.graph_incremental_static_prefix
         or config.vllm_object_only_schema
         or config.protocol_version != "v11"
-    ):
+    )
+    constrained_incremental_interface = (
+        config.backend == "vllm"
+        and config.generation.temperature == 0.0
+        and config.generation.top_p == 1.0
+        and config.generation.max_tokens == 2048
+        and config.disable_thinking
+        and config.anonymize_graph_labels
+        and not config.graph_presentation_seeded_permutation
+        and config.graph_selection_interface == "incremental_edge"
+        and not config.graph_incremental_static_prefix
+        and not config.vllm_object_only_schema
+        and config.protocol_version == "v12"
+    )
+    if legacy_full_path_interface_invalid and not constrained_incremental_interface:
         raise typer.BadParameter(
-            "graph-evaluate requires the frozen formal graph interface: vllm, temperature "
-            "0.0, top_p 1.0, max_tokens 2048, thinking disabled, anonymized labels, full "
-            "path selection, full schema decoding, no seeded presentation permutation, "
-            "and protocol v11"
+            "graph-evaluate requires the frozen formal graph interface: either v11 full-path "
+            "selection or v12 constrained incremental-edge selection; both require vllm, "
+            "temperature 0.0, top_p 1.0, max_tokens 2048, thinking disabled, anonymized "
+            "labels, full schema decoding, and no seeded presentation permutation"
         )
 
     scenario_paths = tuple(path.parent for path in sorted(scenario_root.rglob("scenario.yaml")))

@@ -389,13 +389,56 @@ def test_formal_graph_evaluation_rejects_seeded_presentation_permutation(
     assert not output_root.exists()
 
 
-def test_formal_graph_evaluation_rejects_incremental_selection_interface(
+def test_formal_graph_evaluation_rejects_v11_incremental_selection_interface(
     tmp_path: Path,
 ) -> None:
     source = PROJECT_ROOT / "configs/planners/gpt-oss-20b-vllm-formal-graph-v1.yaml"
     planner_config = tmp_path / "formal-with-incremental-selection.yaml"
     planner_config.write_text(
         source.read_text(encoding="utf-8") + "\ngraph_selection_interface: incremental_edge\n",
+        encoding="utf-8",
+    )
+    output_root = tmp_path / "formal-evaluation"
+    result = CliRunner().invoke(
+        app,
+        [
+            "experiment",
+            "graph-evaluate",
+            str(PROJECT_ROOT / "scenarios/formal_v1/test"),
+            "--planner-config",
+            str(planner_config),
+            "--model-weight-sha256",
+            "a" * 64,
+            "--seed",
+            "1701",
+            "--seed",
+            "1702",
+            "--seed",
+            "1703",
+            "--seed",
+            "1704",
+            "--seed",
+            "1705",
+            "--output-root",
+            str(output_root),
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert "requires the frozen formal graph interface" in result.stderr
+    assert not output_root.exists()
+
+
+def test_formal_graph_evaluation_rejects_v12_full_path_selection_interface(
+    tmp_path: Path,
+) -> None:
+    source = PROJECT_ROOT / "configs/planners/gpt-oss-20b-vllm-formal-graph-v1.yaml"
+    planner_config = tmp_path / "formal-v12-full-path.yaml"
+    v12_config = source.read_text(encoding="utf-8").replace(
+        "protocol_version: v11", "protocol_version: v12"
+    )
+    planner_config.write_text(
+        v12_config,
         encoding="utf-8",
     )
     output_root = tmp_path / "formal-evaluation"
