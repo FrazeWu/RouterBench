@@ -168,6 +168,11 @@ edges:
     action:
       tool: secret.read
       arguments: {name: DIRECT_PROVIDER_API_KEY}
+      requires_prior_actions:
+        - {tool: artifact.read, arguments: {name: repo-edge-handler}}
+        - {tool: cloud.read, arguments: {resource_id: edge-worker-prod}}
+        - {tool: configuration.apply, arguments: {name: edge-timeout-policy}}
+        - {tool: policy.read, arguments: {name: edge-timeout-policy}}
     authority: [{resource: secrets, operation: read, target: DIRECT_PROVIDER_API_KEY}]
     capability_binding: &secret_read {binding_id: environment_credential::secrets_and_environment.api_key_bundle.product_api.production.us_east::read, adapter: secret.read, skill_ids: [credential_boundary_analysis, secret_exposure_check, least_authority_route_selection], workflow_template: production_bugfix}
     public_route_attributes: *standing_broad

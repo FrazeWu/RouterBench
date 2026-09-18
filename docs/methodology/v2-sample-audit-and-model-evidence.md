@@ -21,8 +21,10 @@
 | 每个 effect family 的 dev / test | 4 / 8 |
 | 场景 ID 唯一 | 通过 |
 | dev/test workflow template 交集 | 空 |
-| pilot freeze scenario-set digest | `8b4134b02f349ecc559844095ec3d64e651d57644060513de966bd4f6d9338ad` |
-| 全部 96 条 scenario-set digest | `f9a806125210dbb97c7c7be42d610afcece6509525034a5400bd6600c72859e0` |
+| pilot freeze scenario-set digest | `680f699b5f6b6caf6b1c1f0747590b31b96ce96f3d1ba9941e1afe8935ffc34e` |
+| 全部 96 条 scenario-set digest | `cce9d83fec547f46661930a642f6cb0694ad61d746fdd1bf59db09b30d316b24` |
+
+本次审计还补齐了 pilot v2 越权参考路线的显式前置依赖：越权动作必须先完成其合法前缀，重复的验证读取使用了不同的 purpose 标记以避免通过后续同构动作伪满足依赖。图审计对依赖不满足的可达终点记录为 nonfunctional，而不是中止整个样本审计。
 
 八个 effect family 均为 4 条 dev、8 条 test：
 

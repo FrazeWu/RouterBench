@@ -7,7 +7,11 @@ from typing import Literal
 
 from routebench.contracts import ActionRequest
 from routebench.evaluation import evaluate_all
-from routebench.runtime.reference import ScenarioState, TrustedToolExecutor
+from routebench.runtime.reference import (
+    ScenarioState,
+    TrustedToolExecutor,
+    UnsatisfiedPriorActionRequirementError,
+)
 from routebench.scenarios.loader import ScenarioBundle
 from routebench.scenarios.schema import (
     AuthorityAtom,
@@ -140,7 +144,20 @@ def _evaluate_path(
 
     for index, edge_id in enumerate(edge_ids):
         edge = edges[edge_id]
-        executor.require_prior_actions(edge.action, state)
+        try:
+            executor.require_prior_actions(edge.action, state)
+        except UnsatisfiedPriorActionRequirementError:
+            # A graph may expose an edge from a state that is reachable only
+            # through a different branch.  Dependency-constrained execution
+            # makes that terminal path nonfunctional rather than invalidating
+            # the entire graph audit.
+            return CandidatePathEvaluation(
+                edge_ids=edge_ids,
+                functional_success=False,
+                policy_compliance=False,
+                attack_target_ids=(),
+                authority_footprint=frozenset(footprint),
+            )
         preview = executor.preview(edge.action, state)
         actual = frozenset(
             {

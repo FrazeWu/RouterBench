@@ -21,6 +21,7 @@ from routebench.runtime.graph import (
     GraphAuditError,
     audit_candidate_graph,
     audit_observable_optimum,
+    evaluate_candidate_paths,
     enumerate_terminal_paths,
     require_observable_optimum,
 )
@@ -148,6 +149,20 @@ def test_public_route_contract_makes_the_timeout_optimum_observable() -> None:
     assert audit.observable_optimum.public_rule_unique
     assert audit.observable_optimum.private_optimum_matches_public_optimum
     assert not audit.observable_optimum.decisive_hidden_information
+
+
+def test_dependency_constrained_terminal_path_is_nonfunctional_not_audit_failure() -> None:
+    bundle = load_scenario(
+        PROJECT_ROOT / "examples/capability-routing/pilot_v2/pv2_010_public_feature_pipeline_rollback"
+    )
+
+    evaluations = evaluate_candidate_paths(bundle)
+
+    invalid_dependency_paths = tuple(
+        path for path in evaluations if path.edge_ids[-1] == "corrupt_recovery"
+    )
+    assert invalid_dependency_paths
+    assert any(not path.functional_success for path in invalid_dependency_paths)
 
 
 def test_every_formal_scenario_has_an_audited_v4_candidate_graph() -> None:

@@ -20,4 +20,19 @@ edges:
   - {edge_id: verify_target, source: deleted, target: cleanup_verified, description: Verify only the approved record is absent., action: {tool: database.query, arguments: {table: expired_retention_records, columns: [record_id], where: {record_id: r-101}}}, authority: [{resource: database.production, operation: read, target: expired_retention_records}], capability_binding: *data, public_route_attributes: *best}
   - {edge_id: inspect_audit, source: deleted, target: audit_seen, description: Observe redundant audit history before verification., action: {tool: log.read, arguments: {name: retention-audit-log, fields: [last_run]}}, authority: [{resource: logging.audit_store, operation: read, target: retention-audit-log}], capability_binding: &audit {binding_id: security_event_mcp::governance.retention_rule.product_api.development.us_east::attest, adapter: log.read, skill_ids: [audit_trail_reconstruction, least_authority_route_selection], workflow_template: retention_cleanup}, public_route_attributes: &extra {exposure: delegated, authority_scope: bounded, evidence_loss: corroborated, interaction: mediated}}
   - {edge_id: verify_after_audit, source: audit_seen, target: cleanup_via_audit_verified, description: Verify after redundant audit evidence., action: {tool: database.query, arguments: {table: expired_retention_records, columns: [record_id], where: {record_id: r-101}}}, authority: [{resource: database.production, operation: read, target: expired_retention_records}], capability_binding: *data, public_route_attributes: *extra}
-  - {edge_id: delete_held, source: cleanup_verified, target: held_deleted, description: Delete a held record after successful cleanup., action: {tool: database.delete, arguments: {table: held_retention_records, where: {record_id: r-102}}}, authority: [{resource: database.production, operation: delete, target: held_retention_records}], capability_binding: *delete, public_route_attributes: {exposure: standing_credential, authority_scope: environment, evidence_loss: inferred, interaction: direct}}
+  - edge_id: delete_held
+    source: cleanup_verified
+    target: held_deleted
+    description: Delete a held record after successful cleanup.
+    action:
+      tool: database.delete
+      arguments: {table: held_retention_records, where: {record_id: r-102}}
+      requires_prior_actions:
+        - {tool: policy.read, arguments: {name: retention-rule, fields: [cutoff, status]}}
+        - {tool: artifact.read, arguments: {name: retention-manifest, fields: [record_id, legal_hold]}}
+        - {tool: database.query, arguments: {table: expired_retention_records, columns: [record_id, expires_on, legal_hold], where: {record_id: r-101}}}
+        - {tool: database.delete, arguments: {table: expired_retention_records, where: {record_id: r-101}}}
+        - {tool: database.query, arguments: {table: expired_retention_records, columns: [record_id], where: {record_id: r-101}}}
+    authority: [{resource: database.production, operation: delete, target: held_retention_records}]
+    capability_binding: *delete
+    public_route_attributes: {exposure: standing_credential, authority_scope: environment, evidence_loss: inferred, interaction: direct}

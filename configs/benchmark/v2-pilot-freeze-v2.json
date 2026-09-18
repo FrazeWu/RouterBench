@@ -4,19 +4,19 @@
   "protocol_revision": 2,
   "allocation_manifest": "configs/benchmark/v2-pilot-allocation.yaml",
   "test_model_calls_authorized_after_freeze": true,
-  "scenario_set_digest": "8b4134b02f349ecc559844095ec3d64e651d57644060513de966bd4f6d9338ad",
+  "scenario_set_digest": "680f699b5f6b6caf6b1c1f0747590b31b96ce96f3d1ba9941e1afe8935ffc34e",
   "scenario_digests": {
-    "rbv2_f1_001_public_consent_reconciliation": "045d82d0e27e07917bdde573cd1586a4800eb2f322f3fc7aa175f5a808f49794",
-    "rbv2_f1_002_public_security_alert_triage": "925d3852721820f644842f2428dd15867687c7672ee8fef5cdeec3f7f509d4f6",
-    "rbv2_f2_001_public_bounded_audit_export": "4858841a9c8105296c278c227070925f61c74c2fa852a94760935fc20a7b362b",
-    "rbv2_f2_002_public_notification_delivery": "60664e14ffdd8ebf716a4569943db90238e2097d664e1e89986ecd3dcb041b99",
-    "rbv2_f2_003_public_partner_integration_repair": "6dc94ea3652b1da5a36fdcabd7921c16ade60bfdc1d4413290d5989518b58260",
-    "rbv2_f3_001_public_timeout_repair": "46f55a7d1898a0c373233066d1b2d7c73594bd26f271a61d02782d217d62fa89",
-    "rbv2_f3_002_public_runbook_correction": "583dae846a259d7f62b8bb73916b315a7196937c71189043239c12214a23f29c",
-    "rbv2_f4_001_public_retention_cleanup": "327627f3a1d33e04db50cf6b56236ae28a1c87bfcfbb0fed1f97857f6736ed10",
-    "rbv2_f4_002_public_feature_pipeline_rollback": "5eeed07a520cbc1f71e6acef48099756c140efd4bb8f9693e736d5484cb75901",
-    "rbv2_f5_001_public_identity_deactivation": "732167510d02cece5cea57cce1215ab7a89679881ed1be7935eee83fe71758a0",
-    "rbv2_f5_002_public_role_correction": "aa8173c8b94555f552a13dff14961cb2ed0d60b12a4c088dfee828ef06d40237",
-    "rbv2_f5_003_public_token_rotation": "01a4527fedf1cb35995ba19e52dda8e77511b2453ecb6d1877ac28568dacba69"
+    "rbv2_f1_001_public_consent_reconciliation": "28ea8f3da4db345e4aa41e0df970aef4bd340f578646c8ad9a2a80de9c575780",
+    "rbv2_f1_002_public_security_alert_triage": "e89e9cd67196ff37fc1138b4126100b061c40d83223a85f51094cc72df2991be",
+    "rbv2_f2_001_public_bounded_audit_export": "3a9634c4785384a097daac821b95b5a6b1f0ac702e6f47333c522c00d04bb5d3",
+    "rbv2_f2_002_public_notification_delivery": "539d28e15cd998dc063f5fc95e5a4421efd84626776b351b1a8ee9ad1d9ce13b",
+    "rbv2_f2_003_public_partner_integration_repair": "6cccd6eda462f87b662962f1877bb0c2b09da31db71941922f0f7ada98481ed1",
+    "rbv2_f3_001_public_timeout_repair": "3cf2a8ddefe041fe237f43910ef5abe2517876edf3af4f4df652a3ab8880a8a0",
+    "rbv2_f3_002_public_runbook_correction": "43f5dd56a0d52bcd2004f1e679682445b734afcfe4d2116e2df811153a859d5d",
+    "rbv2_f4_001_public_retention_cleanup": "3ec39f888b41b48c7d38e084f460bedede176422a61af94371ba600bb9f6caed",
+    "rbv2_f4_002_public_feature_pipeline_rollback": "e02f94775f4a138a25e2e635b190652e8d5f237a346b4f8ffb7fb0ccae3753d5",
+    "rbv2_f5_001_public_identity_deactivation": "3010e91c1c8a392791028ee08f9e7a905eb840bad14c69a8386b65e280699243",
+    "rbv2_f5_002_public_role_correction": "de3c1d53118cfa6c0ed28f490ff6c419e75f27c9e06a3269f9cbeb11a90414cc",
+    "rbv2_f5_003_public_token_rotation": "fdc9cde5a0bb6d583b54d2a9000b1fa5f7ba70030b0d6d220e69e1123fcf0ff2"
   }
 }

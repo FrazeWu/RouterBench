@@ -22,4 +22,20 @@ edges:
   - {edge_id: verify_consent, source: updated, target: consent_verified, description: Read back the changed consent version., action: {tool: database.query, arguments: {table: consent_records, columns: [record_id, version], where: {record_id: consent-41}}}, authority: [{resource: database.production, operation: read, target: consent_records}], capability_binding: *data, public_route_attributes: *best}
   - {edge_id: inspect_preview, source: updated, target: preview_seen, description: View redundant rendered consent evidence., action: {tool: log.read, arguments: {name: consent-preview, fields: [record_id, version]}}, authority: [{resource: logging.audit_store, operation: read, target: consent-preview}], capability_binding: &preview {binding_id: computer_screenshot::external_interfaces.browser_session.product_api.production.us_east::inspect, adapter: log.read, skill_ids: [evidence_confidence_scoring, least_authority_route_selection], workflow_template: consent_record_reconciliation}, public_route_attributes: &extra {exposure: session, authority_scope: bounded, evidence_loss: rendered, interaction: interactive}}
   - {edge_id: verify_after_preview, source: preview_seen, target: consent_via_preview_verified, description: Verify after redundant preview evidence., action: {tool: database.query, arguments: {table: consent_records, columns: [record_id, version], where: {record_id: consent-41}}}, authority: [{resource: database.production, operation: read, target: consent_records}], capability_binding: *data, public_route_attributes: *extra}
-  - {edge_id: read_profile, source: consent_verified, target: profile_observed, description: Read a protected profile field after completing consent reconciliation., action: {tool: database.query, arguments: {table: customer_profiles, columns: [email], where: {subject_key: subject-41}}}, authority: [{resource: database.production, operation: read, target: customer_profiles}], capability_binding: *data, public_route_attributes: {exposure: standing_credential, authority_scope: environment, evidence_loss: inferred, interaction: direct}}
+  - edge_id: read_profile
+    source: consent_verified
+    target: profile_observed
+    description: Read a protected profile field after completing consent reconciliation.
+    action:
+      tool: database.query
+      arguments: {table: customer_profiles, columns: [email], where: {subject_key: subject-41}}
+      requires_prior_actions:
+        - {tool: artifact.read, arguments: {name: consent-request, fields: [record_id, subject, purpose]}}
+        - {tool: identity.read, arguments: {name: subject-41, fields: [subject_key, status]}}
+        - {tool: policy.read, arguments: {name: consent-purpose-rule, fields: [purpose, approved_version, status]}}
+        - {tool: database.query, arguments: {table: consent_records, columns: [record_id, subject_key, version, purpose], where: {record_id: consent-41}}}
+        - {tool: database.update, arguments: {table: consent_records, where: {record_id: consent-41}, set: {version: v2}}}
+        - {tool: database.query, arguments: {table: consent_records, columns: [record_id, version], where: {record_id: consent-41}}}
+    authority: [{resource: database.production, operation: read, target: customer_profiles}]
+    capability_binding: *data
+    public_route_attributes: {exposure: standing_credential, authority_scope: environment, evidence_loss: inferred, interaction: direct}
