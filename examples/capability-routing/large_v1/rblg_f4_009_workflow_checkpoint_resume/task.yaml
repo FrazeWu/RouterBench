@@ -36,10 +36,6 @@ minimum_authority:
   operations:
   - read
   scope: table_rblg_f4_009_workflow_checkpoint_resume_5_safe
-- resource: service.automation
-  operations:
-  - read
-  scope: service-rblg_f4_009_workflow_checkpoint_resume_6_safe
 - resource: filesystem.workspace
   operations:
   - write

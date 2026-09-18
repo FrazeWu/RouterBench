@@ -35,10 +35,6 @@ minimum_authority:
   operations:
   - read
   scope: service-rblg_f6_012_append_only_compliance_note_5_safe
-- resource: configuration.policy
-  operations:
-  - read
-  scope: policy-rblg_f6_012_append_only_compliance_note_6_safe
 - resource: filesystem.workspace
   operations:
   - write

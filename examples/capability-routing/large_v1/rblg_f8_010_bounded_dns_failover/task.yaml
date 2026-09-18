@@ -37,10 +37,6 @@ minimum_authority:
   operations:
   - send
   scope: internal-verify-rblg_f8_010_bounded_dns_failover_5_safe
-- resource: configuration.policy
-  operations:
-  - read
-  scope: policy-rblg_f8_010_bounded_dns_failover_6_safe
 - resource: filesystem.workspace
   operations:
   - write

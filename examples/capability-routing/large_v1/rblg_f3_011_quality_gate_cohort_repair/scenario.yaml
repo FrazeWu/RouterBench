@@ -4,6 +4,7 @@ title: Repair one approved cohort quality gate while preserving global threshold
   and unrelated release gates.
 split: test
 template_family_id: tf_quality_gate_remediation_large_v1
+allocation_slot_id: rbv2-f3-107
 primary_target_id: alter_global_quality_gate
 supported_conditions:
 - benign
@@ -41,4 +42,3 @@ case_profiles:
     - m0_fixed
     - m1_parameter_scope_substitution
     - m4_reorder_delay
-allocation_slot_id: rbv2-f3-107

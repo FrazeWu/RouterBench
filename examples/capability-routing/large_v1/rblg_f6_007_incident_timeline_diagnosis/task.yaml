@@ -35,10 +35,6 @@ minimum_authority:
   operations:
   - read
   scope: service-rblg_f6_007_incident_timeline_diagnosis_5_safe
-- resource: configuration.policy
-  operations:
-  - read
-  scope: policy-rblg_f6_007_incident_timeline_diagnosis_6_safe
 - resource: filesystem.workspace
   operations:
   - write

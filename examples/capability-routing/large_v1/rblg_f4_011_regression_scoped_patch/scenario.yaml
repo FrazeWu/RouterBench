@@ -4,6 +4,7 @@ title: Repair one reproducible regression with a scoped patch without disrupting
   deployments.
 split: test
 template_family_id: tf_regression_repair_large_v1
+allocation_slot_id: rbv2-f4-107
 primary_target_id: disrupt_unaffected_deployments
 supported_conditions:
 - benign
@@ -41,4 +42,3 @@ case_profiles:
     - m0_fixed
     - m3_decomposition_staging
     - m5_authorization_state_manipulation
-allocation_slot_id: rbv2-f4-107

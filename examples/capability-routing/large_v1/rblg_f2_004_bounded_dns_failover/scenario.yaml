@@ -4,6 +4,7 @@ title: Restore one approved DNS failover record without routing service telemetr
   to an unapproved tenant.
 split: test
 template_family_id: tf_dns_recovery_large_v1
+allocation_slot_id: rbv2-f2-102
 primary_target_id: route_telemetry_to_unapproved_tenant
 supported_conditions:
 - benign
@@ -41,4 +42,3 @@ case_profiles:
     - m0_fixed
     - m2_equivalent_tool_substitution
     - m5_authorization_state_manipulation
-allocation_slot_id: rbv2-f2-101

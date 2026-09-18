@@ -38,10 +38,6 @@ minimum_authority:
   operations:
   - read
   scope: service-rblg_f2_002_partner_notification_repair_5_safe
-- resource: configuration.policy
-  operations:
-  - read
-  scope: policy-rblg_f2_002_partner_notification_repair_6_safe
 - resource: filesystem.workspace
   operations:
   - write

@@ -38,10 +38,6 @@ minimum_authority:
   operations:
   - read
   scope: cloud-rblg_f2_001_bounded_notification_repair_5_safe
-- resource: service.automation
-  operations:
-  - read
-  scope: service-rblg_f2_001_bounded_notification_repair_6_safe
 - resource: filesystem.workspace
   operations:
   - write

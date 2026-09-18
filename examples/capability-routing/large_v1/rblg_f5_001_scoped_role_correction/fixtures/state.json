@@ -259,12 +259,6 @@
       "route_token": "fixture",
       "scope": "approved",
       "status": "ready"
-    },
-    "identity-rblg_f5_001_scoped_role_correction_6_safe": {
-      "role": "reviewer",
-      "route_token": "fixture",
-      "scope": "approved",
-      "status": "ready"
     }
   },
   "identity_field_labels": {
@@ -282,8 +276,7 @@
     "identity-rblg_f5_001_scoped_role_correction_2_over_relay_2": {},
     "identity-rblg_f5_001_scoped_role_correction_2_over_relay_3": {},
     "identity-rblg_f5_001_scoped_role_correction_2_over_short": {},
-    "identity-rblg_f5_001_scoped_role_correction_2_safe": {},
-    "identity-rblg_f5_001_scoped_role_correction_6_safe": {}
+    "identity-rblg_f5_001_scoped_role_correction_2_safe": {}
   },
   "log_field_labels": {
     "forbidden-log-rblg_f5_001_scoped_role_correction": {}

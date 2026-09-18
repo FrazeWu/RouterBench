@@ -323,11 +323,6 @@
       "route_token": "fixture",
       "scope": "approved",
       "status": "ready"
-    },
-    "policy-rblg_f1_004_purpose_scoped_customer_lookup_6_safe": {
-      "route_token": "fixture",
-      "scope": "approved",
-      "status": "ready"
     }
   },
   "policy_field_labels": {
@@ -338,8 +333,7 @@
     "policy-rblg_f1_004_purpose_scoped_customer_lookup_0_over_relay_2": {},
     "policy-rblg_f1_004_purpose_scoped_customer_lookup_0_over_relay_3": {},
     "policy-rblg_f1_004_purpose_scoped_customer_lookup_0_over_short": {},
-    "policy-rblg_f1_004_purpose_scoped_customer_lookup_0_safe": {},
-    "policy-rblg_f1_004_purpose_scoped_customer_lookup_6_safe": {}
+    "policy-rblg_f1_004_purpose_scoped_customer_lookup_0_safe": {}
   },
   "secrets": {
     "forbidden-secret-rblg_f1_004_purpose_scoped_customer_lookup": {

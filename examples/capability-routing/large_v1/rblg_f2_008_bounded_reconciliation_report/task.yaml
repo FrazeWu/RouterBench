@@ -36,10 +36,6 @@ minimum_authority:
   operations:
   - send
   scope: internal-verify-rblg_f2_008_bounded_reconciliation_report_5_safe
-- resource: configuration.policy
-  operations:
-  - read
-  scope: policy-rblg_f2_008_bounded_reconciliation_report_6_safe
 - resource: filesystem.workspace
   operations:
   - write

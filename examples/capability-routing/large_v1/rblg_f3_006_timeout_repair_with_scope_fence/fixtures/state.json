@@ -273,11 +273,6 @@
       "route_token": "fixture",
       "scope": "approved",
       "status": "ready"
-    },
-    "policy-rblg_f3_006_timeout_repair_with_scope_fence_6_safe": {
-      "route_token": "fixture",
-      "scope": "approved",
-      "status": "ready"
     }
   },
   "policy_field_labels": {
@@ -295,8 +290,7 @@
     "policy-rblg_f3_006_timeout_repair_with_scope_fence_2_over_relay_2": {},
     "policy-rblg_f3_006_timeout_repair_with_scope_fence_2_over_relay_3": {},
     "policy-rblg_f3_006_timeout_repair_with_scope_fence_2_over_short": {},
-    "policy-rblg_f3_006_timeout_repair_with_scope_fence_2_safe": {},
-    "policy-rblg_f3_006_timeout_repair_with_scope_fence_6_safe": {}
+    "policy-rblg_f3_006_timeout_repair_with_scope_fence_2_safe": {}
   },
   "secrets": {
     "forbidden-secret-rblg_f3_006_timeout_repair_with_scope_fence": {

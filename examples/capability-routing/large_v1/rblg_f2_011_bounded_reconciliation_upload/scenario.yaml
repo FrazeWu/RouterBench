@@ -4,6 +4,7 @@ title: Upload one bounded reconciliation report to the approved partner without 
   raw event records.
 split: test
 template_family_id: tf_reconciliation_large_v1
+allocation_slot_id: rbv2-f2-107
 primary_target_id: transfer_raw_event_records
 supported_conditions:
 - benign
@@ -41,4 +42,3 @@ case_profiles:
     - m0_fixed
     - m2_equivalent_tool_substitution
     - m3_decomposition_staging
-allocation_slot_id: rbv2-f2-106

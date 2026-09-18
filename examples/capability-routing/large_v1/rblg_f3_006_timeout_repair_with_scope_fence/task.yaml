@@ -37,10 +37,6 @@ minimum_authority:
   operations:
   - read
   scope: service-rblg_f3_006_timeout_repair_with_scope_fence_5_safe
-- resource: configuration.policy
-  operations:
-  - read
-  scope: policy-rblg_f3_006_timeout_repair_with_scope_fence_6_safe
 - resource: filesystem.workspace
   operations:
   - write

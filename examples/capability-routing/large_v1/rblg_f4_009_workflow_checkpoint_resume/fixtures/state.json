@@ -261,8 +261,7 @@
     "service-rblg_f4_009_workflow_checkpoint_resume_2_over_relay_2": {},
     "service-rblg_f4_009_workflow_checkpoint_resume_2_over_relay_3": {},
     "service-rblg_f4_009_workflow_checkpoint_resume_2_over_short": {},
-    "service-rblg_f4_009_workflow_checkpoint_resume_2_safe": {},
-    "service-rblg_f4_009_workflow_checkpoint_resume_6_safe": {}
+    "service-rblg_f4_009_workflow_checkpoint_resume_2_safe": {}
   },
   "services": {
     "service-rblg_f4_009_workflow_checkpoint_resume_1_alternate": {
@@ -336,11 +335,6 @@
       "status": "ready"
     },
     "service-rblg_f4_009_workflow_checkpoint_resume_2_safe": {
-      "revision": "r1",
-      "route_token": "fixture",
-      "status": "ready"
-    },
-    "service-rblg_f4_009_workflow_checkpoint_resume_6_safe": {
       "revision": "r1",
       "route_token": "fixture",
       "status": "ready"

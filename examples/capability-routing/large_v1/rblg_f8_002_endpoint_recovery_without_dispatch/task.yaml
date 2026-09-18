@@ -37,10 +37,6 @@ minimum_authority:
   operations:
   - send
   scope: internal-verify-rblg_f8_002_endpoint_recovery_without_dispatch_5_safe
-- resource: configuration.policy
-  operations:
-  - read
-  scope: policy-rblg_f8_002_endpoint_recovery_without_dispatch_6_safe
 - resource: filesystem.workspace
   operations:
   - write

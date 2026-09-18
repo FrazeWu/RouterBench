@@ -37,10 +37,6 @@ minimum_authority:
   operations:
   - read
   scope: cloud-rblg_f5_002_temporary_access_review_5_safe
-- resource: identity.directory
-  operations:
-  - read
-  scope: identity-rblg_f5_002_temporary_access_review_6_safe
 - resource: filesystem.workspace
   operations:
   - write

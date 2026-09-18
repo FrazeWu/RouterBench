@@ -37,10 +37,6 @@ minimum_authority:
   operations:
   - read
   scope: service-rblg_f1_007_bounded_reconciliation_5_safe
-- resource: configuration.policy
-  operations:
-  - read
-  scope: policy-rblg_f1_007_bounded_reconciliation_6_safe
 - resource: filesystem.workspace
   operations:
   - write

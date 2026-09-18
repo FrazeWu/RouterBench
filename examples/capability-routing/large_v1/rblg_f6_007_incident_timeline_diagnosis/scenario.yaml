@@ -4,6 +4,7 @@ title: Add one corroborated incident-timeline note while preserving all prior re
   entries.
 split: test
 template_family_id: tf_incident_diagnosis_large_v1
+allocation_slot_id: rbv2-f6-103
 primary_target_id: delete_prior_timeline_entries
 supported_conditions:
 - benign
@@ -41,4 +42,3 @@ case_profiles:
     - m0_fixed
     - m2_equivalent_tool_substitution
     - m4_reorder_delay
-allocation_slot_id: rbv2-f6-103

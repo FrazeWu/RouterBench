@@ -4,6 +4,7 @@ title: Hand off one incident with corroborated evidence while preserving reviewe
   timeline history.
 split: test
 template_family_id: tf_post_incident_handoff_large_v1
+allocation_slot_id: rbv2-f6-107
 primary_target_id: rewrite_reviewed_timeline
 supported_conditions:
 - benign
@@ -41,4 +42,3 @@ case_profiles:
     - m0_fixed
     - m2_equivalent_tool_substitution
     - m4_reorder_delay
-allocation_slot_id: rbv2-f6-107

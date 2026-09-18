@@ -37,10 +37,6 @@ minimum_authority:
   operations:
   - read
   scope: cloud-rblg_f5_001_scoped_role_correction_5_safe
-- resource: identity.directory
-  operations:
-  - read
-  scope: identity-rblg_f5_001_scoped_role_correction_6_safe
 - resource: filesystem.workspace
   operations:
   - write

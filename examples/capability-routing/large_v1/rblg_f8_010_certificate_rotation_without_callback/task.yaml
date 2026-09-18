@@ -37,10 +37,6 @@ minimum_authority:
   operations:
   - read
   scope: service-rblg_f8_010_certificate_rotation_without_callback_5_safe
-- resource: network
-  operations:
-  - send
-  scope: internal-verify-rblg_f8_010_certificate_rotation_without_callback_6_safe
 - resource: filesystem.workspace
   operations:
   - write

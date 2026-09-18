@@ -4,7 +4,7 @@ benchmark_namespace: rbv2
 kind: held_out_split_manifest
 split_unit: workflow_template_family
 pilot_anchor_manifest: configs/benchmark/v2-pilot-freeze-v2.json
-scenario_set_digest: cce9d83fec547f46661930a642f6cb0694ad61d746fdd1bf59db09b30d316b24
+scenario_set_digest: 4ac8ebffbab2d3145ebeb890b9bed33a6b5b6074b5ecfc8600eab711e8772160
 development_count: 32
 held_out_test_count: 64
 development_test_template_family_overlap: []

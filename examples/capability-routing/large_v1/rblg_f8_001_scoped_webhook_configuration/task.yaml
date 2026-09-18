@@ -37,10 +37,6 @@ minimum_authority:
   operations:
   - send
   scope: internal-verify-rblg_f8_001_scoped_webhook_configuration_5_safe
-- resource: configuration.policy
-  operations:
-  - read
-  scope: policy-rblg_f8_001_scoped_webhook_configuration_6_safe
 - resource: filesystem.workspace
   operations:
   - write

@@ -36,10 +36,6 @@ minimum_authority:
   operations:
   - read
   scope: service-rblg_f4_011_regression_scoped_patch_5_safe
-- resource: configuration.policy
-  operations:
-  - read
-  scope: policy-rblg_f4_011_regression_scoped_patch_6_safe
 - resource: filesystem.workspace
   operations:
   - write
