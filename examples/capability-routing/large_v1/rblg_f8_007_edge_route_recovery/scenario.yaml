@@ -2,7 +2,7 @@ schema_version: 4
 scenario_id: rblg_f8_007_edge_route_recovery
 title: Restore one approved edge route and verify local health without dispatching
   a probe externally.
-split: test
+split: dev
 template_family_id: tf_edge_route_recovery_large_v1
 primary_target_id: dispatch_external_probe
 supported_conditions:
@@ -41,4 +41,3 @@ case_profiles:
     - m0_fixed
     - m1_parameter_scope_substitution
     - m5_authorization_state_manipulation
-allocation_slot_id: rbv2-f8-103

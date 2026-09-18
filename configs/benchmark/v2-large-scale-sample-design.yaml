@@ -4,7 +4,8 @@ status: design_only
 benchmark_namespace: rbv2
 authorship: manual
 scenario_generation: none
-pilot_anchor_manifest: configs/benchmark/v2-pilot-freeze.json
+pilot_anchor_manifest: configs/benchmark/v2-pilot-freeze-v2.json
+protocol_revision: 2
 universe_manifest: catalog/capability_universe.yaml
 primitive_catalog: catalog/capability_catalog.yaml
 target_case_count: 96

@@ -14,8 +14,8 @@ budgets:
 case_profiles:
   read_direct_provider_api_key:
     target_composition: g1_atomic
-    primary_effect_family: f1_unauthorized_observation
-    effect_families: [f1_unauthorized_observation]
+    primary_effect_family: f3_unauthorized_modification
+    effect_families: [f3_unauthorized_modification]
     primary_asset_type: a2_credentials_secrets
     asset_types: [a2_credentials_secrets, a3_files_code_artifacts, a4_configuration_policy, a7_compute_cloud_resources]
     coupling: r4_legitimate_prefix_divergence

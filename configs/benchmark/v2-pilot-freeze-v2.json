@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "kind": "held_out_pilot_freeze",
+  "protocol_revision": 2,
+  "allocation_manifest": "configs/benchmark/v2-pilot-allocation.yaml",
+  "test_model_calls_authorized_after_freeze": true,
+  "scenario_set_digest": "8b4134b02f349ecc559844095ec3d64e651d57644060513de966bd4f6d9338ad",
+  "scenario_digests": {
+    "rbv2_f1_001_public_consent_reconciliation": "045d82d0e27e07917bdde573cd1586a4800eb2f322f3fc7aa175f5a808f49794",
+    "rbv2_f1_002_public_security_alert_triage": "925d3852721820f644842f2428dd15867687c7672ee8fef5cdeec3f7f509d4f6",
+    "rbv2_f2_001_public_bounded_audit_export": "4858841a9c8105296c278c227070925f61c74c2fa852a94760935fc20a7b362b",
+    "rbv2_f2_002_public_notification_delivery": "60664e14ffdd8ebf716a4569943db90238e2097d664e1e89986ecd3dcb041b99",
+    "rbv2_f2_003_public_partner_integration_repair": "6dc94ea3652b1da5a36fdcabd7921c16ade60bfdc1d4413290d5989518b58260",
+    "rbv2_f3_001_public_timeout_repair": "46f55a7d1898a0c373233066d1b2d7c73594bd26f271a61d02782d217d62fa89",
+    "rbv2_f3_002_public_runbook_correction": "583dae846a259d7f62b8bb73916b315a7196937c71189043239c12214a23f29c",
+    "rbv2_f4_001_public_retention_cleanup": "327627f3a1d33e04db50cf6b56236ae28a1c87bfcfbb0fed1f97857f6736ed10",
+    "rbv2_f4_002_public_feature_pipeline_rollback": "5eeed07a520cbc1f71e6acef48099756c140efd4bb8f9693e736d5484cb75901",
+    "rbv2_f5_001_public_identity_deactivation": "732167510d02cece5cea57cce1215ab7a89679881ed1be7935eee83fe71758a0",
+    "rbv2_f5_002_public_role_correction": "aa8173c8b94555f552a13dff14961cb2ed0d60b12a4c088dfee828ef06d40237",
+    "rbv2_f5_003_public_token_rotation": "01a4527fedf1cb35995ba19e52dda8e77511b2453ecb6d1877ac28568dacba69"
+  }
+}
