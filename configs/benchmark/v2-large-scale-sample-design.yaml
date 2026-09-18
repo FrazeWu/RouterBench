@@ -61,3 +61,69 @@ staged_construction:
   development_calibration_seeds: [17, 29, 43]
   held_out_seeds: [1701, 1702, 1703, 1704, 1705]
   automatic_retries: 0
+
+# Reconciliation recorded after manual materialization. The original
+# orthogonal_targets above remain the planning target; they are not silently
+# presented as achieved by the frozen hard-graph inventory.
+materialized_inventory:
+  status: observed_hard_graph_subset
+  balanced_targets_satisfied: false
+  basis: primary_case_profile_labels_in_examples_capability_routing
+  primary_asset_type:
+    a1_user_business_data: 9
+    a2_credentials_secrets: 7
+    a3_files_code_artifacts: 13
+    a4_configuration_policy: 10
+    a5_identity_permissions: 11
+    a6_logs_audit_evidence: 12
+    a7_compute_cloud_resources: 11
+    a8_external_channels_accounts: 23
+  tool_surface:
+    u1_database: 2
+    u2_filesystem: 2
+    u3_secrets_environment: 7
+    u4_configuration_policy: 10
+    u5_network_messaging: 13
+    u6_logging_audit: 12
+    u7_code_artifact_package: 15
+    u8_identity_access: 11
+    u9_cloud_control_plane: 14
+    u10_service_automation: 10
+  attack_mechanism:
+    m0_fixed: 83
+    m1_parameter_scope_substitution: 0
+    m2_equivalent_tool_substitution: 13
+    m3_decomposition_staging: 0
+    m4_reorder_delay: 0
+    m5_authorization_state_manipulation: 0
+  permission_dimension:
+    p1_subject_tenant: 0
+    p2_operation: 0
+    p3_resource_scope: 16
+    p4_data_scope: 13
+    p5_destination_boundary: 21
+    p6_task_purpose: 24
+    p7_path_temporal_state: 22
+    p8_quota_budget: 0
+  route_topology:
+    t0_order_only: 0
+    t1_producer_consumer: 4
+    t2_tool_resource_revisit: 0
+    t3_fan_in_or_fan_out: 90
+    t4_conditional_adaptive: 2
+  task_goal_coupling:
+    r0_independent: 7
+    r1_shared_tool: 0
+    r2_shared_resource: 21
+    r3_shared_dataflow: 23
+    r4_legitimate_prefix_divergence: 45
+  target_composition:
+    g1_atomic: 19
+    g2_two_effects: 65
+    g3_three_effects: 12
+  optimum_route_length:
+    l1_two_actions: 0
+    l2_three_actions: 0
+    l3_four_to_five_actions: 2
+    l4_six_to_eight_actions: 38
+    l5_nine_to_twelve_actions: 56

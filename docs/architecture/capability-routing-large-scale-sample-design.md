@@ -5,7 +5,7 @@
 - Origin Skill: `academic-research-suite/experiment-agent`
 - Origin Mode: `plan`
 - Origin Date: `2026-09-06`
-- Verification Status: `84_DESIGN_CASES_MATERIALIZED; 84_DETERMINISTIC_AUDITS_PASS; NO_MODEL_EVALUATION`
+- Verification Status: `84_DESIGN_CASES_MATERIALIZED; 84_DETERMINISTIC_AUDITS_PASS; INVENTORY_RECONCILED; NO_MODEL_EVALUATION`
 - Version Label: `capability_routing_large_scale_v1`
 - Authorship: manual scenario authoring; no model-generated benchmark content
 - Scope: development and held-out sample construction, not a model result
@@ -154,12 +154,12 @@ cases required to reach that quota.
 The family quota is a primary coverage constraint. No family may be filled by
 renaming or permuting another family's graph.
 
-## Orthogonal Coverage Targets
+## Planned Coverage And Frozen Inventory
 
-The authoring allocator must satisfy the following marginal targets while
-respecting the compatibility relation in `catalog/capability_universe.yaml`.
-Exact cells are chosen before graph authoring; the model never chooses these
-labels during task construction.
+The following marginal targets were the original planning objective. They are
+kept in the design manifest for provenance, but the materialized hard-graph
+subset did not satisfy every target. The model never chooses these labels
+during task construction.
 
 | Axis | Target distribution over 96 cases |
 | --- | --- |
@@ -176,7 +176,8 @@ T0 order-only graphs and L1/L2 optimum routes are excluded from the primary
 large-scale set. They are too weak to test dependency-aware routing and may be
 used only as separately labelled sanity controls.
 
-The allocator fills cells by a deterministic constrained rotation:
+The allocator was intended to fill cells by a deterministic constrained
+rotation:
 
 1. enumerate only effect/asset/tool triples allowed by the capability contract;
 2. satisfy family, asset, and tool quotas;
@@ -186,6 +187,13 @@ The allocator fills cells by a deterministic constrained rotation:
 No slot becomes an executable case until a human author selects the concrete
 primitive adapter, provider-resource-mode binding, planning skills, and
 workflow template from the catalog and universe.
+
+The actual frozen primary-label inventory is recorded under
+`materialized_inventory` in the design manifest and checked by
+`test_v2_materialized_inventory_is_explicitly_reconciled`. It is concentrated
+in `M0/M2`, `T3`, and `L4/L5` because the hard-graph construction prioritized
+dependency depth and path ambiguity. Results from this subset must not be
+generalized to unrepresented mechanisms, permission dimensions, or topologies.
 
 ## Per-Case Authoring Contract
 
@@ -263,7 +271,7 @@ evaluator-owned and are excluded from prompts and public inventories.
 
 | Stage | Deliverable | Gate |
 | --- | --- | --- |
-| A | 96 aggregate slots and balanced axes | quota and compatibility audit |
+| A | 96 aggregate slots and reconciled hard-graph inventory | quota, compatibility, and inventory audit |
 | B | 26 new dev cases | schema, binding, graph, and optimum audits |
 | C | 58 new test cases | same gates plus split-family audit |
 | D | dev calibration matrix | no backend failures; useful non-ceiling discrimination |

@@ -40,6 +40,7 @@ def _rows():
                 "template": metadata.template_family_id,
                 "effect": profile.primary_effect_family.value,
                 "digest": bundle.digest,
+                "profile": profile,
             }
         )
     return rows
@@ -94,3 +95,33 @@ def test_v2_pilot_freeze_and_split_manifest_are_content_addressed():
     }
     assert manifest_ids == {row["id"] for row in rows}
     assert split_manifest["development_test_template_family_overlap"] == []
+
+
+def test_v2_materialized_inventory_is_explicitly_reconciled():
+    rows = _rows()
+    design = yaml.safe_load(
+        (ROOT / "configs/benchmark/v2-large-scale-sample-design.yaml").read_text(
+            encoding="utf-8"
+        )
+    )
+    inventory = design["materialized_inventory"]
+    assert inventory["status"] == "observed_hard_graph_subset"
+    assert inventory["balanced_targets_satisfied"] is False
+
+    fields = {
+        "primary_asset_type": "primary_asset_type",
+        "tool_surface": "primary_tool_surface",
+        "attack_mechanism": "primary_attack_mechanism",
+        "permission_dimension": "primary_permission_dimension",
+        "route_topology": "primary_topology",
+        "task_goal_coupling": "coupling",
+        "target_composition": "target_composition",
+        "optimum_route_length": "route_length",
+    }
+    for inventory_axis, profile_field in fields.items():
+        observed = Counter(
+            getattr(row["profile"], profile_field).value for row in rows
+        )
+        expected = inventory[inventory_axis]
+        assert set(observed).issubset(expected)
+        assert {key: observed.get(key, 0) for key in expected} == expected

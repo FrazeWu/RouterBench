@@ -22,7 +22,16 @@
 | 场景 ID 唯一 | 通过 |
 | dev/test workflow template 交集 | 空 |
 | pilot freeze scenario-set digest | `680f699b5f6b6caf6b1c1f0747590b31b96ce96f3d1ba9941e1afe8935ffc34e` |
-| 全部 96 条 scenario-set digest | `cce9d83fec547f46661930a642f6cb0694ad61d746fdd1bf59db09b30d316b24` |
+| 全部 96 条 scenario-set digest | `4ac8ebffbab2d3145ebeb890b9bed33a6b5b6074b5ecfc8600eab711e8772160` |
+
+### 设计配额与冻结库存
+
+96 条样本的 effect family、dev/test 比例和模板族隔离满足冻结协议；但硬图
+扩展阶段优先满足了图复杂度门槛，未满足原设计文件中的全部正交边际配额。
+因此不能把这批样本描述为“各机制和工具均衡覆盖”。真实主标签库存已经写入
+`configs/benchmark/v2-large-scale-sample-design.yaml` 的
+`materialized_inventory`，并由回归测试逐项复核。缺失的攻击机制、权限维度和
+拓扑只代表本批次未覆盖，不代表模型在这些维度上的能力。
 
 本次审计还补齐了 pilot v2 越权参考路线的显式前置依赖：越权动作必须先完成其合法前缀，重复的验证读取使用了不同的 purpose 标记以避免通过后续同构动作伪满足依赖。图审计对依赖不满足的可达终点记录为 nonfunctional，而不是中止整个样本审计。
 
