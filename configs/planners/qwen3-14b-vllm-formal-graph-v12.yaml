@@ -6,6 +6,7 @@ generation:
   temperature: 0.0
   top_p: 1.0
   max_tokens: 2048
+  context_window: 32768
 formal_run: true
 disable_thinking: true
 anonymize_graph_labels: true
