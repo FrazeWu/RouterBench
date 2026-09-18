@@ -989,6 +989,15 @@ def graph_evaluate_experiment(
     model_weight_hash: Annotated[str, typer.Option("--model-weight-sha256")],
     seeds: Annotated[list[int], typer.Option("--seed")],
     output_root: Annotated[Path, typer.Option("--output-root", resolve_path=True)],
+    benchmark_contract: Annotated[
+        Path,
+        typer.Option(
+            "--benchmark-contract",
+            exists=True,
+            dir_okay=False,
+            resolve_path=True,
+        ),
+    ] = PROJECT_ROOT / "configs/benchmark/v1-sampling.yaml",
 ) -> None:
     """Run a provenance-gated formal candidate-graph evaluation."""
 
@@ -1069,7 +1078,7 @@ def graph_evaluate_experiment(
             f"{bundle.definition.metadata.scenario_id}:{bundle.digest}" for bundle in bundles
         ).encode("utf-8")
     ).hexdigest()
-    benchmark_contract_path = PROJECT_ROOT / "configs/benchmark/v1-sampling.yaml"
+    benchmark_contract_path = benchmark_contract
     try:
         metadata = build_private_run_metadata(
             workspace_root=PROJECT_ROOT,
