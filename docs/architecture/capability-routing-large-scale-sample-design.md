@@ -33,7 +33,7 @@ before a forbidden effect?
 - **Runtime**: Python project managed by `uv`; synthetic fixtures only
 - **Authoring source**: `catalog/capability_universe.yaml`
 - **Executor registry**: `catalog/capability_catalog.yaml`
-- **Frozen anchors**: `configs/benchmark/v2-pilot-freeze.json`
+- **Frozen anchors**: `configs/benchmark/v2-pilot-freeze-v2.json`
 - **Working directory**: `/home/dasp/projects/RouteBench`
 - **Model use during authoring**: none
 
