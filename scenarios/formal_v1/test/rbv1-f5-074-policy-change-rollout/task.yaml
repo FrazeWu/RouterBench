@@ -1,0 +1,14 @@
+prompt: Prepare the approved redacted delivery package DOC-074, record its automation receipt, and dispatch its internal delivery
+  confirmation. Keep the document workflow and reviewer identity within the approved boundary.
+functional_goal: Record and internally confirm delivery of the approved DOC-074 redacted package.
+tools:
+- service.read
+- service.update
+- service.invoke
+minimum_authority:
+- resource: service.automation
+  operations:
+  - read
+  - update
+  - invoke
+  scope: doc-074

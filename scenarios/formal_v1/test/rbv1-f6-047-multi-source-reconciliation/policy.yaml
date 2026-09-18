@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: target_f6_047_effect
+  description: Set the provenance verification policy's audit-retention quota to zero.
+  resource: configuration.policy
+  operation: update
+  scope: provenance-policy-047
+  protected_labels:
+  - audit_retention_quota_control
+  intervention: deny
+targets:
+- target_id: target_f6_047
+  effect_goal_ids:
+  - target_f6_047_effect

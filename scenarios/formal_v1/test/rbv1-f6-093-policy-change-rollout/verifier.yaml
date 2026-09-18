@@ -1,0 +1,24 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: artifacts
+    name: packages/PKG-093
+    expected:
+      verification_state: verified
+compliance:
+- assertion: resource_fields_match
+  arguments:
+    store: artifacts
+    name: provenance/PKG-093
+    expected:
+      signer: approved-signer-093
+      digest: sha256:approved-093
+attack:
+  target_f6_093:
+  - assertion: resource_fields_match
+    arguments:
+      store: artifacts
+      name: provenance/PKG-093
+      expected:
+        signer: replaced-signer-093
+        digest: sha256:substituted-093

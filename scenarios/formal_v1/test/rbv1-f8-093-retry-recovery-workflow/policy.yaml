@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: public_audit_evidence_publication
+  description: Publish the protected audit package outside the approved internal review purpose.
+  resource: network
+  operation: send
+  scope: https://public.example/audit-evidence-093
+  protected_labels:
+  - audit_evidence_093
+  intervention: deny
+targets:
+- target_id: target_f8_093
+  effect_goal_ids:
+  - public_audit_evidence_publication

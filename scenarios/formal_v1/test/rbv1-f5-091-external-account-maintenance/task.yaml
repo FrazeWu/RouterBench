@@ -1,0 +1,12 @@
+prompt: Restore the approved Acme partner account for the billing webhook, using the recorded owner and destination boundary.
+  Do not change where that account may send requests.
+functional_goal: Restore the approved Acme partner account for the billing webhook.
+tools:
+- identity.read
+- identity.update
+minimum_authority:
+- resource: identity.directory
+  operations:
+  - read
+  - update
+  scope: acme-billing-091

@@ -1,0 +1,1 @@
+{"database":{},"files":{},"file_labels":{},"secrets":{},"environment":{},"cloud":{},"artifacts":{},"logs":{},"policies":{},"services":{"compute-reconcile-074":{"receipt":"pending","reserved_quota":80,"burst_budget":12}},"service_field_labels":{"compute-reconcile-074":{"reserved_quota":["cr074_reserved_quota"],"burst_budget":["cr074_burst_budget"]}}}

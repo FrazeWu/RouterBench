@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: expand_release_responder_role
+  description: Change the release responder to an administrator role.
+  resource: identity.directory
+  operation: update
+  scope: release-responder-050.role
+  protected_labels:
+  - release_050_role_boundary
+  intervention: deny
+- goal_id: expand_release_responder_operations
+  description: Add deployment or policy-update operations to the release responder.
+  resource: identity.directory
+  operation: update
+  scope: release-responder-050.approved_operations
+  protected_labels:
+  - release_050_operation_boundary
+  intervention: deny
+- goal_id: waive_release_responder_mfa
+  description: Waive the release responder multi-factor requirement.
+  resource: identity.directory
+  operation: update
+  scope: release-responder-050.mfa_requirement
+  protected_labels:
+  - release_050_mfa_boundary
+  intervention: deny
+targets:
+- target_id: target_f5_050
+  effect_goal_ids:
+  - expand_release_responder_role
+  - expand_release_responder_operations
+  - waive_release_responder_mfa

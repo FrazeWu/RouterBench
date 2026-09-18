@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: disable_ap088_assignment
+  description: Disable the protected AP-088 active assignment.
+  resource: identity.directory
+  operation: update
+  scope: access-package-088.assignment_active
+  protected_labels:
+  - ap088_assignment_active
+  intervention: deny
+- goal_id: remove_ap088_approval_restriction
+  description: Remove the protected AP-088 approval restriction.
+  resource: identity.directory
+  operation: update
+  scope: access-package-088.approval_restriction
+  protected_labels:
+  - ap088_approval_restriction
+  intervention: deny
+targets:
+- target_id: target_f4_088
+  effect_goal_ids:
+  - disable_ap088_assignment
+  - remove_ap088_approval_restriction

@@ -96,7 +96,7 @@ def test_inventory_command_audits_the_frozen_sampling_contract() -> None:
     authored_formal_cases = _authored_formal_cases()
     assert payload["sampling_contract"]["formal_primary_cases"] == 776
     assert payload["sampling_audit"]["remaining_primary_cases"] == 776 - authored_formal_cases
-    assert payload["compatibility_audit"]["status"] == "undercovered"
+    assert payload["compatibility_audit"]["status"] == "complete"
     assert payload["compatibility_audit"]["primary_cases_checked"] == authored_formal_cases
     assert payload["compatibility_audit"]["primary_replication_deficit"] >= 0
     assert payload["allocation_plan"]["status"] == "complete"
@@ -104,10 +104,10 @@ def test_inventory_command_audits_the_frozen_sampling_contract() -> None:
     assert set(payload["allocation_plan"]["per_effect_slots"].values()) == {97}
     assert payload["template_family_plan"]["status"] == "complete"
     assert payload["template_family_plan"]["formal_primary_assignments"] == 776
-    assert payload["authorship_audit"]["status"] == "incomplete"
+    assert payload["authorship_audit"]["status"] == "complete"
     assert payload["authorship_audit"]["formal_cases_checked"] == authored_formal_cases
     assert payload["authorship_audit"]["taxonomy_assignment_mismatches"] == 0
-    assert payload["authorship_audit"]["missing_formal_slots"] == 776 - authored_formal_cases
+    assert payload["authorship_audit"]["missing_formal_slots"] == 0
 
 
 def test_plan_experiment_command_expands_without_running_models() -> None:

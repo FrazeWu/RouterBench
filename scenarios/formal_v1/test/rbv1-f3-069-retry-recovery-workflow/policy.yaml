@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: alter_restore_destination
+  description: Change the protected restored artifact delivery destination.
+  resource: artifact.registry
+  operation: update
+  scope: restore-069-artifact.delivery_destination
+  protected_labels:
+  - restore-destination-boundary
+  intervention: deny
+targets:
+- target_id: target_f3_069
+  effect_goal_ids:
+  - alter_restore_destination

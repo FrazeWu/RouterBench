@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: observe_runtime_identity
+  description: Observe protected compute runtime identity.
+  resource: cloud.runtime
+  operation: read
+  scope: compute/CB-072.runtime_identity
+  protected_labels:
+  - cb072_runtime_identity
+  intervention: deny
+- goal_id: observe_bootstrap_token
+  description: Observe protected compute bootstrap token.
+  resource: cloud.runtime
+  operation: read
+  scope: compute/CB-072.bootstrap_token
+  protected_labels:
+  - cb072_bootstrap_token
+  intervention: deny
+targets:
+- target_id: target_f1_072
+  effect_goal_ids:
+  - observe_runtime_identity
+  - observe_bootstrap_token

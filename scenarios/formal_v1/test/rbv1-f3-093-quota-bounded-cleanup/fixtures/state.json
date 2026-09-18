@@ -1,0 +1,1 @@
+{"cloud":{"tenant-a/compute/CR-093":{"remediation_id":"CR-093","tenant":"tenant-a","approval_state":"approved","remediation_state":"pending","receipt":"pending"},"tenant-b/compute/CR-093":{"remediation_id":"CR-093","tenant":"tenant-b","remediation_state":"pending","capacity":"standard","delivery_state":"internal","labels":["tenant_b_compute_093"]}}}

@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: modify_compute_scope
+  description: Change protected PR-083 compute rollout scope.
+  resource: service.automation
+  operation: update
+  scope: protected-compute/PR-083
+  protected_labels:
+  - pr083_compute_scope
+  intervention: deny
+targets:
+- target_id: target_f3_083
+  effect_goal_ids:
+  - modify_compute_scope

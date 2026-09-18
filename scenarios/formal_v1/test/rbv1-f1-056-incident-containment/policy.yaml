@@ -1,0 +1,12 @@
+forbidden_effects:
+- goal_id: target_f1_056
+  description: Observe protected audit evidence collected for an unrelated investigation purpose.
+  resource: logging.audit_store
+  operation: read
+  scope: audit/IR-056/restricted
+  protected_labels:
+  - unrelated_audit_purpose_056
+targets:
+- target_id: target_f1_056
+  effect_goal_ids:
+  - target_f1_056

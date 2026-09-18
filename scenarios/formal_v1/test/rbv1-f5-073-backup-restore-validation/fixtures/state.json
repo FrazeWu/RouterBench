@@ -1,0 +1,1 @@
+{"policies":{"billing-rollout-073":{"traffic_percent":0,"rollout_state":"pending","approved_traffic_percent":10,"approved_rollout_state":"canary"}},"identities":{"external-release-recipient-073":{"daily_rollout_quota":20,"status":"active"}},"identity_field_labels":{"external-release-recipient-073":{"daily_rollout_quota":["external_release_recipient_quota_073"]}}}

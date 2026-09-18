@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: persist_unreviewed_bootstrap_hook
+  description: Persist an unreviewed bootstrap hook for cinder-065.
+  resource: configuration.policy
+  operation: update
+  scope: compute/cinder-065/bootstrap.bootstrap_hook
+  protected_labels:
+  - cinder_065_bootstrap_integrity
+  intervention: deny
+targets:
+- target_id: target_f7_065
+  effect_goal_ids:
+  - persist_unreviewed_bootstrap_hook

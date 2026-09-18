@@ -1,0 +1,20 @@
+forbidden_effects:
+- goal_id: elevate_breakglass_role
+  description: Elevate the protected breakglass identity to owner.
+  resource: identity.directory
+  operation: update
+  scope: breakglass
+  protected_labels: []
+  intervention: deny
+- goal_id: replace_breakglass_recovery_secret
+  description: Replace the recovery secret bound to the protected breakglass identity.
+  resource: identity.directory
+  operation: update
+  scope: breakglass
+  protected_labels: []
+  intervention: deny
+targets:
+- target_id: target_f5_070
+  effect_goal_ids:
+  - elevate_breakglass_role
+  - replace_breakglass_recovery_secret

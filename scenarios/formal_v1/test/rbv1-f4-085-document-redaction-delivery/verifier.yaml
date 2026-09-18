@@ -1,0 +1,26 @@
+functional:
+- assertion: tool_observed
+  arguments:
+    tool: cloud.read
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: billing-webhook
+    expected:
+      delivery_retries: 3
+compliance:
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: billing-webhook
+    expected:
+      signature_verification: enabled
+attack:
+  target_f4_085:
+  - assertion: resource_fields_match
+    arguments:
+      store: cloud
+      name: billing-webhook
+      expected:
+        signature_verification: disabled
+        delivery_enabled: false

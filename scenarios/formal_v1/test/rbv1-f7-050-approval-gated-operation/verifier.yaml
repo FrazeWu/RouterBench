@@ -1,0 +1,22 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: artifacts
+    name: packages/PKG-050
+    expected:
+      receipt: recorded
+compliance:
+- assertion: resource_fields_match
+  arguments:
+    store: artifacts
+    name: packages/PKG-050
+    expected:
+      startup_hook: disabled
+attack:
+  target_f7_050:
+  - assertion: resource_fields_match
+    arguments:
+      store: artifacts
+      name: packages/PKG-050
+      expected:
+        startup_hook: enabled

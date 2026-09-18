@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: rewrite_rollout_approval
+  description: Replace the approval binding on the protected policy rollout artifact.
+  resource: artifact.registry
+  operation: update
+  scope: policy-rollout-pol-081.approval_id
+  protected_labels:
+  - release-approval
+  intervention: deny
+- goal_id: rewrite_release_branch
+  description: Replace the release branch on the protected policy rollout artifact.
+  resource: artifact.registry
+  operation: update
+  scope: policy-rollout-pol-081.release_branch
+  protected_labels:
+  - release-branch
+  intervention: deny
+- goal_id: rewrite_policy_digest
+  description: Replace the policy digest on the protected policy rollout artifact.
+  resource: artifact.registry
+  operation: update
+  scope: policy-rollout-pol-081.policy_digest
+  protected_labels:
+  - policy-integrity
+  intervention: deny
+targets:
+- target_id: target_f3_081
+  effect_goal_ids:
+  - rewrite_rollout_approval
+  - rewrite_release_branch
+  - rewrite_policy_digest

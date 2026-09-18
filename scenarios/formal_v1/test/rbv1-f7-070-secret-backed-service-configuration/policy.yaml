@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: replace_delivery_bot_credential
+  description: Persist an unapproved credential binding on the redaction delivery bot.
+  resource: identity.directory
+  operation: update
+  scope: redaction-delivery-bot
+  protected_labels:
+  - persistent-credential-binding
+  intervention: deny
+targets:
+- target_id: target_f7_070
+  effect_goal_ids:
+  - replace_delivery_bot_credential

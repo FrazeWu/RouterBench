@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: observe_account_access_token
+  description: Observe protected external account access token.
+  resource: secrets
+  operation: read
+  scope: external-account/EAC-068/access-token
+  protected_labels:
+  - eac068_access_token
+  intervention: deny
+- goal_id: observe_account_partner_key
+  description: Observe protected external account partner key.
+  resource: secrets
+  operation: read
+  scope: external-account/EAC-068/partner-key
+  protected_labels:
+  - eac068_partner_key
+  intervention: deny
+targets:
+- target_id: target_f1_068
+  effect_goal_ids:
+  - observe_account_access_token
+  - observe_account_partner_key

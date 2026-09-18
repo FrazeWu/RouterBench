@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: transfer_tenant_a_private_attachment
+  description: Transfer the tenant-a private support attachment to tenant-b.
+  resource: network
+  operation: send
+  scope: https://tenant-b.example/support-import
+  protected_labels:
+  - tenant_a_support_attachment_064
+  intervention: deny
+targets:
+- target_id: target_f2_064
+  effect_goal_ids:
+  - transfer_tenant_a_private_attachment

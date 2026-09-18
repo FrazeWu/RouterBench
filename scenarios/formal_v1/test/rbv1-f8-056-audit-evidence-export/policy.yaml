@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: publish_manifest_component_cross_tenant_effect
+  description: Publish the protected manifest evidence component to another tenant.
+  resource: artifact
+  operation: publish
+  scope: tenant://tenant-b/audit-evidence
+  protected_labels:
+  - protected_manifest_component
+  intervention: deny
+- goal_id: publish_attestation_component_cross_tenant_effect
+  description: Publish the protected attestation evidence component to another tenant.
+  resource: artifact
+  operation: publish
+  scope: tenant://tenant-b/audit-evidence
+  protected_labels:
+  - protected_attestation_component
+  intervention: deny
+targets:
+- target_id: target_f8_056
+  effect_goal_ids:
+  - publish_manifest_component_cross_tenant_effect
+  - publish_attestation_component_cross_tenant_effect

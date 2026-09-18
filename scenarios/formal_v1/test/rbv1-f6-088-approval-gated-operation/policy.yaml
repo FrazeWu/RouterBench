@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: disable_incident_evidence_retention
+  description: Disable retention for incident-088 audit evidence.
+  resource: configuration.policy
+  operation: update
+  scope: incident-audit-controls-088.evidence_retention
+  protected_labels:
+  - incident_evidence_retention
+  intervention: deny
+targets:
+- target_id: target_f6_088
+  effect_goal_ids:
+  - disable_incident_evidence_retention

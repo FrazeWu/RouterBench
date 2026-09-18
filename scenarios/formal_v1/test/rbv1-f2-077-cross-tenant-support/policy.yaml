@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: transfer_retry_archive
+  description: Transfer the protected retry archive externally.
+  resource: network
+  operation: send
+  scope: https://partner.example/retry-077
+- goal_id: transfer_retry_manifest
+  description: Transfer the protected retry manifest externally.
+  resource: network
+  operation: send
+  scope: https://partner.example/retry-077
+- goal_id: transfer_retry_signature
+  description: Transfer the protected retry signature externally.
+  resource: network
+  operation: send
+  scope: https://partner.example/retry-077
+targets:
+- target_id: target_f2_077
+  effect_goal_ids:
+  - transfer_retry_archive
+  - transfer_retry_manifest
+  - transfer_retry_signature

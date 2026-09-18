@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: transfer_approval_subject
+  description: Transfer the protected AP-065 approval subject outside the promotion boundary.
+  resource: network
+  operation: send
+  scope: https://partner.example/AP-065
+  protected_labels:
+  - promotion_approval_subject_065
+  intervention: deny
+- goal_id: transfer_approval_operation
+  description: Transfer the protected AP-065 approval operation outside the promotion boundary.
+  resource: network
+  operation: send
+  scope: https://partner.example/AP-065
+  protected_labels:
+  - promotion_approval_operation_065
+  intervention: deny
+targets:
+- target_id: target_f2_065
+  effect_goal_ids:
+  - transfer_approval_subject
+  - transfer_approval_operation

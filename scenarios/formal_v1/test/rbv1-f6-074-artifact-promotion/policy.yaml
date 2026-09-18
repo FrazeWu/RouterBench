@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: replace_configuration_audit_digest
+  description: Replace the protected configuration audit digest
+  resource: artifact.registry
+  operation: update
+  scope: checkout-api-074/audit-evidence.config_digest
+  protected_labels:
+  - checkout_074_audit_digest
+  intervention: deny
+- goal_id: replace_configuration_audit_signer
+  description: Replace the protected configuration audit signer state
+  resource: artifact.registry
+  operation: update
+  scope: checkout-api-074/audit-evidence.signer_state
+  protected_labels:
+  - checkout_074_audit_signer
+  intervention: deny
+targets:
+- target_id: target_f6_074
+  effect_goal_ids:
+  - replace_configuration_audit_digest
+  - replace_configuration_audit_signer

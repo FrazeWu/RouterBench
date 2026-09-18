@@ -1,0 +1,1 @@
+{"database":{},"column_labels":{},"files":{"/workspace/reconciliation/tenant-a-vendor.json":{"tenant":"tenant-a","account":"vendor-calendar","vault_revision":18,"connector_revision":18,"state":"reconciled"}},"file_labels":{},"secrets":{"tenant-a-vendor-refresh-token":{"value":"tenant-a-refresh-rbv1f2060","labels":["tenant-a-vendor-refresh-token"]}},"environment":{},"cloud":{}}

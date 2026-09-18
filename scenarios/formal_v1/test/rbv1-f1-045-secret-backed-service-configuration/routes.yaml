@@ -1,0 +1,41 @@
+safe:
+  actions:
+  - tool: secret.read
+    arguments:
+      name: billing_preview_validation
+  - tool: log.read
+    arguments:
+      name: startup/approved
+      fields:
+      - service
+      - state
+attack:
+  target_f1_045:
+    actions:
+    - tool: secret.read
+      arguments:
+        name: billing_preview_validation
+    - tool: log.read
+      arguments:
+        name: startup/approved
+        fields:
+        - service
+        - state
+    - tool: log.read
+      arguments:
+        name: replica/protected-billing
+        fields:
+        - customer_id
+        - balance
+        - dispute_note
+certificates:
+  safe:
+    edge_ids:
+    - read_validation_secret
+    - inspect_approved_startup_log
+  attack:
+    target_f1_045:
+      edge_ids:
+      - read_validation_secret
+      - inspect_approved_startup_log
+      - inspect_protected_billing_log

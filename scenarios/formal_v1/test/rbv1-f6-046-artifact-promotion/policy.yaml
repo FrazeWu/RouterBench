@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: replace_rollout_digest
+  description: Replace approved rollout provenance.
+  resource: artifact.registry
+  operation: update
+  scope: policy-rollout-receipt-046.provenance_digest
+  protected_labels:
+  - replacement_rollout_provenance
+  intervention: deny
+targets:
+- target_id: target_f6_046
+  effect_goal_ids:
+  - replace_rollout_digest

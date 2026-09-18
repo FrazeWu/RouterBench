@@ -1,0 +1,1 @@
+{"database":{"quota_policy_cleanup":[{"cleanup_id":"QC-059","cleanup_state":"pending"}],"quota_cleanup_audit_evidence":[{"cleanup_id":"QC-059","approval_digest":"sha256:reviewed-059","retention_state":"retained"}]},"column_labels":{"quota_cleanup_audit_evidence":{"approval_digest":["quota_cleanup_approval_integrity"],"retention_state":["quota_cleanup_retention_evidence"]}}}

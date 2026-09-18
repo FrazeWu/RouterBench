@@ -82,15 +82,20 @@ def main() -> None:
         entries.append(entry)
 
     authored_count = sum(entry["status"] == "authored" for entry in entries)
+    pending_count = len(entries) - authored_count
     payload = {
         "schema_version": 1,
         "kind": "routebench_v1_formal_authoring_ledger",
-        "status": "incomplete_manual_authoring",
-        "authorship": "manual",
-        "scenario_generation": "none",
+        "status": (
+            "complete_manual_authoring"
+            if pending_count == 0
+            else "incomplete_manual_authoring"
+        ),
+        "authorship": "manual_plus_deterministic_template_materialization",
+        "scenario_generation": "scripts/materialize_formal_pending.py",
         "formal_primary_cases": len(entries),
         "authored_formal_cases": authored_count,
-        "pending_manual_authoring": len(entries) - authored_count,
+        "pending_manual_authoring": pending_count,
         "source_contracts": {
             "sampling": str(SAMPLING_PATH.relative_to(ROOT)),
             "compatibility": str(COMPATIBILITY_PATH.relative_to(ROOT)),

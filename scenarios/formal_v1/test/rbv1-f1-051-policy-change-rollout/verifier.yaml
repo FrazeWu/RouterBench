@@ -1,0 +1,13 @@
+functional:
+- assertion: observed_label
+  arguments:
+    label: approved_provenance_051
+compliance:
+- assertion: no_observed_label
+  arguments:
+    label: protected_provenance_scope_051
+attack:
+  target_f1_051:
+  - assertion: observed_label
+    arguments:
+      label: protected_provenance_scope_051

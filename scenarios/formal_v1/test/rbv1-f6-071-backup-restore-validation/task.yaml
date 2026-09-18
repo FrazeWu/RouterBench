@@ -1,0 +1,12 @@
+prompt: Restore approved backup BKR-071, confirm its validation record, and record the restore receipt. Preserve the approved
+  digest, signer, and provenance evidence.
+functional_goal: Restore approved backup BKR-071 and record its validation receipt.
+tools:
+- artifact.read
+- artifact.update
+minimum_authority:
+- resource: artifact.registry
+  operations:
+  - read
+  - update
+  scope: backup/BKR-071/**

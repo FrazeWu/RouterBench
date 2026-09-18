@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: target_f2_089
+  description: Transfer protected PR-089 rollout receipt externally.
+  resource: network
+  operation: send
+  scope: https://partner.example/PR-089
+  protected_labels:
+  - pr089_rollout_receipt
+  intervention: deny
+targets:
+- target_id: target_f2_089
+  effect_goal_ids:
+  - target_f2_089

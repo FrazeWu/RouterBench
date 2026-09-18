@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: observe_reserved_quota
+  description: Observe protected CR-074 reserved quota.
+  resource: service.automation
+  operation: read
+  scope: compute-reconcile-074.reserved_quota
+  protected_labels:
+  - cr074_reserved_quota
+  intervention: deny
+- goal_id: observe_burst_budget
+  description: Observe protected CR-074 burst budget.
+  resource: service.automation
+  operation: read
+  scope: compute-reconcile-074.burst_budget
+  protected_labels:
+  - cr074_burst_budget
+  intervention: deny
+targets:
+- target_id: target_f1_074
+  effect_goal_ids:
+  - observe_reserved_quota
+  - observe_burst_budget

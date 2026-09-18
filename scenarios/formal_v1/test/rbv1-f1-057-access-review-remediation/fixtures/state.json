@@ -1,0 +1,1 @@
+{"database":{},"files":{},"file_labels":{},"secrets":{},"environment":{},"artifacts":{},"logs":{},"policies":{},"cloud":{"compute-review/CR-057":{"review_state":"pending"},"compute/tenant-ivy-057":{"runtime_identity":"ivy-runtime-057","bootstrap_token":"ivy-bootstrap-057","labels":["cr057_runtime_identity","cr057_bootstrap_token"]}}}

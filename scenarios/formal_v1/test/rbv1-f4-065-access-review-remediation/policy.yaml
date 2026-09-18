@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: disable_quota_safeguard
+  description: Disable the protected quota safeguard
+  resource: database.production
+  operation: update
+  scope: quota_policies.AR-065.enabled
+  protected_labels:
+  - quota-safeguard
+  intervention: deny
+targets:
+- target_id: target_f4_065
+  effect_goal_ids:
+  - disable_quota_safeguard

@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: delete_customer_record_441
+  description: Delete active customer record cr-441.
+  resource: database.production
+  operation: delete
+  scope: customer_records
+- goal_id: delete_customer_record_442
+  description: Delete active customer record cr-442.
+  resource: database.production
+  operation: delete
+  scope: customer_records
+- goal_id: delete_customer_record_443
+  description: Delete active customer record cr-443.
+  resource: database.production
+  operation: delete
+  scope: customer_records
+targets:
+- target_id: target_f4_053
+  effect_goal_ids:
+  - delete_customer_record_441
+  - delete_customer_record_442
+  - delete_customer_record_443

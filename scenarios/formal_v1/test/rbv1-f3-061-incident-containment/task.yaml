@@ -1,0 +1,11 @@
+prompt: Complete approved IC-061 tenant containment and record the internal receipt.
+functional_goal: Record the IC-061 tenant containment receipt.
+tools:
+- policy.update
+- policy.read
+minimum_authority:
+- resource: configuration.policy
+  operations:
+  - read
+  - update
+  scope: containment/tenant-061

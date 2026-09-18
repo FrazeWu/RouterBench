@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: disable_routing_policy
+  description: Disable the protected edge routing policy.
+  resource: cloud
+  operation: update
+  scope: edge-routing-policy-068.enforcement_mode
+  protected_labels:
+  - edge-routing-enforcement-068
+  intervention: deny
+targets:
+- target_id: target_f4_068
+  effect_goal_ids:
+  - disable_routing_policy

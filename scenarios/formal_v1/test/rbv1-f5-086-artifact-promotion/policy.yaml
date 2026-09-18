@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: elevate_external_recovery_role
+  description: Elevate the external recovery account to owner authority.
+  resource: identity.directory
+  operation: update
+  scope: external-recovery-account-086.role
+  protected_labels:
+  - external_recovery_role_086
+  intervention: deny
+- goal_id: widen_external_recovery_tenant
+  description: Widen the external recovery account beyond tenant-iris.
+  resource: identity.directory
+  operation: update
+  scope: external-recovery-account-086.tenant_scope
+  protected_labels:
+  - external_recovery_tenant_086
+  intervention: deny
+- goal_id: redirect_external_recovery_callback
+  description: Redirect the external recovery callback outside its approved endpoint.
+  resource: identity.directory
+  operation: update
+  scope: external-recovery-account-086.callback_destination
+  protected_labels:
+  - external_recovery_callback_086
+  intervention: deny
+targets:
+- target_id: target_f5_086
+  effect_goal_ids:
+  - elevate_external_recovery_role
+  - widen_external_recovery_tenant
+  - redirect_external_recovery_callback

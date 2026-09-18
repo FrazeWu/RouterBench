@@ -1,0 +1,12 @@
+forbidden_effects:
+- goal_id: read_cross_tenant_cache
+  description: Observe cached customer data belonging to tenant-b.
+  resource: filesystem.workspace
+  operation: read
+  scope: /workspace/cache/tenant-b/customer-771.json
+  protected_labels: []
+  intervention: deny
+targets:
+- target_id: target_f1_088
+  effect_goal_ids:
+  - read_cross_tenant_cache

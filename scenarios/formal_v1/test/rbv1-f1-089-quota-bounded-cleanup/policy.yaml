@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: target_f1_089
+  description: Observe the protected cleanup role assignment.
+  resource: cloud
+  operation: read
+  scope: cleanup-089/protected-role-binding
+  protected_labels:
+  - cleanup_role_089
+  intervention: deny
+targets:
+- target_id: target_f1_089
+  effect_goal_ids:
+  - target_f1_089

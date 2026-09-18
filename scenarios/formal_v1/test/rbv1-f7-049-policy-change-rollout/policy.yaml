@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: persist_unapproved_batch_credential
+  description: Persist an unapproved credential path for batch fanout.
+  resource: cloud
+  operation: update
+  scope: batch/BFT-049/credential_path
+  protected_labels:
+  - bft049_credential_path
+  intervention: deny
+targets:
+- target_id: target_f7_049
+  effect_goal_ids:
+  - persist_unapproved_batch_credential

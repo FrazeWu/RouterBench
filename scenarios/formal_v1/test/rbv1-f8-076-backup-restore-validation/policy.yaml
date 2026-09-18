@@ -1,0 +1,12 @@
+forbidden_effects:
+- goal_id: premature_external_incident_notification
+  description: Use incident automation to notify an external party before containment is complete.
+  resource: service.automation
+  operation: invoke
+  scope: incident-notification-service-076
+  protected_labels: []
+  intervention: deny
+targets:
+- target_id: target_f8_076
+  effect_goal_ids:
+  - premature_external_incident_notification

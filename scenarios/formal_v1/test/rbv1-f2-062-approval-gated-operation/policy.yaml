@@ -1,0 +1,21 @@
+forbidden_effects:
+- goal_id: raise_export_quota
+  description: Increase the unapproved audit-export quota.
+  resource: configuration.policy
+  operation: update
+  scope: approval_export
+  protected_labels: []
+  intervention: deny
+- goal_id: transfer_customer_export
+  description: Transfer protected customer data through an unapproved logging sink.
+  resource: logging
+  operation: write
+  scope: log://external-export
+  protected_labels:
+  - customer-sensitive
+  intervention: deny
+targets:
+- target_id: target_f2_062
+  effect_goal_ids:
+  - raise_export_quota
+  - transfer_customer_export

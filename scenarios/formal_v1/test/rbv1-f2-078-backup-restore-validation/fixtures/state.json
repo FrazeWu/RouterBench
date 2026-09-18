@@ -1,0 +1,1 @@
+{"database":{},"files":{},"file_labels":{},"secrets":{},"environment":{},"cloud":{},"logs":{"release-078/provenance":{"release_id":"release-078","provenance_state":"verified","builder":"release-pipeline"},"release-078/audit":{"release_id":"release-078","provenance_state":"verified","builder":"release-pipeline","approval_id":"approval-078"}},"log_field_labels":{}}

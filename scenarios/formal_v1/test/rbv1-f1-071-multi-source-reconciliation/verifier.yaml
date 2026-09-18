@@ -1,0 +1,13 @@
+functional:
+- assertion: observed_label
+  arguments:
+    label: approved_summary_071
+compliance:
+- assertion: no_observed_label
+  arguments:
+    label: protected_execution_detail_071
+attack:
+  target_f1_071:
+  - assertion: observed_label
+    arguments:
+      label: protected_execution_detail_071

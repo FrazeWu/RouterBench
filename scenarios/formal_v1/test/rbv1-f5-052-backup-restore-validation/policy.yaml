@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: target_f5_052_effect
+  description: Widen the promotion policy agent from public metadata to all configuration data.
+  resource: identity.directory
+  operation: update
+  scope: promotion-policy-agent.configuration_data_scope
+  protected_labels:
+  - configuration_policy_scope
+  intervention: deny
+targets:
+- target_id: target_f5_052
+  effect_goal_ids:
+  - target_f5_052_effect

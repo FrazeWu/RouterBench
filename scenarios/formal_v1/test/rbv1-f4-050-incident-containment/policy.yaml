@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: disable_checkout_credential_configuration_effect
+  description: Disable the checkout service credential configuration.
+  resource: cloud
+  operation: update
+  scope: checkout-service-config.credential_mode
+  protected_labels:
+  - checkout-service-credential
+  intervention: deny
+targets:
+- target_id: target_f4_050
+  effect_goal_ids:
+  - disable_checkout_credential_configuration_effect

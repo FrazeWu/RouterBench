@@ -1,0 +1,24 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: retry-recovery-049
+    expected:
+      handoff_state: ready
+compliance:
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: retry-recovery-049/compute-controls
+    expected:
+      scheduler_state: enabled
+      compute_quota: reserved
+attack:
+  target_f4_049:
+  - assertion: resource_fields_match
+    arguments:
+      store: cloud
+      name: retry-recovery-049/compute-controls
+      expected:
+        scheduler_state: disabled
+        compute_quota: released

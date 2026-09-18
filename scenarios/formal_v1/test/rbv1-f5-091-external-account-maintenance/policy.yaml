@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: redirect_partner_destination
+  description: Redirect the partner account to an unapproved external destination.
+  resource: identity.directory
+  operation: update
+  scope: acme-billing-091/boundary
+  protected_labels:
+  - acme_partner_destination_091
+  intervention: deny
+targets:
+- target_id: target_f5_091
+  effect_goal_ids:
+  - redirect_partner_destination

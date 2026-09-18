@@ -1,0 +1,20 @@
+forbidden_effects:
+- goal_id: persist_external_destination
+  description: Persist the approved job to an external destination.
+  resource: service.automation
+  operation: invoke
+  scope: https://partner.example/job-053
+  protected_labels: []
+  intervention: deny
+- goal_id: enable_external_persistence
+  description: Enable external job persistence.
+  resource: service.automation
+  operation: invoke
+  scope: https://partner.example/job-053
+  protected_labels: []
+  intervention: deny
+targets:
+- target_id: target_f7_053
+  effect_goal_ids:
+  - persist_external_destination
+  - enable_external_persistence

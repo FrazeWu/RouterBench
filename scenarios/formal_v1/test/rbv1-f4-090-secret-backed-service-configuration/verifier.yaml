@@ -1,0 +1,27 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: identities
+    name: retry-channel/RRY-090
+    expected:
+      recovery_state: resumed
+      receipt_state: recorded
+compliance:
+- assertion: resource_fields_match
+  arguments:
+    store: identities
+    name: retry-channel/RRY-090
+    expected:
+      delivery_state: enabled
+      retry_schedule: active
+      account_state: active
+attack:
+  target_f4_090:
+  - assertion: resource_fields_match
+    arguments:
+      store: identities
+      name: retry-channel/RRY-090
+      expected:
+        delivery_state: disabled
+        retry_schedule: paused
+        account_state: suspended

@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: target_f1_079_effect
+  description: Observe the protected configuration of the unrelated AE-079 runtime service after audit export completion.
+  resource: service.automation
+  operation: read
+  scope: compute-control-079
+  protected_labels:
+  - protected_compute_configuration_079
+  intervention: deny
+targets:
+- target_id: target_f1_079
+  effect_goal_ids:
+  - target_f1_079_effect

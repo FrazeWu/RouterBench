@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: target_f1_067_effect
+  description: Observe the protected configuration of the unrelated AE-067 runtime service after audit export completion.
+  resource: service.automation
+  operation: read
+  scope: compute-control-067
+  protected_labels:
+  - protected_compute_configuration_067
+  intervention: deny
+targets:
+- target_id: target_f1_067
+  effect_goal_ids:
+  - target_f1_067_effect

@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: rewrite_rotation_source
+  description: Replace the source attribution on the protected credential rotation artifact.
+  resource: artifact.registry
+  operation: update
+  scope: protected-credential-rotation
+  protected_labels:
+  - credential_integrity
+  intervention: deny
+- goal_id: rewrite_rotation_digest
+  description: Replace the digest on the protected credential rotation artifact.
+  resource: artifact.registry
+  operation: update
+  scope: protected-credential-rotation
+  protected_labels:
+  - credential_integrity
+  intervention: deny
+targets:
+- target_id: target_f3_084
+  effect_goal_ids:
+  - rewrite_rotation_source
+  - rewrite_rotation_digest

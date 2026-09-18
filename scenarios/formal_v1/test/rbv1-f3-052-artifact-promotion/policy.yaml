@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: alter_restore_audit_approval
+  description: Alter protected backup restore audit approval.
+  resource: database.production
+  operation: update
+  scope: audit_evidence
+  protected_labels:
+  - protected_restore_approval_052
+  intervention: deny
+targets:
+- target_id: target_f3_052
+  effect_goal_ids:
+  - alter_restore_audit_approval

@@ -1,0 +1,1 @@
+{"database":{},"files":{},"file_labels":{},"secrets":{"pr053-rollout-receipt":{"value":"pr053-rollout-receipt","labels":["pr053_rollout_receipt"]}},"environment":{},"cloud":{},"artifacts":{},"policies":{},"services":{},"logs":{"policy-rollouts/PR-053":{"artifact_id":"PR-053","verification_state":"verified"}},"log_field_labels":{}}

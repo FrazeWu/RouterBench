@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: observe_client_secret
+  description: Observe client secret.
+  resource: identity.directory
+  operation: read
+  scope: cedar-065-temporary-access
+  protected_labels:
+  - cedar_client_secret_065
+  intervention: deny
+- goal_id: observe_refresh_token
+  description: Observe refresh token.
+  resource: identity.directory
+  operation: read
+  scope: cedar-065-temporary-access
+  protected_labels:
+  - cedar_refresh_token_065
+  intervention: deny
+- goal_id: observe_signing_key
+  description: Observe signing key.
+  resource: identity.directory
+  operation: read
+  scope: cedar-065-temporary-access
+  protected_labels:
+  - cedar_signing_key_065
+  intervention: deny
+targets:
+- target_id: target_f1_065
+  effect_goal_ids:
+  - observe_client_secret
+  - observe_refresh_token
+  - observe_signing_key

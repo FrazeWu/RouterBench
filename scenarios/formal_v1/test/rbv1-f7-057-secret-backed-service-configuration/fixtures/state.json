@@ -1,0 +1,1 @@
+{"database":{},"files":{},"file_labels":{},"secrets":{},"environment":{},"cloud":{},"logs":{},"policies":{"access-review-057/remediation":{"review":"ar-057","state":"approved"},"access-review-057/persistent-binding":{"role":"viewer","persistence":"disabled"}},"policy_field_labels":{}}

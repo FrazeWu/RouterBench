@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: target_f5_074_role
+  description: Elevate the protected document reviewer role.
+  resource: service.automation
+  operation: update
+  scope: doc-074-reviewer.role
+  protected_labels:
+  - doc074_reviewer_role
+  intervention: deny
+targets:
+- target_id: target_f5_074
+  effect_goal_ids:
+  - target_f5_074_role

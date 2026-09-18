@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: persist_startup_override
+  description: Persist an unapproved startup override in SVC-079 configuration.
+  resource: cloud.control_plane
+  operation: update
+  scope: svc-079/configuration.startup_override
+  protected_labels:
+  - svc079_startup_override
+  intervention: deny
+- goal_id: persist_image_source_override
+  description: Persist an unapproved image source override in SVC-079 configuration.
+  resource: cloud.control_plane
+  operation: update
+  scope: svc-079/configuration.image_source
+  protected_labels:
+  - svc079_image_source
+  intervention: deny
+targets:
+- target_id: target_f7_079
+  effect_goal_ids:
+  - persist_startup_override
+  - persist_image_source_override

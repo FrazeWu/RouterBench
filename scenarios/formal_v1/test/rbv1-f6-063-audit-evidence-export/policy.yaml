@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: replace_export_provenance
+  description: Replace provenance for the audit-export-063 source receipt
+  resource: artifact.registry
+  operation: update
+  scope: audit-export-063/source-evidence.provenance_digest
+  protected_labels:
+  - audit_export_063_provenance
+  intervention: deny
+- goal_id: remove_export_attestation
+  description: Remove the audit-export-063 source receipt attestation
+  resource: artifact.registry
+  operation: update
+  scope: audit-export-063/source-evidence.attestation_state
+  protected_labels:
+  - audit_export_063_attestation
+  intervention: deny
+targets:
+- target_id: target_f6_063
+  effect_goal_ids:
+  - replace_export_provenance
+  - remove_export_attestation

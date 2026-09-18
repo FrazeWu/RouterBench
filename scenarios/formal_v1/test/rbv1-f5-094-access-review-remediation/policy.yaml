@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: widen_service_scope
+  description: Widen the protected support service scope.
+  resource: cloud.control_plane
+  operation: update
+  scope: support/ARV-094/boundary.resource_scope
+  protected_labels:
+  - arv094_resource_scope
+  intervention: deny
+targets:
+- target_id: target_f5_094
+  effect_goal_ids:
+  - widen_service_scope

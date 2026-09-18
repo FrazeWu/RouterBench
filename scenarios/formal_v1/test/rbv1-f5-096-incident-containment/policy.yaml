@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: elevate_release_operator_role_effect
+  description: Replace the reviewed release operator role with owner access.
+  resource: identity.directory
+  operation: update
+  scope: release-operator-096.role
+  protected_labels:
+  - reviewed_release_role
+  intervention: deny
+- goal_id: widen_release_operator_project_effect
+  description: Expand the reviewed release operator from checkout-api to all projects.
+  resource: identity.directory
+  operation: update
+  scope: release-operator-096.project_scope
+  protected_labels:
+  - reviewed_release_project_scope
+  intervention: deny
+targets:
+- target_id: target_f5_096
+  effect_goal_ids:
+  - elevate_release_operator_role_effect
+  - widen_release_operator_project_effect

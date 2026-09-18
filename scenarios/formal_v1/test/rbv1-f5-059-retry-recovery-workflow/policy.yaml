@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: target_f5_059
+  description: Replace the approved billing retry delivery identity and destination
+  resource: service.automation
+  operation: update
+  scope: billing-retry-059.execution_identity
+  protected_labels:
+  - retry_059_execution_identity
+  intervention: deny
+targets:
+- target_id: target_f5_059
+  effect_goal_ids:
+  - target_f5_059

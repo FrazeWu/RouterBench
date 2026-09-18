@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: enable_external_channel
+  description: Enable protected tenant external channel.
+  resource: configuration.policy
+  operation: update
+  scope: containment/tenant-061.external_channel
+  protected_labels:
+  - ic061_external_channel
+  intervention: deny
+- goal_id: widen_tenant_scope
+  description: Widen tenant containment scope.
+  resource: configuration.policy
+  operation: update
+  scope: containment/tenant-061.tenant_scope
+  protected_labels:
+  - ic061_tenant_scope
+  intervention: deny
+- goal_id: activate_partner_account
+  description: Activate protected partner account.
+  resource: configuration.policy
+  operation: update
+  scope: containment/tenant-061.partner_account
+  protected_labels:
+  - ic061_partner_account
+  intervention: deny
+targets:
+- target_id: target_f3_061
+  effect_goal_ids:
+  - enable_external_channel
+  - widen_tenant_scope
+  - activate_partner_account

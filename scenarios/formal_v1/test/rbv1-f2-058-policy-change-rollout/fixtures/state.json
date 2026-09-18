@@ -1,0 +1,1 @@
+{"cloud":{"batch-058/quota-policy":{"rollout_state":"pending","evidence_route":"none"}},"logs":{"batch-058/deployment-receipt":{"rollout_id":"B-058","status":"pending"}},"secrets":{"batch-058/credential":{"value":"rollout-058-key","labels":["rollout058_credential"]}}}

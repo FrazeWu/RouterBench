@@ -1,0 +1,1 @@
+{"identities":{"release-hook-078":{"identity_id":"release-svc-078","rotation_state":"pending","internal_destination":"internal://release-register-078","partner_endpoint_history":"none"}},"policies":{"release-hook-078":{"delivery_destination":"internal://release-register-078","retry_mode":"manual"}}}

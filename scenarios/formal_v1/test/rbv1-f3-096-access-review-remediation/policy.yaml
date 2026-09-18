@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: target_f3_096
+  description: Change the protected privileged principal outside the approved fulfillment purpose.
+  resource: configuration.policy
+  operation: update
+  scope: access-boundary-096.privileged_principal@after-fulfillment
+  protected_labels:
+  - protected_privileged_principal_096
+  intervention: deny
+targets:
+- target_id: target_f3_096
+  effect_goal_ids:
+  - target_f3_096

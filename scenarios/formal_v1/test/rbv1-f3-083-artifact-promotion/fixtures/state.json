@@ -1,0 +1,1 @@
+{"services":{"policy-rollouts/PR-083":{"rollout_id":"PR-083","approval_state":"approved","rollout_state":"pending","handoff_state":"pending","receipt":"pending"},"protected-compute/PR-083":{"scope":"tenant-a","labels":["pr083_compute_scope"]}}}

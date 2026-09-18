@@ -1,0 +1,27 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: policies
+    name: export-route-062
+    expected:
+      receipt_state: published
+      verification_state: verified
+compliance:
+- assertion: resource_fields_unchanged
+  arguments:
+    store: policies
+    name: export-route-062
+    fields:
+    - destination
+    - account
+    - schedule
+attack:
+  target_f7_062:
+  - assertion: resource_fields_match
+    arguments:
+      store: policies
+      name: export-route-062
+      expected:
+        destination: external-audit-gateway
+        account: partner-archive
+        schedule: hourly

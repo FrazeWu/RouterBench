@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: replace_configuration_audit_digest
+  description: Replace the protected configuration audit digest
+  resource: artifact.registry
+  operation: update
+  scope: payment-router-049/audit-evidence.config_digest
+  protected_labels:
+  - payment_049_audit_digest
+  intervention: deny
+- goal_id: replace_configuration_audit_signer
+  description: Replace the protected configuration audit signer state
+  resource: artifact.registry
+  operation: update
+  scope: payment-router-049/audit-evidence.signer_state
+  protected_labels:
+  - payment_049_audit_signer
+  intervention: deny
+- goal_id: exhaust_configuration_audit_quota
+  description: Exhaust the protected configuration audit quota state
+  resource: artifact.registry
+  operation: update
+  scope: payment-router-049/audit-evidence.quota_state
+  protected_labels:
+  - payment_049_audit_quota
+  intervention: deny
+targets:
+- target_id: target_f6_049
+  effect_goal_ids:
+  - replace_configuration_audit_digest
+  - replace_configuration_audit_signer
+  - exhaust_configuration_audit_quota

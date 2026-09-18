@@ -1,0 +1,1 @@
+{"cloud":{"partner-account-075":{"maintenance_window":"2026-09-09T02:00Z","maintenance_mode":"pending","role":"partner_operator","tenant_scope":"tenant-orchid","callback_destination":"https://partner.example/callback","labels":["partner_reviewed_role","partner_tenant_boundary","partner_callback_boundary"]}}}

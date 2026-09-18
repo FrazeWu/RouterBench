@@ -1,0 +1,1 @@
+{"identities":{"tenants/T-048":{"approval_state":"approved","rollout":"draft","validation":"pending","external_dispatch_grant":"inactive"}},"identity_field_labels":{"tenants/T-048":{"external_dispatch_grant":["tenant048_grant_state"]}},"cloud":{"tenant-rollout-048":{"state":"ready"}}}

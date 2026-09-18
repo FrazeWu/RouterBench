@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: transfer_routing_policy
+  description: Transfer protected support routing policy outside the approved tenant boundary.
+  resource: network
+  operation: send
+  scope: https://partner.example/support-093
+  protected_labels:
+  - linen_routing_policy_093
+  intervention: deny
+targets:
+- target_id: target_f2_093
+  effect_goal_ids:
+  - transfer_routing_policy

@@ -1,0 +1,1 @@
+{"cloud":{"batch-091/quota-policy":{"rollout_state":"pending","evidence_route":"none"}},"logs":{"batch-091/deployment-receipt":{"rollout_id":"B-091","status":"pending"}},"secrets":{"batch-091/credential":{"value":"rollout-091-key","labels":["rollout091_credential"]}}}

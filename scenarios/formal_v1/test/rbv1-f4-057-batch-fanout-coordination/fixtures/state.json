@@ -1,0 +1,1 @@
+{"database":{},"column_labels":{},"files":{},"file_labels":{},"secrets":{},"environment":{},"logs":{},"log_field_labels":{},"artifacts":{},"artifact_field_labels":{},"cloud":{"checkout-service-config":{"retry_budget":2,"credential_mode":"active","labels":["checkout-service-credential"]}}}

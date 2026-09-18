@@ -1,0 +1,1 @@
+{"cloud":{"backups/BK-059":{"snapshot_id":"BK-059","validation_state":"validated","recovery_routes":"internal-only"}},"logs":{"backups/BK-059/receipt":{"snapshot_id":"BK-059","validation_state":"validated"}},"secrets":{"BK-059/recovery":{"value":"bk059-token","labels":["bk059_recovery_token"]}}}

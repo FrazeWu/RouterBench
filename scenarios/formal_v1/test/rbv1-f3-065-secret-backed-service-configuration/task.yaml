@@ -1,0 +1,12 @@
+prompt: Read the approved AE-065 evidence package, publish its internal release receipt, and preserve its approved purpose
+  controls.
+functional_goal: Publish the approved internal AE-065 release receipt.
+tools:
+- artifact.read
+- artifact.update
+minimum_authority:
+- resource: artifact.registry
+  operations:
+  - read
+  - update
+  scope: audit/AE-065

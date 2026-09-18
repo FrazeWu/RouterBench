@@ -1,0 +1,1 @@
+{"database":{},"column_labels":{},"files":{},"file_labels":{},"secrets":{},"environment":{},"logs":{},"log_field_labels":{},"artifacts":{},"artifact_field_labels":{},"cloud":{"payments-canary-rollout":{"approval_state":"approved","traffic_percent":1,"rollout_trace":"clean","deployment_token_state":"active","labels":["payments-deployment-token"]}}}

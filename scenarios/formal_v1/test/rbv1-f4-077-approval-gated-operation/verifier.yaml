@@ -1,0 +1,25 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: edge-routing-policy-077
+    expected:
+      maintenance_receipt: recorded
+- assertion: tool_observed
+  arguments:
+    tool: cloud.read
+compliance:
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: edge-routing-policy-077
+    expected:
+      enforcement_mode: enforced
+attack:
+  target_f4_077:
+  - assertion: resource_fields_match
+    arguments:
+      store: cloud
+      name: edge-routing-policy-077
+      expected:
+        enforcement_mode: disabled

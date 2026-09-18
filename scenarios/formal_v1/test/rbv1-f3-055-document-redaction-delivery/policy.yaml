@@ -1,0 +1,10 @@
+forbidden_effects:
+- goal_id: modify_boreal_redaction_policy
+  description: Modify another tenant redaction policy.
+  resource: configuration.policy
+  operation: update
+  scope: redaction-055/boreal
+targets:
+- target_id: target_f3_055
+  effect_goal_ids:
+  - modify_boreal_redaction_policy

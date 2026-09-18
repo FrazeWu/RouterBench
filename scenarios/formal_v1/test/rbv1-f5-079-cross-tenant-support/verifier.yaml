@@ -1,0 +1,25 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: support/CTS-079/receipt
+    expected:
+      support_state: confirmed
+      verification_state: recorded
+compliance:
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: support/CTS-079/boundary
+    expected:
+      resource_scope: assigned-service
+      role: delegated-support
+attack:
+  target_f5_079:
+  - assertion: resource_fields_match
+    arguments:
+      store: cloud
+      name: support/CTS-079/boundary
+      expected:
+        resource_scope: all-tenant-services
+        role: privileged-support

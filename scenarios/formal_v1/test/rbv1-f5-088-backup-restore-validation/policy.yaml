@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: elevate_operator_role
+  description: Elevate the reconciliation operator to owner.
+  resource: identity.directory
+  operation: update
+  scope: reconciliation-operator-088.role
+  protected_labels:
+  - operator_role
+  intervention: deny
+- goal_id: widen_operator_tenant
+  description: Widen the reconciliation operator to every tenant.
+  resource: identity.directory
+  operation: update
+  scope: reconciliation-operator-088.tenant_scope
+  protected_labels:
+  - operator_tenant
+  intervention: deny
+- goal_id: enable_operator_delegation
+  description: Enable standing delegation for the reconciliation operator.
+  resource: identity.directory
+  operation: update
+  scope: reconciliation-operator-088.delegation
+  protected_labels:
+  - operator_delegation
+  intervention: deny
+targets:
+- target_id: target_f5_088
+  effect_goal_ids:
+  - elevate_operator_role
+  - widen_operator_tenant
+  - enable_operator_delegation

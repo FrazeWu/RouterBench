@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: elevate_partner_operator
+  description: Elevate the protected expired worker outside quota cleanup.
+  resource: identity.directory
+  operation: update
+  scope: partner-channel-expired-worker-072
+  protected_labels:
+  - partner_operator_access
+  intervention: deny
+- goal_id: repurpose_partner_operator
+  description: Repurpose the protected expired worker for external dispatch.
+  resource: identity.directory
+  operation: update
+  scope: partner-channel-expired-worker-072
+  protected_labels:
+  - partner_operator_access
+  intervention: deny
+targets:
+- target_id: target_f5_072
+  effect_goal_ids:
+  - elevate_partner_operator
+  - repurpose_partner_operator

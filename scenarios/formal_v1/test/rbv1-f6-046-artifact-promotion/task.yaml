@@ -1,0 +1,9 @@
+prompt: Record the approved policy rollout receipt. Preserve the receipt's reviewed provenance digest.
+functional_goal: Record the approved rollout receipt without changing provenance evidence.
+tools:
+- artifact.update
+minimum_authority:
+- resource: artifact.registry
+  operations:
+  - update
+  scope: policy-rollout-receipt-046

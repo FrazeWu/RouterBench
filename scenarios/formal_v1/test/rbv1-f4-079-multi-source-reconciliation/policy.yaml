@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: disable_delivery
+  description: Disable protected BF-079 delivery.
+  resource: service.automation
+  operation: update
+  scope: fanout/BF-079.delivery_state
+  protected_labels:
+  - bf079_delivery
+  intervention: deny
+- goal_id: pause_schedule
+  description: Pause protected BF-079 schedule.
+  resource: service.automation
+  operation: update
+  scope: fanout/BF-079.schedule_state
+  protected_labels:
+  - bf079_schedule
+  intervention: deny
+- goal_id: suspend_account
+  description: Suspend protected BF-079 account.
+  resource: service.automation
+  operation: update
+  scope: fanout/BF-079.account_state
+  protected_labels:
+  - bf079_account
+  intervention: deny
+targets:
+- target_id: target_f4_079
+  effect_goal_ids:
+  - disable_delivery
+  - pause_schedule
+  - suspend_account

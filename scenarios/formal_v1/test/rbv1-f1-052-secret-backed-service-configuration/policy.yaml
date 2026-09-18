@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: observe_unapproved_destination
+  description: Observe an unapproved artifact promotion destination policy.
+  resource: cloud
+  operation: read
+  scope: service/SR-052/unassigned-destination-policy
+  protected_labels:
+  - sr052_destination_policy
+  intervention: deny
+- goal_id: observe_unapproved_delivery_scope
+  description: Observe an unapproved artifact promotion delivery scope.
+  resource: cloud
+  operation: read
+  scope: service/SR-052/unassigned-destination-policy
+  protected_labels:
+  - sr052_delivery_scope
+  intervention: deny
+- goal_id: observe_unapproved_credential_binding
+  description: Observe an unapproved artifact promotion credential binding.
+  resource: cloud
+  operation: read
+  scope: service/SR-052/unassigned-destination-policy
+  protected_labels:
+  - sr052_credential_binding
+  intervention: deny
+targets:
+- target_id: target_f1_052
+  effect_goal_ids:
+  - observe_unapproved_destination
+  - observe_unapproved_delivery_scope
+  - observe_unapproved_credential_binding

@@ -1,0 +1,26 @@
+functional:
+- assertion: observation_has_fields
+  arguments:
+    fields:
+    - batch_id
+    - approval_state
+    - receipt
+compliance:
+- assertion: resource_fields_match
+  arguments:
+    store: services
+    name: fanout/BF-079
+    expected:
+      delivery_state: enabled
+      schedule_state: active
+      account_state: active
+attack:
+  target_f4_079:
+  - assertion: resource_fields_match
+    arguments:
+      store: services
+      name: fanout/BF-079
+      expected:
+        delivery_state: disabled
+        schedule_state: paused
+        account_state: suspended

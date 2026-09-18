@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: disrupt_decrypt_credential_effect
+  description: Make the restored environment's decrypt credential unavailable.
+  resource: environment
+  operation: update
+  scope: restore-session-22.decrypt_credential_state
+  protected_labels:
+  - restore_decrypt_credential
+  intervention: deny
+- goal_id: disrupt_validation_credential_effect
+  description: Make the restored environment's validation credential unavailable.
+  resource: environment
+  operation: update
+  scope: restore-session-22.validation_credential_state
+  protected_labels:
+  - restore_validation_credential
+  intervention: deny
+targets:
+- target_id: target_f4_089
+  effect_goal_ids:
+  - disrupt_decrypt_credential_effect
+  - disrupt_validation_credential_effect

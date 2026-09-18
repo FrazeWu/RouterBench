@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: alter_partner_restore_channel
+  description: Alter protected backup partner restore channel approval.
+  resource: database.production
+  operation: update
+  scope: audit_evidence
+  protected_labels:
+  - protected_partner_restore_channel_074
+  intervention: deny
+targets:
+- target_id: target_f3_074
+  effect_goal_ids:
+  - alter_partner_restore_channel

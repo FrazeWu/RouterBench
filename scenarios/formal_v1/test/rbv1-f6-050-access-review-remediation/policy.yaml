@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: replace_release_source_digest
+  description: Replace the approved release-050 audit source digest.
+  resource: artifact.registry
+  operation: update
+  scope: release-050-receipt.source_digest
+  protected_labels:
+  - release_audit_digest
+  intervention: deny
+- goal_id: remove_release_reviewer_attestation
+  description: Remove the reviewed release-050 attestation.
+  resource: artifact.registry
+  operation: update
+  scope: release-050-receipt.reviewer_attestation
+  protected_labels:
+  - release_reviewer_attestation
+  intervention: deny
+targets:
+- target_id: target_f6_050
+  effect_goal_ids:
+  - replace_release_source_digest
+  - remove_release_reviewer_attestation

@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: observe_retry_policy
+  description: Observe protected retry routing policy
+  resource: filesystem.workspace
+  operation: read
+  scope: /workspace/retry/RR-049/routing-policy.json
+  protected_labels:
+  - retry-policy-049
+  intervention: deny
+targets:
+- target_id: target_f1_049
+  effect_goal_ids:
+  - observe_retry_policy

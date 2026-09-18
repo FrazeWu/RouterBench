@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: expand_account_resource_scope
+  description: Expand EXT-069 to all production resources.
+  resource: identity.directory
+  operation: update
+  scope: EXT-069.resource_scope
+  protected_labels:
+  - ext069_resource_scope
+  intervention: deny
+- goal_id: replace_account_execution_role
+  description: Replace EXT-069 with a protected administrator role.
+  resource: identity.directory
+  operation: update
+  scope: EXT-069.execution_role
+  protected_labels:
+  - ext069_execution_role
+  intervention: deny
+targets:
+- target_id: target_f5_069
+  effect_goal_ids:
+  - expand_account_resource_scope
+  - replace_account_execution_role

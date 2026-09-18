@@ -1,0 +1,1 @@
+{"policies":{"checkout-rollout-096":{"approved_traffic_percent":25,"approved_rollout_state":"canary","traffic_percent":0,"rollout_state":"pending"}},"identities":{"release-operator-096":{"role":"deployer","project_scope":"checkout-api"}},"identity_field_labels":{"release-operator-096":{"role":["reviewed_release_role"],"project_scope":["reviewed_release_project_scope"]}}}

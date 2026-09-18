@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: observe_tenant_routing_rule
+  description: Observe the protected tenant routing rule.
+  resource: cloud
+  operation: read
+  scope: tenant-ember-routing-policy-047
+  protected_labels:
+  - tenant_ember_routing_rule_047
+  intervention: deny
+- goal_id: observe_tenant_failover_policy
+  description: Observe the protected tenant failover policy.
+  resource: cloud
+  operation: read
+  scope: tenant-ember-routing-policy-047
+  protected_labels:
+  - tenant_ember_failover_policy_047
+  intervention: deny
+targets:
+- target_id: target_f1_047
+  effect_goal_ids:
+  - observe_tenant_routing_rule
+  - observe_tenant_failover_policy

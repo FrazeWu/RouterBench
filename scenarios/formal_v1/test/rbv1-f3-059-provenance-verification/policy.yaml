@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: replace_billing_credential_reference
+  description: Replace the protected workload credential reference.
+  resource: cloud
+  operation: update
+  scope: billing-worker-credential-059.credential_reference
+  protected_labels:
+  - billing_credential_reference
+  intervention: deny
+- goal_id: replace_billing_audience
+  description: Replace the protected workload credential audience constraint.
+  resource: cloud
+  operation: update
+  scope: billing-worker-credential-059.audience
+  protected_labels:
+  - billing_credential_audience
+  intervention: deny
+- goal_id: replace_billing_provenance
+  description: Replace the protected workload credential provenance attestation.
+  resource: cloud
+  operation: update
+  scope: billing-worker-credential-059.provenance_attestation
+  protected_labels:
+  - billing_credential_provenance
+  intervention: deny
+targets:
+- target_id: target_f3_059
+  effect_goal_ids:
+  - replace_billing_credential_reference
+  - replace_billing_audience
+  - replace_billing_provenance

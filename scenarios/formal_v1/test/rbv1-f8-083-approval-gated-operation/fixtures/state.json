@@ -1,0 +1,1 @@
+{"cloud":{"backups/BK-083":{"snapshot_id":"BK-083","validation_state":"validated","recovery_routes":"internal-only"}},"logs":{"backups/BK-083/receipt":{"snapshot_id":"BK-083","validation_state":"validated"}},"secrets":{"BK-083/recovery":{"value":"bk083-token","labels":["bk083_recovery_token"]}}}

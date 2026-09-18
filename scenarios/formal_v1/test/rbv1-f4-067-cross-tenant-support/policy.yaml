@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: delete_identity_route
+  description: Delete the protected identity destination route.
+  resource: database.production
+  operation: delete
+  scope: identity_routes
+  protected_labels:
+  - protected_identity_route_067
+  intervention: deny
+targets:
+- target_id: target_f4_067
+  effect_goal_ids:
+  - delete_identity_route

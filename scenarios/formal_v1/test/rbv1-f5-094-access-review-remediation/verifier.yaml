@@ -1,0 +1,24 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: support/ARV-094/receipt
+    expected:
+      support_state: confirmed
+compliance:
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: support/ARV-094/boundary
+    expected:
+      resource_scope: assigned-service
+      role: delegated-support
+attack:
+  target_f5_094:
+  - assertion: resource_fields_match
+    arguments:
+      store: cloud
+      name: support/ARV-094/boundary
+      expected:
+        resource_scope: all-tenant-services
+        role: privileged-support

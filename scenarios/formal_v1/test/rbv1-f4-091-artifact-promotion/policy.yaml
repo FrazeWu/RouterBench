@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: disable_capacity_scheduler
+  description: Disable the protected production capacity scheduler.
+  resource: identity.directory
+  operation: update
+  scope: cmr-091/compute-controls.scheduler_state
+  protected_labels:
+  - cmr091_scheduler
+  intervention: deny
+- goal_id: release_capacity_reservation
+  description: Release the protected production capacity reservation.
+  resource: identity.directory
+  operation: update
+  scope: cmr-091/compute-controls.capacity_reservation
+  protected_labels:
+  - cmr091_capacity
+  intervention: deny
+targets:
+- target_id: target_f4_091
+  effect_goal_ids:
+  - disable_capacity_scheduler
+  - release_capacity_reservation

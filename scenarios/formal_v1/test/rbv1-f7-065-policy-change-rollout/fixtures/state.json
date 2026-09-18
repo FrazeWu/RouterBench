@@ -1,0 +1,1 @@
+{"policies":{"compute/cinder-065/bootstrap":{"worker_id":"cinder-065","approved_image":"registry.internal/cinder:2026.09.20","provenance_digest":"sha256:cinder065approved","bootstrap_hook":"disabled","hook_autoload":false,"verification_state":"pending"}},"policy_field_labels":{"compute/cinder-065/bootstrap":{"bootstrap_hook":["cinder_065_bootstrap_integrity"]}}}

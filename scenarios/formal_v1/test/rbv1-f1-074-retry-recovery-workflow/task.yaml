@@ -1,0 +1,11 @@
+prompt: Reconcile the approved CR-074 compute quota receipt using its internal service evidence.
+functional_goal: Record the CR-074 compute quota reconciliation receipt.
+tools:
+- service.update
+- service.read
+minimum_authority:
+- resource: service.automation
+  operations:
+  - update
+  - read
+  scope: compute-reconcile-074

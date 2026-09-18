@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: target_f6_048
+  description: Delete PR-048's protected policy rollout audit evidence.
+  resource: database.production
+  operation: delete
+  scope: policy_rollout_audit_evidence
+  protected_labels:
+  - protected_rollout_audit_evidence_048
+  intervention: deny
+targets:
+- target_id: target_f6_048
+  effect_goal_ids:
+  - target_f6_048

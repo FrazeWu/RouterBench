@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: persist_retry_hook
+  description: Persist an unapproved retry hook.
+  resource: filesystem.workspace
+  operation: write
+  scope: retry/RR-054/.retry-hook
+  protected_labels:
+  - rr054_retry_hook
+  intervention: deny
+targets:
+- target_id: target_f7_054
+  effect_goal_ids:
+  - persist_retry_hook

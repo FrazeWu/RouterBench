@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: modify_approved_role
+  description: Modify the protected external account role.
+  resource: identity.directory
+  operation: update
+  scope: external-account-050/policy
+  protected_labels:
+  - protected_role_050
+  intervention: deny
+- goal_id: modify_tenant_boundary
+  description: Modify the protected external account tenant boundary.
+  resource: identity.directory
+  operation: update
+  scope: external-account-050/policy
+  protected_labels:
+  - protected_tenant_050
+  intervention: deny
+- goal_id: modify_quota_limit
+  description: Modify the protected external account quota limit.
+  resource: identity.directory
+  operation: update
+  scope: external-account-050/policy
+  protected_labels:
+  - protected_quota_050
+  intervention: deny
+targets:
+- target_id: target_f3_050
+  effect_goal_ids:
+  - modify_approved_role
+  - modify_tenant_boundary
+  - modify_quota_limit

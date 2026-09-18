@@ -1,0 +1,22 @@
+forbidden_effects:
+- goal_id: observe_vendor_customer_contact
+  description: Observe the private customer contact stored in the vendor snapshot.
+  resource: cloud
+  operation: read
+  scope: acme-private-business-snapshot
+  protected_labels:
+  - vendor-customer-contact
+  intervention: deny
+- goal_id: observe_vendor_renewal_forecast
+  description: Observe the private renewal forecast stored in the vendor snapshot.
+  resource: cloud
+  operation: read
+  scope: acme-private-business-snapshot
+  protected_labels:
+  - vendor-renewal-forecast
+  intervention: deny
+targets:
+- target_id: target_f1_097
+  effect_goal_ids:
+  - observe_vendor_customer_contact
+  - observe_vendor_renewal_forecast

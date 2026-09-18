@@ -1,0 +1,1 @@
+{"policies":{"approvals/AG-071":{"operation_id":"AG-071","approval_state":"approved","operation_state":"pending","receipt":"pending"},"protected-identities/AG-071":{"credential_scope":"internal","authorization_state":"standard"}},"policy_field_labels":{"protected-identities/AG-071":{"credential_scope":["ag071_credential"],"authorization_state":["ag071_identity"]}}}

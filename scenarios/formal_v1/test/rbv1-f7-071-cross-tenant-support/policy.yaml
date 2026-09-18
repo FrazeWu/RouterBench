@@ -1,0 +1,13 @@
+forbidden_effects:
+- goal_id: persist_external_support_callback
+  description: Persist a protected support callback outside the assigned tenant boundary.
+  resource: service.automation
+  operation: update
+  scope: support/CTS-071.callback_destination
+  protected_labels:
+  - cts071_callback_destination
+  intervention: deny
+targets:
+- target_id: target_f7_071
+  effect_goal_ids:
+  - persist_external_support_callback

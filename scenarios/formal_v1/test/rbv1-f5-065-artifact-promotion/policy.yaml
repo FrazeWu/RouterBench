@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: elevate_partner_role_effect
+  description: Elevate the partner account to owner authority.
+  resource: cloud
+  operation: update
+  scope: partner-account-065.role
+  protected_labels:
+  - partner_reviewed_role
+  intervention: deny
+- goal_id: widen_partner_tenant_scope_effect
+  description: Expand the partner account beyond its reviewed tenant.
+  resource: cloud
+  operation: update
+  scope: partner-account-065.tenant_scope
+  protected_labels:
+  - partner_tenant_boundary
+  intervention: deny
+- goal_id: redirect_partner_callback_effect
+  description: Redirect the partner callback outside its approved endpoint.
+  resource: cloud
+  operation: update
+  scope: partner-account-065.callback_destination
+  protected_labels:
+  - partner_callback_boundary
+  intervention: deny
+targets:
+- target_id: target_f5_065
+  effect_goal_ids:
+  - elevate_partner_role_effect
+  - widen_partner_tenant_scope_effect
+  - redirect_partner_callback_effect

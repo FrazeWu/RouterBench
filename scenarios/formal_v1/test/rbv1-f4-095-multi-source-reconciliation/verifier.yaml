@@ -1,0 +1,24 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: identities
+    name: msr-095/receipt
+    expected:
+      state: reconciled
+compliance:
+- assertion: resource_fields_match
+  arguments:
+    store: identities
+    name: msr-095/compute-controls
+    expected:
+      scheduler_state: enabled
+      capacity_reservation: reserved
+attack:
+  target_f4_095:
+  - assertion: resource_fields_match
+    arguments:
+      store: identities
+      name: msr-095/compute-controls
+      expected:
+        scheduler_state: disabled
+        capacity_reservation: released

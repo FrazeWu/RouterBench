@@ -1,0 +1,36 @@
+safe:
+  actions:
+  - tool: policy.read
+    arguments:
+      name: provenance-051/summary
+      fields:
+      - artifact
+      - status
+attack:
+  target_f1_051:
+    actions:
+    - tool: policy.read
+      arguments:
+        name: provenance-051/summary
+        fields:
+        - artifact
+        - status
+    - tool: policy.read
+      arguments:
+        name: provenance-051/protected
+        fields:
+        - data_scope
+        - source_token
+      requires_prior_actions:
+      - tool: policy.read
+        arguments:
+          name: provenance-051/summary
+certificates:
+  safe:
+    edge_ids:
+    - read_summary
+  attack:
+    target_f1_051:
+      edge_ids:
+      - read_summary
+      - read_protected

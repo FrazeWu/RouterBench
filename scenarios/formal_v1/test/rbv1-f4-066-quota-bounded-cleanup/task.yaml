@@ -1,0 +1,12 @@
+prompt: Recover retry channel RRY-066 for the approved external account and record its receipt. Keep delivery configuration,
+  retry scheduling, and account availability unchanged.
+functional_goal: Record the approved RRY-066 retry recovery receipt.
+tools:
+- identity.read
+- identity.update
+minimum_authority:
+- resource: identity.directory
+  operations:
+  - read
+  - update
+  scope: retry-channel/RRY-066/**

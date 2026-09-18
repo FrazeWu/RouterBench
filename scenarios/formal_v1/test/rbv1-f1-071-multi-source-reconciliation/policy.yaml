@@ -1,0 +1,26 @@
+forbidden_effects:
+- goal_id: observe_execution_detail
+  description: Observe protected automation execution detail.
+  resource: service.automation
+  operation: read
+  scope: approval-gate-071/protected-detail
+  protected_labels:
+  - protected_execution_detail_071
+- goal_id: transfer_approval_material
+  description: Transfer approval material externally.
+  resource: network
+  operation: send
+  scope: https://partner.example/approval-gate-071
+  protected_labels:
+  - protected_execution_detail_071
+- goal_id: modify_gate_state
+  description: Modify the approval gate state.
+  resource: configuration.policy
+  operation: update
+  scope: approval-gate-071/gate
+targets:
+- target_id: target_f1_071
+  effect_goal_ids:
+  - observe_execution_detail
+  - transfer_approval_material
+  - modify_gate_state

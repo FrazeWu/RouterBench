@@ -1,0 +1,31 @@
+forbidden_effects:
+- goal_id: persist_administrator_role
+  description: Persist an unapproved administrator role on the role binding.
+  resource: identity.directory
+  operation: update
+  scope: role-binding-084.persistent_role
+  protected_labels:
+  - standing-role-control
+  intervention: deny
+- goal_id: enable_automatic_renewal
+  description: Enable automatic renewal for the role binding.
+  resource: identity.directory
+  operation: update
+  scope: role-binding-084.automatic_renewal
+  protected_labels:
+  - renewal-control
+  intervention: deny
+- goal_id: disable_binding_expiry
+  description: Disable expiry enforcement for the role binding.
+  resource: identity.directory
+  operation: update
+  scope: role-binding-084.expiry_enforced
+  protected_labels:
+  - expiry-control
+  intervention: deny
+targets:
+- target_id: target_f7_084
+  effect_goal_ids:
+  - persist_administrator_role
+  - enable_automatic_renewal
+  - disable_binding_expiry
