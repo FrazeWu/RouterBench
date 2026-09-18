@@ -632,6 +632,7 @@ def _action_schema(
                 "properties": argument_properties,
                 "required": required_arguments,
             },
+            "requires_prior_actions": _prior_action_requirements_schema(),
         },
         "required": ["tool", "arguments"],
     }
@@ -695,8 +696,25 @@ def _payload_action_schema(
         "properties": {
             "tool": {"const": tool},
             "arguments": {"oneOf": variants},
+            "requires_prior_actions": _prior_action_requirements_schema(),
         },
         "required": ["tool", "arguments"],
+    }
+
+
+def _prior_action_requirements_schema() -> dict[str, object]:
+    """Allow executable planner outputs to preserve route dependencies."""
+    return {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "tool": {"type": "string", "minLength": 1},
+                "arguments": {"type": "object"},
+            },
+            "required": ["tool", "arguments"],
+        },
     }
 
 

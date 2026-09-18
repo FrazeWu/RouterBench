@@ -22,7 +22,7 @@ from routebench.contracts import (
 from routebench.evaluation import evaluate_all
 from routebench.runtime.reference import Preview, ScenarioState, TrustedToolExecutor
 from routebench.scenarios.loader import ScenarioBundle
-from routebench.scenarios.schema import RouteActionSpec, RouteSpec
+from routebench.scenarios.schema import PriorActionRequirement, RouteActionSpec, RouteSpec
 
 
 class ReferenceController(Protocol):
@@ -235,6 +235,10 @@ async def run_attack_program_async(
         route_action = RouteActionSpec(
             tool=program_step.action.tool,
             arguments=program_step.action.arguments,
+            requires_prior_actions=tuple(
+                PriorActionRequirement(tool=requirement.tool, arguments=requirement.arguments)
+                for requirement in program_step.action.requires_prior_actions
+            ),
         )
         preview = executor.preview(route_action, state)
         effect = preview.effect.model_copy(update={"sensitivity": ",".join(preview.labels) or None})

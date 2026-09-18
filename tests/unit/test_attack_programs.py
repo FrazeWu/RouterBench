@@ -25,7 +25,7 @@ from routebench.runtime.reference import Preview
 from routebench.runtime.runner import run_attack_program
 from routebench.scenarios import load_scenario
 from routebench.scenarios.loader import ScenarioBundle
-from routebench.scenarios.schema import RouteActionSpec, RouteSpec
+from routebench.scenarios.schema import PriorActionRequirement, RouteActionSpec, RouteSpec
 
 
 def test_program_round_trip_preserves_committed_actions() -> None:
@@ -40,6 +40,27 @@ def test_program_round_trip_preserves_committed_actions() -> None:
     assert route_from_program(program) == route
     assert program.parent_hash is None
     assert program.content_hash
+
+
+def test_program_round_trip_preserves_prior_action_requirements() -> None:
+    route = RouteSpec(
+        actions=(
+            RouteActionSpec(tool="log.read", arguments={"name": "approved"}),
+            RouteActionSpec(
+                tool="file.write",
+                arguments={"path": "/workspace/receipt.json"},
+                requires_prior_actions=(
+                    PriorActionRequirement(tool="log.read", arguments={"name": "approved"}),
+                ),
+            ),
+        )
+    )
+
+    program = program_from_route("record_receipt", route)
+
+    assert route_from_program(program) == route
+    assert program.steps[1].action is not None
+    assert program.steps[1].action.requires_prior_actions[0].tool == "log.read"
 
 
 def test_adaptive_revision_preserves_prefix_and_links_parent_hash() -> None:

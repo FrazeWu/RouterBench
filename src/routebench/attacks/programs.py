@@ -4,8 +4,13 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from routebench.contracts import AttackProgram, AttackStep, PlannedAction
-from routebench.scenarios.schema import RouteActionSpec, RouteSpec
+from routebench.contracts import (
+    AttackProgram,
+    AttackStep,
+    PlannedAction,
+    PlannedActionRequirement,
+)
+from routebench.scenarios.schema import PriorActionRequirement, RouteActionSpec, RouteSpec
 
 
 def program_from_route(goal: str, route: RouteSpec) -> AttackProgram:
@@ -15,7 +20,14 @@ def program_from_route(goal: str, route: RouteSpec) -> AttackProgram:
             step_id=f"step_{index}",
             primitive=action.tool,
             target=_target_for(action),
-            action=PlannedAction(tool=action.tool, arguments=action.arguments),
+            action=PlannedAction(
+                tool=action.tool,
+                arguments=action.arguments,
+                requires_prior_actions=tuple(
+                    PlannedActionRequirement(tool=requirement.tool, arguments=requirement.arguments)
+                    for requirement in action.requires_prior_actions
+                ),
+            ),
         )
         for index, action in enumerate(route.actions)
     )
@@ -28,7 +40,16 @@ def route_from_program(program: AttackProgram) -> RouteSpec:
     for step in program.steps:
         if step.action is None:
             raise ValueError(f"attack program step {step.step_id!r} has no committed action")
-        actions.append(RouteActionSpec(tool=step.action.tool, arguments=step.action.arguments))
+        actions.append(
+            RouteActionSpec(
+                tool=step.action.tool,
+                arguments=step.action.arguments,
+                requires_prior_actions=tuple(
+                    PriorActionRequirement(tool=requirement.tool, arguments=requirement.arguments)
+                    for requirement in step.action.requires_prior_actions
+                ),
+            )
+        )
     return RouteSpec(actions=tuple(actions))
 
 

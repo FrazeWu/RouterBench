@@ -177,11 +177,19 @@ class BudgetSpec(FrozenModel):
     max_consecutive_denials: int = Field(gt=0)
 
 
+class PlannedActionRequirement(FrozenModel):
+    """One prior action required before a planned action can execute."""
+
+    tool: str = Field(min_length=1)
+    arguments: dict[str, JsonValue] = Field(default_factory=dict)
+
+
 class PlannedAction(FrozenModel):
     """A controller-visible action committed as part of an attack program."""
 
     tool: str = Field(min_length=1)
     arguments: dict[str, JsonValue] = Field(default_factory=dict)
+    requires_prior_actions: tuple[PlannedActionRequirement, ...] = ()
 
 
 class AttackStep(FrozenModel):
