@@ -11,4 +11,5 @@ formal_run: true
 disable_thinking: true
 anonymize_graph_labels: true
 graph_selection_interface: incremental_edge
+graph_incremental_static_prefix: true
 protocol_version: v12

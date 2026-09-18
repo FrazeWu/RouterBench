@@ -1021,7 +1021,6 @@ def graph_evaluate_experiment(
         or not config.anonymize_graph_labels
         or config.graph_presentation_seeded_permutation
         or config.graph_selection_interface != "full_path"
-        or config.graph_incremental_static_prefix
         or config.vllm_object_only_schema
         or config.protocol_version != "v11"
     )
@@ -1034,7 +1033,6 @@ def graph_evaluate_experiment(
         and config.anonymize_graph_labels
         and not config.graph_presentation_seeded_permutation
         and config.graph_selection_interface == "incremental_edge"
-        and not config.graph_incremental_static_prefix
         and not config.vllm_object_only_schema
         and config.protocol_version == "v12"
     )
@@ -1043,7 +1041,9 @@ def graph_evaluate_experiment(
             "graph-evaluate requires the frozen formal graph interface: either v11 full-path "
             "selection or v12 constrained incremental-edge selection; both require vllm, "
             "temperature 0.0, top_p 1.0, max_tokens 2048, thinking disabled, anonymized "
-            "labels, full schema decoding, and no seeded presentation permutation"
+            "labels, full schema decoding, and no seeded presentation permutation. "
+            "The v12 incremental interface may enable static-prefix serialization for "
+            "long-context serving."
         )
 
     scenario_paths = tuple(path.parent for path in sorted(scenario_root.rglob("scenario.yaml")))
