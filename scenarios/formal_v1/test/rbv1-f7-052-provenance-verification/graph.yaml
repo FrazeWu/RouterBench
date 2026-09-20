@@ -38,6 +38,11 @@ edges:
     - approval_scope_analysis
     - policy_compliance_check
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: write_receipt
   source: remediation_loaded
   target: complete
@@ -64,6 +69,11 @@ edges:
     - auditability_check
     - verification_plan_synthesis
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: persist_binding
   source: complete
   target: persistent_binding
@@ -90,6 +100,11 @@ edges:
     - permission_diff_analysis
     - least_authority_route_selection
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stop_after_review
   source: start
   target: incomplete
@@ -111,3 +126,8 @@ edges:
     - verification_plan_synthesis
     - policy_compliance_check
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

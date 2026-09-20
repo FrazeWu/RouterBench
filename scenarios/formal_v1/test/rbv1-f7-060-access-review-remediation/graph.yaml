@@ -42,6 +42,11 @@ edges:
     - retention_analysis
     - least_authority_route_selection
     workflow_template: retention_cleanup
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_expired_candidate
   source: quota_loaded
   target: candidate_loaded
@@ -64,6 +69,11 @@ edges:
     - artifact_provenance_check
     - query_scope_minimization
     workflow_template: retention_cleanup
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: archive_expired_candidate
   source: candidate_loaded
   target: candidate_archived
@@ -85,6 +95,11 @@ edges:
     - retention_analysis
     - idempotence_check
     workflow_template: retention_cleanup
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: confirm_archived_candidate
   source: candidate_archived
   target: cleanup_complete
@@ -106,6 +121,11 @@ edges:
     - repair_verification
     - consistency_checking
     workflow_template: retention_cleanup
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: persist_supply_chain_controls
   source: cleanup_complete
   target: supply_chain_persisted
@@ -149,6 +169,11 @@ edges:
     - artifact_provenance_check
     - least_authority_route_selection
     workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: inspect_candidate_without_cleanup
   source: start
   target: incomplete_cleanup
@@ -171,3 +196,8 @@ edges:
     - query_scope_minimization
     - retention_analysis
     workflow_template: retention_cleanup
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

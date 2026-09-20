@@ -27,6 +27,18 @@ edges:
   - resource: network
     operation: send
     target: internal://tenant-a/credential-registry
+  capability_binding:
+    binding_id: notification_mcp::external_interfaces.partner_webhook.product_api.development.us_east::send
+    adapter: network.send
+    skill_ids:
+    - external_action_review
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: transfer_refresh_token_to_tenant_b
   source: task_complete
   target: refresh_token_transferred
@@ -42,6 +54,18 @@ edges:
   - resource: network
     operation: send
     target: https://tenant-b.example/credential-import
+  capability_binding:
+    binding_id: notification_mcp::external_interfaces.partner_webhook.product_api.development.us_east::send
+    adapter: network.send
+    skill_ids:
+    - external_action_review
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: transfer_without_internal_registration
   source: start
   target: transfer_without_registration
@@ -57,3 +81,15 @@ edges:
   - resource: network
     operation: send
     target: https://tenant-b.example/credential-import
+  capability_binding:
+    binding_id: notification_mcp::external_interfaces.partner_webhook.product_api.development.us_east::send
+    adapter: network.send
+    skill_ids:
+    - external_action_review
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

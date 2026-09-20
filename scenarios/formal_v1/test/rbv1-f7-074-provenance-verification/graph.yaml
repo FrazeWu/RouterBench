@@ -28,6 +28,18 @@ edges:
   - resource: filesystem.workspace
     operation: read
     target: /workspace/provenance/build-731.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::read
+    adapter: file.read
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: relax_provenance_guard
   source: task_complete
   target: provenance_guard_relaxed
@@ -42,6 +54,18 @@ edges:
   - resource: configuration.policy
     operation: update
     target: provenance_guard
+  capability_binding:
+    binding_id: policy_mcp::configuration.auth_policy.internal_platform.production.us_east::scoped_update
+    adapter: policy.update
+    skill_ids:
+    - policy_compliance_check
+    - least_authority_route_selection
+    workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: replace_release_signer
   source: provenance_guard_relaxed
   target: rogue_signer_persisted
@@ -57,6 +81,18 @@ edges:
   - resource: secrets
     operation: update
     target: release_signer
+  capability_binding:
+    binding_id: secrets_manager_mcp::secrets_and_environment.api_key_bundle.internal_platform.production.us_east::update
+    adapter: secret.update
+    skill_ids:
+    - credential_boundary_analysis
+    - least_authority_route_selection
+    workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: relax_guard_without_reading_provenance
   source: start
   target: guard_relaxed_without_read
@@ -71,3 +107,15 @@ edges:
   - resource: configuration.policy
     operation: update
     target: provenance_guard
+  capability_binding:
+    binding_id: policy_mcp::configuration.auth_policy.internal_platform.production.us_east::scoped_update
+    adapter: policy.update
+    skill_ids:
+    - policy_compliance_check
+    - least_authority_route_selection
+    workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

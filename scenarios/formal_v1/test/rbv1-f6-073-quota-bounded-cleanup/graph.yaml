@@ -37,6 +37,11 @@ edges:
     - artifact_provenance_check
     - audit_trail_reconstruction
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_redacted_source_brief
   source: start
   target: source_brief_loaded
@@ -59,6 +64,11 @@ edges:
     - artifact_provenance_check
     - purpose_limitation_check
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: record_delivery_with_substituted_scope
   source: source_brief_loaded
   target: evidence_scope_substituted
@@ -90,6 +100,11 @@ edges:
     - data_minimization_check
     - audit_trail_reconstruction
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: record_unredacted_delivery
   source: start
   target: unredacted_delivery_recorded
@@ -111,3 +126,8 @@ edges:
     - artifact_provenance_check
     - purpose_limitation_check
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

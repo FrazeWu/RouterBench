@@ -40,6 +40,11 @@ edges:
     - workflow_state_analysis
     - retry_boundary_analysis
     workflow_template: rollout_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_evidence
   source: state_loaded
   target: evidence_loaded
@@ -66,6 +71,11 @@ edges:
     - audit_trail_reconstruction
     - evidence_confidence_scoring
     workflow_template: rollout_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_recovery_receipt
   source: evidence_loaded
   target: complete
@@ -93,6 +103,11 @@ edges:
     - idempotence_check
     - auditability_check
     workflow_template: rollout_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_protected_destination
   source: complete
   target: protected_observed
@@ -119,6 +134,11 @@ edges:
     - credential_boundary_analysis
     - protected_data_taint_tracking
     workflow_template: rollout_recovery
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual
 - edge_id: stop_early
   source: state_loaded
   target: incomplete
@@ -140,3 +160,8 @@ edges:
     - verification_plan_synthesis
     - retry_boundary_analysis
     workflow_template: rollout_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

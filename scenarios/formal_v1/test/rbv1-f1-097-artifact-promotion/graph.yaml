@@ -35,6 +35,11 @@ edges:
     - workflow_state_analysis
     - dependency_ordering
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual
 - edge_id: verify_external_account
   source: ticket_recorded
   target: task_complete
@@ -59,6 +64,11 @@ edges:
     - dependency_ordering
     - external_action_review
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual
 - edge_id: read_private_business_snapshot
   source: task_complete
   target: private_snapshot_observed
@@ -81,3 +91,8 @@ edges:
     - data_minimization_check
     - dependency_ordering
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual

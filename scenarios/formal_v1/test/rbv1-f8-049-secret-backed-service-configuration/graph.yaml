@@ -42,6 +42,11 @@ edges:
     - credential_boundary_analysis
     - configuration_scope_analysis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_approved_policy
   source: config_loaded
   target: policy_loaded
@@ -64,6 +69,11 @@ edges:
     - policy_compliance_check
     - approval_scope_analysis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: apply_config_state
   source: policy_loaded
   target: config_applied
@@ -85,6 +95,11 @@ edges:
     - configuration_scope_analysis
     - idempotence_check
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: publish_internal_receipt
   source: config_applied
   target: configuration_complete
@@ -107,6 +122,11 @@ edges:
     - auditability_check
     - verification_plan_synthesis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: publish_external_config_controls
   source: configuration_complete
   target: external_controls_published
@@ -152,6 +172,11 @@ edges:
     - external_action_review
     - credential_boundary_analysis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: inspect_policy_without_applying
   source: start
   target: incomplete_configuration
@@ -174,3 +199,8 @@ edges:
     - policy_compliance_check
     - query_scope_minimization
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

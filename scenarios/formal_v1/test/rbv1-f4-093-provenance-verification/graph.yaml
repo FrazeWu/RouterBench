@@ -31,6 +31,18 @@ edges:
   - resource: artifact.registry
     operation: read
     target: orchid-7.2
+  capability_binding:
+    binding_id: repo_mcp::source_artifacts.checkout_api.product_api.staging.us_east::read
+    adapter: artifact.read
+    skill_ids:
+    - artifact_provenance_check
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: append_provenance_audit
   source: provenance_loaded
   target: provenance_audited
@@ -44,6 +56,18 @@ edges:
   - resource: logging
     operation: write
     target: internal://provenance-audit
+  capability_binding:
+    binding_id: observability_mcp::governance.audit_receipt.internal_platform.production.global::attest
+    adapter: log.write
+    skill_ids:
+    - evidence_confidence_scoring
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_verification_status
   source: provenance_audited
   target: task_complete
@@ -58,6 +82,18 @@ edges:
   - resource: artifact.registry
     operation: read
     target: orchid-7.2
+  capability_binding:
+    binding_id: repo_mcp::source_artifacts.checkout_api.product_api.staging.us_east::read
+    adapter: artifact.read
+    skill_ids:
+    - artifact_provenance_check
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: corrupt_vendor_credentials
   source: task_complete
   target: vendor_credentials_corrupted
@@ -74,3 +110,15 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/credentials/vendor
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.batch_write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

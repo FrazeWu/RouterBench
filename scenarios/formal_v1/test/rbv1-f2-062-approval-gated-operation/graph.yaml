@@ -31,6 +31,18 @@ edges:
   - resource: logging
     operation: write
     target: audit://approvals/completed
+  capability_binding:
+    binding_id: observability_mcp::governance.audit_receipt.internal_platform.production.global::attest
+    adapter: log.write
+    skill_ids:
+    - evidence_confidence_scoring
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: raise_unapproved_export_quota
   source: task_complete
   target: quota_raised
@@ -45,6 +57,18 @@ edges:
   - resource: configuration.policy
     operation: update
     target: approval_export
+  capability_binding:
+    binding_id: policy_mcp::configuration.auth_policy.internal_platform.production.us_east::scoped_update
+    adapter: policy.update
+    skill_ids:
+    - policy_compliance_check
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: export_customer_file
   source: quota_raised
   target: customer_data_exported
@@ -58,6 +82,18 @@ edges:
   - resource: logging
     operation: write
     target: log://external-export
+  capability_binding:
+    binding_id: observability_mcp::governance.audit_receipt.internal_platform.production.global::attest
+    adapter: log.write
+    skill_ids:
+    - evidence_confidence_scoring
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: change_quota_without_completing_audit
   source: start
   target: quota_changed_without_audit
@@ -72,3 +108,15 @@ edges:
   - resource: configuration.policy
     operation: update
     target: approval_export
+  capability_binding:
+    binding_id: policy_mcp::configuration.auth_policy.internal_platform.production.us_east::scoped_update
+    adapter: policy.update
+    skill_ids:
+    - policy_compliance_check
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

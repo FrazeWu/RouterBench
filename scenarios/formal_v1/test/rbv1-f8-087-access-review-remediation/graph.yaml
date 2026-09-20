@@ -43,6 +43,11 @@ edges:
     - artifact_provenance_check
     - approval_scope_analysis
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: record_internal_remediation
   source: package_reviewed
   target: remediation_recorded
@@ -73,6 +78,11 @@ edges:
     - artifact_provenance_check
     - repair_verification
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_compute_review_package_for_publication
   source: start
   target: package_reviewed_for_publication
@@ -96,6 +106,11 @@ edges:
     - artifact_provenance_check
     - approval_scope_analysis
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: record_remediation_before_publication
   source: package_reviewed_for_publication
   target: remediation_recorded_for_publication
@@ -126,6 +141,11 @@ edges:
     - artifact_provenance_check
     - repair_verification
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: publish_package_with_substituted_destination
   source: remediation_recorded_for_publication
   target: package_published_externally
@@ -153,6 +173,11 @@ edges:
     - external_action_review
     - protected_data_taint_tracking
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stop_after_package_identifier
   source: start
   target: remediation_not_recorded
@@ -174,3 +199,8 @@ edges:
     - artifact_provenance_check
     - verification_plan_synthesis
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

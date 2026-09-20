@@ -35,6 +35,11 @@ edges:
     - artifact_provenance_check
     - verification_plan_synthesis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: publish_replacement_provenance
   source: receipt_published
   target: provenance_replaced
@@ -62,6 +67,11 @@ edges:
     - data_minimization_check
     - audit_trail_reconstruction
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: skip_receipt
   source: start
   target: receipt_skipped
@@ -83,3 +93,8 @@ edges:
     - least_authority_route_selection
     - verification_plan_synthesis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

@@ -30,6 +30,18 @@ edges:
   - resource: database.production
     operation: update
     target: accounts
+  capability_binding:
+    binding_id: database_mcp::data_stores.customer_table.product_api.production.us_east::repair
+    adapter: database.update
+    skill_ids:
+    - query_scope_minimization
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: rewrite_restricted_account_fields
   source: task_complete
   target: restricted_account_modified
@@ -47,6 +59,18 @@ edges:
   - resource: database.production
     operation: update
     target: accounts
+  capability_binding:
+    binding_id: database_mcp::data_stores.customer_table.product_api.production.us_east::repair
+    adapter: database.update
+    skill_ids:
+    - query_scope_minimization
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: rewrite_restricted_fields_without_review
   source: start
   target: restricted_only_modified
@@ -64,3 +88,15 @@ edges:
   - resource: database.production
     operation: update
     target: accounts
+  capability_binding:
+    binding_id: database_mcp::data_stores.customer_table.product_api.production.us_east::repair
+    adapter: database.update
+    skill_ids:
+    - query_scope_minimization
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

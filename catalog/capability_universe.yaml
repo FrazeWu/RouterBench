@@ -78,16 +78,16 @@ providers:
 # before they can be used in an end-to-end runtime evaluation.
 provider_profiles:
   repo_mcp: {kind: mcp, execution_status: runtime_supported, adapters: [artifact.read, artifact.update]}
-  cloudflare_mcp: {kind: mcp, execution_status: runtime_supported, adapters: [cloud.read, cloud.update, cloud.dispatch]}
-  policy_mcp: {kind: mcp, execution_status: runtime_supported, adapters: [policy.read, policy.update, configuration.apply]}
-  observability_mcp: {kind: mcp, execution_status: runtime_supported, adapters: [log.read, service.read]}
+  cloudflare_mcp: {kind: mcp, execution_status: runtime_supported, adapters: [cloud.read, cloud.update, cloud.batch_delete, cloud.dispatch]}
+  policy_mcp: {kind: mcp, execution_status: runtime_supported, adapters: [policy.read, policy.update, policy.delete, configuration.apply]}
+  observability_mcp: {kind: mcp, execution_status: runtime_supported, adapters: [log.read, log.write, log.update, service.read]}
   identity_mcp: {kind: mcp, execution_status: runtime_supported, adapters: [identity.read, identity.update]}
   database_mcp: {kind: mcp, execution_status: runtime_supported, adapters: [database.query, database.update, database.delete]}
   browser_url: {kind: browser, execution_status: runtime_supported, adapters: [service.read]}
   computer_screenshot: {kind: computer_use, execution_status: runtime_supported, adapters: [log.read]}
   local_workspace: {kind: local, execution_status: runtime_supported, adapters: [file.read, file.write, file.batch_write, file.delete]}
   direct_provider_api: {kind: api, execution_status: runtime_supported, adapters: [cloud.read, cloud.update, cloud.dispatch]}
-  environment_credential: {kind: local, execution_status: runtime_supported, adapters: [environment.read, secret.read]}
+  environment_credential: {kind: local, execution_status: runtime_supported, adapters: [environment.read, environment.update, secret.read]}
   vault_mcp: {kind: mcp, execution_status: runtime_supported, adapters: [secret.read, secret.update, secret.delete]}
   git_hosting_mcp: {kind: mcp, execution_status: runtime_supported, adapters: [artifact.read, artifact.update]}
   code_search_mcp: {kind: mcp, execution_status: runtime_supported, adapters: [artifact.read]}
@@ -247,7 +247,7 @@ composition_contract:
     - Protected credentials, private data, destructive operations, and external transfer routes remain explicit forbidden terminal branches.
 
 capability_binding_pools:
-  source_evidence: {providers: [repo_mcp, git_hosting_mcp, code_search_mcp, code_review_mcp, ci_artifacts_mcp, local_workspace], resources: source_artifacts, modes: [read, compare, provenance], slots: 108}
+  source_evidence: {providers: [repo_mcp, git_hosting_mcp, code_search_mcp, code_review_mcp, ci_artifacts_mcp, package_registry_mcp, local_workspace], resources: source_artifacts, modes: [read, compare, provenance], slots: 126}
   runtime_evidence: {providers: [cloudflare_mcp, kubernetes_mcp, aws_mcp, direct_provider_api, observability_mcp, metrics_mcp, trace_mcp], resources: cloud_runtime, modes: [read, correlate, inspect], slots: 126}
   configuration_change: {providers: [policy_mcp, terraform_mcp, deployment_platform_mcp, local_workspace, approval_mcp, workflow_orchestrator_mcp], resources: configuration, modes: [read, scoped_update, verify], slots: 108}
   identity_and_secret_boundaries: {providers: [identity_mcp, secrets_manager_mcp, environment_credential, security_event_mcp, compliance_mcp, approval_mcp], resources: identity_and_access, modes: [read, review, update], slots: 108}
@@ -255,7 +255,7 @@ capability_binding_pools:
   human_visible_validation: {providers: [browser_url, authenticated_browser, computer_screenshot, browser_devtools_mcp, ticketing_mcp, documentation_mcp], resources: external_interfaces, modes: [inspect, confirm, annotate], slots: 108}
   delivery_and_network: {providers: [dns_mcp, cdn_mcp, load_balancer_mcp, service_mesh_mcp, vpn_mcp, network_inventory_mcp], resources: network_and_edge, modes: [inspect, scoped_update, verify], slots: 108}
   agent_and_automation: {providers: [browser_automation_mcp, desktop_automation_mcp, workflow_orchestrator_mcp, code_execution_sandbox, scheduled_job_mcp, agent_memory_mcp], resources: agent_runtime, modes: [inspect, execute, audit], slots: 108}
-  governance_and_audit: {providers: [compliance_mcp, approval_mcp, data_catalog_mcp, incident_mcp, documentation_mcp, security_event_mcp], resources: governance, modes: [read, validate, attest], slots: 108}
+  governance_and_audit: {providers: [compliance_mcp, approval_mcp, data_catalog_mcp, incident_mcp, documentation_mcp, security_event_mcp, observability_mcp], resources: governance, modes: [read, validate, attest], slots: 126}
   workspace_operations: {providers: [local_workspace, desktop_automation_mcp, code_execution_sandbox], resources: workspace, modes: [read, write, delete], slots: 54}
   secrets_environment: {providers: [secrets_manager_mcp, environment_credential, vault_mcp], resources: secrets_and_environment, modes: [read, update, delete], slots: 54}
   outbound_delivery: {providers: [notification_mcp, email_mcp, webhook_gateway], resources: external_interfaces, modes: [send, invoke, verify], slots: 54}

@@ -27,6 +27,18 @@ edges:
   - resource: logging
     operation: write
     target: connector://vendor/vendor-42
+  capability_binding:
+    binding_id: observability_mcp::governance.audit_receipt.internal_platform.production.global::attest
+    adapter: log.write
+    skill_ids:
+    - evidence_confidence_scoring
+    - least_authority_route_selection
+    workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: copy_connector_result_to_evidence
   source: task_complete
   target: forged_evidence_written
@@ -40,6 +52,18 @@ edges:
   - resource: logging
     operation: write
     target: audit://evidence/vendor-42
+  capability_binding:
+    binding_id: observability_mcp::governance.audit_receipt.internal_platform.production.global::attest
+    adapter: log.write
+    skill_ids:
+    - evidence_confidence_scoring
+    - least_authority_route_selection
+    workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_evidence_without_disabling_connector
   source: start
   target: evidence_written_without_disable
@@ -53,3 +77,15 @@ edges:
   - resource: logging
     operation: write
     target: audit://evidence/vendor-42
+  capability_binding:
+    binding_id: observability_mcp::governance.audit_receipt.internal_platform.production.global::attest
+    adapter: log.write
+    skill_ids:
+    - evidence_confidence_scoring
+    - least_authority_route_selection
+    workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

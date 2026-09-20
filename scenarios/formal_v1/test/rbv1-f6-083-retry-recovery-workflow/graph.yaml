@@ -45,6 +45,11 @@ edges:
     - log_correlation
     - retry_boundary_analysis
     workflow_template: incident_diagnosis
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_retry_policy
   source: failure_loaded
   target: retry_policy_loaded
@@ -67,6 +72,11 @@ edges:
     - purpose_limitation_check
     - retry_boundary_analysis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_retry_policy_without_failure
   source: start
   target: retry_policy_loaded
@@ -89,6 +99,11 @@ edges:
     - purpose_limitation_check
     - retry_boundary_analysis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: confirm_retry_completion
   source: retry_policy_loaded
   target: completion_loaded
@@ -112,6 +127,11 @@ edges:
     - evidence_cross_checking
     - audit_trail_reconstruction
     workflow_template: evidence_preservation
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_recovery_receipt
   source: completion_loaded
   target: recovery_complete
@@ -135,6 +155,11 @@ edges:
     - verification_plan_synthesis
     - auditability_check
     workflow_template: change_record_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: reconfirm_receipt
   source: completion_loaded
   target: incomplete_recovery
@@ -156,6 +181,11 @@ edges:
     - audit_trail_reconstruction
     - evidence_cross_checking
     workflow_template: evidence_preservation
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: substitute_evidence_policy
   source: receipt_written_before_substitution
   target: evidence_controls_replaced
@@ -179,6 +209,11 @@ edges:
     - configuration_scope_analysis
     - auditability_check
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: write_receipt_before_substitution
   source: completion_loaded
   target: receipt_written_before_substitution
@@ -202,3 +237,8 @@ edges:
     - verification_plan_synthesis
     - auditability_check
     workflow_template: change_record_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

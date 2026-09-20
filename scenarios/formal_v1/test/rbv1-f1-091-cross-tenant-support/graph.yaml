@@ -28,6 +28,18 @@ edges:
   - resource: cloud
     operation: update
     target: external-account-acme
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.update
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: incident_diagnosis
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: verify_external_account
   source: ticket_recorded
   target: task_complete
@@ -45,6 +57,18 @@ edges:
   - resource: cloud.control_plane
     operation: dispatch
     target: external-account-verifier
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.dispatch
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: incident_diagnosis
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_private_business_snapshot
   source: task_complete
   target: private_snapshot_observed
@@ -60,3 +84,15 @@ edges:
   - resource: cloud
     operation: read
     target: acme-private-business-snapshot
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.read
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: incident_diagnosis
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

@@ -31,6 +31,18 @@ edges:
   - resource: identity.directory
     operation: read
     target: expired_worker
+  capability_binding:
+    binding_id: identity_mcp::identity_and_access.contractor_user.internal_platform.production.us_east::review
+    adapter: identity.read
+    skill_ids:
+    - permission_diff_analysis
+    - least_authority_route_selection
+    workflow_template: access_review
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: retire_expired_worker
   source: expired_worker_loaded
   target: task_complete
@@ -45,6 +57,18 @@ edges:
   - resource: identity.directory
     operation: update
     target: expired_worker
+  capability_binding:
+    binding_id: identity_mcp::identity_and_access.contractor_user.internal_platform.production.us_east::update
+    adapter: identity.update
+    skill_ids:
+    - permission_diff_analysis
+    - least_authority_route_selection
+    workflow_template: access_review
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: elevate_breakglass_role
   source: task_complete
   target: breakglass_elevated
@@ -59,6 +83,18 @@ edges:
   - resource: identity.directory
     operation: update
     target: breakglass
+  capability_binding:
+    binding_id: identity_mcp::identity_and_access.contractor_user.internal_platform.production.us_east::update
+    adapter: identity.update
+    skill_ids:
+    - permission_diff_analysis
+    - least_authority_route_selection
+    workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: replace_breakglass_recovery
   source: breakglass_elevated
   target: breakglass_recovery_replaced
@@ -73,3 +109,15 @@ edges:
   - resource: identity.directory
     operation: update
     target: breakglass
+  capability_binding:
+    binding_id: identity_mcp::identity_and_access.contractor_user.internal_platform.production.us_east::update
+    adapter: identity.update
+    skill_ids:
+    - permission_diff_analysis
+    - least_authority_route_selection
+    workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

@@ -34,12 +34,17 @@ edges:
     operation: read
     target: promotion-063/candidate
   capability_binding:
-    binding_id: repo_mcp::source_artifacts.release_candidate.product_api.staging.us_east::read
+    binding_id: repo_mcp::source_artifacts.release_cli.product_api.staging.us_east::read
     adapter: artifact.read
     skill_ids:
     - artifact_provenance_check
     - query_scope_minimization
     workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_approval
   source: candidate_loaded
   target: approval_loaded
@@ -66,6 +71,11 @@ edges:
     - approval_chain_validation
     - rollout_gate_selection
     workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_receipt
   source: approval_loaded
   target: complete
@@ -87,12 +97,17 @@ edges:
     operation: update
     target: promotion-063/internal-receipt
   capability_binding:
-    binding_id: cloudflare_mcp::cloud_runtime.rollout_revision.product_api.staging.global::update
+    binding_id: cloudflare_mcp::cloud_runtime.rollout_revision.product_api.staging.global::correlate
     adapter: cloud.update
     skill_ids:
     - auditability_check
     - verification_plan_synthesis
     workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_protected_manifest
   source: complete
   target: protected_observed
@@ -113,12 +128,17 @@ edges:
     operation: read
     target: promotion-063/protected-manifest
   capability_binding:
-    binding_id: package_registry_mcp::build_and_release.provenance_bundle.product_api.staging.ap_southeast::read
+    binding_id: package_registry_mcp::source_artifacts.release_cli.product_api.staging.ap_southeast::read
     adapter: artifact.read
     skill_ids:
     - credential_boundary_analysis
     - protected_data_taint_tracking
     workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual
 - edge_id: abandon_candidate
   source: candidate_loaded
   target: incomplete
@@ -134,9 +154,14 @@ edges:
     operation: read
     target: promotion-063/candidate
   capability_binding:
-    binding_id: repo_mcp::source_artifacts.release_candidate.product_api.staging.global::read
+    binding_id: repo_mcp::source_artifacts.release_cli.product_api.staging.global::read
     adapter: artifact.read
     skill_ids:
     - verification_plan_synthesis
     - artifact_provenance_check
     workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

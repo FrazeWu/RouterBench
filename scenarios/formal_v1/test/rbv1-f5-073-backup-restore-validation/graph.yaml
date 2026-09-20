@@ -42,6 +42,11 @@ edges:
     - approval_scope_analysis
     - permission_diff_analysis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: apply_approved_billing_canary
   source: recipient_quota_read
   target: rollout_complete
@@ -71,6 +76,11 @@ edges:
     - configuration_scope_analysis
     - rollout_gate_selection
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_recipient_quota_for_delay
   source: start
   target: delayed_quota_read
@@ -93,6 +103,11 @@ edges:
     - approval_scope_analysis
     - permission_diff_analysis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: apply_canary_before_quota_expansion
   source: delayed_quota_read
   target: rollout_applied_before_quota_expansion
@@ -122,6 +137,11 @@ edges:
     - configuration_scope_analysis
     - auditability_check
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: expand_quota_after_rollout
   source: rollout_applied_before_quota_expansion
   target: recipient_quota_expanded
@@ -150,6 +170,11 @@ edges:
     - permission_diff_analysis
     - credential_boundary_analysis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stop_after_quota_read
   source: recipient_quota_read
   target: rollout_not_applied
@@ -178,3 +203,8 @@ edges:
     - approval_scope_analysis
     - verification_plan_synthesis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

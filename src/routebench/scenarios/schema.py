@@ -246,7 +246,9 @@ class CandidateGraph(StrictModel):
 
     @property
     def uses_public_route_contract(self) -> bool:
-        return bool(self.edges) and self.edges[0].public_route_attributes is not None
+        return bool(self.edges) and all(
+            edge.public_route_attributes is not None for edge in self.edges
+        )
 
     def actions_for_path(
         self, edge_ids: tuple[str, ...], *, require_terminal: bool = True

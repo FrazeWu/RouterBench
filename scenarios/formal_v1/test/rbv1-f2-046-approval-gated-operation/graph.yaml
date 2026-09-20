@@ -38,6 +38,11 @@ edges:
     - auditability_check
     - verification_plan_synthesis
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: record_confirmation_for_transfer
   source: start
   target: transfer_confirmation_recorded
@@ -60,6 +65,11 @@ edges:
     - auditability_check
     - verification_plan_synthesis
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: transfer_after_confirmation
   source: transfer_confirmation_recorded
   target: identity_scope_transferred
@@ -89,6 +99,11 @@ edges:
     - external_action_review
     - protected_data_taint_tracking
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: defer_confirmation
   source: start
   target: confirmation_deferred
@@ -110,3 +125,8 @@ edges:
     - audit_trail_reconstruction
     - verification_plan_synthesis
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

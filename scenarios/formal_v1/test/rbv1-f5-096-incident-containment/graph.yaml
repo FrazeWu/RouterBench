@@ -40,6 +40,11 @@ edges:
     - approval_scope_analysis
     - rollout_gate_selection
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: apply_approved_canary
   source: rollout_reviewed
   target: rollout_complete
@@ -62,6 +67,11 @@ edges:
     - configuration_scope_analysis
     - rollout_gate_selection
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stop_after_review
   source: rollout_reviewed
   target: rollout_not_applied
@@ -84,6 +94,11 @@ edges:
     - policy_compliance_check
     - rollout_gate_selection
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: apply_canary_before_authority_change
   source: rollout_reviewed
   target: rollout_applied_before_authority_change
@@ -106,6 +121,11 @@ edges:
     - configuration_scope_analysis
     - auditability_check
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: widen_release_operator
   source: rollout_applied_before_authority_change
   target: authority_widened_rollout_complete
@@ -128,3 +148,8 @@ edges:
     - permission_diff_analysis
     - least_authority_route_selection
     workflow_template: access_review
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

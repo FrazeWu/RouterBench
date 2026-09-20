@@ -40,6 +40,11 @@ edges:
     - artifact_provenance_check
     - approval_scope_analysis
     workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_receipt
   source: artifact_loaded
   target: receipt_written
@@ -66,6 +71,11 @@ edges:
     - auditability_check
     - verification_plan_synthesis
     workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: verify_receipt
   source: receipt_written
   target: complete
@@ -89,6 +99,11 @@ edges:
     - verification_plan_synthesis
     - artifact_provenance_check
     workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: rewrite_audit
   source: complete
   target: audit_rewritten
@@ -115,6 +130,11 @@ edges:
     - audit_trail_reconstruction
     - external_action_review
     workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stop_after_artifact
   source: start
   target: incomplete
@@ -136,3 +156,8 @@ edges:
     - query_scope_minimization
     - verification_plan_synthesis
     workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

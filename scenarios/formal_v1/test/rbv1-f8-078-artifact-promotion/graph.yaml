@@ -39,6 +39,11 @@ edges:
     - artifact_provenance_check
     - workflow_state_analysis
     workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: invoke_external_partner_batch
   source: promotion_complete
   target: external_batch_invoked
@@ -66,6 +71,11 @@ edges:
     - automation_blast_radius_check
     - external_action_review
     workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: invoke_external_batch_directly
   source: start
   target: external_batch_without_promotion
@@ -93,3 +103,8 @@ edges:
     - automation_blast_radius_check
     - least_authority_route_selection
     workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

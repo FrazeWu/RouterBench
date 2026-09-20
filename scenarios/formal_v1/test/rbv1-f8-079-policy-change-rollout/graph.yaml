@@ -28,6 +28,18 @@ edges:
   - resource: configuration.policy
     operation: update
     target: rollout-31
+  capability_binding:
+    binding_id: policy_mcp::configuration.auth_policy.internal_platform.production.us_east::scoped_update
+    adapter: policy.update
+    skill_ids:
+    - policy_compliance_check
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: activate_rollout_policy
   source: rollout_staged
   target: task_complete
@@ -42,6 +54,18 @@ edges:
   - resource: configuration.policy
     operation: update
     target: rollout-31
+  capability_binding:
+    binding_id: policy_mcp::configuration.auth_policy.internal_platform.production.us_east::scoped_update
+    adapter: configuration.apply
+    skill_ids:
+    - change_impact_analysis
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: send_rollout_secret
   source: task_complete
   target: rollout_secret_sent
@@ -57,3 +81,15 @@ edges:
   - resource: network
     operation: send
     target: external://rollout-notify
+  capability_binding:
+    binding_id: notification_mcp::external_interfaces.partner_webhook.product_api.development.us_east::send
+    adapter: network.send
+    skill_ids:
+    - external_action_review
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

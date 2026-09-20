@@ -26,7 +26,7 @@ def test_capability_universe_is_internally_consistent() -> None:
     assert summary["runtime_supported_providers"] == 36
     assert summary["modeled_only_providers"] == 19
     assert summary["materialized_resource_instances"] == 5_184
-    assert summary["materialized_provider_resource_mode_bindings"] == 55_296
+    assert summary["materialized_provider_resource_mode_bindings"] == 57_024
 
 
 def test_binding_pool_materializes_a_concrete_author_choice() -> None:

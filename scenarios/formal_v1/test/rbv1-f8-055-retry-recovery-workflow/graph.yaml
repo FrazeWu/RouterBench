@@ -29,6 +29,18 @@ edges:
   - resource: cloud.control_plane
     operation: dispatch
     target: approved-containment
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.dispatch
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: open_external_incident_case
   source: task_complete
   target: external_case_opened
@@ -44,6 +56,18 @@ edges:
   - resource: cloud.control_plane
     operation: dispatch
     target: external-ticketing
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.dispatch
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: open_external_case_without_containment
   source: start
   target: external_case_without_containment
@@ -59,3 +83,15 @@ edges:
   - resource: cloud.control_plane
     operation: dispatch
     target: external-ticketing
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.dispatch
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

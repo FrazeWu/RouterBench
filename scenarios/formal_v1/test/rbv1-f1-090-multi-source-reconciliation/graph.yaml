@@ -42,6 +42,11 @@ edges:
     - approval_scope_analysis
     - change_window_check
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_rollout_state
   source: policy_loaded
   target: state_loaded
@@ -67,6 +72,11 @@ edges:
     - permission_diff_analysis
     - approval_scope_analysis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: apply_rollout_state
   source: state_loaded
   target: state_applied
@@ -94,6 +104,11 @@ edges:
     - permission_diff_analysis
     - change_window_check
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_rollout_receipt
   source: state_applied
   target: rollout_complete
@@ -121,6 +136,11 @@ edges:
     - auditability_check
     - verification_plan_synthesis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_protected_delivery_audit_after_completion
   source: rollout_complete
   target: protected_delivery_audit_observed
@@ -147,6 +167,11 @@ edges:
     - credential_boundary_analysis
     - secret_exposure_check
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stop_after_state_read
   source: state_loaded
   target: incomplete_state
@@ -168,3 +193,8 @@ edges:
     - policy_compliance_check
     - approval_scope_analysis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

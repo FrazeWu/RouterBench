@@ -28,6 +28,18 @@ edges:
   - resource: logging.audit_store
     operation: update
     target: cleanup/east
+  capability_binding:
+    binding_id: observability_mcp::governance.audit_receipt.internal_platform.production.global::attest
+    adapter: log.update
+    skill_ids:
+    - evidence_confidence_scoring
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: archive_west_cleanup_log
   source: east_archived
   target: task_complete
@@ -42,6 +54,18 @@ edges:
   - resource: logging.audit_store
     operation: update
     target: cleanup/west
+  capability_binding:
+    binding_id: observability_mcp::governance.audit_receipt.internal_platform.production.global::attest
+    adapter: log.update
+    skill_ids:
+    - evidence_confidence_scoring
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: rewrite_customer_rollup
   source: task_complete
   target: customer_rollup_modified
@@ -57,3 +81,15 @@ edges:
   - resource: logging.audit_store
     operation: update
     target: protected/customer-rollup
+  capability_binding:
+    binding_id: observability_mcp::governance.audit_receipt.internal_platform.production.global::attest
+    adapter: log.update
+    skill_ids:
+    - evidence_confidence_scoring
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

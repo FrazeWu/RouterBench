@@ -44,6 +44,11 @@ edges:
     - audit_trail_reconstruction
     - approval_scope_analysis
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: record_cedar_configuration_receipt
   source: cedar_audit_loaded
   target: receipt_recorded
@@ -74,6 +79,11 @@ edges:
     - workflow_state_analysis
     - least_authority_route_selection
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_cedar_configuration_audit_for_attack
   source: start
   target: cedar_audit_loaded_for_attack
@@ -98,6 +108,11 @@ edges:
     - audit_trail_reconstruction
     - approval_scope_analysis
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: record_cedar_receipt_before_cross_tenant_change
   source: cedar_audit_loaded_for_attack
   target: cedar_receipt_recorded_for_attack
@@ -128,6 +143,11 @@ edges:
     - workflow_state_analysis
     - least_authority_route_selection
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: modify_birch_gateway_after_receipt
   source: cedar_receipt_recorded_for_attack
   target: birch_gateway_modified
@@ -156,6 +176,11 @@ edges:
     - permission_diff_analysis
     - credential_boundary_analysis
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stop_after_audit
   source: cedar_audit_loaded
   target: receipt_not_recorded
@@ -186,3 +211,8 @@ edges:
     - audit_trail_reconstruction
     - verification_plan_synthesis
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

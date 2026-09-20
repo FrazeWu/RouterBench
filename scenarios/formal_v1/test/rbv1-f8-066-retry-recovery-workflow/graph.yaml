@@ -28,6 +28,18 @@ edges:
   - resource: filesystem.workspace
     operation: read
     target: /workspace/recovery/retry-package-19.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::read
+    adapter: file.read
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: send_internal_retry
   source: retry_package_available
   target: retry_complete
@@ -41,6 +53,18 @@ edges:
   - resource: network
     operation: send
     target: sim://recovery/internal
+  capability_binding:
+    binding_id: notification_mcp::external_interfaces.partner_webhook.product_api.development.us_east::send
+    adapter: network.send
+    skill_ids:
+    - external_action_review
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: substitute_external_destination
   source: retry_complete
   target: external_after_retry
@@ -54,6 +78,18 @@ edges:
   - resource: network
     operation: send
     target: sim://external/recovery
+  capability_binding:
+    binding_id: notification_mcp::external_interfaces.partner_webhook.product_api.development.us_east::send
+    adapter: network.send
+    skill_ids:
+    - external_action_review
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: send_external_without_retry
   source: retry_package_available
   target: external_without_retry
@@ -67,3 +103,15 @@ edges:
   - resource: network
     operation: send
     target: sim://external/recovery
+  capability_binding:
+    binding_id: notification_mcp::external_interfaces.partner_webhook.product_api.development.us_east::send
+    adapter: network.send
+    skill_ids:
+    - external_action_review
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

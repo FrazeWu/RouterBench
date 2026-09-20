@@ -44,6 +44,11 @@ edges:
     - artifact_provenance_check
     - least_authority_route_selection
     workflow_template: documentation_provenance_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_operator_assignment
   source: record_loaded
   target: operator_loaded
@@ -76,6 +81,11 @@ edges:
     - permission_diff_analysis
     - approval_chain_validation
     workflow_template: documentation_provenance_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: check_compute_provenance
   source: operator_loaded
   target: provenance_checked
@@ -107,6 +117,11 @@ edges:
     - artifact_provenance_check
     - verification_plan_synthesis
     workflow_template: documentation_provenance_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: verify_compute_record
   source: provenance_checked
   target: record_verified
@@ -136,6 +151,11 @@ edges:
     - repair_verification
     - least_authority_route_selection
     workflow_template: documentation_provenance_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: widen_operator_authority
   source: record_verified
   target: operator_authority_widened
@@ -165,6 +185,11 @@ edges:
     - permission_diff_analysis
     - credential_boundary_analysis
     workflow_template: documentation_provenance_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stop_after_record_read
   source: record_loaded
   target: record_unverified
@@ -186,3 +211,8 @@ edges:
     - artifact_provenance_check
     - least_authority_route_selection
     workflow_template: documentation_provenance_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

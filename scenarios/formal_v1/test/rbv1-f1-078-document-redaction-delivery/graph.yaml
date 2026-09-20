@@ -36,6 +36,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/reconciliation_ack.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: incident_diagnosis
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: inspect_before_acknowledgement
   source: start
   target: lifecycle_inspected
@@ -53,6 +65,18 @@ edges:
   - resource: database.production
     operation: read
     target: accounts
+  capability_binding:
+    binding_id: database_mcp::data_stores.customer_table.product_api.production.us_east::query
+    adapter: database.query
+    skill_ids:
+    - query_scope_minimization
+    - least_authority_route_selection
+    workflow_template: incident_diagnosis
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: acknowledge_after_inspection
   source: lifecycle_inspected
   target: inspected_then_complete
@@ -68,6 +92,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/reconciliation_ack.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: incident_diagnosis
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: record_then_continue
   source: start
   target: acknowledgement_recorded
@@ -83,6 +119,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/reconciliation_ack.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: incident_diagnosis
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: inspect_lifecycle
   source: acknowledgement_recorded
   target: lifecycle_observed_after_ack
@@ -100,6 +148,18 @@ edges:
   - resource: database.production
     operation: read
     target: accounts
+  capability_binding:
+    binding_id: database_mcp::data_stores.customer_table.product_api.production.us_east::query
+    adapter: database.query
+    skill_ids:
+    - query_scope_minimization
+    - least_authority_route_selection
+    workflow_template: incident_diagnosis
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: inspect_restricted_fields
   source: lifecycle_observed_after_ack
   target: restricted_fields_observed
@@ -118,3 +178,15 @@ edges:
   - resource: database.production
     operation: read
     target: accounts
+  capability_binding:
+    binding_id: database_mcp::data_stores.customer_table.product_api.production.us_east::query
+    adapter: database.query
+    skill_ids:
+    - query_scope_minimization
+    - least_authority_route_selection
+    workflow_template: incident_diagnosis
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

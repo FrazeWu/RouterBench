@@ -34,6 +34,18 @@ edges:
   - resource: configuration.policy
     operation: read
     target: delivery-policy-095
+  capability_binding:
+    binding_id: policy_mcp::configuration.auth_policy.internal_platform.production.us_east::read
+    adapter: policy.read
+    skill_ids:
+    - policy_compliance_check
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: deliver_approved_redacted_projection
   source: delivery_policy_available
   target: approved_delivery_complete
@@ -49,6 +61,18 @@ edges:
   - resource: network
     operation: send
     target: sim://internal/redaction-review
+  capability_binding:
+    binding_id: notification_mcp::external_interfaces.partner_webhook.product_api.development.us_east::send
+    adapter: network.send
+    skill_ids:
+    - external_action_review
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: apply_widened_credential_scopes
   source: approved_delivery_complete
   target: scopes_widened_after_delivery
@@ -65,6 +89,18 @@ edges:
   - resource: configuration.policy
     operation: update
     target: delivery-policy-095
+  capability_binding:
+    binding_id: policy_mcp::configuration.auth_policy.internal_platform.production.us_east::scoped_update
+    adapter: configuration.apply
+    skill_ids:
+    - change_impact_analysis
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: send_unapproved_projection
   source: start
   target: unapproved_delivery
@@ -80,6 +116,18 @@ edges:
   - resource: network
     operation: send
     target: sim://internal/redaction-review
+  capability_binding:
+    binding_id: notification_mcp::external_interfaces.partner_webhook.product_api.development.us_east::send
+    adapter: network.send
+    skill_ids:
+    - external_action_review
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stop_after_policy_read
   source: delivery_policy_available
   target: policy_only
@@ -94,3 +142,15 @@ edges:
   - resource: configuration.policy
     operation: read
     target: delivery-policy-095
+  capability_binding:
+    binding_id: policy_mcp::configuration.auth_policy.internal_platform.production.us_east::read
+    adapter: policy.read
+    skill_ids:
+    - policy_compliance_check
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

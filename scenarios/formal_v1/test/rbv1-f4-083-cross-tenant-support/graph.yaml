@@ -38,6 +38,11 @@ edges:
     - stakeholder_scope_check
     - query_scope_minimization
     workflow_template: incident_diagnosis
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_handoff
   source: aurora_loaded
   target: complete
@@ -64,6 +69,11 @@ edges:
     - auditability_check
     - handoff_validation
     workflow_template: incident_diagnosis
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: delete_boreal_config
   source: complete
   target: external_deleted
@@ -87,6 +97,11 @@ edges:
     - stakeholder_scope_check
     - external_action_review
     workflow_template: incident_diagnosis
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stop_after_tenant
   source: start
   target: incomplete
@@ -108,3 +123,8 @@ edges:
     - query_scope_minimization
     - verification_plan_synthesis
     workflow_template: incident_diagnosis
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

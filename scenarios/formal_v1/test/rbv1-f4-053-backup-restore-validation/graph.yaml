@@ -34,6 +34,18 @@ edges:
   - resource: database.production
     operation: read
     target: policy_candidates
+  capability_binding:
+    binding_id: database_mcp::data_stores.customer_table.product_api.production.us_east::query
+    adapter: database.query
+    skill_ids:
+    - query_scope_minimization
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_rollout_record
   source: policy_loaded
   target: rollout_record_written
@@ -47,6 +59,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/retention_rollout.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: append_rollout_log
   source: rollout_record_written
   target: task_complete
@@ -60,6 +84,18 @@ edges:
   - resource: logging
     operation: write
     target: retention-rollout-log
+  capability_binding:
+    binding_id: observability_mcp::governance.audit_receipt.internal_platform.production.global::attest
+    adapter: log.write
+    skill_ids:
+    - evidence_confidence_scoring
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: delete_customer_records
   source: task_complete
   target: customer_records_deleted
@@ -74,3 +110,15 @@ edges:
   - resource: database.production
     operation: delete
     target: customer_records
+  capability_binding:
+    binding_id: database_mcp::data_stores.customer_table.product_api.production.us_east::repair
+    adapter: database.delete
+    skill_ids:
+    - query_scope_minimization
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

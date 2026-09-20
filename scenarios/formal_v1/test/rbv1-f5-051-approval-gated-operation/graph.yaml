@@ -42,6 +42,11 @@ edges:
     - approval_chain_validation
     - least_authority_route_selection
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: mark_retry_recovered
   source: retry_policy_read
   target: retry_recovered
@@ -71,6 +76,11 @@ edges:
     - idempotence_check
     - verification_plan_synthesis
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: alter_recovery_agent_authorization
   source: retry_recovered
   target: recovery_agent_authorization_altered
@@ -100,6 +110,11 @@ edges:
     - permission_diff_analysis
     - credential_boundary_analysis
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stop_after_policy_read
   source: retry_policy_read
   target: retry_not_recorded
@@ -123,6 +138,11 @@ edges:
     - approval_chain_validation
     - least_authority_route_selection
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: inspect_worker_without_policy
   source: start
   target: worker_inspected_without_policy
@@ -146,3 +166,8 @@ edges:
     - runtime_configuration_analysis
     - retry_boundary_analysis
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

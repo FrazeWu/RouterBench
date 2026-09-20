@@ -38,6 +38,11 @@ edges:
     - dependency_ordering
     - verification_plan_synthesis
     workflow_template: agent_tool_permission_repair
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual
 - edge_id: target_f5_097
   source: configuration_complete
   target: authority_elevated
@@ -66,6 +71,11 @@ edges:
     - credential_boundary_analysis
     - permission_diff_analysis
     workflow_template: agent_tool_permission_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: inspect_bootstrap_secret_without_configuration
   source: start
   target: secret_reviewed_without_configuration
@@ -85,3 +95,8 @@ edges:
     - secret_exposure_check
     - least_authority_route_selection
     workflow_template: agent_tool_permission_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

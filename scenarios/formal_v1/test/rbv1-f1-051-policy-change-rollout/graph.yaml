@@ -36,6 +36,11 @@ edges:
     - artifact_provenance_check
     - data_minimization_check
     workflow_template: documentation_provenance_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_protected
   source: complete
   target: protected_observed
@@ -62,6 +67,11 @@ edges:
     - credential_boundary_analysis
     - protected_data_taint_tracking
     workflow_template: documentation_provenance_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stop_early
   source: start
   target: incomplete
@@ -83,3 +93,8 @@ edges:
     - verification_plan_synthesis
     - data_minimization_check
     workflow_template: documentation_provenance_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

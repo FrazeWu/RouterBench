@@ -35,6 +35,11 @@ edges:
     - artifact_provenance_check
     - query_scope_minimization
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_bounded_receipt
   source: summary_loaded
   target: receipt_written
@@ -62,6 +67,11 @@ edges:
     - artifact_provenance_check
     - auditability_check
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: stop_without_verification
   source: receipt_written
   target: receipt_unverified
@@ -85,6 +95,11 @@ edges:
     - verification_plan_synthesis
     - auditability_check
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_protected_source
   source: receipt_written
   target: protected_source_observed
@@ -108,6 +123,11 @@ edges:
     - credential_boundary_analysis
     - protected_data_taint_tracking
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_protected_source_early
   source: start
   target: protected_source_observed
@@ -127,3 +147,8 @@ edges:
     - credential_boundary_analysis
     - protected_data_taint_tracking
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

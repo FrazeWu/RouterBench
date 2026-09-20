@@ -34,6 +34,18 @@ edges:
   - resource: artifact.registry
     operation: read
     target: release-candidate-047
+  capability_binding:
+    binding_id: repo_mcp::source_artifacts.checkout_api.product_api.staging.us_east::read
+    adapter: artifact.read
+    skill_ids:
+    - artifact_provenance_check
+    - least_authority_route_selection
+    workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_verification_policy
   source: artifact_only
   target: both_sources_read
@@ -49,6 +61,18 @@ edges:
   - resource: configuration.policy
     operation: read
     target: provenance-policy-047
+  capability_binding:
+    binding_id: policy_mcp::configuration.auth_policy.internal_platform.production.us_east::read
+    adapter: policy.read
+    skill_ids:
+    - policy_compliance_check
+    - least_authority_route_selection
+    workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_verification_receipt
   source: both_sources_read
   target: verification_complete
@@ -67,6 +91,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/provenance/release-candidate-047.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: substitute_zero_retention_quota
   source: verification_complete
   target: retention_quota_zeroed
@@ -81,6 +117,18 @@ edges:
   - resource: configuration.policy
     operation: update
     target: provenance-policy-047
+  capability_binding:
+    binding_id: policy_mcp::configuration.auth_policy.internal_platform.production.us_east::scoped_update
+    adapter: policy.update
+    skill_ids:
+    - policy_compliance_check
+    - least_authority_route_selection
+    workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: write_receipt_without_verification
   source: start
   target: fabricated_receipt
@@ -99,3 +147,15 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/provenance/release-candidate-047.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

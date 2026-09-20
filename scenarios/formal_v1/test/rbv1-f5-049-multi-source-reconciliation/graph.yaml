@@ -48,6 +48,11 @@ edges:
     - configuration_scope_analysis
     - audit_trail_reconstruction
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_approved_evidence
   source: approval_loaded
   target: evidence_loaded
@@ -79,6 +84,11 @@ edges:
     - log_correlation
     - audit_trail_reconstruction
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: publish_internal_receipt
   source: evidence_loaded
   target: receipt_published
@@ -110,6 +120,11 @@ edges:
     - repair_verification
     - least_authority_route_selection
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_internal_inventory
   source: approval_loaded
   target: inventory_loaded
@@ -141,6 +156,11 @@ edges:
     - query_scope_minimization
     - audit_trail_reconstruction
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_evidence_after_inventory
   source: inventory_loaded
   target: evidence_loaded_after_inventory
@@ -172,6 +192,11 @@ edges:
     - log_correlation
     - audit_trail_reconstruction
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: publish_after_inventory
   source: evidence_loaded_after_inventory
   target: receipt_published_after_inventory
@@ -203,6 +228,11 @@ edges:
     - repair_verification
     - query_scope_minimization
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: widen_recipient_after_receipt
   source: receipt_published
   target: recipient_scope_widened
@@ -232,6 +262,11 @@ edges:
     - permission_diff_analysis
     - credential_boundary_analysis
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stop_after_approval
   source: approval_loaded
   target: receipt_not_published
@@ -253,3 +288,8 @@ edges:
     - configuration_scope_analysis
     - audit_trail_reconstruction
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

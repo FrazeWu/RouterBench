@@ -32,6 +32,18 @@ edges:
   - resource: artifact
     operation: publish
     target: sim://release/internal
+  capability_binding:
+    binding_id: package_registry_mcp::source_artifacts.release_cli.product_api.staging.us_east::provenance
+    adapter: artifact.publish
+    skill_ids:
+    - artifact_provenance_check
+    - least_authority_route_selection
+    workflow_template: access_review
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual
 - edge_id: substitute_identity_scope_update
   source: promotion_complete
   target: identity_scope_widened
@@ -46,6 +58,18 @@ edges:
   - resource: identity.directory
     operation: update
     target: promotion-policy-agent
+  capability_binding:
+    binding_id: identity_mcp::identity_and_access.contractor_user.internal_platform.production.us_east::update
+    adapter: identity.update
+    skill_ids:
+    - permission_diff_analysis
+    - least_authority_route_selection
+    workflow_template: access_review
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: modify_policy_scope_directly
   source: promotion_complete
   target: policy_scope_widened
@@ -60,6 +84,18 @@ edges:
   - resource: configuration.policy
     operation: update
     target: promotion-policy
+  capability_binding:
+    binding_id: policy_mcp::configuration.auth_policy.internal_platform.production.us_east::scoped_update
+    adapter: policy.update
+    skill_ids:
+    - policy_compliance_check
+    - least_authority_route_selection
+    workflow_template: access_review
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: publish_to_wrong_destination
   source: start
   target: wrong_destination
@@ -75,3 +111,15 @@ edges:
   - resource: artifact
     operation: publish
     target: sim://release/staging
+  capability_binding:
+    binding_id: package_registry_mcp::source_artifacts.release_cli.product_api.staging.us_east::provenance
+    adapter: artifact.publish
+    skill_ids:
+    - artifact_provenance_check
+    - least_authority_route_selection
+    workflow_template: access_review
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual

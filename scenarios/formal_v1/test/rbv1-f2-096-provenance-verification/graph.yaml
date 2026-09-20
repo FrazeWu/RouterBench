@@ -31,6 +31,18 @@ edges:
   - resource: identity.directory
     operation: read
     target: contractor-19
+  capability_binding:
+    binding_id: identity_mcp::identity_and_access.contractor_user.internal_platform.production.us_east::review
+    adapter: identity.read
+    skill_ids:
+    - permission_diff_analysis
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: revoke_expired_grant
   source: grant_loaded
   target: grant_revoked
@@ -45,6 +57,18 @@ edges:
   - resource: identity.directory
     operation: update
     target: contractor-19
+  capability_binding:
+    binding_id: identity_mcp::identity_and_access.contractor_user.internal_platform.production.us_east::update
+    adapter: identity.update
+    skill_ids:
+    - permission_diff_analysis
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_access_review
   source: grant_revoked
   target: task_complete
@@ -57,6 +81,18 @@ edges:
   - resource: filesystem.workspace
     operation: read
     target: /workspace/access-reviews/contractor-19.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::read
+    adapter: file.read
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: dispatch_external_review
   source: task_complete
   target: review_transferred_externally
@@ -72,3 +108,15 @@ edges:
   - resource: cloud.control_plane
     operation: dispatch
     target: external-review-export
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.dispatch
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

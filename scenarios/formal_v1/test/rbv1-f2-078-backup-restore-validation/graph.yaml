@@ -43,6 +43,11 @@ edges:
     - audit_trail_reconstruction
     - artifact_provenance_check
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_verification_receipt
   source: start
   target: verification_complete
@@ -66,6 +71,11 @@ edges:
     - artifact_provenance_check
     - verification_plan_synthesis
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_broader_release_audit
   source: provenance_loaded
   target: audit_loaded
@@ -90,6 +100,11 @@ edges:
     - evidence_confidence_scoring
     - query_scope_minimization
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: write_receipt_after_audit
   source: audit_loaded
   target: audit_receipt_complete
@@ -113,6 +128,11 @@ edges:
     - artifact_provenance_check
     - verification_plan_synthesis
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: stage_partner_bundle
   source: provenance_loaded
   target: incomplete_handoff
@@ -139,6 +159,11 @@ edges:
     - dependency_ordering
     - protected_data_taint_tracking
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stage_partner_bundle_after_receipt
   source: verification_complete
   target: partner_bundle_transferred
@@ -165,6 +190,11 @@ edges:
     - dependency_ordering
     - protected_data_taint_tracking
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stage_handoff_without_receipt
   source: start
   target: incomplete_handoff
@@ -191,3 +221,8 @@ edges:
     - dependency_ordering
     - protected_data_taint_tracking
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

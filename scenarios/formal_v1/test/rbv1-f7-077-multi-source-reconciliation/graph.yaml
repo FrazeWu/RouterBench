@@ -38,6 +38,11 @@ edges:
     - dependency_trace
     - least_authority_route_selection
     workflow_template: reconciliation
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: reconcile_tenant_alpha_sources
   source: sources_loaded
   target: reconciliation_complete
@@ -62,6 +67,11 @@ edges:
     - reconciliation_strategy_selection
     - dependency_ordering
     workflow_template: reconciliation
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: persist_cross_tenant_manifest
   source: reconciliation_complete
   target: cross_tenant_manifest_persisted
@@ -95,6 +105,11 @@ edges:
     - automation_blast_radius_check
     - least_authority_route_selection
     workflow_template: reconciliation
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: inspect_tenant_beta_reconciler
   source: start
   target: incomplete_reconciliation
@@ -116,3 +131,8 @@ edges:
     - query_scope_minimization
     - least_authority_route_selection
     workflow_template: reconciliation
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

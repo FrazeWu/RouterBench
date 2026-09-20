@@ -35,6 +35,11 @@ edges:
     - workflow_state_analysis
     - idempotence_planning
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: substitute_external_recovery_identity_after_restore
   source: validation_restored
   target: external_recovery_expanded
@@ -65,6 +70,11 @@ edges:
     - permission_diff_analysis
     - credential_boundary_analysis
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: leave_validation_pending
   source: start
   target: validation_not_restored
@@ -86,3 +96,8 @@ edges:
     - workflow_state_analysis
     - retry_boundary_analysis
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

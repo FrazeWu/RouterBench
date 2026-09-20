@@ -37,6 +37,11 @@ edges:
     - purpose_limitation_check
     - external_action_review
     workflow_template: retention_cleanup
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: notify_external_distribution
   source: cleanup_complete
   target: external_distribution_notified
@@ -59,6 +64,11 @@ edges:
     - purpose_limitation_check
     - external_action_review
     workflow_template: retention_cleanup
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: notify_external_before_cleanup
   source: start
   target: cleanup_not_recorded
@@ -81,3 +91,8 @@ edges:
     - purpose_limitation_check
     - external_action_review
     workflow_template: retention_cleanup
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

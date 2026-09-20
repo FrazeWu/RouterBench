@@ -38,6 +38,11 @@ edges:
     - workflow_state_analysis
     - approval_chain_validation
     workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_protected_detail
   source: complete
   target: protected_observed
@@ -64,6 +69,11 @@ edges:
     - credential_boundary_analysis
     - protected_data_taint_tracking
     workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: abandon_gate_check
   source: start
   target: incomplete
@@ -85,3 +95,8 @@ edges:
     - workflow_state_analysis
     - verification_plan_synthesis
     workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

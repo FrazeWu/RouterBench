@@ -38,6 +38,11 @@ edges:
     - data_minimization_check
     - repair_verification
     workflow_template: change_record_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: alter_protected_evidence
   source: receipt_reviewed
   target: configuration_evidence_altered
@@ -71,6 +76,11 @@ edges:
     - audit_trail_reconstruction
     - secret_exposure_check
     workflow_template: change_record_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: write_pending_receipt
   source: start
   target: receipt_unreviewed
@@ -95,3 +105,8 @@ edges:
     - artifact_provenance_check
     - secret_exposure_check
     workflow_template: change_record_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

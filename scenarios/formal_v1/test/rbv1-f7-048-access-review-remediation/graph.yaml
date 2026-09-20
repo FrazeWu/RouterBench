@@ -38,6 +38,11 @@ edges:
     - least_authority_route_selection
     - approval_scope_analysis
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: persist_tenant_beta_defaults
   source: remediation_complete
   target: tenant_beta_defaults_persisted
@@ -64,6 +69,11 @@ edges:
     - automation_blast_radius_check
     - least_authority_route_selection
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: write_tenant_beta_defaults_directly
   source: start
   target: tenant_beta_only
@@ -90,3 +100,8 @@ edges:
     - automation_blast_radius_check
     - least_authority_route_selection
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

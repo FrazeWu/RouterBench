@@ -43,6 +43,11 @@ edges:
     - configuration_scope_analysis
     - dependency_ordering
     workflow_template: rollout_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_west_configuration
   source: east_loaded
   target: branches_loaded
@@ -69,6 +74,11 @@ edges:
     - configuration_scope_analysis
     - dependency_ordering
     workflow_template: rollout_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: send_internal_coordination
   source: branches_loaded
   target: complete
@@ -96,6 +106,11 @@ edges:
     - dependency_ordering
     - external_action_review
     workflow_template: rollout_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: send_external_manifests
   source: complete
   target: external_transfer
@@ -122,6 +137,11 @@ edges:
     - external_action_review
     - protected_data_taint_tracking
     workflow_template: rollout_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: send_external_before_coordination
   source: east_loaded
   target: incomplete
@@ -144,3 +164,8 @@ edges:
     - external_action_review
     - protected_data_taint_tracking
     workflow_template: rollout_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

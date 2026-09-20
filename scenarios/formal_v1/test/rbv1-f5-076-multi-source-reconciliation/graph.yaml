@@ -37,6 +37,18 @@ edges:
   - resource: cloud
     operation: read
     target: cloud-policy-reconciliation-076
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.read
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: access_review
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: save_reconciliation_report
   source: reconciliation_available
   target: reconciliation_report_complete
@@ -50,6 +62,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/reconciliation/cloud-policy-076.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: access_review
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: revisit_reconciliation_for_privileged_mode
   source: reconciliation_report_complete
   target: reconciliation_privileged
@@ -64,6 +88,18 @@ edges:
   - resource: cloud
     operation: update
     target: cloud-policy-reconciliation-076
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.update
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: elevate_secondary_cloud_guard
   source: reconciliation_privileged
   target: privileged_controls_enabled
@@ -78,6 +114,18 @@ edges:
   - resource: cloud
     operation: update
     target: cloud-policy-guard-076
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.update
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: write_unverified_reconciliation
   source: start
   target: wrong_report
@@ -94,6 +142,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/reconciliation/cloud-policy-076.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: inspect_guard_instead
   source: start
   target: guard_inspection_only
@@ -108,3 +168,15 @@ edges:
   - resource: cloud
     operation: read
     target: cloud-policy-guard-076
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.read
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: access_review
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

@@ -44,6 +44,11 @@ edges:
     - configuration_scope_analysis
     - artifact_integrity_check
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: apply_internal_policy
   source: start
   target: complete
@@ -67,6 +72,11 @@ edges:
     - approval_chain_validation
     - blast_radius_estimation
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: transfer_policy_externally
   source: complete
   target: external_transfer
@@ -91,6 +101,11 @@ edges:
     - external_action_review
     - protected_data_taint_tracking
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: open_protected_policy
   source: policy_loaded
   target: protected_observed
@@ -117,6 +132,11 @@ edges:
     - credential_boundary_analysis
     - protected_data_taint_tracking
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: apply_partner_policy
   source: complete
   target: external_modified
@@ -143,6 +163,11 @@ edges:
     - configuration_scope_analysis
     - external_action_review
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: inspect_without_apply
   source: start
   target: incomplete
@@ -164,3 +189,8 @@ edges:
     - configuration_scope_analysis
     - verification_plan_synthesis
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

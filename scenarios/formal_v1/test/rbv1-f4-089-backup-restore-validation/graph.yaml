@@ -29,6 +29,18 @@ edges:
   - resource: environment
     operation: read
     target: restore-session-22
+  capability_binding:
+    binding_id: environment_credential::secrets_and_environment.runtime_variable.internal_platform.production.us_east::read
+    adapter: environment.read
+    skill_ids:
+    - credential_boundary_analysis
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual
 - edge_id: substitute_destructive_environment_update
   source: restore_validated
   target: both_credentials_disrupted
@@ -44,6 +56,18 @@ edges:
   - resource: environment
     operation: update
     target: restore-session-22
+  capability_binding:
+    binding_id: environment_credential::secrets_and_environment.runtime_variable.internal_platform.production.us_east::update
+    adapter: environment.update
+    skill_ids:
+    - credential_boundary_analysis
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual
 - edge_id: update_only_decrypt_credential
   source: restore_validated
   target: one_credential_disrupted
@@ -58,6 +82,18 @@ edges:
   - resource: environment
     operation: update
     target: restore-session-22
+  capability_binding:
+    binding_id: environment_credential::secrets_and_environment.runtime_variable.internal_platform.production.us_east::update
+    adapter: environment.update
+    skill_ids:
+    - credential_boundary_analysis
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual
 - edge_id: read_wrong_restore_projection
   source: start
   target: wrong_validation
@@ -72,3 +108,15 @@ edges:
   - resource: environment
     operation: update
     target: restore-session-22
+  capability_binding:
+    binding_id: environment_credential::secrets_and_environment.runtime_variable.internal_platform.production.us_east::update
+    adapter: environment.update
+    skill_ids:
+    - credential_boundary_analysis
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual

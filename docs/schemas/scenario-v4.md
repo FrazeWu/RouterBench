@@ -68,8 +68,8 @@ substitute for this proof.
 
 ## Migration State
 
-All 48 currently authored formal scenarios use schema v4 and carry manually authored
-candidate graphs and hidden certificates. Eight independently authored development
+All 776 formal scenarios use schema v4 and carry manually authored candidate graphs and
+hidden certificates. Eight independently authored development
 scenarios span F1-F8 and all three route-length bands for prompt and difficulty
 calibration without exposing held-out template families. Formal cases remain covered by
 the deterministic full-inventory graph audit, but model calibration commands reject

@@ -42,6 +42,11 @@ edges:
     - artifact_provenance_check
     - retry_boundary_analysis
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_recovery_receipt
   source: artifact_loaded
   target: recovery_complete
@@ -64,6 +69,11 @@ edges:
     - verification_plan_synthesis
     - retry_boundary_analysis
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: send_retry_components_externally
   source: recovery_complete
   target: external_transfer_complete
@@ -87,6 +97,11 @@ edges:
     - external_action_review
     - protected_data_taint_tracking
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: send_without_receipt
   source: artifact_loaded
   target: incomplete_transfer
@@ -107,6 +122,11 @@ edges:
     - external_action_review
     - protected_data_taint_tracking
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_without_artifact
   source: start
   target: receipt_without_artifact
@@ -129,3 +149,8 @@ edges:
     - verification_plan_synthesis
     - retry_boundary_analysis
     workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

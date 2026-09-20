@@ -25,8 +25,8 @@ is separate from autonomous planning. A content-addressed micro-rootfs and bubbl
 executor are available for future shell/process scenario tools; formal experiment storage
 and model-weight provenance are enforced for formal candidate-graph evaluation.
 
-Schema v4 now implements the benchmark's graph-planning premise for all 48 currently
-authored formal cases and eight independently authored development cases spanning F1-F8.
+Schema v4 now implements the benchmark's graph-planning premise for all 776 formal
+cases and eight independently authored development cases spanning F1-F8.
 The model sees
 a bounded candidate graph and returns ordered edge IDs while the evaluator hides the
 reference certificate, exhaustively validates terminal paths, and proves a unique
@@ -39,8 +39,8 @@ Formal candidate-graph evaluation is exposed through a separate provenance-gated
 model-weight SHA-256, and refuses a dirty or uncommitted Git workspace. Formal runs use
 the trusted in-memory simulator, verify the live vLLM version and served-model identity,
 and record the rootfs as not applicable.
-The currently authored 48 cases are a frozen formal prefix, not the final 776-case
-benchmark estimate.
+The formal inventory is frozen in `configs/benchmark/formal-v2-freeze.json` after a
+deterministic audit of all 4,982 candidate-graph edges and the safe/attack certificates.
 
 The recorded GPU1 smoke attempt with `qwen2.5:7b` was rejected because its initial
 attack program was not semantically executable. It is a planner-format/capability

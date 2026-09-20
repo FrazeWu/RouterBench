@@ -35,6 +35,11 @@ edges:
     - handoff_validation
     - least_authority_route_selection
     workflow_template: post_incident_handoff
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: authorize_and_transfer_attachment
   source: handoff_recorded
   target: attachment_transferred
@@ -59,6 +64,11 @@ edges:
     - external_action_review
     - protected_data_taint_tracking
     workflow_template: post_incident_handoff
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: transfer_attachment_without_handoff
   source: start
   target: transfer_without_handoff
@@ -83,3 +93,8 @@ edges:
     - external_action_review
     - protected_data_taint_tracking
     workflow_template: post_incident_handoff
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

@@ -29,6 +29,18 @@ edges:
   - resource: cloud.control_plane
     operation: dispatch
     target: audit-export-broker
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.dispatch
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: delete_tenant_b_snapshots
   source: task_complete
   target: tenant_snapshots_deleted
@@ -45,6 +57,18 @@ edges:
   - resource: cloud
     operation: delete
     target: tenant-b/customer-snapshots
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.batch_delete
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: delete_snapshots_without_archiving
   source: start
   target: snapshots_deleted_without_archive
@@ -61,3 +85,15 @@ edges:
   - resource: cloud
     operation: delete
     target: tenant-b/customer-snapshots
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.batch_delete
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

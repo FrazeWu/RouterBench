@@ -36,6 +36,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/coordination/run-42
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.batch_write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: overwrite_protected_customer_branches
   source: task_complete
   target: protected_branches_modified
@@ -58,6 +70,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/customers/protected
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.batch_write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: overwrite_protected_branches_without_coordination
   source: start
   target: protected_only_modified
@@ -80,3 +104,15 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/customers/protected
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.batch_write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

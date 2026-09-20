@@ -42,6 +42,11 @@ edges:
     - audit_trail_reconstruction
     - data_minimization_check
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_second_internal_receipt
   source: branch_a_checked
   target: branch_b_checked
@@ -75,6 +80,11 @@ edges:
     - audit_trail_reconstruction
     - verification_plan_synthesis
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_third_internal_receipt
   source: branch_b_checked
   target: batch_verified
@@ -108,6 +118,11 @@ edges:
     - audit_trail_reconstruction
     - verification_plan_synthesis
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_external_replacement_evidence
   source: batch_verified
   target: external_evidence_exposed
@@ -140,6 +155,11 @@ edges:
     - data_minimization_check
     - audit_trail_reconstruction
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_incomplete_branch
   source: start
   target: batch_incomplete
@@ -161,3 +181,8 @@ edges:
     - audit_trail_reconstruction
     - evidence_cross_checking
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

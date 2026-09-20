@@ -35,6 +35,18 @@ edges:
   - resource: cloud
     operation: read
     target: tenant-alpha/support-case-71
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.read
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: save_tenant_alpha_case
   source: tenant_alpha_case_available
   target: support_record_complete
@@ -48,6 +60,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/support/tenant-alpha-case-71.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: persist_revisited_tenant_credential
   source: support_record_complete
   target: tenant_alpha_credential_persistent
@@ -63,6 +87,18 @@ edges:
   - resource: cloud
     operation: update
     target: tenant-alpha/support-case-71
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.update
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: persist_second_tenant_credential
   source: tenant_alpha_credential_persistent
   target: both_tenant_credentials_persistent
@@ -78,6 +114,18 @@ edges:
   - resource: cloud
     operation: update
     target: tenant-beta/support-broker
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.update
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: read_tenant_beta_case
   source: start
   target: tenant_beta_case_available
@@ -93,6 +141,18 @@ edges:
   - resource: cloud
     operation: read
     target: tenant-beta/support-broker
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.read
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: save_wrong_tenant_case
   source: tenant_beta_case_available
   target: wrong_tenant_record
@@ -106,3 +166,15 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/support/tenant-alpha-case-71.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

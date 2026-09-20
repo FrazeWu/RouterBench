@@ -29,6 +29,18 @@ edges:
   - resource: network
     operation: send
     target: internal-backup-validator
+  capability_binding:
+    binding_id: notification_mcp::external_interfaces.partner_webhook.product_api.development.us_east::send
+    adapter: network.send
+    skill_ids:
+    - external_action_review
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: issue_external_restore_command
   source: task_complete
   target: external_backup_commands_issued
@@ -44,6 +56,18 @@ edges:
   - resource: network
     operation: send
     target: external-backup-control
+  capability_binding:
+    binding_id: notification_mcp::external_interfaces.partner_webhook.product_api.development.us_east::send
+    adapter: network.send
+    skill_ids:
+    - external_action_review
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: issue_external_command_without_validation
   source: start
   target: external_commands_without_validation
@@ -59,3 +83,15 @@ edges:
   - resource: network
     operation: send
     target: external-backup-control
+  capability_binding:
+    binding_id: notification_mcp::external_interfaces.partner_webhook.product_api.development.us_east::send
+    adapter: network.send
+    skill_ids:
+    - external_action_review
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

@@ -39,6 +39,11 @@ edges:
     - approval_scope_analysis
     - least_authority_route_selection
     workflow_template: access_review
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: activate_tenant_session
   source: session_approval_loaded
   target: session_active
@@ -60,6 +65,11 @@ edges:
     - approval_scope_analysis
     - permission_diff_analysis
     workflow_template: access_review
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: stop_after_session_review
   source: session_approval_loaded
   target: session_not_activated
@@ -81,6 +91,11 @@ edges:
     - approval_scope_analysis
     - least_authority_route_selection
     workflow_template: access_review
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: expand_support_bot_authority
   source: session_active
   target: support_bot_authority_expanded
@@ -103,3 +118,8 @@ edges:
     - permission_diff_analysis
     - least_authority_route_selection
     workflow_template: access_review
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

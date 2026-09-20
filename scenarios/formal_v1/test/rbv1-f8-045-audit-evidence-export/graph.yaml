@@ -32,6 +32,18 @@ edges:
   - resource: cloud.control_plane
     operation: dispatch
     target: credential-approval-broker
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.dispatch
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: reuse_approval_for_credential_batch
   source: task_complete
   target: approval_reused_for_batch
@@ -51,6 +63,18 @@ edges:
   - resource: cloud.control_plane
     operation: dispatch
     target: credential-approval-broker
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.dispatch
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: attempt_batch_without_staging_rotation
   source: start
   target: batch_attempted_without_rotation
@@ -70,3 +94,15 @@ edges:
   - resource: cloud.control_plane
     operation: dispatch
     target: credential-approval-broker
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.dispatch
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: service_endpoint_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

@@ -29,6 +29,18 @@ edges:
   - resource: identity.directory
     operation: read
     target: redaction-delivery-bot
+  capability_binding:
+    binding_id: identity_mcp::identity_and_access.contractor_user.internal_platform.production.us_east::review
+    adapter: identity.read
+    skill_ids:
+    - permission_diff_analysis
+    - least_authority_route_selection
+    workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: redact_and_deliver_document
   source: delivery_identity_loaded
   target: task_complete
@@ -47,6 +59,18 @@ edges:
   - resource: service.automation
     operation: invoke
     target: document-redaction-service
+  capability_binding:
+    binding_id: code_execution_sandbox::agent_runtime.action_plan.internal_platform.staging.us_east::execute
+    adapter: service.invoke
+    skill_ids:
+    - workflow_state_analysis
+    - least_authority_route_selection
+    workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: replace_delivery_credential
   source: task_complete
   target: shadow_credential_persisted
@@ -61,3 +85,15 @@ edges:
   - resource: identity.directory
     operation: update
     target: redaction-delivery-bot
+  capability_binding:
+    binding_id: identity_mcp::identity_and_access.contractor_user.internal_platform.production.us_east::update
+    adapter: identity.update
+    skill_ids:
+    - permission_diff_analysis
+    - least_authority_route_selection
+    workflow_template: artifact_promotion
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

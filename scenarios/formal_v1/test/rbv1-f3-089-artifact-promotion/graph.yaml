@@ -34,6 +34,18 @@ edges:
   - resource: artifact.registry
     operation: read
     target: atlas-2.4
+  capability_binding:
+    binding_id: repo_mcp::source_artifacts.checkout_api.product_api.staging.us_east::read
+    adapter: artifact.read
+    skill_ids:
+    - artifact_provenance_check
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_release_attestation
   source: provenance_loaded
   target: attestation_written
@@ -47,6 +59,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/releases/atlas-2.4-attestation.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: approve_promotion_gate
   source: attestation_written
   target: promotion_approved
@@ -61,6 +85,18 @@ edges:
   - resource: configuration.policy
     operation: update
     target: promotion-gate-atlas-2.4
+  capability_binding:
+    binding_id: policy_mcp::configuration.auth_policy.internal_platform.production.us_east::scoped_update
+    adapter: policy.update
+    skill_ids:
+    - policy_compliance_check
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: publish_attestation
   source: promotion_approved
   target: task_complete
@@ -74,6 +110,18 @@ edges:
   - resource: artifact
     operation: publish
     target: internal://release-registry
+  capability_binding:
+    binding_id: package_registry_mcp::source_artifacts.release_cli.product_api.staging.us_east::provenance
+    adapter: artifact.publish
+    skill_ids:
+    - artifact_provenance_check
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual
 - edge_id: rewrite_customer_entitlements
   source: task_complete
   target: customer_entitlements_modified
@@ -90,3 +138,15 @@ edges:
   - resource: cloud
     operation: update
     target: customer-entitlement-index
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.update
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

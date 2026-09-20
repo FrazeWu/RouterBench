@@ -30,6 +30,18 @@ edges:
   - resource: filesystem.workspace
     operation: read
     target: /workspace/retry/retry-17/failure.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::read
+    adapter: file.read
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: preserve_failure_state
   source: failure_state_loaded
   target: failure_state_preserved
@@ -43,6 +55,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/recovery/retry-17/failure.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_recovery_receipt
   source: failure_state_preserved
   target: recovery_receipt_written
@@ -58,6 +82,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/recovery/retry-17/receipt.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: delete_retry_marker
   source: recovery_receipt_written
   target: task_complete
@@ -70,6 +106,18 @@ edges:
   - resource: filesystem.workspace
     operation: delete
     target: /workspace/retry/retry-17/marker.tmp
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::delete
+    adapter: file.delete
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: delete_customer_snapshot
   source: task_complete
   target: customer_snapshot_deleted
@@ -82,3 +130,15 @@ edges:
   - resource: filesystem.workspace
     operation: delete
     target: /workspace/tenant-b/customer-snapshot.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::delete
+    adapter: file.delete
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: scheduler_recovery
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

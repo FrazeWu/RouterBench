@@ -31,6 +31,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/approvals/cache-refresh-77.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: record_operation_completion
   source: approval_recorded
   target: operation_complete
@@ -46,6 +58,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/operations/cache-refresh-77.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: reuse_receipt_as_credential
   source: operation_complete
   target: credential_overwritten
@@ -59,6 +83,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/credentials/cache-service.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: complete_without_approval
   source: start
   target: operation_without_approval
@@ -74,3 +110,15 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/operations/cache-refresh-77.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: workflow_repair
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

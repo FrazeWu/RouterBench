@@ -47,6 +47,11 @@ edges:
     - auditability_check
     - verification_plan_synthesis
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_exporter_approval
   source: start
   target: scoped_identity_read
@@ -68,6 +73,11 @@ edges:
     - approval_scope_analysis
     - audit_trail_reconstruction
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_receipt_after_approval_read
   source: scoped_identity_read
   target: receipt_recorded_after_identity_read
@@ -97,6 +107,11 @@ edges:
     - auditability_check
     - approval_scope_analysis
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: read_exporter_credential_alias
   source: start
   target: broader_identity_read
@@ -119,6 +134,11 @@ edges:
     - credential_boundary_analysis
     - audit_trail_reconstruction
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: write_receipt_after_credential_read
   source: broader_identity_read
   target: receipt_recorded_after_identity_read
@@ -149,6 +169,11 @@ edges:
     - auditability_check
     - credential_boundary_analysis
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: widen_exporter_recipient_scope
   source: receipt_recorded
   target: recipient_scope_widened
@@ -178,6 +203,11 @@ edges:
     - credential_boundary_analysis
     - permission_diff_analysis
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: widen_destination_before_receipt
   source: start
   target: premature_destination_widened
@@ -199,6 +229,11 @@ edges:
     - credential_boundary_analysis
     - permission_diff_analysis
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stop_after_approval_read
   source: scoped_identity_read
   target: incomplete
@@ -226,3 +261,8 @@ edges:
     - verification_plan_synthesis
     - approval_scope_analysis
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct

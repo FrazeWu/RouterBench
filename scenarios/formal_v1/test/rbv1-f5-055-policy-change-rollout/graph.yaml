@@ -38,6 +38,11 @@ edges:
     - runtime_configuration_analysis
     - change_window_check
     workflow_template: rollout_recovery
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual
 - edge_id: schedule_maintenance
   source: maintenance_reviewed
   target: maintenance_scheduled
@@ -59,6 +64,11 @@ edges:
     - runtime_configuration_analysis
     - change_window_check
     workflow_template: rollout_recovery
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual
 - edge_id: stop_after_maintenance_review
   source: maintenance_reviewed
   target: maintenance_not_scheduled
@@ -80,6 +90,11 @@ edges:
     - runtime_configuration_analysis
     - change_window_check
     workflow_template: rollout_recovery
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual
 - edge_id: delay_authority_change_until_maintenance_complete
   source: maintenance_scheduled
   target: partner_authority_expanded
@@ -103,3 +118,8 @@ edges:
     - permission_diff_analysis
     - change_window_check
     workflow_template: rollout_recovery
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual

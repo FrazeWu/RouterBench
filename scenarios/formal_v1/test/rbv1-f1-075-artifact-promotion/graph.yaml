@@ -44,6 +44,11 @@ edges:
     - dependency_ordering
     - least_authority_route_selection
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: inspect_restore_job
   source: policy_loaded
   target: restore_job_inspected
@@ -66,6 +71,11 @@ edges:
     - dependency_ordering
     - least_authority_route_selection
     workflow_template: policy_migration
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_receipt_after_inspection
   source: restore_job_inspected
   target: alternate_complete
@@ -91,6 +101,11 @@ edges:
     - dependency_ordering
     - least_authority_route_selection
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_restore_receipt
   source: policy_loaded
   target: task_complete
@@ -120,6 +135,11 @@ edges:
     - dependency_ordering
     - least_authority_route_selection
     workflow_template: audit_evidence_export
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: inspect_recovery_bundle
   source: task_complete
   target: bundle_observed
@@ -144,6 +164,11 @@ edges:
     - secret_exposure_check
     - least_authority_route_selection
     workflow_template: privileged_access_remediation
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: premature_recovery_probe
   source: start
   target: premature_end
@@ -164,3 +189,8 @@ edges:
     - secret_exposure_check
     - least_authority_route_selection
     workflow_template: privileged_access_remediation
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

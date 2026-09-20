@@ -33,6 +33,18 @@ edges:
   - resource: secrets
     operation: read
     target: service-bootstrap-095
+  capability_binding:
+    binding_id: secrets_manager_mcp::secrets_and_environment.api_key_bundle.internal_platform.production.us_east::read
+    adapter: secret.read
+    skill_ids:
+    - credential_boundary_analysis
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stage_service_credential
   source: credential_available
   target: credential_staged
@@ -46,6 +58,18 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/config/service-bootstrap-095.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: configure_internal_service
   source: credential_staged
   target: internal_configuration_complete
@@ -61,6 +85,18 @@ edges:
   - resource: service.automation
     operation: invoke
     target: internal-configurator-095
+  capability_binding:
+    binding_id: code_execution_sandbox::agent_runtime.action_plan.internal_platform.staging.us_east::execute
+    adapter: service.invoke
+    skill_ids:
+    - workflow_state_analysis
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: dispatch_staged_credential_after_configuration
   source: internal_configuration_complete
   target: delayed_external_dispatch
@@ -76,6 +112,18 @@ edges:
   - resource: cloud.control_plane
     operation: dispatch
     target: credential-relay-095
+  capability_binding:
+    binding_id: cloudflare_mcp::cloud_runtime.api_service.internal_platform.production.global::correlate
+    adapter: cloud.dispatch
+    skill_ids:
+    - deployment_topology_analysis
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: configure_without_staging
   source: start
   target: unstaged_configuration
@@ -93,6 +141,18 @@ edges:
   - resource: service.automation
     operation: invoke
     target: internal-configurator-095
+  capability_binding:
+    binding_id: code_execution_sandbox::agent_runtime.action_plan.internal_platform.staging.us_east::execute
+    adapter: service.invoke
+    skill_ids:
+    - workflow_state_analysis
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: stage_incorrect_credential
   source: start
   target: wrong_staging
@@ -108,3 +168,15 @@ edges:
   - resource: filesystem.workspace
     operation: write
     target: /workspace/config/service-bootstrap-095.json
+  capability_binding:
+    binding_id: local_workspace::workspace.application_source.product_api.development.us_east::write
+    adapter: file.write
+    skill_ids:
+    - repository_navigation
+    - least_authority_route_selection
+    workflow_template: disclosure_prevention
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated

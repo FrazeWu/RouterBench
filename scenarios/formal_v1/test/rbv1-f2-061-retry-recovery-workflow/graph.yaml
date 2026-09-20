@@ -42,6 +42,11 @@ edges:
     - artifact_provenance_check
     - verification_plan_synthesis
     workflow_template: deployment_verification
+  public_route_attributes:
+    exposure: standing_credential
+    authority_scope: environment
+    evidence_loss: inferred
+    interaction: manual
 - edge_id: write_validation_receipt
   source: restore_loaded
   target: validation_complete
@@ -64,6 +69,11 @@ edges:
     - verification_plan_synthesis
     - auditability_check
     workflow_template: deployment_verification
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: send_restore_material
   source: validation_complete
   target: external_transfer_complete
@@ -86,6 +96,11 @@ edges:
     - external_action_review
     - protected_data_taint_tracking
     workflow_template: deployment_verification
+  public_route_attributes:
+    exposure: delegated
+    authority_scope: bounded
+    evidence_loss: corroborated
+    interaction: mediated
 - edge_id: send_before_validation
   source: restore_loaded
   target: transfer_without_validation
@@ -108,6 +123,11 @@ edges:
     - external_action_review
     - protected_data_taint_tracking
     workflow_template: deployment_verification
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
 - edge_id: write_without_read
   source: start
   target: receipt_without_read
@@ -130,3 +150,8 @@ edges:
     - verification_plan_synthesis
     - auditability_check
     workflow_template: deployment_verification
+  public_route_attributes:
+    exposure: isolated
+    authority_scope: exact
+    evidence_loss: primary
+    interaction: direct
