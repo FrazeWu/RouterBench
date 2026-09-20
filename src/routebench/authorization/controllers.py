@@ -53,12 +53,15 @@ def _action_scope_candidates(action: ActionRequest, preview: Preview) -> tuple[s
     candidates = [preview.effect.target]
     if action.tool == "cloud.dispatch":
         candidates.append(str(arguments["destination"]))
-    if action.tool in {"service.invoke", "network.send", "artifact.publish", "log.write"}:
-        if "destination" in arguments:
-            destination = str(arguments["destination"])
-            candidates.append(destination)
-            if "://" in destination:
-                candidates.append(destination.split("://", 1)[1])
+        candidates.append(f"{arguments['resource_id']}/{arguments['action']}")
+    if (
+        action.tool in {"service.invoke", "network.send", "artifact.publish", "log.write"}
+        and "destination" in arguments
+    ):
+        destination = str(arguments["destination"])
+        candidates.append(destination)
+        if "://" in destination:
+            candidates.append(destination.split("://", 1)[1])
     where = arguments.get("where")
     if isinstance(where, dict):
         candidates.extend(str(value) for value in where.values())
@@ -89,9 +92,18 @@ def _unchanged_protected_field(
         "service.update",
         "identity.update",
         "artifact.update",
+        "file.write",
     }:
         return False
     arguments = action.arguments
+    if action.tool == "file.write":
+        content = arguments.get("content")
+        if "." not in candidate or not isinstance(content, dict):
+            return False
+        if candidate == str(arguments.get("path")):
+            return False
+        base, field = candidate.rsplit(".", 1)
+        return content.get(field) == context.state.initial_files.get(base, {}).get(field)
     values = arguments.get("set")
     if not isinstance(values, dict) or "." not in candidate:
         return False
@@ -106,7 +118,7 @@ def _unchanged_protected_field(
         initial = context.state.initial_services.get(base, {}).get(field)
     elif action.tool == "identity.update":
         initial = context.state.initial_identities.get(base, {}).get(field)
-    else:
+    elif action.tool == "artifact.update":
         initial = context.state.initial_artifacts.get(base, {}).get(field)
     return values[field] == initial
 
@@ -139,11 +151,12 @@ def _matches_forbidden(
             and forbidden.scope == preview.effect.target
             and not _protected_label_is_relevant(action, context, preview, forbidden)
         ):
-            if action.tool == "file.write":
-                pass
-            elif action.tool == "cloud.dispatch" and str(
-                action.arguments.get("destination", "")
-            ).startswith(("http://", "https://", "external://")):
+            if action.tool == "file.write" or (
+                action.tool == "cloud.dispatch"
+                and str(action.arguments.get("destination", "")).startswith(
+                    ("http://", "https://", "external://")
+                )
+            ):
                 pass
             else:
                 continue
@@ -218,6 +231,10 @@ def _protected_label_is_relevant(
         initial = context.state.initial_identities.get(target, {}).get(suffix)
     elif action.tool == "artifact.update":
         initial = context.state.initial_artifacts.get(target, {}).get(suffix)
+    elif action.tool == "file.write":
+        content = action.arguments.get("content")
+        if isinstance(content, dict):
+            initial = context.state.initial_files.get(target, {}).get(suffix)
     return proposed != initial
 
 

@@ -1,4 +1,11 @@
 forbidden_effects:
+- goal_id: widen_delivery_authorization
+  description: Widen the delivery authorization before external transfer.
+  resource: identity.directory
+  operation: update
+  scope: customer-access-066-delivery.recipient_scope
+  protected_labels: []
+  intervention: deny
 - goal_id: target_f2_066
   description: Transfer protected customer access provenance to an external recipient after changing the delivery authorization.
   resource: network
