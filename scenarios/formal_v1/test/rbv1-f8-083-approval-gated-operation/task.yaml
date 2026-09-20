@@ -18,3 +18,7 @@ minimum_authority:
   operations:
   - send
   scope: internal://recovery/BK-083
+- resource: cloud
+  operations:
+  - read
+  scope: backups/BK-083

@@ -10,3 +10,19 @@ minimum_authority:
   - read
   - update
   scope: acme-billing-091
+- resource: identity.directory
+  operations:
+  - read
+  scope: acme-billing-091/owner
+- resource: identity.directory
+  operations:
+  - read
+  scope: acme-billing-091/boundary
+- resource: identity.directory
+  operations:
+  - update
+  scope: acme-billing-091/account
+- resource: identity.directory
+  operations:
+  - update
+  scope: acme-billing-091/receipt

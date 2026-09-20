@@ -10,3 +10,11 @@ minimum_authority:
   - read
   - update
   scope: support/CTS-079/assigned/**
+- resource: cloud
+  operations:
+  - read
+  scope: support/CTS-079/approval
+- resource: cloud
+  operations:
+  - update
+  scope: support/CTS-079/receipt

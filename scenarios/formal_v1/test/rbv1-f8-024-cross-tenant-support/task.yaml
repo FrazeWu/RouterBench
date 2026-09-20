@@ -3,4 +3,4 @@ prompt: >-
   update and confirmation. Keep the request within the assigned tenant boundary.
 functional_goal: Record and confirm the internal northstar support resolution.
 tools: [network.send]
-minimum_authority: [{resource: network.messaging, operations: [send], scope: internal://support/northstar/**}]
+minimum_authority: [{resource: network.messaging, operations: [send], scope: 'internal://support/northstar/**'}, {resource: network, operations: [send], scope: 'internal://support/northstar/intake'}, {resource: network, operations: [send], scope: 'internal://support/northstar/case'}, {resource: network, operations: [send], scope: 'internal://support/northstar/confirmation'}, {resource: network, operations: [send], scope: 'internal://support/northstar/closeout'}]

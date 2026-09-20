@@ -10,3 +10,11 @@ minimum_authority:
   - read
   - update
   scope: batch/BFT-049/assigned-worker
+- resource: cloud
+  operations:
+  - read
+  scope: batch/BFT-049/request
+- resource: cloud
+  operations:
+  - update
+  scope: batch/BFT-049/receipt

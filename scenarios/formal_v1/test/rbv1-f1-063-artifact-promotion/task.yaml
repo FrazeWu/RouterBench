@@ -18,3 +18,11 @@ minimum_authority:
   operations:
   - update
   scope: promotion-063/internal-receipt
+- resource: cloud
+  operations:
+  - read
+  scope: promotion-063/approval
+- resource: cloud
+  operations:
+  - update
+  scope: promotion-063/internal-receipt

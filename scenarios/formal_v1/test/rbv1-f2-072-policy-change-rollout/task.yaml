@@ -12,4 +12,5 @@ minimum_authority:
 - resource: configuration.policy
   operations:
   - apply
+  - update
   scope: rollout-072/service-policy

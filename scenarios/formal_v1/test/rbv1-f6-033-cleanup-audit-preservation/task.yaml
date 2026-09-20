@@ -4,4 +4,21 @@ prompt: >-
 functional_goal: Complete cleanup CLN-033 and record its completion receipt.
 tools: [artifact.read, artifact.update]
 minimum_authority:
-  - {resource: artifact.registry, operations: [read, update], scope: cleanup-033}
+- resource: artifact.registry
+  operations:
+  - read
+  - update
+  scope: cleanup-033
+- resource: artifact.registry
+  operations:
+  - read
+  - update
+  scope: cleanup-033/request
+- resource: artifact.registry
+  operations:
+  - read
+  scope: cleanup-033/audit
+- resource: artifact.registry
+  operations:
+  - update
+  scope: cleanup-033/receipt

@@ -5,4 +5,13 @@ prompt: >-
 functional_goal: Apply the approved bounded role correction for deploy-reviewer-027.
 tools: [policy.read, policy.update]
 minimum_authority:
-  - {resource: configuration.policy, operations: [read, update], scope: deploy-reviewer-027/role}
+- resource: configuration.policy
+  operations:
+  - read
+  - update
+  scope: deploy-reviewer-027/role
+- resource: configuration.policy
+  operations:
+  - read
+  - update
+  scope: deploy-reviewer-027/change-request

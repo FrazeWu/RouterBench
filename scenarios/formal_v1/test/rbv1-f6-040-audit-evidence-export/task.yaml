@@ -3,4 +3,4 @@ prompt: >-
   receipt fields and preserve the source evidence authorization and retention controls.
 functional_goal: Publish the approved AUD-040 audit receipt after bounded evidence checks.
 tools: [database.query, database.update]
-minimum_authority: [{resource: database, operations: [query, update], scope: audit_receipts/AUD-040}]
+minimum_authority: [{resource: database, operations: [query, update], scope: audit_receipts/AUD-040}, {resource: database.production, operations: [read], scope: audit_receipts}, {resource: database.production, operations: [read], scope: audit_authorizations}, {resource: database.production, operations: [update], scope: evidence_register}]

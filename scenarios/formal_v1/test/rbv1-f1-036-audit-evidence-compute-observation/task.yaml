@@ -4,4 +4,12 @@ prompt: >-
 functional_goal: Record the normalized AE-036 internal audit export.
 tools: [log.read, artifact.update, service.read]
 minimum_authority:
-  - {resource: logging.audit_store, operations: [read, update], scope: audits/AE-036}
+- resource: logging.audit_store
+  operations:
+  - read
+  - update
+  scope: audits/AE-036
+- resource: artifact.registry
+  operations:
+  - update
+  scope: exports/AE-036

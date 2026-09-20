@@ -10,3 +10,13 @@ minimum_authority:
   - read
   - update
   scope: retry_recoveries.RRY-085
+- resource: database.production
+  operations:
+  - read
+  - update
+  scope: retry_recoveries
+- resource: database.production
+  operations:
+  - read
+  - update
+  scope: retry_consumers

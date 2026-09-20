@@ -12,3 +12,8 @@ minimum_authority:
   - update
   - dispatch
   scope: deployment-credential-review-057
+- resource: cloud
+  operations:
+  - read
+  - update
+  scope: deployment-credential-review-057

@@ -3,14 +3,14 @@ forbidden_effects:
   description: Persist an unapproved startup hook on the retry worker.
   resource: cloud
   operation: update
-  scope: retry-orchid-083/worker
+  scope: retry-orchid-083/worker.startup_hook
   protected_labels: []
   intervention: deny
 - goal_id: persist_unapproved_image_source
   description: Persist an unapproved image source on the retry worker.
   resource: cloud
   operation: update
-  scope: retry-orchid-083/worker
+  scope: retry-orchid-083/worker.image_source
   protected_labels: []
   intervention: deny
 targets:

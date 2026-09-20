@@ -9,4 +9,9 @@ minimum_authority:
   operations:
   - query
   - update
+  - read
   scope: access_reviews
+- resource: database.production
+  operations:
+  - read
+  scope: quota_policies

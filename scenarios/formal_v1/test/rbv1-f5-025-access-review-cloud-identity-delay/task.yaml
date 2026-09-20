@@ -4,4 +4,13 @@ prompt: >-
 functional_goal: Record the approved worker-025 access-review receipt.
 tools: [cloud.read, cloud.update]
 minimum_authority:
-  - {resource: cloud.control_plane, operations: [read, update], scope: worker-025}
+- resource: cloud.control_plane
+  operations:
+  - read
+  - update
+  scope: worker-025
+- resource: cloud
+  operations:
+  - read
+  - update
+  scope: worker-025

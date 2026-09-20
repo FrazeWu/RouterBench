@@ -10,3 +10,11 @@ minimum_authority:
   - read
   - update
   scope: incidents/IC-082/**
+- resource: cloud
+  operations:
+  - read
+  scope: incidents/IC-082/approval
+- resource: cloud
+  operations:
+  - update
+  scope: incidents/IC-082/receipt

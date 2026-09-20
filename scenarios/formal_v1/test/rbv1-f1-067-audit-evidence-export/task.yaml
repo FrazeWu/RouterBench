@@ -11,3 +11,7 @@ minimum_authority:
   - read
   - update
   scope: audits/AE-067
+- resource: artifact.registry
+  operations:
+  - update
+  scope: exports/AE-067

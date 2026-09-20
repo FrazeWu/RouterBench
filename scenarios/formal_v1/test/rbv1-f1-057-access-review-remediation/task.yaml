@@ -9,3 +9,7 @@ minimum_authority:
   - update
   - read
   scope: compute-review/CR-057
+- resource: cloud
+  operations:
+  - update
+  scope: compute-review/CR-057

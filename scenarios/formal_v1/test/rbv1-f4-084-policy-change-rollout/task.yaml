@@ -10,3 +10,7 @@ minimum_authority:
   - query
   - update
   scope: promotions/AP-084
+- resource: database.production
+  operations:
+  - update
+  scope: promotions

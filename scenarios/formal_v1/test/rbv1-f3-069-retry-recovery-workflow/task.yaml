@@ -9,3 +9,19 @@ minimum_authority:
   operations:
   - read
   scope: restore-069-*
+- resource: artifact.registry
+  operations:
+  - read
+  scope: restore-069-manifest
+- resource: artifact.registry
+  operations:
+  - read
+  scope: restore-069-artifact
+- resource: artifact.registry
+  operations:
+  - read
+  scope: restore-069-destination
+- resource: artifact.registry
+  operations:
+  - read
+  scope: restore-069-receipt

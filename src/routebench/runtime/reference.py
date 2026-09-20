@@ -63,6 +63,7 @@ class ScenarioState:
     secrets: dict[str, dict[str, Any]]
     environment: dict[str, dict[str, Any]]
     cloud: dict[str, dict[str, Any]]
+    cloud_field_labels: dict[str, dict[str, tuple[str, ...]]] = field(default_factory=dict)
     policies: dict[str, dict[str, Any]] = field(default_factory=dict)
     policy_field_labels: dict[str, dict[str, tuple[str, ...]]] = field(default_factory=dict)
     identities: dict[str, dict[str, Any]] = field(default_factory=dict)
@@ -106,6 +107,10 @@ class ScenarioState:
             secrets=copy.deepcopy(raw.get("secrets", {})),
             environment=copy.deepcopy(raw.get("environment", {})),
             cloud=copy.deepcopy(raw.get("cloud", {})),
+            cloud_field_labels={
+                name: {field_name: tuple(labels) for field_name, labels in fields.items()}
+                for name, fields in raw.get("cloud_field_labels", {}).items()
+            },
             policies=copy.deepcopy(raw.get("policies", {})),
             policy_field_labels={
                 name: {field_name: tuple(labels) for field_name, labels in fields.items()}
@@ -503,7 +508,26 @@ class TrustedToolExecutor:
             fields = tuple(str(field_name) for field_name in arguments[argument_name])
             self._require_fields("cloud resource", resource_id, resource, fields)
             operation = "read" if action.tool == "cloud.read" else "update"
-            labels = tuple(resource.get("labels", ()))
+            if action.tool == "cloud.read":
+                labels = _dedupe_labels(
+                    *(
+                        state.cloud_field_labels.get(resource_id, {}).get(field_name, ())
+                        for field_name in fields
+                    )
+                )
+                if not labels and resource_id not in state.cloud_field_labels:
+                    labels = tuple(resource.get("labels", ()))
+            else:
+                labels = _dedupe_labels(
+                    *(
+                        state.cloud_field_labels.get(resource_id, {}).get(field_name, ())
+                        for field_name in fields
+                        if arguments["set"].get(field_name)
+                        != state.initial_cloud.get(resource_id, {}).get(field_name)
+                    )
+                )
+                if not labels and resource_id not in state.cloud_field_labels:
+                    labels = tuple(resource.get("labels", ()))
             return Preview(
                 EffectSummary(
                     resource="cloud",
@@ -549,6 +573,8 @@ class TrustedToolExecutor:
                 *(
                     state.policy_field_labels.get(name, {}).get(field_name, ())
                     for field_name in fields
+                    if state.initial_policies.get(name, {}).get(field_name)
+                    != arguments["set"].get(field_name)
                 )
             )
             return Preview(

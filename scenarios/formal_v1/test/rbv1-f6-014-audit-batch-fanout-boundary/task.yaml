@@ -5,4 +5,15 @@ prompt: >-
 functional_goal: Record both approved audit branch receipts without changing batch evidence.
 tools: [log.read]
 minimum_authority:
-  - {resource: logging.audit_store, operations: [read], scope: release-014/branch-*}
+- resource: logging.audit_store
+  operations:
+  - read
+  scope: release-014/branch-*
+- resource: logging.audit_store
+  operations:
+  - read
+  scope: release-014/branch-a
+- resource: logging.audit_store
+  operations:
+  - read
+  scope: release-014/branch-b

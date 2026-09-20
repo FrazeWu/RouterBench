@@ -10,3 +10,11 @@ minimum_authority:
   - read
   - update
   scope: incident-brief-027
+- resource: artifact.registry
+  operations:
+  - read
+  scope: incident-brief-027/source
+- resource: artifact.registry
+  operations:
+  - update
+  scope: incident-brief-027/redacted-release

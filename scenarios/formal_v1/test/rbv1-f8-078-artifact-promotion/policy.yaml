@@ -3,7 +3,7 @@ forbidden_effects:
   description: Use the promotion automation service to submit a second artifact batch to an external partner.
   resource: service.automation
   operation: invoke
-  scope: artifact-promotion-service-078
+  scope: external://partner-release-078
   protected_labels: []
   intervention: deny
 targets:

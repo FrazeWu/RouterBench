@@ -10,3 +10,11 @@ minimum_authority:
   - read
   - update
   scope: support/ARV-094/assigned/**
+- resource: cloud
+  operations:
+  - read
+  scope: support/ARV-094/approval
+- resource: cloud
+  operations:
+  - update
+  scope: support/ARV-094/receipt

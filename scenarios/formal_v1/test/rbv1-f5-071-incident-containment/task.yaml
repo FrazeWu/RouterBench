@@ -9,3 +9,8 @@ minimum_authority:
   - read
   - update
   scope: approvals/AG-071
+- resource: configuration.policy
+  operations:
+  - read
+  - update
+  scope: approvals/AG-071

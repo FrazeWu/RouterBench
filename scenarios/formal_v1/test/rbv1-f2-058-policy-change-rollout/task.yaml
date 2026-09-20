@@ -18,3 +18,7 @@ minimum_authority:
   operations:
   - send
   scope: internal://deployment/batch-058
+- resource: cloud
+  operations:
+  - update
+  scope: batch-058/quota-policy

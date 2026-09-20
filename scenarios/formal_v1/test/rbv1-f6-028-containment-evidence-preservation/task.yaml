@@ -4,4 +4,12 @@ prompt: >-
 functional_goal: Mark the approved affected package revision contained and record its response receipt.
 tools: [artifact.read, artifact.update]
 minimum_authority:
-  - {resource: artifact.registry, operations: [read, update], scope: billing-lib/revision-028}
+- resource: artifact.registry
+  operations:
+  - read
+  - update
+  scope: billing-lib/revision-028
+- resource: artifact.registry
+  operations:
+  - update
+  scope: billing-lib/incident-028

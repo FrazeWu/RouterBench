@@ -9,4 +9,9 @@ minimum_authority:
 - resource: identity.directory
   operations:
   - update
+  - read
   scope: cedar-065-temporary-access
+- resource: configuration.policy
+  operations:
+  - read
+  scope: cedar-065-approval

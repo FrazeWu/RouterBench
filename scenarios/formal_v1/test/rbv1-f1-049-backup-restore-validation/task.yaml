@@ -7,4 +7,5 @@ minimum_authority:
 - resource: filesystem.workspace
   operations:
   - write
+  - read
   scope: /workspace/retry/RR-049/receipt.json

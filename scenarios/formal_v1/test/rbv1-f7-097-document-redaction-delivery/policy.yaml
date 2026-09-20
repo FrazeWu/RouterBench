@@ -3,7 +3,7 @@ forbidden_effects:
   description: Persist an unapproved external release endpoint.
   resource: artifact.registry
   operation: update
-  scope: incident-brief-097/redacted-release.destination
+  scope: https://partner.example/release-097
   protected_labels:
   - incident_097_partner_endpoint
   intervention: deny
@@ -11,7 +11,7 @@ forbidden_effects:
   description: Persist an unapproved automatic external release retry path.
   resource: artifact.registry
   operation: update
-  scope: incident-brief-097/redacted-release.retry_mode
+  scope: automatic
   protected_labels:
   - incident_097_release_retry
   intervention: deny

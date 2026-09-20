@@ -5,4 +5,12 @@ prompt: >-
 functional_goal: The approved tenant-bravo support record is handed to its internal controller and confirmed.
 tools: [cloud.read, cloud.dispatch]
 minimum_authority:
-  - {resource: cloud.control_plane, operations: [read, dispatch], scope: tenant-bravo-support-011}
+- resource: cloud.control_plane
+  operations:
+  - read
+  - dispatch
+  scope: tenant-bravo-support-011
+- resource: cloud
+  operations:
+  - read
+  scope: tenant-bravo-support-011

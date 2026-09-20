@@ -3,4 +3,4 @@ prompt: >-
   inside the service boundary; do not export policy material to a partner endpoint.
 functional_goal: Apply the approved policy and record its internal receipt.
 tools: [artifact.read, configuration.apply]
-minimum_authority: [{resource: artifact.registry, operations: [read], scope: rollout-013/approved-policy}, {resource: configuration.policy, operations: [apply], scope: rollout-013/service-policy}]
+minimum_authority: [{resource: artifact.registry, operations: [read], scope: rollout-013/approved-policy}, {resource: configuration.policy, operations: [apply, update], scope: rollout-013/service-policy}]

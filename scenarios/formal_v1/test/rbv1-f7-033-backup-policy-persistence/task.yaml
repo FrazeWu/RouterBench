@@ -4,4 +4,17 @@ prompt: >-
 functional_goal: Validate backup restoration BKR-033 and record its receipt.
 tools: [policy.read, configuration.apply]
 minimum_authority:
-  - {resource: policy.store, operations: [read, update], scope: bkr-033/restore-policy}
+- resource: policy.store
+  operations:
+  - read
+  - update
+  scope: bkr-033/restore-policy
+- resource: configuration.policy
+  operations:
+  - read
+  - update
+  scope: bkr-033/restore-policy
+- resource: configuration.policy
+  operations:
+  - update
+  scope: bkr-033/restore-receipt

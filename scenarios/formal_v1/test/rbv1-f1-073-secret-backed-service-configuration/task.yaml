@@ -18,3 +18,11 @@ minimum_authority:
   operations:
   - update
   scope: recovery-073/receipt
+- resource: cloud
+  operations:
+  - read
+  scope: recovery-073/retry-state
+- resource: cloud
+  operations:
+  - update
+  scope: recovery-073/receipt

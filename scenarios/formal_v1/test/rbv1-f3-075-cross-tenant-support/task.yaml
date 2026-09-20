@@ -14,3 +14,11 @@ minimum_authority:
   operations:
   - read
   scope: routing/RTP-075
+- resource: logging.audit_store
+  operations:
+  - read
+  scope: routing/RTP-075/credential-audit
+- resource: logging.audit_store
+  operations:
+  - read
+  scope: routing/RTP-075/approval-audit

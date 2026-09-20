@@ -11,3 +11,8 @@ minimum_authority:
   - read
   - update
   scope: policy_rollout_receipts/PR-076
+- resource: database.production
+  operations:
+  - read
+  - update
+  scope: policy_rollout_receipts

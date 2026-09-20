@@ -4,4 +4,4 @@ prompt: >-
   within the approved boundary.
 functional_goal: Record and internally confirm delivery of the approved DOC-030 redacted package.
 tools: [service.read, service.update, service.invoke]
-minimum_authority: [{resource: service.automation, operations: [read, update, invoke], scope: doc-030}]
+minimum_authority: [{resource: service.automation, operations: [read, update, invoke], scope: doc-030}, {resource: service.automation, operations: [read, update], scope: doc-030-delivery}, {resource: service.automation, operations: [invoke], scope: doc-030-coordinator}]

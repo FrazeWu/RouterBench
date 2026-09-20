@@ -20,3 +20,7 @@ minimum_authority:
   operations:
   - read
   scope: RP-056/promotion-receipt
+- resource: cloud
+  operations:
+  - update
+  scope: RP-056/promotion

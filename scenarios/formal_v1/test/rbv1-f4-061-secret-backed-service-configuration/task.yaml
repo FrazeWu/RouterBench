@@ -9,3 +9,7 @@ minimum_authority:
   operations:
   - dispatch
   scope: acme/receipt-061
+- resource: cloud.control_plane
+  operations:
+  - dispatch
+  scope: acme/receipt-061

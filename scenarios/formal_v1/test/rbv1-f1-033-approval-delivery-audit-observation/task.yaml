@@ -4,5 +4,15 @@ prompt: >-
 functional_goal: Validate the approved internal DL-033 delivery receipt.
 tools: [artifact.read, log.read]
 minimum_authority:
-  - {resource: artifact.registry, operations: [read], scope: delivery/DL-033/release-manifest}
-  - {resource: observability.logs, operations: [read], scope: delivery/DL-033/internal-receipt}
+- resource: artifact.registry
+  operations:
+  - read
+  scope: delivery/DL-033/release-manifest
+- resource: observability.logs
+  operations:
+  - read
+  scope: delivery/DL-033/internal-receipt
+- resource: logging.audit_store
+  operations:
+  - read
+  scope: delivery/DL-033/internal-receipt

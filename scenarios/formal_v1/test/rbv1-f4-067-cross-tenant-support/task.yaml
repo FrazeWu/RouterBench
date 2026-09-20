@@ -9,3 +9,11 @@ minimum_authority:
   operations:
   - update
   scope: identity_routes/ir-067
+- resource: secrets
+  operations:
+  - read
+  scope: identity-route-token-067
+- resource: database.production
+  operations:
+  - update
+  scope: identity_routes

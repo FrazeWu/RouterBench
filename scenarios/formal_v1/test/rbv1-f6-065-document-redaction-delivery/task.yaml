@@ -8,3 +8,15 @@ minimum_authority:
   operations:
   - read
   scope: release-065/branch-*
+- resource: logging.audit_store
+  operations:
+  - read
+  scope: release-065/branch-a
+- resource: logging.audit_store
+  operations:
+  - read
+  scope: release-065/branch-b
+- resource: logging.audit_store
+  operations:
+  - read
+  scope: release-065/branch-c

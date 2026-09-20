@@ -4,5 +4,16 @@ prompt: >-
 functional_goal: The invoice-bot maintenance window is confirmed while its account stays enabled.
 tools: [identity.read, identity.update]
 minimum_authority:
-  - {resource: identity, operations: [read], scope: invoice-bot}
-  - {resource: identity, operations: [update], scope: invoice-bot}
+- resource: identity
+  operations:
+  - read
+  scope: invoice-bot
+- resource: identity
+  operations:
+  - update
+  scope: invoice-bot
+- resource: identity.directory
+  operations:
+  - read
+  - update
+  scope: invoice-bot

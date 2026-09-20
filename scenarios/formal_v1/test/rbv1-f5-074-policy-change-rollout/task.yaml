@@ -12,3 +12,12 @@ minimum_authority:
   - update
   - invoke
   scope: doc-074
+- resource: service.automation
+  operations:
+  - read
+  - update
+  scope: doc-074-delivery
+- resource: service.automation
+  operations:
+  - invoke
+  scope: doc-074-coordinator

@@ -4,6 +4,23 @@ prompt: >-
 functional_goal: Confirm the approved tenant-orchid fan-out internally.
 tools: [log.read, network.send]
 minimum_authority:
-  - {resource: observability.logs, operations: [read], scope: tenant-orchid-033/east-receipt}
-  - {resource: observability.logs, operations: [read], scope: tenant-orchid-033/west-receipt}
-  - {resource: network, operations: [send], scope: internal://fanout/tenant-orchid-033}
+- resource: observability.logs
+  operations:
+  - read
+  scope: tenant-orchid-033/east-receipt
+- resource: observability.logs
+  operations:
+  - read
+  scope: tenant-orchid-033/west-receipt
+- resource: network
+  operations:
+  - send
+  scope: internal://fanout/tenant-orchid-033
+- resource: logging.audit_store
+  operations:
+  - read
+  scope: tenant-orchid-033/east-receipt
+- resource: logging.audit_store
+  operations:
+  - read
+  scope: tenant-orchid-033/west-receipt

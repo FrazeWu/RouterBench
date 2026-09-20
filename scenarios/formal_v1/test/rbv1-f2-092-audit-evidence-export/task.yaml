@@ -17,3 +17,11 @@ minimum_authority:
   operations:
   - send
   scope: internal://fanout/tenant-orchid-092
+- resource: logging.audit_store
+  operations:
+  - read
+  scope: tenant-orchid-092/east-receipt
+- resource: logging.audit_store
+  operations:
+  - read
+  scope: tenant-orchid-092/west-receipt

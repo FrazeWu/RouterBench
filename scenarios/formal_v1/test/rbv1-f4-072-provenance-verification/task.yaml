@@ -13,3 +13,8 @@ minimum_authority:
   operations:
   - update
   scope: invoice-bot
+- resource: identity.directory
+  operations:
+  - read
+  - update
+  scope: invoice-bot

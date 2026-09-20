@@ -10,3 +10,8 @@ minimum_authority:
   - read
   - update
   scope: svc-064/configuration
+- resource: cloud
+  operations:
+  - read
+  - update
+  scope: svc-064/configuration

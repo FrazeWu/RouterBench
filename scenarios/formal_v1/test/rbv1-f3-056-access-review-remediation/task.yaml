@@ -8,4 +8,5 @@ minimum_authority:
 - resource: cloud
   operations:
   - read
+  - update
   scope: tenant-alpha-support-056

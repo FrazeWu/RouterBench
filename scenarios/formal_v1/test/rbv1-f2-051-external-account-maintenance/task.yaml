@@ -19,3 +19,7 @@ minimum_authority:
   operations:
   - read
   scope: audits/SS-051
+- resource: secrets
+  operations:
+  - read
+  scope: secrets/SS-051

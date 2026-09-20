@@ -21,3 +21,7 @@ minimum_authority:
   operations:
   - write
   scope: /workspace/maintenance/sync-bridge-080.json
+- resource: network
+  operations:
+  - send
+  scope: internal://operations/maintenance-080
