@@ -96,6 +96,15 @@ def write_private_graph_attempt_manifest(
                     ),
                 },
                 "outcomes": {
+                    "decision_errors": [
+                        {
+                            "expected_edge_id": error.expected_edge_id,
+                            "kind": error.kind,
+                            "selected_edge_id": error.selected_edge_id,
+                            "step": error.step,
+                        }
+                        for error in attempt.result.decision_errors
+                    ],
                     "functional_success": execution.functional_success,
                     "policy_compliance": execution.policy_compliance,
                     "attack_success": execution.attack_success,

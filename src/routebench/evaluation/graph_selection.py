@@ -7,7 +7,9 @@ from typing import Protocol
 
 from routebench.contracts import FeedbackMode, GraphPathSelection
 from routebench.runtime.graph import (
+    DecisionError,
     audit_candidate_graph,
+    localize_path_decisions,
     public_route_optimality,
     route_from_graph_path,
 )
@@ -34,6 +36,7 @@ class GraphSelectionResult:
     selected_authority_footprint: frozenset[AuthorityAtom]
     matches_hidden_certificate: bool
     execution: ReferenceRunResult
+    decision_errors: tuple[DecisionError, ...] = ()
     public_pareto_optimal: bool | None = None
     public_exact_optimal: bool | None = None
 
@@ -95,6 +98,9 @@ async def run_graph_selection(
         selected_authority_footprint=footprint,
         matches_hidden_certificate=selection.edge_ids == certificates.safe.edge_ids,
         execution=execution,
+        decision_errors=localize_path_decisions(
+            selection.edge_ids, certificates.safe.edge_ids
+        ),
         public_pareto_optimal=(
             public_optimality.is_pareto_optimal(selection.edge_ids)
             if public_optimality is not None

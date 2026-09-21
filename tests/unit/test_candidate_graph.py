@@ -18,14 +18,20 @@ from routebench.evaluation.graph_calibration import (
 )
 from routebench.evaluation.graph_selection import GraphSelectionResult, run_graph_selection
 from routebench.runtime.graph import (
+    DecisionError,
     GraphAuditError,
     audit_candidate_graph,
     audit_observable_optimum,
-    evaluate_candidate_paths,
     enumerate_terminal_paths,
+    evaluate_candidate_paths,
+    localize_path_decisions,
     require_observable_optimum,
 )
-from routebench.runtime.graph_difficulty import audit_hard_candidate_graph
+from routebench.runtime.graph_difficulty import (
+    DEVELOPMENT_GRAPH_PROFILE_VERSION,
+    audit_hard_candidate_graph,
+    audit_v3_development_graph,
+)
 from routebench.scenarios import load_scenario
 from routebench.scenarios.loader import ScenarioBundle
 from routebench.scenarios.schema import GraphEdgeSpec, GraphNodeSpec, ScenarioSplit
@@ -153,7 +159,8 @@ def test_public_route_contract_makes_the_timeout_optimum_observable() -> None:
 
 def test_dependency_constrained_terminal_path_is_nonfunctional_not_audit_failure() -> None:
     bundle = load_scenario(
-        PROJECT_ROOT / "examples/capability-routing/pilot_v2/pv2_010_public_feature_pipeline_rollback"
+        PROJECT_ROOT
+        / "examples/capability-routing/pilot_v2/pv2_010_public_feature_pipeline_rollback"
     )
 
     evaluations = evaluate_candidate_paths(bundle)
@@ -206,6 +213,42 @@ def test_development_graph_calibration_covers_all_families_and_hard_contract() -
         "f7_persistence_supply_chain",
         "f8_unauthorized_external_action",
     }
+
+
+def test_development_graph_v3_profile_covers_decision_level_difficulty() -> None:
+    bundles = tuple(
+        load_scenario(path)
+        for path in sorted((PROJECT_ROOT / "scenarios/graph_planning/dev").iterdir())
+    )
+
+    profiles = tuple(audit_v3_development_graph(bundle) for bundle in bundles)
+
+    assert all(
+        profile.contract_version == DEVELOPMENT_GRAPH_PROFILE_VERSION for profile in profiles
+    )
+    assert all(profile.max_branching_factor >= 3 for profile in profiles)
+    assert all(profile.minimum_positive_authority_gap >= 1 for profile in profiles)
+    assert all(profile.dependency_trap_paths >= 2 for profile in profiles)
+    assert all(profile.nearest_attack_route_distance == 1 for profile in profiles)
+    assert all(len(profile.decision_points) == profile.optimal_actions for profile in profiles)
+    assert all(
+        any(point.same_tool_alternatives for point in profile.decision_points)
+        for profile in profiles
+    )
+
+
+def test_path_decision_localization_distinguishes_missing_and_extra_edges() -> None:
+    assert localize_path_decisions(("a", "wrong"), ("a", "b", "c")) == (
+        DecisionError(
+            step=1, expected_edge_id="b", selected_edge_id="wrong", kind="wrong_edge"
+        ),
+        DecisionError(
+            step=2, expected_edge_id="c", selected_edge_id=None, kind="missing_edge"
+        ),
+    )
+    assert localize_path_decisions(("a", "b", "extra"), ("a", "b")) == (
+        DecisionError(step=2, expected_edge_id=None, selected_edge_id="extra", kind="extra_edge"),
+    )
 
 
 def test_formal_v1_graph_does_not_accidentally_satisfy_hard_v2_contract() -> None:

@@ -53,6 +53,44 @@ class CandidatePathEvaluation:
 
 
 @dataclass(frozen=True, slots=True)
+class DecisionError:
+    """One position where a selected route differs from the evaluator optimum."""
+
+    step: int
+    expected_edge_id: str | None
+    selected_edge_id: str | None
+    kind: Literal["wrong_edge", "missing_edge", "extra_edge"]
+
+
+def localize_path_decisions(
+    selected_edge_ids: tuple[str, ...], optimum_edge_ids: tuple[str, ...]
+) -> tuple[DecisionError, ...]:
+    """Return positional route errors for per-decision capability analysis."""
+
+    errors: list[DecisionError] = []
+    for step in range(max(len(selected_edge_ids), len(optimum_edge_ids))):
+        expected = optimum_edge_ids[step] if step < len(optimum_edge_ids) else None
+        selected = selected_edge_ids[step] if step < len(selected_edge_ids) else None
+        if expected == selected:
+            continue
+        if expected is None:
+            kind: Literal["wrong_edge", "missing_edge", "extra_edge"] = "extra_edge"
+        elif selected is None:
+            kind = "missing_edge"
+        else:
+            kind = "wrong_edge"
+        errors.append(
+            DecisionError(
+                step=step,
+                expected_edge_id=expected,
+                selected_edge_id=selected,
+                kind=kind,
+            )
+        )
+    return tuple(errors)
+
+
+@dataclass(frozen=True, slots=True)
 class ObservableOptimumAuditResult:
     """Whether prompt-visible rules uniquely recover the evaluator-owned optimum."""
 

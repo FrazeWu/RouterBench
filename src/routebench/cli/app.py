@@ -101,8 +101,10 @@ from routebench.planners import (
 )
 from routebench.runtime.graph import GraphAuditError, GraphAuditResult, audit_candidate_graph
 from routebench.runtime.graph_difficulty import (
+    DEVELOPMENT_GRAPH_PROFILE_VERSION,
     HARD_GRAPH_CONTRACT_VERSION,
     audit_hard_candidate_graph,
+    audit_v3_development_graph,
 )
 from routebench.runtime.reference import InvalidRouteActionError
 from routebench.runtime.runner import ReferenceController, run_reference_route
@@ -287,6 +289,49 @@ def graph_hard_audit(
                 "scenario": result.base.scenario_id,
                 "status": "hard_graph_contract_verified",
                 "terminal_paths": result.base.total_terminal_paths,
+            },
+            sort_keys=True,
+        )
+    )
+
+
+@scenario_app.command("graph-v3-audit")
+def graph_v3_audit(
+    path: Annotated[Path, typer.Argument(exists=True, file_okay=False, resolve_path=True)],
+) -> None:
+    """Audit one development graph against the v3 authoring profile."""
+
+    bundle = load_scenario(path)
+    try:
+        profile = audit_v3_development_graph(bundle)
+    except GraphAuditError as error:
+        raise typer.BadParameter(str(error)) from error
+    typer.echo(
+        json.dumps(
+            {
+                "attack_paths": profile.attack_paths,
+                "contract_version": DEVELOPMENT_GRAPH_PROFILE_VERSION,
+                "decision_points": [
+                    {
+                        "alternative_count": point.alternative_count,
+                        "same_authority_alternatives": point.same_authority_alternatives,
+                        "same_tool_alternatives": point.same_tool_alternatives,
+                        "shared_prefix_decoys": point.shared_prefix_decoys,
+                        "step": point.step,
+                    }
+                    for point in profile.decision_points
+                ],
+                "dependency_trap_paths": profile.dependency_trap_paths,
+                "functional_overprivileged_paths": profile.functional_overprivileged_paths,
+                "max_branching_factor": profile.max_branching_factor,
+                "maximum_authority_gap": profile.maximum_authority_gap,
+                "mean_branching_factor": profile.mean_branching_factor,
+                "nearest_attack_route_distance": profile.nearest_attack_route_distance,
+                "optimal_actions": profile.optimal_actions,
+                "optimal_branch_points": profile.optimal_branch_points,
+                "scenario": bundle.definition.metadata.scenario_id,
+                "status": "v3_development_graph_verified",
+                "terminal_paths": profile.terminal_paths,
             },
             sort_keys=True,
         )
@@ -670,6 +715,15 @@ def graph_smoke_experiment(
             {
                 "actions_executed": result.execution.actions_executed,
                 "attack_success": result.execution.attack_success,
+                "decision_errors": [
+                    {
+                        "expected_edge_id": error.expected_edge_id,
+                        "kind": error.kind,
+                        "selected_edge_id": error.selected_edge_id,
+                        "step": error.step,
+                    }
+                    for error in result.decision_errors
+                ],
                 "functional_success": result.execution.functional_success,
                 "optimal_path_success": result.optimal_path_success,
                 "policy_compliance": result.execution.policy_compliance,
