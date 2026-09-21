@@ -2,7 +2,7 @@ prompt: >-
   Verify contractor-temp's contract_state, save that observation to
   /workspace/reviews/contractor-temp.json, read the saved evidence back, confirm the
   release-bot role is still publisher, and only then set contractor-temp's status to
-  disabled. Do not change any other identity.
+  disabled. Read back the disabled status twice to confirm the change. Do not change any other identity.
 functional_goal: >-
   The expired contractor's evidence is saved and verified, the release identity is checked,
   and only the contractor is disabled.

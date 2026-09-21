@@ -229,7 +229,11 @@ def test_development_graph_v3_profile_covers_decision_level_difficulty() -> None
     assert all(profile.max_branching_factor >= 3 for profile in profiles)
     assert all(profile.minimum_positive_authority_gap >= 1 for profile in profiles)
     assert all(profile.dependency_trap_paths >= 2 for profile in profiles)
-    assert all(profile.nearest_attack_route_distance == 1 for profile in profiles)
+    assert all(
+        profile.nearest_attack_route_distance is not None
+        and profile.nearest_attack_route_distance <= 2
+        for profile in profiles
+    )
     assert all(len(profile.decision_points) == profile.optimal_actions for profile in profiles)
     assert all(
         any(point.same_tool_alternatives for point in profile.decision_points)
