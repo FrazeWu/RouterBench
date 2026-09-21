@@ -858,7 +858,10 @@ def graph_calibrate_experiment(
                 f"graph calibration requires schema v4: {bundle.definition.metadata.scenario_id}"
             )
         try:
-            if config.graph_presentation_seeded_permutation:
+            if config.graph_difficulty_contract == DEVELOPMENT_GRAPH_PROFILE_VERSION:
+                audit_v3_development_graph(bundle)
+                audit_result = audit_candidate_graph(bundle)
+            elif config.graph_presentation_seeded_permutation:
                 audit_result = audit_hard_candidate_graph(bundle).base
             else:
                 audit_result = audit_candidate_graph(bundle)
@@ -922,10 +925,13 @@ def graph_calibrate_experiment(
         "execution_order": "sequential",
         "graph_selection_interface": config.graph_selection_interface,
         "graph_incremental_static_prefix": config.graph_incremental_static_prefix,
-        "graph_difficulty_contract": (
-            HARD_GRAPH_CONTRACT_VERSION
-            if config.graph_presentation_seeded_permutation
-            else "base_v4"
+            "graph_difficulty_contract": (
+            config.graph_difficulty_contract
+            or (
+                HARD_GRAPH_CONTRACT_VERSION
+                if config.graph_presentation_seeded_permutation
+                else "base_v4"
+            )
         ),
         "observable_optimum": "required_for_private_edge_costs",
     }

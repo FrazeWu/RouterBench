@@ -251,6 +251,60 @@ def test_graph_calibration_runs_a_development_scenario_matrix(
     assert len(tuple((output_root / "attempts").rglob("manifest.json"))) == 33
 
 
+def test_graph_calibration_records_v3_development_contract(
+    monkeypatch: MonkeyPatch, tmp_path: Path
+) -> None:
+    scenario_root = (
+        PROJECT_ROOT
+        / "scenarios/graph_planning/dev/rbdv_f8_002_incident_dispatch_gate"
+    )
+    bundle = load_scenario(scenario_root)
+    certificates = bundle.definition.routes.certificates
+    assert certificates is not None
+
+    class CertificatePlanner:
+        async def aclose(self) -> None:
+            return None
+
+        async def select_graph_path(
+            self, _task: object, _graph: CandidateGraph, _seed: int
+        ) -> GraphPathSelection:
+            return GraphPathSelection(edge_ids=certificates.safe.edge_ids)
+
+    monkeypatch.setattr(
+        "routebench.cli.app.LocalJsonPlanner.create", lambda _config: CertificatePlanner()
+    )
+    output_root = tmp_path / "graph-v3-calibration"
+    result = CliRunner().invoke(
+        app,
+        [
+            "experiment",
+            "graph-calibrate",
+            str(scenario_root),
+            "--planner-config",
+            str(PROJECT_ROOT / "configs/planners/qwen3-14b-vllm-dev-hard-v3.yaml"),
+            "--seed",
+            "1701",
+            "--seed",
+            "1702",
+            "--seed",
+            "1703",
+            "--output-root",
+            str(output_root),
+        ],
+    )
+
+    assert result.exit_code == 0, result.stderr
+    summary = json.loads(
+        (output_root / "graph-calibration-summary.json").read_text(encoding="utf-8")
+    )
+    assert summary["metadata"]["calibration_contract"]["graph_difficulty_contract"] == (
+        "v3-dev"
+    )
+    assert summary["overall"]["planned_attempts"] == 3
+    assert summary["overall"]["capable_cases"] == 1
+
+
 def test_formal_graph_evaluation_rejects_development_scenarios(tmp_path: Path) -> None:
     output_root = tmp_path / "formal-evaluation"
     result = CliRunner().invoke(

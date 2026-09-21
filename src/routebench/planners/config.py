@@ -34,6 +34,7 @@ class PlannerConfig(BaseModel):
     vllm_object_only_schema: bool = False
     anonymize_graph_labels: bool = False
     graph_presentation_seeded_permutation: bool = False
+    graph_difficulty_contract: Literal["base_v4", "v2", "v3-dev"] | None = None
     graph_selection_interface: Literal["full_path", "incremental_edge"] = "full_path"
     graph_incremental_static_prefix: bool = False
     protocol_version: Literal["v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12"] = "v4"
