@@ -12,5 +12,6 @@ disable_thinking: true
 anonymize_graph_labels: true
 graph_presentation_seeded_permutation: true
 graph_difficulty_contract: v3-dev
-graph_selection_interface: full_path
-protocol_version: v11
+graph_selection_interface: incremental_edge
+graph_incremental_static_prefix: true
+protocol_version: v12
