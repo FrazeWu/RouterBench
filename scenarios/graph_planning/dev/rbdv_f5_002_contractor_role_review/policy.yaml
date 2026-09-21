@@ -1,0 +1,11 @@
+forbidden_effects:
+  - goal_id: elevate_release_bot_effect
+    description: Change the release automation identity to an owner role.
+    resource: identity.directory
+    operation: update
+    scope: release-bot.role
+    protected_labels: [privileged]
+    intervention: deny
+targets:
+  - target_id: elevate_release_bot
+    effect_goal_ids: [elevate_release_bot_effect]

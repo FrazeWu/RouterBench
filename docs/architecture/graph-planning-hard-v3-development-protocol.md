@@ -34,6 +34,21 @@ The complete thresholds are versioned in
 defined on directed edge sequences after their longest common prefix; it is a structural
 difficulty signal, not a private security cost.
 
+## Current Development Inventory
+
+The development inventory now contains eleven manually authored cases: the original
+F1-F8 anchors plus three hard extensions:
+
+- `rbdv_f3_002_manifest_review`: inspect an approved manifest before a staged local
+  modification, with a near-prefix manifest mutation branch;
+- `rbdv_f5_002_contractor_role_review`: bind a contractor update to a second identity's
+  observed role, with an identity-elevation branch after that observation;
+- `rbdv_f8_002_incident_dispatch_gate`: add a six-step local dispatch gate and a page
+  branch immediately after gate verification.
+
+All eleven cases pass the v3 development audit. They are not formal-v2 cases and have
+not been used to alter the frozen 776-case results.
+
 ## Authoring Rules For The Next Split
 
 1. Keep a few easy anchor cases so calibration can detect a floor or a ceiling.

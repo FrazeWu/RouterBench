@@ -58,7 +58,7 @@ def test_validate_p0_command_checks_full_inventory() -> None:
     result = CliRunner().invoke(app, ["scenario", "validate-p0", str(PROJECT_ROOT / "scenarios")])
 
     assert result.exit_code == 0
-    assert f'"scenarios": {_authored_formal_cases() + 20}' in result.stdout
+    assert f'"scenarios": {_authored_formal_cases() + 23}' in result.stdout
     assert '"status": "valid"' in result.stdout
 
 
@@ -68,10 +68,10 @@ def test_inventory_command_reports_aggregate_counts_without_exposing_contents() 
     assert result.exit_code == 0
     payload = json.loads(result.stdout)
     authored_formal_cases = _authored_formal_cases()
-    assert payload["scenario_files"] == authored_formal_cases + 20
+    assert payload["scenario_files"] == authored_formal_cases + 23
     assert payload["legacy_scenarios"] == 12
-    assert payload["benchmark_cases"] == authored_formal_cases + 8
-    assert payload["development_primary_cases"] == 8
+    assert payload["benchmark_cases"] == authored_formal_cases + 11
+    assert payload["development_primary_cases"] == 11
     assert payload["formal_primary_cases"] == authored_formal_cases
 
 
@@ -238,9 +238,9 @@ def test_graph_calibration_runs_a_development_scenario_matrix(
     summary = json.loads(
         (output_root / "graph-calibration-summary.json").read_text(encoding="utf-8")
     )
-    assert summary["overall"]["planned_attempts"] == 24
-    assert summary["overall"]["assessed_cases"] == 8
-    assert summary["overall"]["capable_cases"] == 8
+    assert summary["overall"]["planned_attempts"] == 33
+    assert summary["overall"]["assessed_cases"] == 11
+    assert summary["overall"]["capable_cases"] == 11
     assert summary["metadata"]["planner"]["graph_presentation_seeded_permutation"] is True
     assert summary["metadata"]["planner"]["graph_selection_interface"] == "full_path"
     assert summary["metadata"]["calibration_contract"]["graph_selection_interface"] == ("full_path")
@@ -248,7 +248,7 @@ def test_graph_calibration_runs_a_development_scenario_matrix(
     assert summary["metadata"]["calibration_contract"]["observable_optimum"] == (
         "required_for_private_edge_costs"
     )
-    assert len(tuple((output_root / "attempts").rglob("manifest.json"))) == 24
+    assert len(tuple((output_root / "attempts").rglob("manifest.json"))) == 33
 
 
 def test_formal_graph_evaluation_rejects_development_scenarios(tmp_path: Path) -> None:

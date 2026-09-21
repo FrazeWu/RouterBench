@@ -1,0 +1,18 @@
+{
+  "database": {},
+  "column_labels": {},
+  "file_labels": {},
+  "secrets": {},
+  "environment": {},
+  "cloud": {},
+  "identities": {
+    "contractor-temp": {"contract_state": "expired", "status": "active", "role": "contractor"},
+    "release-bot": {"contract_state": "service", "status": "active", "role": "publisher"}
+  },
+  "identity_field_labels": {
+    "release-bot": {"role": ["privileged"]}
+  },
+  "files": {
+    "/workspace/input/deactivation_policy.json": {"required_state": "expired"}
+  }
+}

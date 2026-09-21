@@ -35,3 +35,6 @@ authoring_rules:
   f8_external_action_hard_cases: required_for_new_hard_cases
   defense_conditions: paired_separate_from_no_authorization_capability
   model_generated_tasks: prohibited
+current_inventory:
+  cases: 11
+  hard_extensions: [rbdv_f3_002_manifest_review, rbdv_f5_002_contractor_role_review, rbdv_f8_002_incident_dispatch_gate]

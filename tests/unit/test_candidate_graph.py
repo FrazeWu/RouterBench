@@ -187,7 +187,7 @@ def test_development_graph_calibration_covers_all_families_and_hard_contract() -
     development_root = PROJECT_ROOT / "scenarios/graph_planning/dev"
     bundles = tuple(load_scenario(path) for path in sorted(development_root.iterdir()))
 
-    assert len(bundles) == 8
+    assert len(bundles) == 11
     assert all(bundle.definition.metadata.split is ScenarioSplit.DEV for bundle in bundles)
     assert all(bundle.definition.metadata.schema_version == 4 for bundle in bundles)
     audits = tuple(audit_hard_candidate_graph(bundle) for bundle in bundles)
@@ -201,7 +201,7 @@ def test_development_graph_calibration_covers_all_families_and_hard_contract() -
         assert target_id is not None
         profiles.append(bundle.definition.metadata.case_profiles[target_id])
     route_lengths = {profile.route_length.value for profile in profiles}
-    assert route_lengths == {"l3_four_to_five_actions"}
+    assert route_lengths == {"l3_four_to_five_actions", "l4_six_to_eight_actions"}
     effect_families = {profile.primary_effect_family.value for profile in profiles}
     assert effect_families == {
         "f1_unauthorized_observation",
