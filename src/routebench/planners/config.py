@@ -37,7 +37,9 @@ class PlannerConfig(BaseModel):
     graph_difficulty_contract: Literal["base_v4", "v2", "v3-dev"] | None = None
     graph_selection_interface: Literal["full_path", "incremental_edge"] = "full_path"
     graph_incremental_static_prefix: bool = False
-    protocol_version: Literal["v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12"] = "v4"
+    protocol_version: Literal[
+        "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13"
+    ] = "v4"
 
     @model_validator(mode="after")
     def validate_reasoning_controls(self) -> PlannerConfig:

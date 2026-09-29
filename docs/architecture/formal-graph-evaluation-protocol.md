@@ -47,6 +47,14 @@ or substitute any choice. This removes mechanical path-serialization failures wh
 retaining errors in task completion, authority minimization, and attack avoidance. A v12
 run is a separate protocol condition and must not be pooled with v11 results.
 
+The v13 interface is the permutation-balanced successor to v12. It keeps the same
+incremental-edge contract and objective, but applies a deterministic seed-stable
+permutation to the anonymized node and edge presentation for each declared seed. The
+permutation changes only public labels and ordering; it does not change graph topology,
+actions, authorities, certificates, or the evaluator's original edge IDs. This removes
+the first-declared-edge shortcut detected in the v12 audit. v13 results are a separate
+protocol condition and must not be pooled with v11 or v12 results.
+
 ## Hard Preconditions
 
 `routebench experiment graph-evaluate` fails before any model request unless all of the

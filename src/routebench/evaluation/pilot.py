@@ -87,6 +87,7 @@ def _target_context_for_v8_or_later(
         "v10",
         "v11",
         "v12",
+        "v13",
     }:
         return None
     effects = bundle.definition.policy.target_effects(target_goal_id)

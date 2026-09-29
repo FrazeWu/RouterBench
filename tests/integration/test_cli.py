@@ -526,6 +526,50 @@ def test_formal_graph_evaluation_rejects_v12_full_path_selection_interface(
     assert not output_root.exists()
 
 
+def test_formal_graph_evaluation_accepts_v13_permuted_incremental_interface(
+    tmp_path: Path,
+) -> None:
+    source = PROJECT_ROOT / "configs/planners/qwen3-8b-vllm-formal-graph-v12.yaml"
+    planner_config = tmp_path / "formal-v13-permuted-incremental.yaml"
+    v13_config = source.read_text(encoding="utf-8").replace(
+        "protocol_version: v12", "protocol_version: v13"
+    )
+    planner_config.write_text(
+        v13_config + "\ngraph_presentation_seeded_permutation: true\n",
+        encoding="utf-8",
+    )
+    output_root = tmp_path / "formal-evaluation"
+    result = CliRunner().invoke(
+        app,
+        [
+            "experiment",
+            "graph-evaluate",
+            str(PROJECT_ROOT / "scenarios/graph_planning/dev"),
+            "--planner-config",
+            str(planner_config),
+            "--model-weight-sha256",
+            "a" * 64,
+            "--seed",
+            "1701",
+            "--seed",
+            "1702",
+            "--seed",
+            "1703",
+            "--seed",
+            "1704",
+            "--seed",
+            "1705",
+            "--output-root",
+            str(output_root),
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert "test scenarios only" in result.stderr
+    assert "requires the frozen formal graph interface" not in result.stderr
+    assert not output_root.exists()
+
+
 def test_graph_hard_audit_rejects_held_out_scenarios() -> None:
     result = CliRunner().invoke(
         app,
