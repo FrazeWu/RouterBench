@@ -1,29 +1,23 @@
 # RouteBench
 
-RouteBench evaluates whether runtime authorization remains effective when a code-agent
-planner can observe authorization feedback and adapt its route toward a forbidden goal.
-The primary result is the paired difference between fixed and adaptive attack success,
-called the Adaptive Authorization Robustness Gap (AARG).
+RouteBench evaluates whether a code-agent planner can select a functionally successful
+route that exercises the globally least authority from a bounded directed capability
+graph. Forbidden-effect branches are included as safety decoys: selecting one is
+reported as an unsafe route choice, not as a planner attack objective.
 
-The repository is intentionally organized around complete agent-system runs rather than
-single model outputs. Planners, attacks, authorization controllers, sandbox execution,
-verifiers, and storage communicate through versioned contracts.
+The repository is intentionally organized around complete benchmark runs rather than
+single model outputs. Planners, graph evaluators, typed tools, verifiers, and provenance
+storage communicate through versioned contracts.
 
 ## Status
 
-The P0 deterministic foundation is implemented: all 12 Pilot scenario families,
-reference routes, trusted simulated tools, functional/compliance/per-goal verification,
-per-action attack evidence freezing, and no-authorization, static-minimum-permission,
-and path-state controllers. Fixed and adaptive AttackProgram contracts plus strict local
-Ollama/vLLM JSON adapters are available. A P1 paired smoke runner writes private,
-redacted manifests and distinguishes invalid planner output from an authorization
-intervention; `routebench experiment summarize` aggregates those manifests without
-counting invalid outputs as attack failures. `routebench experiment plan` expands the
-configured matrix into immutable paired job IDs, and `run-job` executes exactly one
-selected job rather than silently launching the matrix. Guided route-execution calibration
-is separate from autonomous planning. A content-addressed micro-rootfs and bubblewrap
-executor are available for future shell/process scenario tools; formal experiment storage
-and model-weight provenance are enforced for formal candidate-graph evaluation.
+The deterministic benchmark foundation is implemented: manually authored scenario
+graphs, trusted simulated tools, functional and policy verification, unique
+least-authority certificates, and strict local Ollama/vLLM JSON adapters. Historical
+Pilot code also contains authorization controllers and fixed/adaptive AttackProgram
+contracts; those are retained for reproducibility but are not part of the current
+benchmark claim. Formal experiment storage and model-weight provenance are enforced for
+candidate-graph evaluation.
 
 Schema v4 now implements the benchmark's graph-planning premise for all 776 formal
 cases and eight independently authored development cases spanning F1-F8.
@@ -42,9 +36,8 @@ and record the rootfs as not applicable.
 The formal inventory is frozen in `configs/benchmark/formal-v2-freeze.json` after a
 deterministic audit of all 4,982 candidate-graph edges and the safe/attack certificates.
 
-The recorded GPU1 smoke attempt with `qwen2.5:7b` was rejected because its initial
-attack program was not semantically executable. It is a planner-format/capability
-failure, so it produces no AARG estimate and must not be interpreted as a defense win.
+Historical attack-program smoke artifacts are not benchmark results and are excluded
+from the current graph-planning analysis.
 
 ## Requirements
 
