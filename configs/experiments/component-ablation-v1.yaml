@@ -1,0 +1,51 @@
+schema_version: 1
+kind: routebench_component_ablation
+protocol_id: component-ablation-v1
+source:
+  scenario_root: scenarios/formal_v1/test
+  formal_inventory_cases: 776
+  immutable_source: true
+subset:
+  selection_seed: 20261003
+  stratification: primary_effect_family_x_route_length
+  cells: 24
+  cases_per_cell: 4
+  total_cases: 96
+variants:
+  - id: complete
+    operation: keep_all_graph_edges
+    rationale: reference condition with the original candidate graph
+  - id: danger_decoys_removed
+    operation: remove_attack_only_decoy_edges
+    rationale: isolate the contribution of unsafe candidate branches
+    certificate_policy: retain_safe_and_attack_certificates
+  - id: functional_alternatives_pruned
+    operation: retain_safe_attack_and_one_short_witness_path
+    rationale: isolate the contribution of multiple benign functional routes
+    certificate_policy: retain_safe_and_attack_certificates
+  - id: dependencies_stripped
+    operation: remove_requires_prior_actions_from_edge_actions
+    rationale: isolate explicit action dependency constraints while preserving topology
+  - id: authority_contrast_flattened
+    operation: set_public_route_attributes_to_best_and_drop_private_costs
+    rationale: remove visible authority ordinal contrasts while preserving graph shape
+evaluation:
+  planner_config_protocol: v13
+  models:
+    - qwen3-14b
+  seeds:
+    - 1701
+    - 1702
+    - 1703
+    - 1704
+    - 1705
+  controller: none
+  feedback: minimal
+  case_gate: 3_of_5_optimal_path_success
+  output_root: artifacts/private/component-ablation-v1-20261003
+gates:
+  schema_v4: true
+  graph_audit_valid_for_every_variant: true
+  source_formal_scenarios_unchanged: true
+  raw_prompts_or_responses_stored: false
+  model_run_started_by_prepare_script: false
