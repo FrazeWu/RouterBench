@@ -8,6 +8,7 @@ scenario_globs:
 planners:
   - configs/planners/qwen3-32b-vllm.yaml
   - configs/planners/gpt-oss-20b-vllm.yaml
+  - configs/planners/qwen3-14b-vllm-dev-hard-v3.yaml
 controllers:
   - configs/controllers/no-authorization.yaml
   - configs/controllers/static-minimum-permission.yaml
