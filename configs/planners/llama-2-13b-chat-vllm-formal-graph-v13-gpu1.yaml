@@ -1,0 +1,16 @@
+schema_version: 2
+backend: vllm
+model: RouteBench/Llama2-13B-Chat
+endpoint: http://127.0.0.1:8003/v1
+generation:
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 2048
+  context_window: 32768
+formal_run: true
+disable_thinking: true
+anonymize_graph_labels: true
+graph_presentation_seeded_permutation: true
+graph_selection_interface: incremental_edge
+graph_incremental_static_prefix: true
+protocol_version: v13

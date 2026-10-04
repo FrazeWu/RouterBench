@@ -24,7 +24,17 @@ parameters, and evaluator unchanged.
 | Qwen2.5 | Qwen2.5-7B | Qwen2.5-14B | Qwen2.5-32B |
 | Llama | Llama3.1-8B | - | Llama3.3-70B-AWQ |
 | Gemma | Gemma2-9B | - | Gemma2-27B |
-| Mistral | - | Mistral Small 3.2-24B | - |
+| Mistral | Mistral-7B-Instruct-v0.3 (extension) | Mistral Small 3.2-24B | - |
+
+The extension batch adds a runnable Mistral 7B checkpoint and a Llama 2 13B
+checkpoint so that the pilot has at least three independently implemented
+families at small and middle scales. These are evaluated under the same v13
+protocol and are reported with their own configuration and model hashes.
+
+| Extension family | Small | Middle |
+|---|---|---|
+| Llama (legacy instruction baseline) | - | Llama2-13B |
+| Mistral | Mistral-7B-Instruct-v0.3 | - |
 
 The initial cross-family pilot uses the shared 100-case prefix already materialized
 under `artifacts/private/formal-graph-v12-scale-100-20260910/input-100-v2`. A model
