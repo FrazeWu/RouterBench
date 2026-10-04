@@ -99,11 +99,19 @@ def load(spec: ModelSpec) -> tuple[dict, dict, str] | None:
 def main() -> None:
     rows: list[tuple[ModelSpec, dict, dict, str]] = []
     pending: list[str] = []
+    pending_formal: list[str] = []
     for spec in MODELS:
         loaded = load(spec)
         if loaded is None:
             pending.append(spec.name)
             continue
+        if (
+            spec.formal_root is not None
+            and not (spec.formal_root / "formal-graph-summary.json").is_file()
+            and spec.pilot_root is not None
+            and (spec.pilot_root / "formal-graph-summary.json").is_file()
+        ):
+            pending_formal.append(spec.name)
         rows.append((spec, loaded[0], loaded[1], loaded[2]))
 
     lines = [
@@ -160,6 +168,12 @@ def main() -> None:
     )
     if pending:
         lines.extend(f"- `{name}`: artifact not complete yet." for name in pending)
+    if pending_formal:
+        lines.extend(
+            f"- `{name}`: 776-case formal run pending; "
+            "the displayed row is still the 100-case pilot."
+            for name in pending_formal
+        )
     lines.extend(
         [
             "- Gemma2-9B/27B: native context configuration is incompatible with the frozen 32K "
