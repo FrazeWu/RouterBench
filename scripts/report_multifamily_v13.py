@@ -18,6 +18,7 @@ class ModelSpec:
     scale: str
     formal_root: Path | None = None
     pilot_root: Path | None = None
+    formal_eligible: bool = True
 
 
 MODELS = (
@@ -48,6 +49,7 @@ MODELS = (
         "14B",
         formal_root=ROOT / "artifacts/private/formal-v13-qwen25-14b-20261004",
         pilot_root=ROOT / "artifacts/private/cross-family-qwen25-14b-v13-retry2-20261004/result",
+        formal_eligible=False,
     ),
     ModelSpec(
         "Llama3.1-8B",
@@ -106,7 +108,8 @@ def main() -> None:
             pending.append(spec.name)
             continue
         if (
-            spec.formal_root is not None
+            spec.formal_eligible
+            and spec.formal_root is not None
             and not (spec.formal_root / "formal-graph-summary.json").is_file()
             and spec.pilot_root is not None
             and (spec.pilot_root / "formal-graph-summary.json").is_file()
@@ -180,6 +183,8 @@ def main() -> None:
             "protocol.",
             "- Llama3.3-70B-AWQ: single-node launch exceeded available KV/profile memory; no "
             "capability score is assigned.",
+            "- Qwen2.5-14B: the available single-GPU vLLM 0.7.3 runtime cannot satisfy the "
+            "frozen 32K context contract; its 100-case pilot remains diagnostic only.",
             "- Mistral Small 3.2-24B: vLLM 0.7.3 cannot load its Mistral3 config in the current "
             "runtime; the Mistral-7B pilot is the runnable family baseline.",
             "",
