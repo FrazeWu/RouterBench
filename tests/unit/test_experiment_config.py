@@ -22,18 +22,18 @@ def test_pilot_config_expands_to_stable_paired_blocks(tmp_path: Path) -> None:
     first = expand_experiment_jobs(matrix)
     second = expand_experiment_jobs(matrix)
 
-    assert len(first) == 324
+    assert len(first) == 216
     assert first == second
     assert len({job.job_id for job in first}) == len(first)
     assert {job.scenario_id for job in first}
-    assert sum(job.stage_id == "p1_calibration" for job in first) == 108
-    assert sum(job.stage_id == "p2_core" for job in first) == 216
+    assert sum(job.stage_id == "p1_calibration" for job in first) == 72
+    assert sum(job.stage_id == "p2_core" for job in first) == 144
     assert all(len(job.conditions) in {2, 3} for job in first)
 
     plan = write_experiment_plan(matrix, first, tmp_path / "pilot-plan.json")
     payload = json.loads(plan.read_text(encoding="utf-8"))
     assert payload["experiment_id"] == "routebench-pilot-v2"
-    assert len(payload["jobs"]) == 324
+    assert len(payload["jobs"]) == 216
     assert payload["jobs"][0]["job_id"] == first[0].job_id
 
 
