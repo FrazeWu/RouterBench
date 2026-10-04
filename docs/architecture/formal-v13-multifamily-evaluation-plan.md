@@ -34,6 +34,7 @@ configuration and model hash.
 | Extension family | Small | Middle |
 |---|---|---|
 | Mistral | Mistral-7B-Instruct-v0.3 | - |
+| Gemma | - | Gemma3-12B-IT (text-only serving) |
 
 The initial cross-family pilot uses the shared 100-case prefix already materialized
 under `artifacts/private/formal-graph-v12-scale-100-20260910/input-100-v2`. A model
