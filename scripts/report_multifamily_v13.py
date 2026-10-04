@@ -16,51 +16,59 @@ class ModelSpec:
     name: str
     family: str
     scale: str
-    summary_root: Path
+    formal_root: Path | None = None
+    pilot_root: Path | None = None
 
 
 MODELS = (
     ModelSpec(
-        "Qwen3-8B", "Qwen3", "8B", ROOT / "artifacts/private/formal-v3-776-20260929/qwen3-8b-v13"
+        "Qwen3-8B", "Qwen3", "8B",
+        formal_root=ROOT / "artifacts/private/formal-v3-776-20260929/qwen3-8b-v13",
     ),
     ModelSpec(
-        "Qwen3-14B", "Qwen3", "14B", ROOT / "artifacts/private/formal-v3-776-20260929/qwen3-14b-v13"
+        "Qwen3-14B", "Qwen3", "14B",
+        formal_root=ROOT / "artifacts/private/formal-v3-776-20260929/qwen3-14b-v13",
     ),
     ModelSpec(
         "Qwen3-32B-AWQ",
         "Qwen3",
         "32B",
-        ROOT / "artifacts/private/formal-v3-776-20260929/qwen3-32b-awq-v13",
+        formal_root=ROOT / "artifacts/private/formal-v3-776-20260929/qwen3-32b-awq-v13",
     ),
     ModelSpec(
         "Qwen2.5-7B",
         "Qwen2.5",
         "7B",
-        ROOT / "artifacts/private/cross-family-qwen25-7b-v13-20261004-retry1",
+        formal_root=ROOT / "artifacts/private/formal-v13-qwen25-7b-20261004",
+        pilot_root=ROOT / "artifacts/private/cross-family-qwen25-7b-v13-20261004-retry1",
     ),
     ModelSpec(
         "Qwen2.5-14B",
         "Qwen2.5",
         "14B",
-        ROOT / "artifacts/private/cross-family-qwen25-14b-v13-retry2-20261004/result",
+        formal_root=ROOT / "artifacts/private/formal-v13-qwen25-14b-20261004",
+        pilot_root=ROOT / "artifacts/private/cross-family-qwen25-14b-v13-retry2-20261004/result",
     ),
     ModelSpec(
         "Llama3.1-8B",
         "Llama",
         "8B",
-        ROOT / "artifacts/private/cross-family-llama31-8b-v13-20261003",
+        formal_root=ROOT / "artifacts/private/formal-v13-llama31-8b-20261004",
+        pilot_root=ROOT / "artifacts/private/cross-family-llama31-8b-v13-20261003",
     ),
     ModelSpec(
         "Gemma3-12B",
         "Gemma",
         "12B",
-        ROOT / "artifacts/private/cross-family-gemma3-12b-v13-20261004/result",
+        formal_root=ROOT / "artifacts/private/formal-v13-gemma3-12b-20261004",
+        pilot_root=ROOT / "artifacts/private/cross-family-gemma3-12b-v13-20261004/result",
     ),
     ModelSpec(
         "Mistral-7B",
         "Mistral",
         "7B",
-        ROOT / "artifacts/private/cross-family-mistral-7b-v13-20261004/result",
+        formal_root=ROOT / "artifacts/private/formal-v13-mistral-7b-20261004",
+        pilot_root=ROOT / "artifacts/private/cross-family-mistral-7b-v13-20261004/result",
     ),
 )
 
@@ -69,26 +77,34 @@ def percent(value: int, total: int) -> str:
     return f"{100 * value / total:.2f}%"
 
 
-def load(spec: ModelSpec) -> tuple[dict, dict] | None:
-    summary_path = spec.summary_root / "formal-graph-summary.json"
-    manifest_path = spec.summary_root / "run-manifest.json"
-    if not summary_path.is_file() or not manifest_path.is_file():
-        return None
-    return (
-        json.loads(summary_path.read_text(encoding="utf-8")),
-        json.loads(manifest_path.read_text(encoding="utf-8")),
+def load(spec: ModelSpec) -> tuple[dict, dict, str] | None:
+    roots = (
+        ("complete_formal_benchmark", spec.formal_root),
+        ("formal_prefix", spec.pilot_root),
     )
+    for scope, root in roots:
+        if root is None:
+            continue
+        summary_path = root / "formal-graph-summary.json"
+        manifest_path = root / "run-manifest.json"
+        if summary_path.is_file() and manifest_path.is_file():
+            return (
+                json.loads(summary_path.read_text(encoding="utf-8")),
+                json.loads(manifest_path.read_text(encoding="utf-8")),
+                scope,
+            )
+    return None
 
 
 def main() -> None:
-    rows: list[tuple[ModelSpec, dict, dict]] = []
+    rows: list[tuple[ModelSpec, dict, dict, str]] = []
     pending: list[str] = []
     for spec in MODELS:
         loaded = load(spec)
         if loaded is None:
             pending.append(spec.name)
             continue
-        rows.append((spec, loaded[0], loaded[1]))
+        rows.append((spec, loaded[0], loaded[1], loaded[2]))
 
     lines = [
         "# RouteBench v13 Multi-Family Model Comparison",
@@ -108,7 +124,7 @@ def main() -> None:
         "Attack | Runtime | Commit |",
         "|---|---|---:|---|---:|---:|---:|---:|---:|---:|---|---|",
     ]
-    for spec, summary, manifest in rows:
+    for spec, summary, manifest, _source in rows:
         overall = summary["overall"]
         scope = summary["scope"]
         metadata = manifest["metadata"]
