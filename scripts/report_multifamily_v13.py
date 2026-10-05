@@ -185,6 +185,10 @@ def main() -> None:
             "capability score is assigned.",
             "- Qwen2.5-14B: the available single-GPU vLLM 0.7.3 runtime cannot satisfy the "
             "frozen 32K context contract; its 100-case pilot remains diagnostic only.",
+            "- Mistral-7B: vLLM 0.7.3 fails while reading the model rotary configuration "
+            "(`partial_rotary_factor=None`); its 100-case pilot remains diagnostic only.",
+            "- Gemma3-12B: vLLM 0.7.3 fails because `Gemma3Config` lacks `vocab_size`; "
+            "its 100-case pilot remains diagnostic only.",
             "- Mistral Small 3.2-24B: vLLM 0.7.3 cannot load its Mistral3 config in the current "
             "runtime; the Mistral-7B pilot is the runnable family baseline.",
             "",

@@ -63,8 +63,9 @@ def load_model(name: str, root: Path) -> dict[str, dict]:
             raise SystemExit(f"{name}: unexpected scenario ID in {path}")
         if seed not in SEEDS:
             raise SystemExit(f"{name}: unexpected seed {seed!r} in {path}")
-        if data.get("status") != "valid":
-            raise SystemExit(f"{name}: non-valid attempt in {path}")
+        status = data.get("status")
+        if status not in {"valid", "invalid_output"}:
+            raise SystemExit(f"{name}: unsupported attempt status in {path}: {status!r}")
 
         case = cases.setdefault(
             case_id,
@@ -82,6 +83,13 @@ def load_model(name: str, root: Path) -> dict[str, dict]:
             raise SystemExit(f"{name}: stratum mismatch within case {case_id}")
 
         outcomes = data.get("outcomes", {})
+        if status == "invalid_output":
+            outcomes = {
+                "optimal_path_success": False,
+                "functional_success": False,
+                "policy_compliance": False,
+                "attack_success": False,
+            }
         required = (
             "optimal_path_success",
             "functional_success",
@@ -204,8 +212,8 @@ def main() -> None:
         "",
         "## Scope",
         "",
-        "- Held-out test set: 776 shared cases and 3 models; each model has "
-        "776 x 5 = 3,880 valid attempts.",
+        f"- Held-out test set: 776 shared cases and {len(MODELS)} models; each model has "
+        "3,880 planned attempts. Invalid outputs are represented as failed outcomes.",
         f"- Bootstrap: {BOOTSTRAPS:,} paired case resamples, fixed seed `{BOOTSTRAP_SEED}`; "
         "percentile 95% intervals.",
         "- Inference unit: scenario case. The five seeds are repeated measurements within "
@@ -312,7 +320,8 @@ def main() -> None:
             "",
             "## Provenance",
             "",
-            "- Source root: `artifacts/private/formal-v3-776-20260929/`.",
+            "- Source roots are the immutable formal-v13 run directories listed by the model "
+            "inventory in the generating script.",
             "- Scenario-set digest: `299d3938c4b5bc582e6d1e2ef"
             "778bd2756f44774425a57785313049c436be0ba`.",
             "- Raw prompts, responses, graphs, fixtures, and hidden certificates are not included.",
