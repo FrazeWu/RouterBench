@@ -64,6 +64,7 @@ MODELS = (
         "12B",
         formal_root=ROOT / "artifacts/private/formal-v13-gemma3-12b-20261004",
         pilot_root=ROOT / "artifacts/private/cross-family-gemma3-12b-v13-20261004/result",
+        formal_eligible=False,
     ),
     ModelSpec(
         "Mistral-7B",
@@ -71,6 +72,7 @@ MODELS = (
         "7B",
         formal_root=ROOT / "artifacts/private/formal-v13-mistral-7b-20261004",
         pilot_root=ROOT / "artifacts/private/cross-family-mistral-7b-v13-20261004/result",
+        formal_eligible=False,
     ),
 )
 
