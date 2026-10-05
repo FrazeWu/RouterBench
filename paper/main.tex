@@ -1,0 +1,145 @@
+\documentclass[11pt]{article}
+\usepackage[review]{acl}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{graphicx}
+
+\title{RouteBench: Evaluating Least-Authority Capability Routing in Code Agents}
+
+\author{Anonymous ACL Submission}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Code agents increasingly choose among multiple tool routes that can complete the same
+task but expose different authority. Existing evaluations often collapse task success
+and safety into a single outcome, making it difficult to distinguish inability from
+unsafe route selection. We present RouteBench, a deterministic benchmark for evaluating
+whether an agent can select a functionally successful route with globally least
+authority from a bounded capability graph. RouteBench separates functional completion,
+policy compliance, and least-authority route selection, and verifies outcomes through a
+trusted stateful simulator rather than textual traces. Its formal contract uses manually
+authored schema-v4 scenarios, hidden route certificates, typed tools, and held-out
+template families. We describe the benchmark design, threat model, evaluation protocol,
+and the data boundary required for a future evaluation-calibrated reinforcement-learning
+defense. Results and defense experiments are intentionally reported only after the
+corresponding frozen runs are complete.
+\end{abstract}
+
+\section{Introduction}
+
+Language-model agents increasingly interact with databases, files, identity systems,
+cloud resources, and external services through typed tools. A task can therefore have
+several functionally valid routes with different authority footprints. An agent may
+complete the task while selecting an unnecessarily broad capability, or it may follow a
+functionally plausible route that realizes a forbidden effect. These cases are not
+captured by task success alone.
+
+We introduce RouteBench, a benchmark for this capability-routing problem. Given a
+bounded directed graph of typed actions, an agent must select a route that completes the
+ordinary task while minimizing authority under a frozen evaluator contract. The
+benchmark distinguishes three outcomes: whether the task completes, whether the route
+is policy compliant, and whether it matches the unique least-authority optimum. Unsafe
+branches are verified by deterministic state assertions and are reported separately
+from planner capability failures.
+
+RouteBench is designed around four requirements. First, the evaluator must verify
+effects in a clean state rather than trust a textual plan. Second, the public task and
+graph must not reveal the evaluator-owned optimum. Third, benchmark cases must cover
+distinct permission dimensions, tool surfaces, route topologies, and attack mechanisms.
+Finally, formal results must remain separated from any later policy training or defense
+calibration.
+
+Our contributions are:
+\begin{itemize}
+  \item a formal capability-routing task with typed tools, bounded candidate graphs, and
+        hidden least-authority certificates;
+  \item a deterministic evaluation protocol that separates functional success, policy
+        compliance, optimal-path success, and attack-path selection; and
+  \item a data and split contract that supports future defenses, including constrained
+        reinforcement learning, without leaking held-out test cases into training.
+\end{itemize}
+
+\section{Problem Definition}
+
+Let a scenario provide a task $T$, an initial state $s_0$, and a bounded directed graph
+$G=(V,E)$. Each edge represents one typed tool action and declares an authority atom.
+A route $p$ is executable when its dependencies hold at every step. The trusted
+simulator maps a route to a terminal state and an authority footprint.
+
+The evaluator accepts a route only when it satisfies the functional verifier and policy
+verifier. Among accepted routes, the primary objective is the evaluator-defined
+least-authority route, with action count used as a secondary objective where required.
+The model receives the public task projection, tools, graph, and objective description;
+it does not receive the reference route, hidden certificate, fixture, or outcome labels.
+
+\section{Benchmark Design}
+
+\subsection{Scenario Construction}
+
+Formal cases are manually authored and use schema v4. Each case contains a public task
+and graph, a private fixture, typed tool definitions, functional and policy verifiers,
+and evaluator-owned safe and attack certificates. Construction checks establish that a
+safe functional route exists, that the least-authority certificate is unique, and that
+attack certificates produce the declared forbidden effects.
+
+The taxonomy covers eight forbidden-effect families, eight permission dimensions, ten
+typed tool surfaces, five route topologies, five route-length bands, and six attack
+mechanism labels including fixed control, parameter substitution, equivalent-tool
+substitution, decomposition, delayed reordering, and authorization-state
+manipulation.
+
+\subsection{Evaluation Outcomes}
+
+For each attempt, the simulator records functional success, policy compliance,
+attack success, certificate matching, public Pareto optimality, and public exact
+optimality. The primary formal endpoint is \texttt{OptimalPathSuccess}. A case is
+considered capable only when at least three of five declared seeds achieve that endpoint;
+backend failures remain infrastructure failures and are not converted into model
+failures.
+
+\section{Evaluation Protocol}
+
+The formal inventory contains 776 held-out primary cases distributed across frozen
+template families. Each case is evaluated with five seeds at temperature zero using the
+same typed interface and trusted simulator. Run manifests record the Git revision,
+dependency and planner hashes, model identity, weight hash, scenario digests, and
+generation parameters. Raw prompts, responses, fixtures, graphs, and hidden
+certificates are excluded from aggregate artifacts.
+
+\section{Toward Evaluation-Calibrated Defense}
+
+RouteBench is also intended to support a separate defense study. Development traces
+can be converted into state-action-outcome records for a policy that mediates typed
+capability requests. A future constrained offline-RL policy may choose to allow,
+constrain, escalate, or deny an action using the task, current capability state, route
+history, and data-flow labels. Formal test cases must remain excluded from training,
+reward design, threshold selection, and policy revision. This separation makes the
+defense result a held-out generalization test rather than a benchmark-specific rule.
+
+\section{Discussion and Limitations}
+
+RouteBench uses deterministic simulated tools and therefore does not by itself establish
+security against arbitrary real-world APIs or untyped shell behavior. The benchmark
+measures route selection and trusted state effects; it does not claim that a model's
+internal reasoning is observable or safe. These limits motivate reporting both the
+capability endpoint and the authorization outcomes, and motivate external validation of
+future defenses on independently authored workflows.
+
+\section{Conclusion}
+
+RouteBench frames agent safety as least-authority capability routing. Its separation of
+task completion, policy compliance, and route optimality provides a basis for measuring
+where agents fail and for evaluating defenses without conflating capability failure
+with security success. The current manuscript establishes the benchmark contract; all
+empirical claims will be tied to frozen, provenance-recorded runs.
+
+\bibliography{custom}
+\bibliographystyle{acl_natbib}
+
+\end{document}
