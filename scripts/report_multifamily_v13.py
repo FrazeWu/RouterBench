@@ -193,6 +193,11 @@ def main() -> None:
             "the displayed row is still the 100-case pilot."
             for name in pending_formal
         )
+    lines.append(
+        "- DeepSeek-R1-Distill-Qwen-7B: an exploratory formal prefix was stopped at "
+        "1,105/3,880 attempts for runtime budget; its partial artifacts are excluded, "
+        "and only the completed 100-case pilot is reported."
+    )
     lines.extend(
         [
             "- Gemma2-9B/27B: native context configuration is incompatible with the frozen 32K "
