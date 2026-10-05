@@ -21,3 +21,12 @@ artifacts/
 
 # Third-party datasets are fetched/imported locally and tracked by provenance only.
 data/external/atbench/
+
+# Local LaTeX build outputs.
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.pdf
+paper/missfont.log
