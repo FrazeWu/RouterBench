@@ -37,6 +37,13 @@ MODELS = (
         formal_root=ROOT / "artifacts/private/formal-v3-776-20260929/qwen3-32b-awq-v13",
     ),
     ModelSpec(
+        "DeepSeek-R1-Distill-Qwen-7B",
+        "DeepSeek-Qwen",
+        "7B",
+        pilot_root=ROOT / "artifacts/private/local-v13-deepseek7-pilot-20261005",
+        formal_root=ROOT / "artifacts/private/formal-v13-deepseek7-776-20261005",
+    ),
+    ModelSpec(
         "Qwen2.5-7B",
         "Qwen2.5",
         "7B",
@@ -65,6 +72,13 @@ MODELS = (
         formal_root=ROOT / "artifacts/private/formal-v13-gemma3-12b-20261004",
         pilot_root=ROOT / "artifacts/private/cross-family-gemma3-12b-v13-20261004/result",
         formal_eligible=False,
+    ),
+    ModelSpec(
+        "Gemma3-1B",
+        "Gemma3",
+        "1B",
+        formal_root=ROOT / "artifacts/private/formal-v13-gemma3-1b-776-20261005",
+        pilot_root=ROOT / "artifacts/private/local-v13-gemma3-1b-pilot-20261005-rerun",
     ),
     ModelSpec(
         "Mistral-7B",
@@ -191,6 +205,14 @@ def main() -> None:
             "(`partial_rotary_factor=None`); its 100-case pilot remains diagnostic only.",
             "- Gemma3-12B: vLLM 0.7.3 fails because `Gemma3Config` lacks `vocab_size`; "
             "its 100-case pilot remains diagnostic only.",
+            "- Gemma3-4B: vLLM 0.7.3 fails because `Gemma3Config` lacks `vocab_size`; "
+            "no capability score is assigned.",
+            "- DeepSeek-R1-Distill-Qwen-14B: single A100 cannot provide the frozen 32K KV "
+            "cache (maximum 22,224 tokens at the configured memory limit); no score is assigned.",
+            "- InternLM2.5-7B: vLLM tokenizer conversion fails on the local tokenizer.model; "
+            "no capability score is assigned.",
+            "- Zephyr-7B and Dolphin-2.6-Mixtral-8x7B: current vLLM MistralCommonTokenizer "
+            "rejects the tokenizer kwargs; no capability score is assigned.",
             "- Mistral Small 3.2-24B: vLLM 0.7.3 cannot load its Mistral3 config in the current "
             "runtime; the Mistral-7B pilot is the runnable family baseline.",
             "",
