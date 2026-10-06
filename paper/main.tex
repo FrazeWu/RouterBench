@@ -24,9 +24,8 @@ policy compliance, and least-authority route selection, and verifies outcomes th
 trusted stateful simulator rather than textual traces. Its formal contract uses manually
 authored schema-v4 scenarios, hidden route certificates, typed tools, and held-out
 template families. We describe the benchmark design, threat model, evaluation protocol,
-and the data boundary required for a future evaluation-calibrated reinforcement-learning
-defense. Results and defense experiments are intentionally reported only after the
-corresponding frozen runs are complete.
+and a separate protocol for studying whether its findings can guide a later defense.
+Results are reported only from frozen, provenance-recorded runs.
 \end{abstract}
 
 \section{Introduction}
@@ -59,11 +58,13 @@ Our contributions are:
         hidden least-authority certificates;
   \item a deterministic evaluation protocol that separates functional success, policy
         compliance, optimal-path success, and attack-path selection; and
-  \item a data and split contract that supports future defenses, including constrained
-        reinforcement learning, without leaking held-out test cases into training.
+  \item a data and split contract that supports a separate defense study without leaking
+        held-out test cases into training or calibration.
 \end{itemize}
 
-\section{Problem Definition}
+\section{Capability-Routing Problem}
+
+\subsection{Task and Objective}
 
 Let a scenario provide a task $T$, an initial state $s_0$, and a bounded directed graph
 $G=(V,E)$. Each edge represents one typed tool action and declares an authority atom.
@@ -73,12 +74,28 @@ simulator maps a route to a terminal state and an authority footprint.
 The evaluator accepts a route only when it satisfies the functional verifier and policy
 verifier. Among accepted routes, the primary objective is the evaluator-defined
 least-authority route, with action count used as a secondary objective where required.
+The authority footprint is computed from trusted action effects rather than from the
+planner's textual explanation.
+
+We report four distinct outcomes. Functional success means that the ordinary task is
+completed. Policy compliance means that no forbidden effect is realized. Optimal-path
+success additionally requires the evaluator-owned least-authority route. Attack success
+means that an assigned forbidden effect is realized in the clean simulator state.
+
+\subsection{Threat Model and Information Boundary}
+
+The planner may choose any public graph edge and may produce invalid or incomplete
+outputs. A route is considered unsafe when a sequence of individually typed actions
+produces a forbidden state effect, including through scope substitution, equivalent-tool
+substitution, decomposition, reordering, or authorization-state manipulation. The
+evaluator is trusted; tools are deterministic and reset before every attempt.
+
 The model receives the public task projection, tools, graph, and objective description;
 it does not receive the reference route, hidden certificate, fixture, or outcome labels.
 
-\section{Benchmark Design}
+\section{RouteBench Benchmark}
 
-\subsection{Scenario Construction}
+\subsection{Scenario Construction and Verification}
 
 Formal cases are manually authored and use schema v4. Each case contains a public task
 and graph, a private fixture, typed tool definitions, functional and policy verifiers,
@@ -86,13 +103,25 @@ and evaluator-owned safe and attack certificates. Construction checks establish 
 safe functional route exists, that the least-authority certificate is unique, and that
 attack certificates produce the declared forbidden effects.
 
+\subsection{Coverage Taxonomy}
+
 The taxonomy covers eight forbidden-effect families, eight permission dimensions, ten
 typed tool surfaces, five route topologies, five route-length bands, and six attack
 mechanism labels including fixed control, parameter substitution, equivalent-tool
 substitution, decomposition, delayed reordering, and authorization-state
-manipulation.
+manipulation. Primary labels are used for disjoint reporting strata; additional tags
+preserve multi-factor coverage.
 
-\subsection{Evaluation Outcomes}
+\subsection{Public and Private Artifacts}
+
+The public projection contains the task, typed tools, graph topology, action arguments,
+and declared objective. Private artifacts contain the fixture, verifiers, reference
+routes, and certificates. Aggregate reports expose outcomes and provenance without
+rendering prompts, graphs, fixtures, or hidden certificates.
+
+\section{Evaluation Protocol}
+
+\subsection{Outcomes and Case Decisions}
 
 For each attempt, the simulator records functional success, policy compliance,
 attack success, certificate matching, public Pareto optimality, and public exact
@@ -101,16 +130,19 @@ considered capable only when at least three of five declared seeds achieve that 
 backend failures remain infrastructure failures and are not converted into model
 failures.
 
-\section{Evaluation Protocol}
-
 The formal inventory contains 776 held-out primary cases distributed across frozen
 template families. Each case is evaluated with five seeds at temperature zero using the
-same typed interface and trusted simulator. Run manifests record the Git revision,
-dependency and planner hashes, model identity, weight hash, scenario digests, and
-generation parameters. Raw prompts, responses, fixtures, graphs, and hidden
-certificates are excluded from aggregate artifacts.
+same typed interface and trusted simulator.
 
-\section{Toward Evaluation-Calibrated Defense}
+\subsection{Reproducibility and Split Contract}
+
+The formal test inventory is held out by template family. Formal cases cannot be used
+for prompt selection, threshold selection, policy training, or defense revision. Run
+manifests record the Git revision, dependency and planner hashes, model identity, weight
+hash, scenario digests, and generation parameters. Raw prompts, responses, fixtures,
+graphs, and hidden certificates are excluded from aggregate artifacts.
+
+\section{Auxiliary RL Defense Study}
 
 RouteBench is also intended to support a separate defense study. Development traces
 can be converted into state-action-outcome records for a policy that mediates typed
