@@ -92,6 +92,12 @@ from routebench.evaluation.pilot import (
     write_private_guided_manifest,
     write_private_manifest,
 )
+from routebench.evaluation.unified import (
+    build_unified_report,
+    collect_result_summaries,
+    validate_scenarios,
+    write_unified_report,
+)
 from routebench.planners import (
     LocalJsonPlanner,
     PlannerConfig,
@@ -1441,6 +1447,67 @@ def plan_experiment(
     if output is not None:
         payload["plan"] = str(write_experiment_plan(matrix, jobs, output))
     typer.echo(json.dumps(payload, sort_keys=True))
+
+
+@experiment_app.command("suite")
+def unified_experiment_suite(
+    scenario_root: Annotated[
+        Path,
+        typer.Option(
+            "--scenario-root",
+            exists=True,
+            file_okay=False,
+            resolve_path=True,
+            help="Root containing scenario directories to validate.",
+        ),
+    ],
+    artifacts_root: Annotated[
+        Path,
+        typer.Option(
+            "--artifacts-root",
+            exists=True,
+            file_okay=False,
+            resolve_path=True,
+            help="Root containing existing aggregate result summaries.",
+        ),
+    ],
+    output_root: Annotated[
+        Path,
+        typer.Option("--output-root", resolve_path=True),
+    ],
+    limit: Annotated[
+        int | None,
+        typer.Option("--limit", min=1, help="Validate only the first N scenarios for a dry run."),
+    ] = None,
+    split: Annotated[
+        str | None,
+        typer.Option("--split", help="Optional split filter, for example dev or test."),
+    ] = None,
+) -> None:
+    """Validate scenario material and analyze existing results in one deterministic pass."""
+
+    try:
+        validations = validate_scenarios(scenario_root, limit=limit, split=split)
+        results = collect_result_summaries(artifacts_root)
+        report = build_unified_report(validations, results)
+        json_path, markdown_path = write_unified_report(report, output_root)
+    except (OSError, ValueError) as error:
+        raise typer.BadParameter(str(error)) from error
+    validation = report["validation"]
+    result_summary = report["results"]
+    assert isinstance(validation, dict) and isinstance(result_summary, dict)
+    typer.echo(
+        json.dumps(
+            {
+                "scenarios_checked": validation["scenarios_checked"],
+                "invalid_scenarios": validation["invalid"],
+                "result_summaries": result_summary["summaries_found"],
+                "json": str(json_path),
+                "markdown": str(markdown_path),
+            },
+            sort_keys=True,
+        )
+    )
 
 
 @experiment_app.command("run-job")
