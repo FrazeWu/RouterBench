@@ -42,7 +42,7 @@ def test_unified_report_collects_aggregate_results_without_raw_content(tmp_path:
                     "attack_path_selections": 0,
                 },
                 "metadata": {
-                    "planner": {"model": "test-model"},
+                    "planner": {"model": "test-model", "protocol_version": "v13"},
                     "inference_runtime": {"implementation": "fake"},
                     "git": {"commit": "abc"},
                 },
@@ -51,7 +51,7 @@ def test_unified_report_collects_aggregate_results_without_raw_content(tmp_path:
         encoding="utf-8",
     )
 
-    results = collect_result_summaries(tmp_path)
+    results = collect_result_summaries(tmp_path, scope_kind=None, protocol_version=None)
     report = build_unified_report((), results)
     json_path, markdown_path = write_unified_report(report, tmp_path / "out")
 
@@ -59,3 +59,29 @@ def test_unified_report_collects_aggregate_results_without_raw_content(tmp_path:
     assert results[0]["optimal_rate"] == 0.8
     assert "test-model" in markdown_path.read_text(encoding="utf-8")
     assert json.loads(json_path.read_text(encoding="utf-8"))["results"]["summaries_found"] == 1
+
+
+def test_unified_result_scope_excludes_diagnostic_prefixes(tmp_path: Path) -> None:
+    for index, scope in enumerate(("formal_prefix", "complete_formal_benchmark")):
+        run = tmp_path / f"run-{index}"
+        run.mkdir()
+        (run / "formal-graph-summary.json").write_text(
+            json.dumps(
+                {
+                    "scope": {"kind": scope, "evaluated_cases": 776 if index else 96},
+                    "overall": {"planned_attempts": 5, "backend_failures": 0},
+                    "metadata": {
+                        "planner": {"model": f"model-{index}", "protocol_version": "v13"}
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    formal = collect_result_summaries(tmp_path)
+    assert len(formal) == 1
+    assert formal[0]["scope"] == "complete_formal_benchmark"
+    all_scopes = collect_result_summaries(
+        tmp_path, scope_kind=None, protocol_version=None
+    )
+    assert len(all_scopes) == 2

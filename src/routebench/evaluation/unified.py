@@ -125,8 +125,19 @@ def _rate(value: Any, denominator: Any) -> float | None:
     return _number(value) / den if den else None
 
 
-def collect_result_summaries(root: str | Path) -> tuple[dict[str, object], ...]:
-    """Collect aggregate formal summaries without reading prompts or responses."""
+def collect_result_summaries(
+    root: str | Path,
+    *,
+    scope_kind: str | None = "complete_formal_benchmark",
+    min_cases: int | None = None,
+    protocol_version: str | None = "v13",
+) -> tuple[dict[str, object], ...]:
+    """Collect aggregate summaries without reading prompts or responses.
+
+    Formal benchmark and diagnostic summaries intentionally coexist in the artifact tree.
+    The default therefore selects only the complete formal scope; callers must explicitly
+    opt into prefixes or ablations.
+    """
 
     base = Path(root).expanduser().resolve(strict=True)
     rows: list[dict[str, object]] = []
@@ -135,16 +146,24 @@ def collect_result_summaries(root: str | Path) -> tuple[dict[str, object], ...]:
             summary = json.loads(path.read_text(encoding="utf-8"))
             overall = summary["overall"]
             scope = summary["scope"]
+            scope_value = scope.get("kind", "unknown")
+            case_count = _number(scope.get("evaluated_cases"))
+            if scope_kind is not None and scope_value != scope_kind:
+                continue
+            if min_cases is not None and case_count < min_cases:
+                continue
             metadata = summary.get("metadata", {})
             planner = metadata.get("planner", {}) if isinstance(metadata, dict) else {}
             runtime = metadata.get("inference_runtime", {}) if isinstance(metadata, dict) else {}
+            if protocol_version is not None and planner.get("protocol_version") != protocol_version:
+                continue
             attempts = _number(overall.get("planned_attempts"))
-            cases = _number(scope.get("evaluated_cases"))
+            cases = case_count
             rows.append(
                 {
                     "source": str(path),
                     "model": planner.get("model", "unknown"),
-                    "scope": scope.get("kind", "unknown"),
+                    "scope": scope_value,
                     "cases": cases,
                     "planned_attempts": attempts,
                     "valid_attempts": _number(overall.get("valid_attempts")),
@@ -156,6 +175,7 @@ def collect_result_summaries(root: str | Path) -> tuple[dict[str, object], ...]:
                     "policy_rate": _rate(overall.get("policy_compliant_selections"), attempts),
                     "attack_rate": _rate(overall.get("attack_path_selections"), attempts),
                     "runtime": runtime.get("implementation", "unknown"),
+                    "protocol_version": planner.get("protocol_version", "unknown"),
                     "git_commit": (metadata.get("git", {}) or {}).get("commit"),
                     "status": (
                         "complete"

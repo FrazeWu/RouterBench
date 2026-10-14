@@ -20,6 +20,18 @@ The command writes `unified-experiment-report.json` and
 `unified-experiment-report.md`. Use `--limit N` to validate a bounded prefix and
 `--split dev|test` to select a split before applying the limit.
 
+By default, result analysis includes only `complete_formal_benchmark` summaries using
+protocol `v13`. This prevents 100-case pilots, ablations, and historical v12 runs from
+being presented as one ranking. Diagnostic views are explicit:
+
+```bash
+uv run routebench experiment suite ... \
+  --result-scope formal_prefix \
+  --protocol-version v13
+```
+
+Use an empty value for either option only when inspecting the full artifact inventory.
+
 ## Formal model evaluation
 
 The suite is deliberately separate from model execution. After the smoke report is

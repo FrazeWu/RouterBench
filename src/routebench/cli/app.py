@@ -1483,12 +1483,38 @@ def unified_experiment_suite(
         str | None,
         typer.Option("--split", help="Optional split filter, for example dev or test."),
     ] = None,
+    result_scope: Annotated[
+        str | None,
+        typer.Option(
+            "--result-scope",
+            help=(
+                "Result scope to include. Defaults to complete_formal_benchmark; use '' "
+                "to include all scopes."
+            ),
+        ),
+    ] = "complete_formal_benchmark",
+    min_cases: Annotated[
+        int | None,
+        typer.Option("--min-cases", min=1, help="Exclude summaries smaller than this case count."),
+    ] = None,
+    protocol_version: Annotated[
+        str | None,
+        typer.Option(
+            "--protocol-version",
+            help="Protocol version to include; defaults to v13. Use '' to include all versions.",
+        ),
+    ] = "v13",
 ) -> None:
     """Validate scenario material and analyze existing results in one deterministic pass."""
 
     try:
         validations = validate_scenarios(scenario_root, limit=limit, split=split)
-        results = collect_result_summaries(artifacts_root)
+        results = collect_result_summaries(
+            artifacts_root,
+            scope_kind=result_scope or None,
+            min_cases=min_cases,
+            protocol_version=protocol_version or None,
+        )
         report = build_unified_report(validations, results)
         json_path, markdown_path = write_unified_report(report, output_root)
     except (OSError, ValueError) as error:
