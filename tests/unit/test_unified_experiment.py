@@ -85,3 +85,33 @@ def test_unified_result_scope_excludes_diagnostic_prefixes(tmp_path: Path) -> No
         tmp_path, scope_kind=None, protocol_version=None
     )
     assert len(all_scopes) == 2
+
+
+def test_unified_report_distinguishes_invalid_outputs_from_backend_failures(
+    tmp_path: Path,
+) -> None:
+    run = tmp_path / "run"
+    run.mkdir()
+    (run / "formal-graph-summary.json").write_text(
+        json.dumps(
+            {
+                "scope": {"kind": "complete_formal_benchmark", "evaluated_cases": 776},
+                "overall": {
+                    "planned_attempts": 3880,
+                    "valid_attempts": 3876,
+                    "backend_failures": 0,
+                    "invalid_outputs": 4,
+                },
+                "metadata": {
+                    "planner": {"model": "model", "protocol_version": "v13"}
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    rows = collect_result_summaries(tmp_path)
+    report = build_unified_report((), rows)
+    assert rows[0]["status"] == "complete_with_invalid_outputs"
+    assert report["results"]["clean_summaries"] == 0
+    assert report["results"]["summaries_with_invalid_outputs"] == 1

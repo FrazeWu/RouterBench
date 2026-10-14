@@ -178,9 +178,13 @@ def collect_result_summaries(
                     "protocol_version": planner.get("protocol_version", "unknown"),
                     "git_commit": (metadata.get("git", {}) or {}).get("commit"),
                     "status": (
-                        "complete"
-                        if _number(overall.get("backend_failures")) == 0
-                        else "infrastructure_failure"
+                        "infrastructure_failure"
+                        if _number(overall.get("backend_failures")) > 0
+                        else (
+                            "complete_with_invalid_outputs"
+                            if _number(overall.get("invalid_outputs")) > 0
+                            else "complete"
+                        )
                     ),
                 }
             )
@@ -204,7 +208,14 @@ def build_unified_report(
         },
         "results": {
             "summaries_found": len(results),
-            "complete_summaries": sum(item.get("status") == "complete" for item in results),
+            "complete_summaries": sum(
+                item.get("status") in {"complete", "complete_with_invalid_outputs"}
+                for item in results
+            ),
+            "clean_summaries": sum(item.get("status") == "complete" for item in results),
+            "summaries_with_invalid_outputs": sum(
+                item.get("status") == "complete_with_invalid_outputs" for item in results
+            ),
             "records": list(results),
         },
     }
@@ -238,6 +249,8 @@ def write_unified_report(report: dict[str, object], output_root: str | Path) -> 
         "",
         f"- Summary files found: `{results['summaries_found']}`",
         f"- Complete summaries: `{results['complete_summaries']}`",
+        f"- Clean summaries: `{results['clean_summaries']}`",
+        f"- Summaries with invalid outputs: `{results['summaries_with_invalid_outputs']}`",
         "",
         "| Model | Scope | Cases | Optimal | Capable cases | Functional | "
         "Policy | Attack | Status |",
