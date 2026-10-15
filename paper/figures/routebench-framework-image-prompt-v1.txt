@@ -1,0 +1,86 @@
+Use case: scientific-educational
+Asset type: a framework figure for an ACL research manuscript, not a marketing graphic.
+Primary request: generate a precise, publication-quality raster diagram explaining
+RouteBench as the primary benchmark, with proposed counterfactual diagnostics and
+an auxiliary evaluation-calibrated path-aware reinforcement-learning defense (ECPA).
+
+Style: crisp flat academic diagram on a pure white background, landscape composition,
+restrained blue, teal, and amber accents, dark readable text, fine gray outlines,
+generous aligned spacing. Use small meaningful graph/tool/shield symbols only.
+No photographs, decorative illustrations, gradients, shadows, or performance claims.
+Use an easily readable sans-serif typeface. All labels must be spelled exactly as
+specified below. Maintain legibility when placed across two ACL paper columns.
+
+Title, verbatim: "RouteBench: Evaluation, Diagnosis, and Auxiliary Defense"
+
+Arrange three clearly separated horizontal lanes. Solid outlines denote the implemented
+benchmark core; dashed outlines denote proposed, unimplemented extensions. All arrows
+have clear direction and avoid text and box collisions. The benchmark lane is visually
+dominant. Diagnosis and defense are supplementary research designs, not completed results.
+
+Lane A heading: "A  RouteBench Evaluation"
+Status: "Implemented core"
+Four left-to-right stages, connected by solid arrows:
+1. "Public Task & Graph"
+   Small subtitle: "Catalog-bound typed actions"
+   A tiny branching capability graph may appear within this stage.
+2. "Frozen LLM Planner"
+   Small subtitle: "Select an ordered route"
+3. "Trusted Replay"
+   Small subtitle: "Task, policy, and effects"
+4. "Evaluation"
+   Three short lines: "Completion", "Compliance", "Least-authority optimality"
+A separate compact box labelled "Private Fixtures & Verifiers" feeds only Trusted
+Replay; it must have no arrow to the planner. Do not draw any reference certificate,
+private cost, or privileged answer flowing to the planner.
+
+Lane B heading: "B  Counterfactual Diagnosis & Offline Learning"
+Status: "Proposed"
+Five left-to-right stages, connected by dashed arrows:
+1. "Independent Dev Families"
+2. "Matched Task Pairs"
+3. "Recognition / Planning Gaps"
+4. "Simulator Traces"
+   Small subtitle: "Diagnostic-guided collection"
+5. "Offline CQL"
+   Small subtitle: "Train the intervention selector"
+Both routes in a diagnostic pair complete the ordinary task; diagnosis concerns
+composition-sensitive safety. These are independent development/training families.
+There must be no arrow from held-out formal test results to training or calibration.
+Training uses actual intervention-dependent simulator rollouts, not relabelled
+unguarded routes. Do not show gradients entering the frozen LLM planner.
+
+Lane C heading: "C  Auxiliary ECPA Runtime Defense"
+Status: "Proposed"
+Five left-to-right stages, connected by dashed arrows:
+1. "Typed Proposal + State"
+   Small subtitle: "Grants, history, data flow"
+2. "Trusted Admissible Menu"
+   Small subtitle: "Permissions + completion witnesses"
+3. "ECPA Selector"
+   Four short decision labels: "Allow", "Constrain", "Escalate", "Deny"
+4. "Trusted Dispatcher"
+   Small subtitle: "Execute / Replan / Approval / Stop"
+5. "Sandbox Tools & Receipts"
+Draw a dashed arrow from Offline CQL in Lane B to the ECPA Selector in Lane C,
+labelled "Frozen policy". Draw a clean dashed feedback arrow from Sandbox Tools &
+Receipts back to Typed Proposal + State, labelled "Trusted execution history".
+The selector only chooses within a trusted admissible menu. The trusted dispatcher
+performs final authorization checks. Constrain offers an explicitly accepted,
+registered replacement; escalate waits for authenticated approval; deny does not
+execute the proposed tool call. No learned module can independently expand grants,
+waive fixed forbidden effects, or authorize an invalid request.
+
+Compact legend, verbatim:
+"Solid: implemented core    Dashed: proposed extensions"
+Footer, verbatim:
+"Held-out tests do not train or calibrate the defense."
+
+Constraints: render only the specified labels, status markers, meaningful symbols,
+and arrows; do not add numeric results, accuracy values, theorem claims, unregistered
+capabilities, real credentials, logos, watermarks, or author-identifying details.
+Keep the exact hierarchy: benchmark first, diagnostic-guided offline learning second,
+trusted runtime intervention third. The diagnostics, data collection, and ECPA are
+proposed and not experimentally validated. The benchmark core is implemented, while
+its stop/continue interface repair remains pending; never label a repaired protocol
+or the complete evaluation-to-defense system as already implemented or proven.

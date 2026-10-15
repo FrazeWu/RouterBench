@@ -1,0 +1,5 @@
+safe_route_length,cases,capable_cases,optimal_attempts,attack_path
+1,160,93.8,92.4,3.8
+2,270,87.0,81.5,5.8
+3,172,70.9,65.0,11.0
+4,173,85.5,76.5,5.4

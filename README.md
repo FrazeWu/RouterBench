@@ -39,6 +39,15 @@ deterministic audit of all 4,982 candidate-graph edges and the safe/attack certi
 Historical attack-program smoke artifacts are not benchmark results and are excluded
 from the current graph-planning analysis.
 
+## License
+
+Original RouteBench code and self-authored scenario files are licensed under
+GPL-3.0-only; see [LICENSE](LICENSE). Third-party dependencies, datasets, model
+weights, and ACL style files retain their upstream licenses. See
+[external-data provenance](data/external/README.md) for imported dataset records.
+Manuscript prose is outside this software/data licensing scope. An anonymous review
+archive and public research release are planned.
+
 ## Requirements
 
 - Python 3.12 managed by `uv`
