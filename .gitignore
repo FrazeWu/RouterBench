@@ -30,3 +30,7 @@ paper/*.log
 paper/*.out
 paper/*.pdf
 paper/missfont.log
+
+# Local visualization and PDF preview outputs.
+output/
+tmp/
