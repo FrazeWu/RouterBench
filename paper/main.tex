@@ -722,12 +722,20 @@ Independently author this suite without changing frozen RouteBench cases.
 \section{Auxiliary Defense: ECPA}
 \label{sec:ecpa}
 
-% Proposed design; implementation and empirical validation remain pending.
+We implement the trusted simulator scaffold for ECPA's intervention boundary;
+the learner, diagnostic corpus, and empirical defense comparison remain pending.
 ECPA uses development diagnostics to prioritize training strata, not grant
 authority. Data-flow and order contrasts respectively identify source/sink and
 history-sensitive strata. Trusted policies determine admissibility; reference
 certificates never supply runtime advice. ECPA needs a separately frozen
 interleaved execution/replanning protocol, not v13 pre-replay selection.
+
+The scaffold exposes 	exttt{allow}, 	exttt{constrain}, 	exttt{escalate}, and
+	exttt{deny}. It reruns a hard guard immediately before dispatch, accepts a
+constraint only when its replacement is registered explicitly, obtains escalation
+approval from a trusted callback, and records actual dispatches and replanning
+outcomes. These implementation checks establish the data-collection boundary;
+they are not evidence of a learned defense benefit.
 
 \subsection{State and Intervention Menu}
 

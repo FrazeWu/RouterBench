@@ -6,9 +6,9 @@ This protocol defines a reinforcement-learning defense that converts RouteBench
 development results into a runtime policy for reducing unauthorized access and
 privilege escalation while preserving benign task completion.
 
-Status: author-confirmed research plan, updated 2026-10-08. The diagnostic corpus,
-interleaved ECPA environment, and learned controller are not implemented or validated
-by this document. Experiments and training remain outside the current writing scope.
+Status: trusted simulator scaffold implemented 2026-10-19; the diagnostic corpus,
+learned controller, and defense results are not implemented or validated by this
+document. Experiments and training remain outside the current writing scope.
 
 ## Scope and data boundary
 
@@ -40,6 +40,11 @@ allow | constrain | escalate | deny
 
 The environment executes only the selected decision. The policy cannot rewrite an action
 silently; constrained actions must be represented as a new typed capability request.
+The checked-in ECPA simulator enforces this boundary at dispatch: it reruns a hard guard
+immediately before every accepted request, requires an explicitly registered replacement
+for `constrain`, obtains approval only from a trusted callback for `escalate`, and records
+actual dispatches, denials, approvals, and first violations. Rejected decisions return
+control for replanning and do not dispatch the proposal.
 
 ## Learning formulation
 

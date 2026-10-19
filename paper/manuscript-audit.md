@@ -52,9 +52,9 @@ results.
 - The experiments section now reports existing formal v13, difficulty-stratified,
   component-ablation, model-free baseline, ordering anti-leakage, and checkpoint
   stability artifacts. No new run was started.
-- The current benchmark is implemented. Counterfactual diagnostics, persistent
-  diagnostic monitors, ECPA, its training corpus, and its hyperparameters are
-  proposed, not implemented or validated by this draft.
+- The current benchmark and a trusted ECPA intervention-boundary scaffold are
+  implemented. Counterfactual diagnostics, persistent diagnostic monitors, the
+  learned controller, its training corpus, and defense results remain unvalidated.
 - ECPA needs a separately frozen interleaved execution/replanning protocol;
   v13's pre-replay route selection is not itself the proposed RL environment.
 - The runtime/transition appendix specifies stateless planner calls, accepted
@@ -120,8 +120,9 @@ identities:
   labeled as a presentation-leak diagnostic, not a capability baseline. The
   ordering ablation makes the leak explicit and documents the v13 permutation.
 
-The paper explicitly states that no RL, ECPA, or defense-improvement experiment
-has been run. Result tables and machine-readable CSV inputs are present under
+The paper explicitly states that no RL, learned ECPA, or defense-improvement
+experiment has been run. The trusted scaffold is a simulator boundary, not a
+learned controller. Result tables and machine-readable CSV inputs are present under
 `paper/figures/`; the model CSV now contains all eleven full-v13 model rows,
 and `formal_diagnostics.pdf` visualizes the model, route-length, and component
 ablation results. The plotting source uses Python/matplotlib; vector, raster,
@@ -360,7 +361,7 @@ Neither the source changes nor the local PDF proves full submission readiness.
 | No invented experiments or improvements | Existing results cite frozen artifacts; RL/ECPA results remain explicitly absent | Verified in source |
 | Match implemented benchmark semantics | Freeze metadata, replay/selection source, both structural audits | Verified with disclosed defects |
 | Valid planner/scorer contract | Interior-terminal mismatch; conflicting credit field; proposed repair only | Not fully achieved |
-| Distinct diagnostic and defense mechanisms | Local/rule controls; paired recognition/planning; post-intervention witnesses; simulator-only logging and constrained CQL | Specified, not empirically validated |
+| Distinct diagnostic and defense mechanisms | Local/rule controls; paired recognition/planning; trusted ECPA dispatch boundary; post-intervention witnesses; simulator-only logging and constrained CQL | Scaffold implemented; learning and empirical validation pending |
 | Reproducible runtime assumptions | Stateless planner and receipt state, registered variants, approval epochs, actual rollout logging, stop/continue contract | Specified in appendices |
 | ACL review formatting | Official unchanged style, A4, two columns, embedded fonts; eight content pages; 135-word abstract | Local checks pass |
 | References and cross-references resolve | 19 metadata/citation entries, unique labels, no unresolved references | Mechanical checks pass |
