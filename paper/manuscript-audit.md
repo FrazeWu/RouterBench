@@ -1,6 +1,6 @@
 # RouteBench Manuscript Audit
 
-Date: 2026-10-09. This is a working-paper audit, not a claim that the study is
+Date: 2026-10-19. This is a working-paper audit, not a claim that the study is
 ready for submission. Scope: integrate the existing frozen evaluation artifacts
 without running new model evaluations, changing frozen scenarios, or inventing
 results.
@@ -287,7 +287,8 @@ reported separately: a pending request is not a successful compilation.
 
 Checks completed for the current source:
 
-- Tectonic 0.17.0 compiled the same main document and generated `paper/main.pdf`.
+- Tectonic 0.17.0 compiled the same main document and generated `paper/main.pdf`;
+  the current recheck completed on 2026-10-19.
 - Main text through the conclusion occupies eight pages after integrating the
   existing results; the complete draft is fourteen pages including references
   and appendices. The eight-page ACL content budget is currently met.
@@ -363,7 +364,7 @@ Neither the source changes nor the local PDF proves full submission readiness.
 | Reproducible runtime assumptions | Stateless planner and receipt state, registered variants, approval epochs, actual rollout logging, stop/continue contract | Specified in appendices |
 | ACL review formatting | Official unchanged style, A4, two columns, embedded fonts; eight content pages; 135-word abstract | Local checks pass |
 | References and cross-references resolve | 19 metadata/citation entries, unique labels, no unresolved references | Mechanical checks pass |
-| PDF layout | Twelve rendered pages inspected; no overfull boxes or overlap found | Local checks pass |
+| PDF layout | Fourteen rendered pages inspected; no overfull boxes or overlap found | Local checks pass |
 | Built-in compiler succeeds | Current saved source returned `kind: success` on 2026-10-09 | Confirmed |
 | Model/data/code licensing and anonymous artifact access | Original code/tasks GPLv3; synthetic provenance and anonymous/public release approved; encoder snapshot and archive pending | Partly confirmed; third-party verification and archive preparation remain |
 | Human verification and Responsible NLP attestation | Assistance disclosed; author verification not asserted complete | Requires author action |
