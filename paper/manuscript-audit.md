@@ -59,7 +59,10 @@ results.
   v13's pre-replay route selection is not itself the proposed RL environment.
 - The runtime/transition appendix specifies stateless planner calls, accepted
   replacement requests, post-intervention completion witnesses, fixed approval
-  semantics, bounded decisions, and actual intervention-dependent rollouts.
+  semantics, bounded decisions, and actual intervention-dependent rollouts. The
+  trusted ECPA scaffold now implements the guard, witness, approval, replanning,
+  probability-accounted collection helper, and value-free transition-record
+  boundary; a task corpus, learning, and empirical validation remain pending.
 - The selectability-repair appendix defines a proposed explicit stop/continue
   interface and its validation requirements. It is not implemented by this edit.
 

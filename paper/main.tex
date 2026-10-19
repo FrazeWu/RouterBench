@@ -730,11 +730,14 @@ history-sensitive strata. Trusted policies determine admissibility; reference
 certificates never supply runtime advice. ECPA needs a separately frozen
 interleaved execution/replanning protocol, not v13 pre-replay selection.
 
-The scaffold exposes 	exttt{allow}, 	exttt{constrain}, 	exttt{escalate}, and
-	exttt{deny}. It reruns a hard guard immediately before dispatch, accepts a
+The scaffold exposes \texttt{allow}, \texttt{constrain}, \texttt{escalate}, and
+\texttt{deny}. It reruns a hard guard immediately before dispatch, accepts a
 constraint only when its replacement is registered explicitly, obtains escalation
 approval from a trusted callback, and records actual dispatches and replanning
-outcomes. These implementation checks establish the data-collection boundary;
+outcomes. A constrained replacement also requires a trusted completion witness;
+value-free transition records retain the intervention, reward, violation increment,
+terminal status, and behavior probability while hashing proposal identity. These
+implementation checks establish the data-collection boundary;
 they are not evidence of a learned defense benefit.
 
 \subsection{State and Intervention Menu}

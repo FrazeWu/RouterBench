@@ -45,6 +45,10 @@ immediately before every accepted request, requires an explicitly registered rep
 for `constrain`, obtains approval only from a trusted callback for `escalate`, and records
 actual dispatches, denials, approvals, and first violations. Rejected decisions return
 control for replanning and do not dispatch the proposal.
+Constrained requests additionally require a trusted completion witness; an absent or
+failed witness is rejected without execution. The resulting value-free transition
+records retain action kind, reward, episode violation increment, terminal status, and
+behavior probability while hashing proposal identity rather than storing argument values.
 
 ## Learning formulation
 

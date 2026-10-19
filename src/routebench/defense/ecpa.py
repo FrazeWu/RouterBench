@@ -86,6 +86,14 @@ class ApprovalProvider(Protocol):
     def __call__(self, action: ActionRequest, preview: Preview) -> bool | Awaitable[bool]: ...
 
 
+class CompletionWitness(Protocol):
+    """Trusted check that a replacement preserves an available task completion."""
+
+    def __call__(
+        self, state: ScenarioState, action: RouteActionSpec, preview: Preview
+    ) -> bool | Awaitable[bool]: ...
+
+
 class ECPAEnvironment:
     """Execute intervention-dependent rollouts inside the trusted simulator."""
 
@@ -96,6 +104,7 @@ class ECPAEnvironment:
         feedback_mode: FeedbackMode = FeedbackMode.MINIMAL,
         hard_guard: ReferenceController | None = None,
         approval_provider: ApprovalProvider | None = None,
+        completion_witness: CompletionWitness | None = None,
         decision_budget: int | None = None,
     ) -> None:
         self.bundle = bundle
@@ -110,6 +119,7 @@ class ECPAEnvironment:
         )
         self.hard_guard = hard_guard or PathStateAuthorizationController()
         self.approval_provider = approval_provider
+        self.completion_witness = completion_witness
         configured_budget = bundle.definition.metadata.budgets.max_proposals
         self.decision_budget = configured_budget if decision_budget is None else decision_budget
         if self.decision_budget <= 0:
@@ -201,6 +211,25 @@ class ECPAEnvironment:
             )
 
         accepted_request, accepted_preview = self._prepare(accepted_action)
+        if decision.kind is DefenseDecisionKind.CONSTRAIN:
+            if self.completion_witness is None:
+                return self._record(
+                    observation, proposal, decision.kind, accepted_action, False, approved,
+                    "completion_witness_unavailable", "completion_witness_unavailable"
+                )
+            witness_value = self.completion_witness(
+                self.state, accepted_action, accepted_preview
+            )
+            preserves_completion = (
+                bool(await witness_value)
+                if inspect.isawaitable(witness_value)
+                else bool(witness_value)
+            )
+            if not preserves_completion:
+                return self._record(
+                    observation, proposal, decision.kind, accepted_action, False, approved,
+                    "completion_witness_failed", "completion_witness_failed"
+                )
         guard_decision = await self.hard_guard.decide(
             accepted_request, self.context, accepted_preview
         )
@@ -228,6 +257,28 @@ class ECPAEnvironment:
             observation, proposal, decision.kind, accepted_action, True, approved,
             "allow", terminal_reason, functional=functional, compliant=compliant,
             attack=attack, violation=violation, first_violation=first_violation,
+        )
+
+    async def observe(self, proposal: RouteActionSpec) -> DefenseObservation:
+        """Preview a proposal without consuming budget or changing simulator state."""
+        if self.terminated:
+            raise RuntimeError("ECPA episode is already terminated")
+        if self.step_index >= self.decision_budget:
+            raise RuntimeError("ECPA decision budget exhausted")
+        request, preview = self._prepare(proposal)
+        return DefenseObservation(
+            step=self.step_index,
+            proposal_hash=request.action_hash,
+            tool=proposal.tool,
+            effect_resource=preview.effect.resource,
+            effect_operation=preview.effect.operation,
+            effect_target=preview.effect.target,
+            labels=preview.labels,
+            executed_actions=self.executed_actions,
+            decision_budget_remaining=self.decision_budget - self.step_index,
+            approval_epoch=self.approval_epoch,
+            first_violation=self.first_violation_seen,
+            terminal=False,
         )
 
     def _prepare(self, action: RouteActionSpec) -> tuple[ActionRequest, Preview]:
