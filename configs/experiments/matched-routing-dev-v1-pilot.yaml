@@ -1,0 +1,44 @@
+schema_version: 1
+protocol_id: matched-routing-dev-v1-pilot-v1
+material_protocol_id: matched-routing-dev-v1
+design: configs/experiments/matched-routing-dev-v1.yaml
+conditions: [base, alternatives_expanded, dependencies_active]
+seeds: [1701, 1702, 1703, 1704, 1705]
+case_gate: 3_of_5_optimal_path_success
+models:
+  qwen3-8b:
+    planner_config: configs/planners/qwen3-8b-matched-dev-v1.yaml
+    local_weights: /home/data1/llm_datasets/qwen/qwen3-8b
+    physical_gpu: 1
+  qwen3-14b:
+    planner_config: configs/planners/qwen3-14b-matched-dev-v1.yaml
+    local_weights: /home/data1/llm_datasets/qwen/qwen3-14b
+    physical_gpu: 1
+serving_declaration:
+  python: /tmp/routebench-vllm-cu124/bin/python
+  vllm_version: 0.8.5.post1
+  dtype: bfloat16
+  max_model_len: 32768
+  gpu_memory_utilization: 0.90
+  max_num_seqs: 4
+  enforce_eager: true
+  generation_config: vllm
+  seed: 20261021
+  host: 127.0.0.1
+  disable_log_requests: true
+evaluation:
+  formal_run: false
+  controller: none
+  feedback: minimal
+  executor: trusted_in_memory_simulator
+  order: condition_then_seed_sequential_within_model
+  model_order: [qwen3-14b, qwen3-8b]
+  serving_schedule: one_model_at_a_time_on_physical_gpu_1
+  automatic_retries: 0
+  invalid_output: capability_failure
+  backend_failure: case_unassessed
+  raw_prompts_or_responses_stored: false
+  independent_tasks: 1
+  inference_attempts_per_model: 15
+  total_inference_attempts: 30
+  causal_inference: false
