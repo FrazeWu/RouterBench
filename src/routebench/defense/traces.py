@@ -1,106 +1,131 @@
-"""Private, value-free transition records for ECPA data collection."""
+"""Private learning records with real state/menu features and censoring semantics."""
 
 from __future__ import annotations
 
-import hashlib
-import json
 from dataclasses import dataclass
 
-from routebench.defense.ecpa import DefenseDecisionKind, DefenseObservation, ECPAStep
+from routebench.defense.collect import CollectedEpisode
+from routebench.defense.contracts import content_hash
+from routebench.defense.ecpa import DefenseDecisionKind, DefenseObservation
+from routebench.scenarios.schema import StrictModel
 
 
 @dataclass(frozen=True, slots=True)
 class ECPARewardSpec:
-    """Fixed reward accounting used before collection; it is not tuned on tests."""
-
     task_success: float = 1.0
     violation: float = -10.0
-    dispatch_cost: float = -0.01
+    execution_cost: float = -0.01
     intervention_cost: float = -0.02
     approval_cost: float = -0.02
+    agent_call_cost: float = -0.001
+    preview_cost: float = -0.0001
+    search_cost: float = -0.0001
 
 
-@dataclass(frozen=True, slots=True)
-class ECPATransition:
-    """One simulator-derived transition without private action arguments."""
-
+class ECPATransition(StrictModel):
     state_hash: str
-    action: DefenseDecisionKind
-    next_state_hash: str | None
+    state: DefenseObservation
+    candidate_id: str
+    next_state: DefenseObservation | None
     reward: float
     violation_increment: int
     dispatched: bool
     terminal: bool
-    behavior_probability: float
+    truncated: bool
+    bootstrap_available: bool
+    proposal_sampling_probability: float
+    intervention_behavior_probability: float
+    remaining_safe_success: float | None
+    remaining_cost: float | None
+    eventual_violation: float | None = None
 
 
 def observation_hash(observation: DefenseObservation) -> str:
-    payload = json.dumps(
-        {
-            "step": observation.step,
-            "proposal_hash": observation.proposal_hash,
-            "tool": observation.tool,
-            "effect_resource": observation.effect_resource,
-            "effect_operation": observation.effect_operation,
-            "effect_target": observation.effect_target,
-            "labels": observation.labels,
-            "executed_actions": observation.executed_actions,
-            "decision_budget_remaining": observation.decision_budget_remaining,
-            "approval_epoch": observation.approval_epoch,
-            "first_violation": observation.first_violation,
-        },
-        sort_keys=True,
-        separators=(",", ":"),
-    ).encode("utf-8")
-    return hashlib.sha256(payload).hexdigest()
+    return content_hash(observation.model_dump(mode="json", exclude={"state_token"}))
 
 
 def build_transitions(
-    steps: tuple[ECPAStep, ...],
+    episode: CollectedEpisode,
     *,
     reward_spec: ECPARewardSpec | None = None,
-    behavior_probabilities: tuple[float, ...] | None = None,
 ) -> tuple[ECPATransition, ...]:
-    """Convert actual steps into CQL-ready records with checked probabilities."""
-
-    if reward_spec is None:
-        reward_spec = ECPARewardSpec()
-    if behavior_probabilities is None:
-        behavior_probabilities = tuple(1.0 for _ in steps)
-    if len(behavior_probabilities) != len(steps):
-        raise ValueError("behavior probabilities must match the number of ECPA steps")
-    transitions: list[ECPATransition] = []
-    for index, step in enumerate(steps):
-        probability = behavior_probabilities[index]
-        if not 0.0 < probability <= 1.0:
-            raise ValueError("behavior probabilities must be in (0, 1]")
-        reward = 0.0
-        if step.functional_success:
-            reward += reward_spec.task_success
-        if step.violation:
-            reward += reward_spec.violation
-        if step.dispatched:
-            reward += reward_spec.dispatch_cost
-        if step.decision is not DefenseDecisionKind.ALLOW:
-            reward += reward_spec.intervention_cost
-        if step.approved:
-            reward += reward_spec.approval_cost
-        next_hash = (
-            observation_hash(steps[index + 1].observation)
-            if index + 1 < len(steps)
-            else None
+    if episode.final_outcome is None or len(episode.outcomes) != len(episode.steps):
+        raise ValueError("learning records require separately evaluated actual outcomes")
+    if len(episode.intervention_probabilities) != len(episode.steps):
+        raise ValueError("intervention probabilities must match the collected steps")
+    reward_spec = reward_spec or ECPARewardSpec()
+    safe_success = (
+        episode.terminated
+        and episode.termination_reason == "agent_stop"
+        and episode.final_outcome.functional_success
+        and not episode.final_outcome.violation
+        and not any(outcome.violation for outcome in episode.outcomes)
+    )
+    records = []
+    violated = False
+    step_costs: list[float] = []
+    for index, step in enumerate(episode.steps):
+        before = step.observation.remaining
+        # Include the next proposal/STOP call in the preceding transition's cost.
+        after = (
+            episode.steps[index + 1].observation.remaining
+            if index + 1 < len(episode.steps)
+            else episode.final_state["remaining"]
         )
-        transitions.append(
+        if not isinstance(after, dict):
+            raise ValueError("missing final resource ledger")
+        cost = (
+            reward_spec.execution_cost * (before["executions"] - int(after["executions"]))
+            + reward_spec.approval_cost * (before["approvals"] - int(after["approvals"]))
+            + reward_spec.agent_call_cost * (before["agent_calls"] - int(after["agent_calls"]))
+            + reward_spec.preview_cost * (before["previews"] - int(after["previews"]))
+            + reward_spec.search_cost * (before["searches"] - int(after["searches"]))
+            + reward_spec.intervention_cost
+            * int(step.selected.kind is not DefenseDecisionKind.ALLOW)
+        )
+        step_costs.append(cost)
+        outcome = episode.outcomes[index]
+        increment = int(outcome.violation and not violated)
+        violated = violated or outcome.violation
+        last = index + 1 == len(episode.steps)
+        terminal = last and episode.terminated
+        records.append(
             ECPATransition(
                 state_hash=observation_hash(step.observation),
-                action=step.decision,
-                next_state_hash=next_hash,
-                reward=reward,
-                violation_increment=int(step.first_violation),
+                state=step.observation,
+                candidate_id=step.selected.candidate_id,
+                next_state=episode.steps[index + 1].observation if not last else None,
+                reward=cost
+                + reward_spec.violation * increment
+                + reward_spec.task_success * int(terminal and safe_success),
+                violation_increment=increment,
                 dispatched=step.dispatched,
-                terminal=step.termination_reason == "task_completed"
-                or index + 1 == len(steps),
-                behavior_probability=probability,
+                terminal=terminal,
+                truncated=last and episode.truncated,
+                bootstrap_available=not last or terminal,
+                proposal_sampling_probability=episode.proposal_sampling_probability,
+                intervention_behavior_probability=episode.intervention_probabilities[index],
+                remaining_safe_success=float(safe_success) if episode.terminated else None,
+                remaining_cost=None,
+                eventual_violation=(
+                    float(
+                        episode.final_outcome.violation
+                        or any(item.violation for item in episode.outcomes)
+                    )
+                    if episode.terminated
+                    else None
+                ),
             )
         )
-    return tuple(transitions)
+    cumulative_cost = 0.0
+    result = []
+    for record, cost in zip(reversed(records), reversed(step_costs), strict=True):
+        cumulative_cost += cost
+        result.append(
+            record.model_copy(
+                update={
+                    "remaining_cost": -cumulative_cost if episode.terminated else None,
+                }
+            )
+        )
+    return tuple(reversed(result))

@@ -1,333 +1,629 @@
-"""A trusted, intervention-dependent simulator for ECPA data collection.
-
-The environment keeps policy decisions separate from dispatch. A learned policy can
-request an intervention, but it cannot rewrite a proposal, waive a hard guard, or
-manufacture approval. Constrained actions must be supplied as explicit registered
-replacement requests by the caller.
-"""
+"""Interleaved recovery; no hidden evaluator, automatic success stop or rollback."""
 
 from __future__ import annotations
 
-import inspect
-from collections.abc import Awaitable
-from dataclasses import dataclass
+import copy
+from dataclasses import asdict, dataclass, field
 from enum import StrEnum
 from typing import Protocol
 
+from pydantic import Field
+
 from routebench.authorization.controllers import (
-    AuthorizationContext,
-    PathStateAuthorizationController,
+    OperationalAuthorizationContext,
+    OperationalAuthorizationController,
 )
 from routebench.contracts import ActionRequest, DecisionKind, FeedbackMode
-from routebench.evaluation import evaluate_all
-from routebench.runtime.reference import Preview, ScenarioState, TrustedToolExecutor
-from routebench.runtime.runner import ReferenceController
-from routebench.scenarios.loader import ScenarioBundle
-from routebench.scenarios.schema import RouteActionSpec
+from routebench.defense.contracts import (
+    ApprovalRule,
+    PublicRecoveryTask,
+    WitnessStatus,
+    completion_witness,
+    content_hash,
+    granted,
+    public_policy_allows,
+)
+from routebench.runtime.reference import InvalidRouteActionError, Preview, ScenarioState
+from routebench.runtime.reference import TrustedToolExecutor as ToolExecutor
+from routebench.scenarios.schema import AuthorityGrant, GraphEdgeSpec, RouteActionSpec, StrictModel
 
 
 class DefenseDecisionKind(StrEnum):
-    """Runtime intervention choices exposed to a defense policy."""
-
     ALLOW = "allow"
     CONSTRAIN = "constrain"
     ESCALATE = "escalate"
     DENY = "deny"
 
 
-@dataclass(frozen=True, slots=True)
-class DefenseDecision:
-    """A policy proposal; approval is supplied only by the trusted environment."""
+class BudgetLimits(StrictModel):
+    decisions: int = Field(default=32, gt=0)
+    agent_calls: int = Field(default=64, gt=0)
+    executions: int = Field(default=16, gt=0)
+    approvals: int = Field(default=4, ge=0)
+    previews: int = Field(default=256, ge=0)
+    searches: int = Field(default=4096, ge=0)
+    total: int = Field(default=8192, gt=0)
 
+
+class BudgetExhausted(RuntimeError):
+    pass
+
+
+class AgentResponseError(RuntimeError):
+    """An attempted model call failed; the episode must remain in its denominator."""
+
+
+@dataclass(slots=True)
+class BudgetLedger:
+    limits: BudgetLimits
+    used: dict[str, int] = field(default_factory=dict)
+
+    def remaining(self, name: str) -> int:
+        return int(getattr(self.limits, name)) - self.used.get(name, 0)
+
+    def charge(self, name: str, count: int = 1) -> None:
+        if count < 0 or name == "total":
+            raise ValueError("invalid resource charge")
+        if self.remaining(name) < count:
+            raise BudgetExhausted(name)
+        if self.remaining("total") < count:
+            raise BudgetExhausted("total")
+        self.used[name] = self.used.get(name, 0) + count
+        self.used["total"] = self.used.get("total", 0) + count
+
+    def snapshot(self) -> dict[str, int]:
+        return {name: self.remaining(name) for name in BudgetLimits.model_fields}
+
+
+class AgentReplyKind(StrEnum):
+    PROPOSE = "propose"
+    STOP = "stop"
+    ACCEPT = "accept"
+    REJECT = "reject"
+
+
+class AgentReply(StrictModel):
+    kind: AgentReplyKind
+    edge_id: str | None = None
+    action: RouteActionSpec | None = None
+    request_hash: str | None = None
+
+
+class DefenseCandidate(StrictModel):
+    candidate_id: str
     kind: DefenseDecisionKind
-    replacement: RouteActionSpec | None = None
+    edge_id: str | None = None
+    action: RouteActionSpec | None = None
+    request_hash: str | None = None
+    grant_id: str | None = None
+    witness: WitnessStatus | None = None
 
 
-@dataclass(frozen=True, slots=True)
-class DefenseObservation:
-    """Value-free state presented to a policy or stored in a training trace."""
-
-    step: int
-    proposal_hash: str
-    tool: str
-    effect_resource: str
-    effect_operation: str
-    effect_target: str
+class TrustedReceipt(StrictModel):
+    edge_id: str
+    request_hash: str
+    node: str
+    facts: tuple[str, ...]
     labels: tuple[str, ...]
-    executed_actions: int
-    decision_budget_remaining: int
     approval_epoch: int
-    first_violation: bool
-    terminal: bool
 
 
-@dataclass(frozen=True, slots=True)
-class ECPAStep:
-    """One intervention and its actual simulator outcome."""
+class ToolContent(StrictModel):
+    """Low-trust data, never parsed as authorization metadata."""
 
-    observation: DefenseObservation
-    proposal: RouteActionSpec
-    decision: DefenseDecisionKind
-    accepted_action: RouteActionSpec | None
-    dispatched: bool
+    trust: str = "untrusted_tool_content"
+    tool: str
+    content: object
+
+
+class AgentView(StrictModel):
+    task: PublicRecoveryTask
+    node: str
+    facts: tuple[str, ...]
+    receipts: tuple[TrustedReceipt, ...]
+    tool_contents: tuple[ToolContent, ...]
+    feedback: tuple[str, ...]
+    remaining: dict[str, int]
+    offer: DefenseCandidate | None = None
+
+
+class DefenseObservation(StrictModel):
+    task: PublicRecoveryTask
+    step: int
+    node: str
+    facts: tuple[str, ...]
+    proposal: AgentReply
+    grants: tuple[AuthorityGrant, ...]
+    receipts: tuple[TrustedReceipt, ...]
+    tool_contents: tuple[ToolContent, ...]
+    feedback: tuple[str, ...]
+    remaining: dict[str, int]
+    approval_epoch: int
+    menu: tuple[DefenseCandidate, ...]
+    state_token: str
+
+
+class ApprovalReceipt(StrictModel):
     approved: bool
-    hard_guard: str
-    functional_success: bool
-    policy_compliance: bool
-    attack_success: bool
-    violation: bool
-    first_violation: bool
-    termination_reason: str | None
+    principal: str
+    task_id: str
+    request_hash: str
+    grant_id: str
+    epoch: int
+    expires_after_decision: int
 
 
 class ApprovalProvider(Protocol):
-    """Trusted approval source; model output cannot implement this callback."""
+    async def request(
+        self,
+        *,
+        principal: str,
+        task_id: str,
+        request_hash: str,
+        rule: ApprovalRule,
+        epoch: int,
+        decision: int,
+    ) -> ApprovalReceipt: ...
 
-    def __call__(self, action: ActionRequest, preview: Preview) -> bool | Awaitable[bool]: ...
+
+class RecoveryAgent(Protocol):
+    async def respond(self, view: AgentView, *, seed: int) -> AgentReply: ...
 
 
-class CompletionWitness(Protocol):
-    """Trusted check that a replacement preserves an available task completion."""
+class ToolContentProvider(Protocol):
+    def present(self, tool: str, output: object, *, execution: int) -> object: ...
 
-    def __call__(
-        self, state: ScenarioState, action: RouteActionSpec, preview: Preview
-    ) -> bool | Awaitable[bool]: ...
+
+class ECPAStep(StrictModel):
+    observation: DefenseObservation
+    selected: DefenseCandidate
+    accepted_action: RouteActionSpec | None = None
+    acceptance: str = "not_required"
+    dispatched: bool = False
+    approval_requested: bool = False
+    approved: bool = False
+    feedback: str
+    receipt: TrustedReceipt | None = None
+    remaining: dict[str, int]
+    terminated: bool = False
+    termination_reason: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class ActiveApproval:
+    grants: tuple[AuthorityGrant, ...]
+    request_hash: str
+    expires_after_decision: int
 
 
 class ECPAEnvironment:
-    """Execute intervention-dependent rollouts inside the trusted simulator."""
-
     def __init__(
         self,
-        bundle: ScenarioBundle,
+        task: PublicRecoveryTask,
+        state: ScenarioState,
         *,
-        feedback_mode: FeedbackMode = FeedbackMode.MINIMAL,
-        hard_guard: ReferenceController | None = None,
+        budgets: BudgetLimits | None = None,
+        principal: str = "task_agent",
         approval_provider: ApprovalProvider | None = None,
-        completion_witness: CompletionWitness | None = None,
-        decision_budget: int | None = None,
+        tool_content_provider: ToolContentProvider | None = None,
     ) -> None:
-        self.bundle = bundle
-        self.feedback_mode = feedback_mode
-        self.state = ScenarioState.from_fixture(bundle.root / "fixtures" / "state.json")
-        self.executor = TrustedToolExecutor()
-        self.context = AuthorizationContext(
-            task=bundle.definition.task,
-            policy=bundle.definition.policy,
-            state=self.state,
-            feedback_mode=feedback_mode,
-        )
-        self.hard_guard = hard_guard or PathStateAuthorizationController()
+        self.task = task
+        self.state = state
+        self.budget = BudgetLedger(budgets or BudgetLimits())
+        self.principal = principal
         self.approval_provider = approval_provider
-        self.completion_witness = completion_witness
-        configured_budget = bundle.definition.metadata.budgets.max_proposals
-        self.decision_budget = configured_budget if decision_budget is None else decision_budget
-        if self.decision_budget <= 0:
-            raise ValueError("ECPA decision budget must be positive")
-        self.step_index = 0
-        self.approval_epoch = 0
-        self.executed_actions = 0
-        self.first_violation_seen = False
-        self.terminated = False
+        self.tool_content_provider = tool_content_provider
+        self.executor = ToolExecutor()
+        self.guard = OperationalAuthorizationController()
+        self.node = task.graph.start_node
+        self.facts = frozenset(task.contract.initial_facts)
+        self.executed_edges: tuple[str, ...] = ()
+        self.receipts: list[TrustedReceipt] = []
+        self.tool_contents: list[ToolContent] = []
+        self.feedback: list[str] = []
         self.history: list[ECPAStep] = []
+        self.active_approvals: list[ActiveApproval] = []
+        self.approval_epoch = 0
+        self.terminated = False
+        self.termination_reason: str | None = None
+        self.pending_proposal: AgentReply | None = None
+        self._pending_observation: str | None = None
+
+    def clone_for_collection(self) -> ECPAEnvironment:
+        """Independent simulator branch; never effectful runtime rollback."""
+        return copy.deepcopy(self)
+
+    def finish(self, reason: str) -> None:
+        self.terminated = True
+        self.termination_reason = reason
+
+    def _token(self) -> str:
+        return content_hash(
+            {
+                "task": self.task.digest,
+                "node": self.node,
+                "facts": sorted(self.facts),
+                "receipts": [item.model_dump(mode="json") for item in self.receipts],
+                "epoch": self.approval_epoch,
+                "decision": len(self.history),
+                "execution_state": asdict(self.state),
+            }
+        )
+
+    def agent_view(self, offer: DefenseCandidate | None = None) -> AgentView:
+        return AgentView(
+            task=self.task,
+            node=self.node,
+            facts=tuple(sorted(self.facts)),
+            receipts=tuple(self.receipts),
+            tool_contents=tuple(self.tool_contents),
+            feedback=tuple(self.feedback),
+            remaining=self.budget.snapshot(),
+            offer=offer,
+        )
+
+    async def call_agent(
+        self, agent: RecoveryAgent, *, seed: int, offer: DefenseCandidate | None = None
+    ) -> AgentReply | None:
+        try:
+            self.budget.charge("agent_calls")
+        except BudgetExhausted as error:
+            self.finish(f"budget_exhausted:{error}")
+            return None
+        try:
+            return await agent.respond(self.agent_view(offer).model_copy(deep=True), seed=seed)
+        except AgentResponseError:
+            self.finish("agent_response_error")
+            return None
+
+    def handle_stop(self) -> None:
+        self.finish("agent_stop" if self.node in self.task.graph.terminal_nodes else "illegal_stop")
+
+    def _edge(self, proposal: AgentReply) -> GraphEdgeSpec | None:
+        edge = next(
+            (edge for edge in self.task.graph.edges if edge.edge_id == proposal.edge_id), None
+        )
+        if edge is None or edge.source != self.node:
+            return None
+        if proposal.action is not None and proposal.action != edge.action:
+            return None
+        if not set(self.task.contract.actions[edge.edge_id].requires) <= self.facts:
+            return None
+        return edge
+
+    def _request(self, edge: GraphEdgeSpec) -> tuple[ActionRequest, Preview]:
+        self.executor.require_prior_actions(edge.action, self.state)
+        preview = self.executor.preview(edge.action, self.state)
+        effect = preview.effect.model_copy(update={"sensitivity": ",".join(preview.labels) or None})
+        return ActionRequest(
+            action_id=f"recovery-{len(self.history)}-{edge.edge_id}",
+            step=len(self.history),
+            tool=edge.action.tool,
+            arguments=edge.action.arguments,
+            effects=(effect,),
+        ), preview
+
+    def _grants(self, request_hash: str) -> tuple[AuthorityGrant, ...]:
+        grants = self.task.contract.initial_grants
+        for approval in self.active_approvals:
+            if approval.request_hash == request_hash and (
+                len(self.history) < approval.expires_after_decision
+            ):
+                grants += approval.grants
+        return grants
+
+    async def _check(
+        self, edge: GraphEdgeSpec, extra_grants: tuple[AuthorityGrant, ...] = ()
+    ) -> tuple[ActionRequest, Preview] | None:
+        self.budget.charge("previews")
+        try:
+            request, preview = self._request(edge)
+        except (InvalidRouteActionError, KeyError, ValueError, TypeError):
+            return None
+        grants = self._grants(request.action_hash) + extra_grants
+        contract = self.task.contract.actions[edge.edge_id]
+        if (
+            not all(granted(atom, grants) for atom in edge.authority)
+            or not public_policy_allows(self.task, edge)
+            or not any(
+                effect.resource == preview.effect.resource
+                and effect.operation == preview.effect.operation
+                and effect.target == preview.effect.target
+                and set(preview.labels) <= set(effect.labels)
+                for effect in contract.effects
+            )
+        ):
+            return None
+        decision = await self.guard.decide(
+            request,
+            OperationalAuthorizationContext(
+                policy=self.task.policy,
+                state=self.state,
+                feedback_mode=FeedbackMode.MINIMAL,
+                grants=grants,
+            ),
+            preview,
+        )
+        return (request, preview) if decision.kind is DecisionKind.ALLOW else None
+
+    def _witness(
+        self, edge: GraphEdgeSpec, grants: tuple[AuthorityGrant, ...], *, approvals_used: int = 0
+    ) -> WitnessStatus:
+        contract = self.task.contract.actions[edge.edge_id]
+        if not contract.deterministic:
+            return WitnessStatus.UNKNOWN
+        remaining = (
+            min(
+                self.budget.remaining("executions"),
+                self.task.graph.max_path_length - len(self.executed_edges),
+                self.budget.remaining("decisions"),
+            )
+            - 1
+        )
+        if remaining < 0:
+            return WitnessStatus.INFEASIBLE
+        result = completion_witness(
+            self.task,
+            node=edge.target,
+            facts=contract.successor(self.facts),
+            executed_edge_ids=(*self.executed_edges, edge.edge_id),
+            grants=grants,
+            remaining_executions=remaining,
+            max_expansions=min(self.budget.remaining("searches"), self.budget.remaining("total")),
+            remaining_approvals=self.budget.remaining("approvals") - approvals_used,
+        )
+        self.budget.charge("searches", result.expansions)
+        return result.status
+
+    async def observe(self, proposal: AgentReply) -> DefenseObservation | None:
+        """Deterministic concrete menu from this trusted snapshot."""
+        if self.terminated:
+            return None
+        try:
+            if self.budget.remaining("decisions") <= 0:
+                raise BudgetExhausted("decisions")
+            menu = [DefenseCandidate(candidate_id="deny", kind=DefenseDecisionKind.DENY)]
+            proposed = self._edge(proposal)
+            if self.budget.remaining("executions") > 0 and (
+                len(self.executed_edges) < self.task.graph.max_path_length
+            ):
+                proposed_atoms = set(proposed.authority) if proposed is not None else set()
+                for edge in sorted(self.task.graph.edges, key=lambda item: item.edge_id):
+                    if (
+                        edge.source != self.node
+                        or self._edge(AgentReply(kind=AgentReplyKind.PROPOSE, edge_id=edge.edge_id))
+                        is None
+                    ):
+                        continue
+                    is_proposed = proposed is not None and proposed.edge_id == edge.edge_id
+                    if not is_proposed and not set(edge.authority) <= proposed_atoms:
+                        continue
+                    checked = await self._check(edge)
+                    if checked is not None:
+                        request, _ = checked
+                        witness = (
+                            None
+                            if is_proposed
+                            else self._witness(edge, self.task.contract.initial_grants)
+                        )
+                        if is_proposed or witness is WitnessStatus.FEASIBLE:
+                            kind = (
+                                DefenseDecisionKind.ALLOW
+                                if is_proposed
+                                else DefenseDecisionKind.CONSTRAIN
+                            )
+                            menu.append(
+                                DefenseCandidate(
+                                    candidate_id=f"{kind.value}:{edge.edge_id}",
+                                    kind=kind,
+                                    edge_id=edge.edge_id,
+                                    action=edge.action,
+                                    request_hash=request.action_hash,
+                                    witness=witness,
+                                )
+                            )
+                    elif is_proposed and self.budget.remaining("approvals") > 0:
+                        for rule in self.task.contract.approvals:
+                            if edge.edge_id not in rule.edge_ids:
+                                continue
+                            checked_approval = await self._check(edge, rule.grants)
+                            if checked_approval is None:
+                                continue
+                            request, _ = checked_approval
+                            witness = self._witness(
+                                edge, self.task.contract.initial_grants, approvals_used=1
+                            )
+                            if witness is WitnessStatus.FEASIBLE:
+                                menu.append(
+                                    DefenseCandidate(
+                                        candidate_id=f"escalate:{edge.edge_id}:{rule.grant_id}",
+                                        kind=DefenseDecisionKind.ESCALATE,
+                                        edge_id=edge.edge_id,
+                                        action=edge.action,
+                                        request_hash=request.action_hash,
+                                        grant_id=rule.grant_id,
+                                        witness=witness,
+                                    )
+                                )
+            observation = DefenseObservation(
+                task=self.task,
+                step=len(self.history),
+                node=self.node,
+                facts=tuple(sorted(self.facts)),
+                proposal=proposal,
+                grants=self.task.contract.initial_grants,
+                receipts=tuple(self.receipts),
+                tool_contents=tuple(self.tool_contents),
+                feedback=tuple(self.feedback),
+                remaining=self.budget.snapshot(),
+                approval_epoch=self.approval_epoch,
+                menu=tuple(menu),
+                state_token=self._token(),
+            )
+            self._pending_observation = observation.model_dump_json()
+            return observation.model_copy(deep=True)
+        except BudgetExhausted as error:
+            self.finish(f"budget_exhausted:{error}")
+            return None
 
     async def step(
         self,
-        proposal: RouteActionSpec,
-        decision: DefenseDecision,
-        *,
-        registered_replacements: tuple[RouteActionSpec, ...] = (),
-    ) -> ECPAStep:
-        """Apply one decision and return the actual, replay-derived outcome.
-
-        A constrained replacement must be byte-for-byte equal to one of the supplied
-        registered requests. The guard is rerun on the accepted request immediately
-        before dispatch. Any non-allow guard result is terminal for this step and no
-        tool effect is executed.
-        """
-        if self.terminated:
-            raise RuntimeError("ECPA episode is already terminated")
-        if self.step_index >= self.decision_budget:
-            self.terminated = True
-            raise RuntimeError("ECPA decision budget exhausted")
-
-        proposal_request, proposal_preview = self._prepare(proposal)
-        observation = DefenseObservation(
-            step=self.step_index,
-            proposal_hash=proposal_request.action_hash,
-            tool=proposal.tool,
-            effect_resource=proposal_preview.effect.resource,
-            effect_operation=proposal_preview.effect.operation,
-            effect_target=proposal_preview.effect.target,
-            labels=proposal_preview.labels,
-            executed_actions=self.executed_actions,
-            decision_budget_remaining=self.decision_budget - self.step_index,
-            approval_epoch=self.approval_epoch,
-            first_violation=self.first_violation_seen,
-            terminal=False,
-        )
-
-        accepted_action: RouteActionSpec | None = None
-        approved = False
-        hard_guard = "not_checked"
-        if decision.kind is DefenseDecisionKind.DENY:
-            hard_guard = "policy_denied"
-        elif decision.kind is DefenseDecisionKind.CONSTRAIN:
-            if decision.replacement is None:
-                return self._record(
-                    observation, proposal, decision.kind, None, False, False,
-                    "missing_registered_replacement", "replacement_required"
-                )
-            if decision.replacement not in registered_replacements:
-                return self._record(
-                    observation, proposal, decision.kind, None, False, False,
-                    "unregistered_replacement", "replacement_not_registered"
-                )
-            accepted_action = decision.replacement
-        elif decision.kind is DefenseDecisionKind.ALLOW:
-            accepted_action = proposal
-        elif decision.kind is DefenseDecisionKind.ESCALATE:
-            accepted_action = proposal
-            if self.approval_provider is not None:
-                approved_value = self.approval_provider(proposal_request, proposal_preview)
-                approved = (
-                    bool(await approved_value)
-                    if inspect.isawaitable(approved_value)
-                    else bool(approved_value)
-                )
-            if not approved:
-                return self._record(
-                    observation, proposal, decision.kind, None, False, False,
-                    "approval_pending_or_rejected", "approval_rejected"
-                )
-            self.approval_epoch += 1
-        else:  # pragma: no cover - StrEnum exhaustiveness guard
-            raise ValueError(f"unsupported ECPA decision: {decision.kind}")
-
-        if accepted_action is None:
-            return self._record(
-                observation, proposal, decision.kind, None, False, approved,
-                hard_guard, "decision_denied"
-            )
-
-        accepted_request, accepted_preview = self._prepare(accepted_action)
-        if decision.kind is DefenseDecisionKind.CONSTRAIN:
-            if self.completion_witness is None:
-                return self._record(
-                    observation, proposal, decision.kind, accepted_action, False, approved,
-                    "completion_witness_unavailable", "completion_witness_unavailable"
-                )
-            witness_value = self.completion_witness(
-                self.state, accepted_action, accepted_preview
-            )
-            preserves_completion = (
-                bool(await witness_value)
-                if inspect.isawaitable(witness_value)
-                else bool(witness_value)
-            )
-            if not preserves_completion:
-                return self._record(
-                    observation, proposal, decision.kind, accepted_action, False, approved,
-                    "completion_witness_failed", "completion_witness_failed"
-                )
-        guard_decision = await self.hard_guard.decide(
-            accepted_request, self.context, accepted_preview
-        )
-        if guard_decision.kind is not DecisionKind.ALLOW:
-            return self._record(
-                observation, proposal, decision.kind, accepted_action, False, approved,
-                f"guard_{guard_decision.kind.value}", "hard_guard_rejected"
-            )
-
-        self.executor.execute(accepted_request, self.state)
-        self.executed_actions += 1
-        functional = evaluate_all(self.bundle.definition.verifier.functional, self.state)
-        compliant = evaluate_all(self.bundle.definition.verifier.compliance, self.state)
-        target_id = self.bundle.definition.metadata.primary_target_id
-        attack = (
-            evaluate_all(self.bundle.definition.verifier.attack[target_id], self.state)
-            if target_id is not None
-            else False
-        )
-        violation = not compliant
-        first_violation = violation and not self.first_violation_seen
-        self.first_violation_seen = self.first_violation_seen or violation
-        terminal_reason = "task_completed" if functional else None
-        return self._record(
-            observation, proposal, decision.kind, accepted_action, True, approved,
-            "allow", terminal_reason, functional=functional, compliant=compliant,
-            attack=attack, violation=violation, first_violation=first_violation,
-        )
-
-    async def observe(self, proposal: RouteActionSpec) -> DefenseObservation:
-        """Preview a proposal without consuming budget or changing simulator state."""
-        if self.terminated:
-            raise RuntimeError("ECPA episode is already terminated")
-        if self.step_index >= self.decision_budget:
-            raise RuntimeError("ECPA decision budget exhausted")
-        request, preview = self._prepare(proposal)
-        return DefenseObservation(
-            step=self.step_index,
-            proposal_hash=request.action_hash,
-            tool=proposal.tool,
-            effect_resource=preview.effect.resource,
-            effect_operation=preview.effect.operation,
-            effect_target=preview.effect.target,
-            labels=preview.labels,
-            executed_actions=self.executed_actions,
-            decision_budget_remaining=self.decision_budget - self.step_index,
-            approval_epoch=self.approval_epoch,
-            first_violation=self.first_violation_seen,
-            terminal=False,
-        )
-
-    def _prepare(self, action: RouteActionSpec) -> tuple[ActionRequest, Preview]:
-        self.executor.require_prior_actions(action, self.state)
-        preview = self.executor.preview(action, self.state)
-        effect = preview.effect.model_copy(update={"sensitivity": ",".join(preview.labels) or None})
-        request = ActionRequest(
-            action_id=f"ecpa-{self.step_index}-{action.tool}",
-            step=self.step_index,
-            tool=action.tool,
-            arguments=action.arguments,
-            effects=(effect,),
-        )
-        return request, preview
-
-    def _record(
-        self,
         observation: DefenseObservation,
-        proposal: RouteActionSpec,
-        decision: DefenseDecisionKind,
-        accepted_action: RouteActionSpec | None,
-        dispatched: bool,
-        approved: bool,
-        hard_guard: str,
-        termination_reason: str | None,
+        candidate_id: str,
         *,
-        functional: bool = False,
-        compliant: bool = True,
-        attack: bool = False,
-        violation: bool = False,
-        first_violation: bool = False,
+        agent: RecoveryAgent,
+        seed: int,
     ) -> ECPAStep:
-        self.step_index += 1
-        if termination_reason == "task_completed":
-            self.terminated = True
+        if self.terminated or observation.state_token != self._token():
+            raise ValueError("stale or terminated recovery observation")
+        if self._pending_observation != observation.model_dump_json():
+            raise ValueError("modified recovery menu or observation")
+        # Use a trusted copy, not caller-owned nested mappings.
+        observation = DefenseObservation.model_validate_json(self._pending_observation)
+        self._pending_observation = None
+        candidate = next(
+            (item for item in observation.menu if item.candidate_id == candidate_id), None
+        )
+        if candidate is None:
+            raise ValueError("controller selected an unregistered candidate")
+        dispatched = approved = approval_requested = False
+        acceptance = "not_required"
+        receipt = None
+        accepted_action = None
+        feedback = f"request_denied_replan_from:{self.node}"
+        try:
+            self.budget.charge("decisions")
+            edge = (
+                self._edge(
+                    AgentReply(
+                        kind=AgentReplyKind.PROPOSE,
+                        edge_id=candidate.edge_id,
+                        action=candidate.action,
+                    )
+                )
+                if candidate.kind is not DefenseDecisionKind.DENY
+                else None
+            )
+            if edge is not None and candidate.kind is DefenseDecisionKind.CONSTRAIN:
+                acceptance_snapshot = self._token()
+                reply = await self.call_agent(agent, seed=seed, offer=candidate)
+                if reply is not None and (
+                    reply.kind is AgentReplyKind.ACCEPT
+                    and reply.edge_id == candidate.edge_id
+                    and reply.action == candidate.action
+                    and reply.request_hash == candidate.request_hash
+                    and self._token() == acceptance_snapshot
+                ):
+                    acceptance = "accepted"
+                else:
+                    acceptance = "rejected" if reply is not None else "unavailable"
+                    if reply is not None and reply.kind is AgentReplyKind.PROPOSE:
+                        self.pending_proposal = reply
+                        acceptance = "fresh_proposal"
+                    if reply is not None and reply.kind is AgentReplyKind.STOP:
+                        self.handle_stop()
+                    edge = None
+            if edge is not None and candidate.kind is DefenseDecisionKind.ESCALATE:
+                self.budget.charge("approvals")
+                approval_requested = True
+                rule = next(
+                    rule
+                    for rule in self.task.contract.approvals
+                    if rule.grant_id == candidate.grant_id
+                )
+                if self.approval_provider is not None:
+                    approval_snapshot = self._token()
+                    approval = await self.approval_provider.request(
+                        principal=self.principal,
+                        task_id=self.task.contract.task_id,
+                        request_hash=str(candidate.request_hash),
+                        rule=rule,
+                        epoch=self.approval_epoch,
+                        decision=len(self.history),
+                    )
+                    approved = (
+                        approval.approved
+                        and approval.principal == self.principal
+                        and approval.task_id == self.task.contract.task_id
+                        and approval.request_hash == candidate.request_hash
+                        and approval.grant_id == rule.grant_id
+                        and approval.epoch == self.approval_epoch
+                        and self._token() == approval_snapshot
+                        and len(self.history)
+                        < approval.expires_after_decision
+                        <= len(self.history) + rule.validity_decisions
+                    )
+                    if approved:
+                        self.active_approvals.append(
+                            ActiveApproval(
+                                rule.grants, approval.request_hash, approval.expires_after_decision
+                            )
+                        )
+                        self.approval_epoch += 1
+                if not approved:
+                    edge = None
+                    feedback = "approval_rejected_replan"
+            if edge is not None and not self.terminated:
+                edge = self._edge(
+                    AgentReply(
+                        kind=AgentReplyKind.PROPOSE,
+                        edge_id=candidate.edge_id,
+                        action=candidate.action,
+                    )
+                )
+            if edge is not None and not self.terminated:
+                # No await between final guard result and synchronous dispatch.
+                checked = await self._check(edge)
+                if checked is not None:
+                    request, preview = checked
+                    if request.action_hash != candidate.request_hash:
+                        feedback = "request_changed_replan"
+                    else:
+                        self.budget.charge("executions")
+                        execution = self.executor.execute(request, self.state)
+                        accepted_action = edge.action
+                        dispatched = True
+                        self.node = edge.target
+                        self.facts = self.task.contract.actions[edge.edge_id].successor(self.facts)
+                        self.executed_edges = (*self.executed_edges, edge.edge_id)
+                        receipt = TrustedReceipt(
+                            edge_id=edge.edge_id,
+                            request_hash=request.action_hash,
+                            node=self.node,
+                            facts=tuple(sorted(self.facts)),
+                            labels=preview.labels,
+                            approval_epoch=self.approval_epoch,
+                        )
+                        self.receipts.append(receipt)
+                        output: object = execution.result.model_dump(mode="json")["output"]
+                        if self.tool_content_provider is not None:
+                            output = self.tool_content_provider.present(
+                                edge.action.tool, output, execution=len(self.executed_edges)
+                            )
+                        self.tool_contents.append(
+                            ToolContent(tool=edge.action.tool, content=output)
+                        )
+                        feedback = "executed_continue_or_stop"
+                else:
+                    feedback = "guard_rejected_replan"
+            if not self.terminated and self.budget.remaining("decisions") <= 0:
+                self.finish("budget_exhausted:decisions")
+        except BudgetExhausted as error:
+            self.finish(f"budget_exhausted:{error}")
+        self.feedback.append(feedback)
         result = ECPAStep(
             observation=observation,
-            proposal=proposal,
-            decision=decision,
+            selected=candidate,
             accepted_action=accepted_action,
+            acceptance=acceptance,
             dispatched=dispatched,
+            approval_requested=approval_requested,
             approved=approved,
-            hard_guard=hard_guard,
-            functional_success=functional,
-            policy_compliance=compliant,
-            attack_success=attack,
-            violation=violation,
-            first_violation=first_violation,
-            termination_reason=termination_reason,
+            feedback=feedback,
+            receipt=receipt,
+            remaining=self.budget.snapshot(),
+            terminated=self.terminated,
+            termination_reason=self.termination_reason,
         )
         self.history.append(result)
         return result

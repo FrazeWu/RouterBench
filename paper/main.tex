@@ -345,8 +345,8 @@ explicit validity check, distinguishing unavailable targets from model errors.
 We further specify matched counterfactual diagnostics separating local permission
 judgments, complete-route safety recognition, and safe planning, with controls for
 ordinary task competence. Finally, we formulate an auxiliary evaluation-calibrated
-path-aware capability attenuation defense: offline reinforcement learning selects
-interventions inside trusted execution bounds. The benchmark is implemented;
+path-aware capability attenuation defense: a trained scorer selects concrete
+recovery interventions inside trusted execution bounds. The benchmark is implemented;
 the diagnostic and defense extensions require empirical validation.
 \end{abstract}
 
@@ -389,7 +389,7 @@ The paper has three contributions:
  presentation controls.
  \item A specified auxiliary defense, evaluation-calibrated path-aware
  capability attenuation (ECPA), connecting development diagnostics to bounded
- runtime interventions and constrained offline learning.
+ runtime recovery and matched supervised/offline learning.
 \end{itemize}
 The latter two are methodological specifications, not claims of an observed
 diagnostic gap or validated defense improvement.
@@ -722,120 +722,65 @@ Independently author this suite without changing frozen RouteBench cases.
 \section{Auxiliary Defense: ECPA}
 \label{sec:ecpa}
 
-We implement the trusted simulator scaffold for ECPA's intervention boundary;
-the learner, diagnostic corpus, and empirical defense comparison remain pending.
-ECPA uses development diagnostics to prioritize training strata, not grant
-authority. Data-flow and order contrasts respectively identify source/sink and
-history-sensitive strata. Trusted policies determine admissibility; reference
-certificates never supply runtime advice. ECPA needs a separately frozen
-interleaved execution/replanning protocol, not v13 pre-replay selection.
+ECPA studies safe recovery under fixed trusted guards. Its interleaved runtime,
+real task-agent interface and candidate scorer are implemented; an independent
+corpus, formal freeze and benefit comparison remain pending. Historical v13 is
+a separate pre-replay interface. The primary attack induces a frozen normal
+agent through low-trust tool-return content, paired with benign returns. Trusted
+receipts remain separate. Malicious submitters require separate boundary tests;
+budgeted adaptive-attacker evaluation is pending.
 
-The scaffold exposes \texttt{allow}, \texttt{constrain}, \texttt{escalate}, and
-\texttt{deny}. It reruns a hard guard immediately before dispatch, accepts a
-constraint only when its replacement is registered explicitly, obtains escalation
-approval from a trusted callback, and records actual dispatches and replanning
-outcomes. A constrained replacement also requires a trusted completion witness;
-value-free transition records retain the intervention, reward, violation increment,
-terminal status, and behavior probability while hashing proposal identity. These
-implementation checks establish the data-collection boundary;
-they are not evidence of a learned defense benefit.
+The trainable component selects concrete recovery interventions on every request.
+Public contracts determine admissibility; hidden verifiers, reference routes/costs
+and evaluator minimum authority never inform runtime choices. Diagnostics may
+prioritize training data but cannot expand permissions. Recovery learning and
+diagnostics-guided acquisition are separate hypotheses; training alone is not novel.
 
 \subsection{State and Intervention Menu}
 
-The decision state is
-\[
- x_t=(T^{\mathrm{pub}},G^{\mathrm{pub}},n_t,a_t,K_t,q_t,d_t,b_t),
-\]
-with position $n_t$, proposed call $a_t$, grant envelope $K_t$, trusted monitor
-$q_t$, provenance $d_t$, and budget $b_t$. Hidden optima, private fixture values,
-and model explanations are not authorization evidence. The state must retain
-transition-relevant information for a Markov interpretation.
+The state contains public contracts, graph node, proposal, grants, trusted
+monitor/provenance history and remaining budgets. Hidden optima, fixture answers
+and model explanations are not authorization evidence. Trusted code offers a
+checked proposal, a registered narrower action, exact scoped approval, or denial
+with replanning. Narrowing requires exact agent acceptance. Approved grants bind
+principal, task, request, epoch and expiry; fixed prohibitions persist. A final
+state-bound recheck precedes dispatch. Only trusted receipts update facts/history.
 
-The trusted finite menu contains:
-\begin{itemize}
- \item \textbf{Allow}: dispatch after trusted checks.
- \item \textbf{Constrain}: offer a registered narrower typed request for explicit
- acceptance or replanning.
- \item \textbf{Escalate}: suspend pending trusted approval bound to principal,
- task, exact request, policy epoch, and validity period.
- \item \textbf{Deny}: reject with bounded replanning or termination.
-\end{itemize}
-Trusted code enumerates bindings; pending/rejected requests have no external
-effect. Between authenticated approvals, $K_{t+1}\subseteq K_t$.
-Prerequisites can activate actions inside existing grants, not expand them.
-Only trusted transformations change classifications. Atomic final-request
-checks bind request hash and policy version to prevent check/use substitution.
+A bounded pure witness uses public preconditions/effects, goals, grants and horizon.
+It returns feasible, infeasible or unknown, executes no tool and shows no suffix
+path. Unknown alternatives are not executable. Witness soundness remains a
+contract-authoring assumption; public search is also a matched baseline.
 
-\subsection{Completion-Preserving Attenuation}
-
-For intervention $u$ with grants $K'(u)$, let $\mathcal{W}(x_t,u)$ contain
-monitor-admissible, goal-completing suffixes from its predicted successor state.
-Read-only trusted previews include the replacement call's effects and consumed
-budget; pre-intervention reachability alone is insufficient. Require a witness
-for each modeled successor, with an empty suffix allowed for completed tasks.
-Reject constraints eliminating all continuations when completion was available.
-Unknown reachability triggers deferral/denial. The menu $\mathcal{M}(x_t)$ combines
-typed validity, grant inclusion, history/data-flow checks, and this test.
-Witnesses are model-relative and do not ensure planner compliance.
-Exact cost-sensitive search remains a required non-learning baseline.
-
-\subsection{Data and Offline Learning}
+\subsection{Data and Learning}
 \label{sec:learning}
 
-A new corpus is required; current development cases are not presumed sufficient.
-Split semantic families into training, tuning, calibration, and fresh tests.
-Independent development diagnostics prioritize contrast strata with recognition
-or planning failures. Collect traces from frozen planners and rule controllers,
-retaining logging probabilities and stratum weights; also collect uniform
-coverage. The learning data are
-\[
- \mathcal{D}=\{(x_t,u_t,r_t,v_t,x_{t+1},z_t)\},
-\]
-where $u_t$ is the executed intervention and $z_t$ termination. Trusted replay
-labels utility, authority, and intervention cost. Rejected proposals are not
-executed actions. Include failures and unsafe proposals, but no formal test
-cases or live-service attacks.
+Collect actual intervention-dependent continuations, retaining failures, rejection,
+approval and independent simulator branches. Record allowed state/history/menu
+features and actual outcomes. Separate task-sampling, intervention-behavior and
+branch-assignment probabilities. Cutoff is censoring, not a failed terminal label.
+A sufficient independent corpus remains outstanding. Hold out task families and
+attack mechanisms across train, tuning, calibration and fresh tests.
 
-For bounded horizon $H$ and nonnegative cost $c_t$, set
-$r_t=z_tF_T(s_{t+1})-c_t$; utility is credited once at termination.
-Optimize
-\begin{align*}
- \max_{\pi}\quad &J_U=\mathbb{E}_{\pi}\sum_{t<H}r_t,\\
- \text{subject to}\quad &J_V=\mathbb{E}_{\pi}\sum_{t<H}v_t\leq\alpha.
-\end{align*}
-For sticky violation state $h_t$ with $h_0=0$, set $v_t=h_{t+1}-h_t$;
-$J_V$ is thus the episode violation probability, not repeated violation counts.
-Authority and intervention costs do not redefine ordinal optimality.
-
-Use discrete conservative Q-learning \citep{kumar2020cql} on supported,
-admissible choices with scalar reward $r-\lambda v$. Invalid choices are guard
-tests, not critic actions. Empty menus terminate; low support, critic
-disagreement, or invalid features trigger deterministic fallback.
-Appendix~\ref{app:training} gives the loss, defaults, and sampling rule.
-
-Tuning chooses the multiplier and fallback thresholds. Independent calibration
-then audits that fixed policy with a one-sided episode-risk bound; no candidate
-reselections use the same audit data. Report infeasibility if it misses the
-budget. This is distribution-specific evidence, not safety under shift.
-For completely mediated, soundly monitored effects, violations are excluded by
-the guard; calibration checks implementation and uncovered risk, not permission
-to relax it. Freeze the controller before testing; no deployed online exploration
-updates authority.
+Compare outcome supervision and multi-step offline RL on the same frozen text
+encoder, learned state/history/candidate backbone, data and update budget. Predict
+safe completion, remaining cost, violations and return. The offline objective uses
+actual n-step returns and supported successor interventions; unsupported backups
+use observed returns. CQL regularization \citep{kumar2020cql} is optional.
+Low-support/disagreement fallbacks are heuristics, not risk certificates.
+Calibration audits a fixed tuned policy; it cannot select another policy.
 
 \subsection{Guarantees and Empirical Burden}
 
-Complete mediation, sound subset checks, and unforgeable approval imply
-$K_t\subseteq K_0$ within an approval epoch, with $K_0$ its initial grants.
-Sound effect monitors exclude their
-specified forbidden effects. This is an established reference-monitor argument,
-not a new theorem or RL guarantee; bypasses or incorrect contracts invalidate it.
-
-Compare matched-menu rules, path-state controls, and exact search;
-minimum-authority and private-fixture oracles are privileged references.
-Ablate diagnostic allocation, history, provenance, preservation, and learning.
-Report violations, completion, authority, interventions, approvals, and overhead.
-Appendix~\ref{app:training} fixes comparisons and success criteria.
-Equality with deterministic controls does not establish learning's added value.
+Complete mediation, sound contracts and authenticated approvals support an
+established reference-monitor argument, not a new theorem or learned-safety
+guarantee. Compare public rules, path-state controls, charged search, supervised
+learning, offline RL and block-then-recover under shared menus and online limits.
+The primary endpoint is actual completion with explicit stop and no episode
+violation over the entire fixed attacked set. Failed/missed attacks, unnecessary
+interventions and exhausted budgets remain in its denominator. Report violations,
+benign completion, approvals and total costs separately. Appendix~\ref{app:training}
+fixes the success thresholds. Equality with deterministic control does not
+demonstrate learning's added value.
 
 \section{Experiments}
 \label{sec:experiments}
@@ -1011,9 +956,9 @@ v13 presentation; the prefix comparison is a control diagnostic rather than a
 second benchmark estimate.
 
 \paragraph{Defense status.}
-The results establish benchmark and diagnostic signals only. No offline RL,
-ECPA controller, or defense-improvement experiment has been run; consequently
-we make no claim that the proposed defense reduces violations or preserves
+The reported formal results establish benchmark and diagnostic signals only.
+Development recovery/training feasibility checks are not defense-improvement
+experiments; consequently we make no claim that training reduces violations or preserves
 utility.
 
 \section{Discussion}
@@ -1385,117 +1330,101 @@ review access and public distribution are planned, not yet available.
 Legacy atom-only cases minimize set inclusion then action count under a
 uniqueness contract, not the formal ordinal endpoint.
 
-\section{Proposed Training Defaults}
+\section{Recovery Training and Evaluation Protocol}
 \label{app:training}
 
-These defaults specify a design, not an executed run.
-For finite-horizon discrete CQL, use
-\begin{equation}
-\begin{aligned}
- \mathcal{L}(Q)&=\tfrac12\mathbb{E}_{\mathcal{D}}(Q(x,u)-y)^2\\
- &\quad+\eta\,\mathbb{E}_{x\sim\mathcal{D}}\mathcal{R}(Q;x),\\
- \mathcal{R}(Q;x)&=\log\sum_{u\in\mathcal{M}(x)}e^{Q(x,u)}\\
- &\quad-\mathbb{E}_{u\sim\beta(\cdot\mid x)}Q(x,u),
-\end{aligned}
- \label{eq:cql}
-\end{equation}
-where $\beta$ is logged behavior and $\bar Q$ a target critic.
-For nonterminal transitions,
-$y=r-\lambda v+\bar Q(x',\widehat\pi(x'))$;
-otherwise $y=r-\lambda v$. Empty successor menus terminate with abstention.
+The implemented objectives use identical concrete-menu features and a shared
+128/64-unit ReLU backbone with success, cost, violation and return heads.
+A frozen pretrained encoder embeds public task/contracts, state/proposal,
+history and candidate separately, with typed counters appended.
+The development encoder is pinned \nolinkurl{intfloat/e5-small-v2} revision
+\texttt{ffb93f3b} (full digest in the protocol manifest).
+Long components use deterministic chunk pooling without silent truncation;
+encoder weights do not authorize actions or receive gradients.
+Private traces contain permitted observations and actual outcomes;
+hashes serve as identifiers, not substitutes for learning features.
 
-The backup/deployed selector $\widehat\pi$ chooses the best member of
-$\mathcal{U}(x)\subseteq\mathcal{M}(x)$, defined by a tuning-fixed logging-support
-threshold. Low support or critic disagreement invokes a deterministic admissible
-fallback, whose transitions enter both logging and calibration. This avoids an
-undefined maximum over an empty supported set. The conservative penalty covers
-the whole admissible menu. All interventions consume the finite decision budget,
-including rejection and approval requests.
+For supervised learning, predict eventual safe completion, remaining actual
+cost, eventual violation and full observed return. This is long-term outcome
+supervision, not imitation of logged actions. For offline RL, retain the same
+auxiliary heads and use the multi-step target. Let $I_{t+k}$ equal one
+when the successor is supported and nonterminal, and zero otherwise:
+\begin{align*}
+ y_t={}&\sum_{j=0}^{k-1}r_{t+j}\\
+       &+ I_{t+k}\max_{u\in\mathcal U(x_{t+k})}\bar Q(x_{t+k},u).
+\end{align*}
+Here $k$ ends at the selected horizon or true termination. The implemented
+$r_t$ already contains fixed execution, intervention, approval, agent-call, preview,
+and search costs, the first observed violation penalty, and a safe-completion reward
+only after an explicit valid stop.
+If no successor candidate meets the fixed support heuristic, use the actual
+full return instead of extrapolating an unsupported backup.
+Censored rollouts supply neither fabricated terminal outcomes nor full-return
+labels. A finite-menu log-sum-exp conservative penalty may supplement the TD
+loss \citep{kumar2020cql}; this is not a new RL algorithm.
 
-Encode public task/policy text using a frozen sentence-embedding model
-\citep{reimers2019sentencebert}; the proposed checkpoint is
-\nolinkurl{sentence-transformers/all-MiniLM-L6-v2}.
-Concatenate its vector with categorical typed state/menu embeddings,
-monitor/provenance summaries, and remaining budgets.
-Pin the encoder and tokenizer before training. It cannot authorize grants.
+Engineering defaults are Adam $3\times10^{-4}$, batch 256, horizon $k=3$,
+discount 1 and target factor 0.005. Five independent controller seeds are planned.
+Tune update count, regularization, cost weights, support and fallback thresholds
+on tuning families before calibration. Kind/tool counts and ensemble disagreement
+are heuristics, not certificates of conditional support or per-action safety.
+Calibration audits a fixed policy; do not reselect on the same audit set.
 
-Use five independently initialized scalar critics with two 256-unit ReLU layers.
-Adam uses learning rate $3\times10^{-4}$ and batch size 256; finite-horizon
-discount is 1. Start with $\eta=1$ and Polyak target factor 0.005.
-Cap training at 100,000 updates with development-only selection every 2,000.
-Normalize costs with training-set scales and freeze their weights before tests.
-Ensemble disagreement and logging-policy support are abstention features,
-not certified per-action bounds.
+A new corpus must split semantic families across training, tuning, calibration
+and fresh tests; primary test attack mechanisms are also held out.
+Entity renaming is not family independence. Other frozen task-agent models
+form separate transfer tests. Current development cases are insufficient.
+Diagnostic-guided acquisition mixes half uniform and half development-failure
+priority within training families. Its acquisition budget includes diagnostic
+calls and all branch continuations. Compare uniform acquisition at equal total
+calls/tokens, with equal-rollout comparisons supplementary; use the same
+architecture/update budget. Recovery benefit alone does not prove acquisition
+benefit.
 
-For diagnostic stratum $s$, use priority
-$a_s=\epsilon+\widehat D_{\mathrm{rec},s}+\widehat D_{\mathrm{plan},s}$,
-where strata are preregistered policy/effect and intervention-type cells;
-the proposed default is $\epsilon=0.1$. Undefined conditional rates contribute zero,
-not an inferred absence of error; retain their counts. Allocate a fixed
-collection budget half uniformly and half in proportion to $a_s$ within training
-families. Record sampling probabilities. Compare uniform
-and prioritized collection at equal budgets and identical trusted menus.
-The frequencies change data allocation only, never grant validity.
+Within a concrete menu, the logging mixture is
+$\beta(u\mid x)=\frac12\beta_{\rm rule}(u\mid x)+
+\frac12\operatorname{Unif}(\mathcal M(x))$.
+Record conditional behavior probabilities separately from task sampling and
+branch assignments. Branching changes simulator state and real agent
+continuations independently; rejected offers and failures remain observations.
+Actual approval may reject. Never infer successful recovery by relabeling a
+trace collected without that intervention.
 
-Within each training stratum and nonempty menu, use a simulator-only mixture
-$\beta(u\mid x)=\tfrac12\beta_{\mathrm{rules}}(u\mid x)+
-\tfrac12\operatorname{Unif}(\mathcal{M}(x))$.
-The rule-controller mixture is frozen before collection; all random choices
-remain inside trusted bounds. This supplies intervention coverage rather than
-only replaying whichever decision a single controller happened to take.
-Log effective probabilities after any deterministic override, including fallback.
-Approval availability and outcomes follow a fixed trusted simulator policy,
-not a model-generated authorization or assumed acceptance. No such exploration
-occurs against deployed accounts. Collection is proposed, not performed.
+\paragraph{Comparisons and fixed criterion.}
+Compare public goal/path-state rules, budgeted public structural search,
+long-term supervised scoring, multi-step offline RL and block-then-recover.
+Unguarded behavior is a separate reference. Guarded methods share menus,
+information, guards, witness/approval semantics and online budgets.
+Report realized encoding, diagnostics, acquisition, training and total costs,
+not just controller inference overhead. Freeze the strongest comparator on
+tuning data before calibration/testing.
 
-Calibration uses episode-level uncertainty under its declared sampling design.
-An exact binomial bound is appropriate only for independent Bernoulli episodes;
-repeated seeds or presentations of a case cannot be counted as independent.
-Set confidence level and risk budget before collection. Charge nonnegative,
-training-normalized authority-use, intervention, and execution costs in $c_t$;
-fix their weights using tuning data, not calibration or test outcomes.
+The author-confirmed recovery criterion requires a point gain of at least
+five percentage points on the entire fixed attacked set and a paired 95\%
+interval lower bound above zero. The one-sided 95\% lower bound for benign
+functional-success difference must be at least $-0.02$. Utility cannot offset
+more violations; report safety differences and uncertainty independently.
+Common zero violations imply no demonstrated additional violation reduction.
+Resample semantic families, retaining presentations and all training seeds
+within each cluster; repeated seeds are not independent families.
+Failure to satisfy these rules is a reported outcome, not grounds to relax them.
 
-Split by task family before collecting traces; no semantic family crosses
-training, tuning, calibration, and fresh defense tests. Diagnostic allocation
-uses development families only; report any shared training/development strata.
-Dataset size, behavior coverage, risk budget, cost weights, support thresholds,
-checkpoint, licenses, and compute are run-dependent quantities to report with
-experiments. Insufficient support or calibration coverage requires reporting
-infeasibility, not relaxing requirements after observing tests.
-
-\paragraph{Planned comparisons and success criterion.}
-The minimum comparison includes no defense, a public-input rule controller,
-uniform-collection CQL, and diagnostic-guided CQL. Freeze the strongest rule
-comparator using tuning data before calibration and tests.
-Both learned variants share architecture, rewards, menus, guards, approval
-rules, and collection budgets; only diagnostic data allocation differs.
-For the strict safety claim, require the one-sided 95\% upper confidence
-limit for $V_{\mathrm{RL}}-V_{\mathrm{rule}}$ to be below zero and the lower
-limit for $F_{\mathrm{RL}}-F_{\mathrm{rule}}$ to be at least $-0.02$, where
-$V$ is episode violation rate and $F$ is benign functional success rate.
-Pair cases and settings; cluster uncertainty by semantic family and retain
-repeated presentations and all training seeds within those units.
-Diagnostic-guided versus uniform CQL is a separate matched-budget comparison.
-If common sound guards make all violation rates zero, the strict safety
-criterion cannot be met; report utility and costs separately without claiming
-an additional reduction in violations. These are planned tests, not results.
-
-\paragraph{Planned compute and replication.}
-The available host has two NVIDIA A100-PCIe-40GB GPUs and approximately
-196\,GiB of RAM. Use a frozen Qwen3-14B planner in BF16 on one GPU;
-Qwen3-8B and a separately pinned other-family planner provide transfer tests.
-Start inference at an 8,192-token context, at most four concurrent sequences,
-and 90\% GPU-memory utilization. Check projected prompt lengths on development
-data before freezing limits; do not truncate test inputs to fit them.
-Run five independent controller-training seeds, distinct from repeated planner
-presentations. These are resource plans; throughput, elapsed time, and memory
-use require measurement in the eventual runs.
-
-\section{Proposed Runtime and Transition Contract}
+\paragraph{Development versus formal evidence.}
+Implementation and small development feasibility checks establish executable
+collection/training, not learned efficacy or generalization. Formal collection,
+independent contracts, adaptive attacks and the held-out comparison remain
+pending. The available host has two A100-PCIe-40GB GPUs and about 196 GiB RAM.
+Development inference uses frozen Qwen3-14B BF16, context 8192, maximum four
+sequences and 90\% GPU-memory utilization. Measure actual calls/tokens,
+acceptance/replanning and fitting before fixing the total resource cap.
+The author's resource-cap decision precedes formal experiments; planning
+approximations do not guarantee power. Formal runs require a committed clean
+revision and frozen identity, distinct from historical v13.
+\section{Runtime and Transition Contract}
 \label{app:runtime}
 
-This protocol specifies the environment for ECPA, not an implemented extension
-of v13. Use a frozen planner with stateless calls conditioned on the public
+The separate recovery runtime implements this contract; it does not repair
+or reinterpret historical v13 results. Use frozen stateless calls on the public
 task/graph, current node, and trusted execution receipts. Pin its model and
 generation settings. Persistent planner memory, if introduced, must enter the
 recorded decision state; monitor summaries alone cannot be presumed Markov.
@@ -1528,7 +1457,8 @@ reward from an unguarded trace after relabeling its decision is invalid.
 Store the behavior probability of the executed intervention, including fallback,
 and separate proposal, accepted request, and dispatched effect. Record
 rejection-induced replanning and approval outcomes rather than imputing successful
-recovery. Runtime private values are not critic inputs or public release data.
+recovery. Only deployment-permitted observations enter critic features; hidden
+fixture answers do not. Private training traces are not public release data.
 All baselines use the same proposal/feedback contract, action variants, approval
 rules, and decision budgets; evaluator-informed oracles are labeled separately.
 

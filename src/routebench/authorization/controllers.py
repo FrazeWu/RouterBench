@@ -17,6 +17,16 @@ class AuthorizationContext:
     feedback_mode: FeedbackMode
 
 
+@dataclass(frozen=True, slots=True)
+class OperationalAuthorizationContext:
+    """Runtime grants supplied independently of evaluator minimum_authority."""
+
+    policy: PolicySpec
+    state: ScenarioState
+    feedback_mode: FeedbackMode
+    grants: tuple[AuthorityGrant, ...]
+
+
 def _scope_allows(granted_scope: str, target: str) -> bool:
     if granted_scope == "*":
         return True
@@ -83,7 +93,9 @@ def _action_scope_candidates(action: ActionRequest, preview: Preview) -> tuple[s
 
 
 def _unchanged_protected_field(
-    action: ActionRequest, context: AuthorizationContext, candidate: str
+    action: ActionRequest,
+    context: AuthorizationContext | OperationalAuthorizationContext,
+    candidate: str,
 ) -> bool:
     if action.tool not in {
         "cloud.update",
@@ -103,7 +115,7 @@ def _unchanged_protected_field(
         if candidate == str(arguments.get("path")):
             return False
         base, field = candidate.rsplit(".", 1)
-        return content.get(field) == context.state.initial_files.get(base, {}).get(field)
+        return bool(content.get(field) == context.state.initial_files.get(base, {}).get(field))
     values = arguments.get("set")
     if not isinstance(values, dict) or "." not in candidate:
         return False
@@ -125,7 +137,7 @@ def _unchanged_protected_field(
 
 def _matches_forbidden(
     action: ActionRequest,
-    context: AuthorizationContext,
+    context: AuthorizationContext | OperationalAuthorizationContext,
     preview: Preview,
     *,
     include_protected: bool = False,
@@ -186,7 +198,7 @@ def _decision(action: ActionRequest, mode: FeedbackMode, reason: str | None = No
 
 def _protected_label_is_relevant(
     action: ActionRequest,
-    context: AuthorizationContext,
+    context: AuthorizationContext | OperationalAuthorizationContext,
     preview: Preview,
     forbidden: ForbiddenEffect,
 ) -> bool:
@@ -265,9 +277,7 @@ class PathStateAuthorizationController(StaticMinimumPermissionController):
         decision = await super().decide(action, context, preview)
         if decision.kind is not DecisionKind.ALLOW:
             return decision
-        forbidden_reason = _matches_forbidden(
-            action, context, preview, include_protected=True
-        )
+        forbidden_reason = _matches_forbidden(action, context, preview, include_protected=True)
         if forbidden_reason is not None:
             return _decision(action, context.feedback_mode, forbidden_reason)
         for forbidden in context.policy.forbidden_effects:
@@ -282,3 +292,36 @@ class PathStateAuthorizationController(StaticMinimumPermissionController):
                     f"protected data label would cross boundary for {forbidden.goal_id}",
                 )
         return decision
+
+
+class OperationalAuthorizationController:
+    """Immutable effect controls plus independent, current operational grants.
+
+    Deliberately does not inherit the historical minimum-authority controller.
+    Approval may enlarge grants, but cannot waive a forbidden effect.
+    """
+
+    async def decide(
+        self, action: ActionRequest, context: OperationalAuthorizationContext, preview: Preview
+    ) -> Decision:
+        from routebench.defense.contracts import granted
+        from routebench.scenarios.schema import AuthorityAtom
+
+        reason = _matches_forbidden(action, context, preview, include_protected=True)
+        if reason is not None:
+            return _decision(action, context.feedback_mode, reason)
+        for forbidden in context.policy.forbidden_effects:
+            if (
+                _same_resource(preview.effect.resource, forbidden.resource)
+                and preview.effect.operation == forbidden.operation
+                and _protected_label_is_relevant(action, context, preview, forbidden)
+            ):
+                return _decision(action, context.feedback_mode, "protected data boundary")
+        atom = AuthorityAtom(
+            resource=preview.effect.resource,
+            operation=preview.effect.operation,
+            target=preview.effect.target,
+        )
+        if not granted(atom, context.grants):
+            return _decision(action, context.feedback_mode, "outside operational grants")
+        return _decision(action, context.feedback_mode)

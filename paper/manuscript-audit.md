@@ -1,11 +1,35 @@
 # RouteBench Manuscript Audit
 
-Date: 2026-10-19. This is a working-paper audit, not a claim that the study is
-ready for submission. Scope: integrate the existing frozen evaluation artifacts
-without running new model evaluations, changing frozen scenarios, or inventing
-results.
+Date: 2026-10-21. This is a working-paper audit, not a submission-readiness claim.
+Current scope includes the author-confirmed recovery design, implementation and
+development feasibility measurements. Formal experiments await a concrete total
+resource-cap decision and clean frozen protocol. Historical benchmark results and
+frozen scenarios remain unchanged. Earlier writing-only scope entries are historical.
 
-## Author-Confirmed Decisions (2026-10-08)
+## Author-Confirmed Recovery Design (2026-10-21)
+
+This supersedes the older CQL-only/violation-superiority plan below.
+
+- Train a concrete intervention scorer behind common immutable guards, with a frozen
+  normal task agent attacked primarily through low-trust tool-return content.
+- Compare long-term outcome supervision and multi-step offline RL using the same
+  backbone/data/update budget. Training alone is not an innovation; report the winner
+  and all negative results. RouteBench remains primary if learned value is absent.
+- Explicit exact agent acceptance, actual request-bound scoped approval, public pure
+  completion witnesses, final rechecks and explicit STOP are required. Hidden verifiers,
+  reference paths/costs and evaluator minimum authority never inform runtime choices.
+- Primary endpoint is safe completion over the entire fixed attacked normal-task set.
+  Require point gain >=5 percentage points and paired 95% lower bound >0, with
+  one-sided benign-success lower bound >=-2 points. More violations cannot be offset
+  by utility. Family clusters contain all presentation and controller-seed repetitions.
+- Hold out semantic families and attack mechanisms; use separate transfer agents and
+  budgeted adaptive attackers. Diagnostics-guided acquisition is a separate hypothesis
+  under equal total acquisition budgets including diagnostics, not only equal rollouts.
+- Implementation and small development timing/training checks are authorized. A formal
+  resource cap must follow concrete measurement/cost estimates before formal runs.
+  Development results are not evidence of learned efficacy or sufficient training data.
+
+## Historical Decisions (2026-10-08)
 
 - Repair the stop/continue interface and public credit wording under a new protocol
   identity. Historical results remain unchanged. Implementation and freezing are pending.
@@ -52,17 +76,19 @@ results.
 - The experiments section now reports existing formal v13, difficulty-stratified,
   component-ablation, model-free baseline, ordering anti-leakage, and checkpoint
   stability artifacts. No new run was started.
-- The current benchmark and a trusted ECPA intervention-boundary scaffold are
-  implemented. Counterfactual diagnostics, persistent diagnostic monitors, the
-  learned controller, its training corpus, and defense results remain unvalidated.
+- The benchmark, interleaved recovery runtime, real JSON-agent adapter, actual rollout
+  traces, supervised candidate scorer and multi-step TD scorer are implemented.
+  Counterfactual diagnostics, sufficient independent training data, formal adaptive
+  attacks, calibration and learned-benefit results remain unvalidated.
 - ECPA needs a separately frozen interleaved execution/replanning protocol;
   v13's pre-replay route selection is not itself the proposed RL environment.
 - The runtime/transition appendix specifies stateless planner calls, accepted
   replacement requests, post-intervention completion witnesses, fixed approval
   semantics, bounded decisions, and actual intervention-dependent rollouts. The
-  trusted ECPA scaffold now implements the guard, witness, approval, replanning,
-  probability-accounted collection helper, and value-free transition-record
-  boundary; a task corpus, learning, and empirical validation remain pending.
+  runtime implements the guards, pure public witness, exact acceptance, actual scoped
+  grants, real replanning, explicit stop and probability-accounted collection.
+  Private records retain actual permitted state/menu/history and outcomes; hashes
+  are identifiers. Two development overlays are not a sufficient training corpus.
 - The selectability-repair appendix defines a proposed explicit stop/continue
   interface and its validation requirements. It is not implemented by this edit.
 
@@ -84,7 +110,7 @@ this is not a clean formal-evaluation checkpoint. Existing user changes to
 | Five seeds and at least 3/5 exact successes | Protocol endpoint; seeds are within-case measurements |
 | Static minimum-authority baseline | Privileged evaluator information, not a deployable public-input baseline |
 | Grant attenuation and recovery | Established control ideas; no first-invention claim |
-| Offline CQL | Existing algorithm, not a new RL algorithm |
+| Supervised outcomes / offline multi-step TD | Existing learning methods, not a new RL algorithm |
 
 The formal inventory has only 3--6 terminal paths per case. Safe certificates
 have 1--5 actions. Five nominal length bands are defined, but only three are
@@ -123,9 +149,9 @@ identities:
   labeled as a presentation-leak diagnostic, not a capability baseline. The
   ordering ablation makes the leak explicit and documents the v13 permutation.
 
-The paper explicitly states that no RL, learned ECPA, or defense-improvement
-experiment has been run. The trusted scaffold is a simulator boundary, not a
-learned controller. Result tables and machine-readable CSV inputs are present under
+The paper makes no learned-defense efficacy claim. Small real-agent recovery and
+scorer fitting checks are development feasibility evidence, not formal improvement
+experiments. Result tables and machine-readable CSV inputs are present under
 `paper/figures/`; the model CSV now contains all eleven full-v13 model rows,
 and `formal_diagnostics.pdf` visualizes the model, route-length, and component
 ablation results. The plotting source uses Python/matplotlib; vector, raster,
@@ -258,8 +284,9 @@ Human author verification remains required.
 RACG's abstract and available HTML differed; claims follow the inspected main
 text, not the inconsistent generic abstract. Progent uses its original arXiv
 year, 2025, while the comparison uses the inspected current revision. Unverified
-refereed versions are not invented. The proposed MiniLM checkpoint's exact
-snapshot and license still need confirmation before use.
+refereed versions are not invented. The development encoder now uses a pinned
+E5-small-v2 snapshot; no MiniLM inference claim remains. Model licensing and
+anonymous redistribution must still be checked for the final release contents.
 
 ## ACL Format Gates
 
@@ -292,9 +319,9 @@ reported separately: a pending request is not a successful compilation.
 Checks completed for the current source:
 
 - Tectonic 0.17.0 compiled the same main document and generated `paper/main.pdf`;
-  the current recheck completed on 2026-10-19.
+  the current recheck completed on 2026-10-21.
 - Main text through the conclusion occupies eight pages after integrating the
-  existing results; the complete draft is fourteen pages including references
+  existing results; the complete draft is thirteen pages including references
   and appendices. The eight-page ACL content budget is currently met.
 - The abstract contains 135 whitespace-delimited words.
 - All 19 cited keys have metadata and embedded entries. The embedded
@@ -306,17 +333,18 @@ Checks completed for the current source:
   and OUT inputs. The first-pass log confirmed creation of `./acl.sty` from the
   embedded block; the converged check succeeded without unresolved references.
   It generated only ignored XDV/log outputs, not another PDF or document.
-- Built-in compilation of the current saved source succeeded on 2026-10-09 with
-  `kind: success` and the message: "The current source compiled successfully with
-  the desktop editor's compiler." Earlier non-returning requests are historical;
-  this successful response confirms the current standalone source.
-- All fourteen current PDF pages were rendered and inspected as a contact sheet;
+- The editor's built-in compilation succeeded on 2026-10-09 with `kind: success`.
+  That response predates the current source; the current source is instead
+  confirmed by the local Tectonic compilation above.
+- All thirteen current PDF pages were rendered and inspected as a contact sheet;
   ethics, extended-diagnostics, figure, and training/criterion pages were also
   inspected at full page size.
 - The Python diagnostic figure passed static preflight, the Matplotlib panel
   alignment gate, the 5-point PDF glyph audit, and the rendered collision audit.
-- `git diff --check` passes. No frozen source/scenario/result was modified;
-  the paper changes remain uncommitted. No experiment checkpoint is asserted.
+- `git diff --check` passes. Historical frozen scenarios and results were not
+  modified. The interleaved recovery implementation and manuscript belong to
+  the same local checkpoint; its exact revision is recorded separately in the
+  ignored development provenance. No formal experiment checkpoint is asserted.
 
 The cached `lineno.sty` emits a UTF-8 comment warning, and narrow columns have
 underfull-box warnings. These did not produce visible glyph or layout defects;
@@ -330,9 +358,9 @@ the official ACL style was not altered to suppress them.
    the historical v13 results are no longer sufficient. The current defense
    evidence remains absent; a specification cannot be presented as completed RL
    validation.
-3. Demonstrate a diagnostic-guided learning gain over strong deterministic
-   controls under equal menus, information, collection budgets, and approvals.
-   Otherwise remove the independent RL novelty claim.
+3. Test trained safe-recovery gains against strong matched-information controls.
+   Test diagnostic acquisition separately under equal total acquisition budgets.
+   Neither benefit can be presumed; remove unsupported novelty claims after failure.
 4. Confirm split independence, authoring neutrality, executable fixture
    semantics, training support, calibration sampling assumptions, and compute.
 5. Verify every citation and substantive AI-assisted claim with the human
@@ -364,16 +392,16 @@ Neither the source changes nor the local PDF proves full submission readiness.
 | No invented experiments or improvements | Existing results cite frozen artifacts; RL/ECPA results remain explicitly absent | Verified in source |
 | Match implemented benchmark semantics | Freeze metadata, replay/selection source, both structural audits | Verified with disclosed defects |
 | Valid planner/scorer contract | Interior-terminal mismatch; conflicting credit field; proposed repair only | Not fully achieved |
-| Distinct diagnostic and defense mechanisms | Local/rule controls; paired recognition/planning; trusted ECPA dispatch boundary; post-intervention witnesses; simulator-only logging and constrained CQL | Scaffold implemented; learning and empirical validation pending |
+| Distinct diagnostic and defense mechanisms | Public contracts/guards, actual recovery collection, supervised outcomes and multi-step offline TD | Runtime/learning implemented; independent corpus and efficacy pending |
 | Reproducible runtime assumptions | Stateless planner and receipt state, registered variants, approval epochs, actual rollout logging, stop/continue contract | Specified in appendices |
 | ACL review formatting | Official unchanged style, A4, two columns, embedded fonts; eight content pages; 135-word abstract | Local checks pass |
 | References and cross-references resolve | 19 metadata/citation entries, unique labels, no unresolved references | Mechanical checks pass |
-| PDF layout | Fourteen rendered pages inspected; no overfull boxes or overlap found | Local checks pass |
-| Built-in compiler succeeds | Current saved source returned `kind: success` on 2026-10-09 | Confirmed |
+| PDF layout | Thirteen rendered pages inspected; no overfull boxes or overlap found | Local checks pass |
+| Built-in compiler | A 2026-10-09 success predates current source; current local Tectonic build passes | Historical editor check; current local check passes |
 | Model/data/code licensing and anonymous artifact access | Original code/tasks GPLv3; synthetic provenance and anonymous/public release approved; encoder snapshot and archive pending | Partly confirmed; third-party verification and archive preparation remain |
 | Human verification and Responsible NLP attestation | Assistance disclosed; author verification not asserted complete | Requires author action |
 | Novelty/effectiveness supported rather than promised | Benchmark design described; diagnostic/defense benefit still untested | Cannot establish by prose alone |
-| Experiments stay outside this writing scope | No new model evaluations, trace collection, or training; existing aggregate artifacts were integrated | Preserved |
+| Development work within confirmed scope | Real-agent smoke rollouts, independent branches and small scorer fits; formal experiments await resource cap/freeze | Authorized 2026-10-21; no efficacy claim |
 
 Author confirmations now establish the original license, release intent, synthetic
 provenance, single-reviewer sampling account, resources, and planned success margin.

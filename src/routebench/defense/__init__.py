@@ -1,41 +1,45 @@
-"""Trusted simulator components for the evaluation-calibrated defense."""
+"""Public-contract recovery and intervention-dependent collection."""
 
 from routebench.defense.collect import (
     CollectedEpisode,
     CollectionMode,
-    DefenseProposal,
-    SampledProposal,
+    PolicyChoice,
+    branch_interventions,
     collect_episode,
-    sample_proposals,
+    sample_tasks,
 )
+from routebench.defense.contracts import PublicRecoveryTask, RecoveryContract, completion_witness
 from routebench.defense.ecpa import (
-    ApprovalProvider,
-    CompletionWitness,
-    DefenseDecision,
+    AgentReply,
+    AgentReplyKind,
+    BudgetLimits,
+    DefenseCandidate,
     DefenseDecisionKind,
     DefenseObservation,
     ECPAEnvironment,
     ECPAStep,
 )
-from routebench.defense.policies import PublicRulePolicy
-from routebench.defense.traces import ECPARewardSpec, ECPATransition, build_transitions
+from routebench.defense.policies import MixtureLoggingPolicy, PublicRulePolicy, PublicSearchPolicy
 
 __all__ = [
-    "ApprovalProvider",
+    "AgentReply",
+    "AgentReplyKind",
+    "BudgetLimits",
     "CollectedEpisode",
     "CollectionMode",
-    "CompletionWitness",
-    "DefenseDecision",
+    "DefenseCandidate",
     "DefenseDecisionKind",
     "DefenseObservation",
-    "DefenseProposal",
     "ECPAEnvironment",
-    "ECPARewardSpec",
     "ECPAStep",
-    "ECPATransition",
+    "MixtureLoggingPolicy",
+    "PolicyChoice",
+    "PublicRecoveryTask",
     "PublicRulePolicy",
-    "SampledProposal",
-    "build_transitions",
+    "PublicSearchPolicy",
+    "RecoveryContract",
+    "branch_interventions",
     "collect_episode",
-    "sample_proposals",
+    "completion_witness",
+    "sample_tasks",
 ]
