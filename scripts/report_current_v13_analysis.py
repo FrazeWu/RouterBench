@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Create the current v13 aggregate model comparison and audit report.
 
-The recovery runs intentionally retain aggregate-only artifacts.  This report
-therefore never invents case-level intervals from aggregate counts; paired
-case-level statistics are linked separately when attempt manifests exist.
+Recovery runs retain private per-attempt manifests as well as aggregate summaries.
+Use report_v13_evidence.py for validated current-run pairing and provenance audits.
 """
 
 from __future__ import annotations
@@ -102,24 +101,28 @@ def main() -> None:
         "## Scope and Integrity",
         "",
         "- All rows below are complete 776-case runs with 5 seeds (3,880 attempts).",
-        "- Primary endpoint: `OptimalPathSuccess`; a capable case has at least 3/5 successful seeds.",
-        "- Backend failures are excluded from capability scoring; all rows in this report have zero backend failures.",
-        "- Attack-path selection is an unsafe branch selected in the trusted simulator; no real data or destructive action was executed.",
-        "- The first Qwen3-8B run with 904 backend failures is preserved as an infrastructure failure and is not pooled here.",
+        "- Primary endpoint: `OptimalPathSuccess`; a capable case has at least "
+        "3/5 successful seeds.",
+        "- Backend failures leave affected cases unassessed; all rows here have zero failures.",
+        "- Attack-path selection is an unsafe simulator branch, not a real destructive action.",
+        "- The first 8B run with 904 backend failures is preserved separately and not pooled.",
         "",
         "## Current Formal Results",
         "",
-        "| Model | Family | Scale | Optimal | Capable cases | Functional | Policy compliant | Attack path | Invalid | Runtime | Git |",
+        "| Model | Family | Scale | Optimal | Capable cases | Functional | Policy compliant | "
+        "Attack path | Invalid | Runtime | Git |",
         "|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|",
     ]
     for model, summary, manifest in loaded:
         o = summary["overall"]
         m = manifest["metadata"]
         lines.append(
-            f"| `{model.name}` | {model.family} | {model.scale} | {rate(o, 'optimal_path_successes')} | "
+            f"| `{model.name}` | {model.family} | {model.scale} | "
+            f"{rate(o, 'optimal_path_successes')} | "
             f"{pct(o['capable_cases'], EXPECTED_CASES)} | {rate(o, 'functional_successes')} | "
             f"{rate(o, 'policy_compliant_selections')} | {rate(o, 'attack_path_selections')} | "
-            f"{o['invalid_outputs']} | {m['inference_runtime']['implementation']} {m['inference_runtime']['version']} | "
+            f"{o['invalid_outputs']} | {m['inference_runtime']['implementation']} "
+            f"{m['inference_runtime']['version']} | "
             f"`{m['git']['commit'][:12]}` |"
         )
 
@@ -131,19 +134,43 @@ def main() -> None:
             "",
             "## Qwen3 Scale Comparison",
             "",
-            "The current recovery result changes the 8B aggregate by less than 0.2 percentage points from the archived v13 8B result. The 14B and 8B recovery runs share commit `558bd16`; the 32B-AWQ result uses commit `7c95822` and vLLM 0.28.0.",
+            "8B recovery differs from archived v13 by less than 0.2 pp on optimal attempts, "
+            "but by approximately 0.64 pp on capable cases. 8B/14B share commit `558bd16`; "
+            "32B-AWQ uses `7c95822` and vLLM 0.28.0.",
             "",
-            "| Comparison | Optimal | Capable cases | Functional | Policy compliant | Attack path |",
+            "| Comparison | Optimal | Capable cases | Functional | Policy | Attack path |",
             "|---|---:|---:|---:|---:|---:|",
-            f"| 14B - 8B | {delta(a,b,'optimal_path_successes')} | {100*(a['capable_cases']-b['capable_cases'])/EXPECTED_CASES:+.2f} pp | {delta(a,b,'functional_successes')} | {delta(a,b,'policy_compliant_selections')} | {delta(a,b,'attack_path_selections')} |",
-            f"| 32B-AWQ - 8B | {delta(c,b,'optimal_path_successes')} | {100*(c['capable_cases']-b['capable_cases'])/EXPECTED_CASES:+.2f} pp | {delta(c,b,'functional_successes')} | {delta(c,b,'policy_compliant_selections')} | {delta(c,b,'attack_path_selections')} |",
-            f"| 14B - 32B-AWQ | {delta(a,c,'optimal_path_successes')} | {100*(a['capable_cases']-c['capable_cases'])/EXPECTED_CASES:+.2f} pp | {delta(a,c,'functional_successes')} | {delta(a,c,'policy_compliant_selections')} | {delta(a,c,'attack_path_selections')} |",
+            f"| 14B - 8B | {delta(a, b, 'optimal_path_successes')} | "
+            f"{100 * (a['capable_cases'] - b['capable_cases']) / EXPECTED_CASES:+.2f} pp | "
+            f"{delta(a, b, 'functional_successes')} | "
+            f"{delta(a, b, 'policy_compliant_selections')} | "
+            f"{delta(a, b, 'attack_path_selections')} |",
+            f"| 32B-AWQ - 8B | {delta(c, b, 'optimal_path_successes')} | "
+            f"{100 * (c['capable_cases'] - b['capable_cases']) / EXPECTED_CASES:+.2f} pp | "
+            f"{delta(c, b, 'functional_successes')} | "
+            f"{delta(c, b, 'policy_compliant_selections')} | "
+            f"{delta(c, b, 'attack_path_selections')} |",
+            f"| 14B - 32B-AWQ | {delta(a, c, 'optimal_path_successes')} | "
+            f"{100 * (a['capable_cases'] - c['capable_cases']) / EXPECTED_CASES:+.2f} pp | "
+            f"{delta(a, c, 'functional_successes')} | "
+            f"{delta(a, c, 'policy_compliant_selections')} | "
+            f"{delta(a, c, 'attack_path_selections')} |",
             "",
-            "Interpretation: 14B is strongest on the current primary endpoint. This is a descriptive scale/family result, not a causal parameter-count law, because 32B is quantized and the serving configurations differ.",
+            "14B is strongest on the primary endpoint. This is descriptive, not a causal "
+            "parameter-count law: quantization and serving configurations differ.",
         ]
     )
 
-    lines.extend(["", "## Qwen3 Effect-Family Breakdown", "", "| Family | 8B optimal | 14B optimal | 32B optimal | 8B attack | 14B attack | 32B attack |", "|---|---:|---:|---:|---:|---:|---:|"])
+    lines.extend(
+        [
+            "",
+            "## Qwen3 Effect-Family Breakdown",
+            "",
+            "| Family | 8B optimal | 14B optimal | 32B optimal | "
+            "8B attack | 14B attack | 32B attack |",
+            "|---|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
     for family in qwen["Qwen3-8B"]["by_primary_effect_family"]:
         cells = []
         for name in ("Qwen3-8B", "Qwen3-14B", "Qwen3-32B-AWQ"):
@@ -154,7 +181,16 @@ def main() -> None:
             cells.append(pct(row["attack_path_selections"], 97 * 5))
         lines.append(f"| `{family}` | " + " | ".join(cells) + " |")
 
-    lines.extend(["", "## Qwen3 Route-Length Breakdown", "", "| Stratum | 8B optimal | 14B optimal | 32B optimal | 8B capable | 14B capable | 32B capable |", "|---|---:|---:|---:|---:|---:|---:|"])
+    lines.extend(
+        [
+            "",
+            "## Qwen3 Route-Length Breakdown",
+            "",
+            "| Stratum | 8B optimal | 14B optimal | 32B optimal | "
+            "8B capable | 14B capable | 32B capable |",
+            "|---|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
     for length in qwen["Qwen3-8B"]["by_route_length"]:
         cases = 258 if length.startswith("l3") else 259
         cells = []
@@ -171,22 +207,25 @@ def main() -> None:
             "",
             "## Statistical Boundary",
             "",
-            "- The current 8B recovery and 14B artifacts contain aggregate summaries only, so this report does not fabricate current case-level confidence intervals.",
-            "- Protocol-equivalent archived attempt manifests are analyzed separately by `scripts/paired_multifamily_v13.py`; those intervals describe the archived paired records, not the recovery run's individual case outcomes.",
-            "- Before a final paper table, retain both aggregate recovery results and a fresh paired-attempt export from the same frozen run when case-level intervals are required.",
+            "- Current 8B/14B runs each retain 3,880 private attempt manifests for 776 cases. "
+            "No inference rerun is needed for paired intervals.",
+            "- Use `scripts/report_v13_evidence.py` to validate manifests and compute current "
+            "case-clustered intervals; do not substitute historical intervals.",
+            "- Shared scenario digests alone do not establish code or serving equivalence.",
             "",
             "## Next Experiments",
             "",
-            "1. Export case-level outcome manifests for the final 8B/14B/32B runs and rerun paired bootstrap intervals on the exact frozen revision.",
-            "2. Complete the cross-family table using only zero-backend-failure 776-case runs; keep pilot and infrastructure-excluded models in separate tables.",
-            "3. Run the planned ablations: edge-order permutation, candidate-path count, route length, and removal of the minimum-permission constraint.",
-            "4. Sample representative failures from `f3`, `f4`, and `f6`, plus l2/l3 routes, and classify dependency, authority, and unsafe-branch errors.",
-            "5. Reuse the same seeds, case IDs, evaluator, and serving contract for any missing model; do not start a new large run until the protocol identity is recorded.",
+            "1. Validate current outcomes and compute paired intervals without new inference.",
+            "2. Audit cross-family 776-case runs; separate pilots and infrastructure failures.",
+            "3. Audit existing ablations for effective manipulations before running new ones.",
+            "4. Review f3/f4/f6 and long-route failures; distinguish outcome flags from causes.",
+            "5. Freeze protocol and serving provenance before any missing-model run.",
             "",
             "## Provenance",
             "",
             "- Scenario count: 776; attempts per model: 3,880; seeds: 1701-1705.",
-            "- Scenario-set digest: `299d3938c4b5bc582e6d1e2ef778bd2756f44774425a57785313049c436be0ba`.",
+            "- Scenario-set digest: `299d3938c4b5bc582e6d1e2ef"
+            "778bd2756f44774425a57785313049c436be0ba`.",
             "- Raw prompts, responses, graphs, fixtures, and hidden certificates are not included.",
         ]
     )
