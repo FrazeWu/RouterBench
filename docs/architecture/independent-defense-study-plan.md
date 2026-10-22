@@ -112,6 +112,10 @@ intervention kinds, and descriptive no-decision/singleton-only/choice-exposed
 episode counts and outcomes. Exposure can change after intervention, so these
 cohorts are not causal subgroups or replacements for the primary analysis.
 Counts concern recorded decisions, not proposals interrupted before a step.
+Both compact arms bypass inference on singleton menus and take the same forced
+choice. These remain recorded decisions and primary episodes; no selector
+call/token charge is invented for the bypass. Model loading and task-agent costs
+remain. Realized savings require measurement, not an adjusted pilot estimate.
 Contracts certify receipt-derived facts for fixed authored fixtures; they do
 not yet validate arbitrary runtime data or unseen dynamic policy conditions.
 

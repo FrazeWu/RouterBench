@@ -269,6 +269,10 @@ class PacedStudySelector(CompactPolicy):
         self.telemetry, self.pacer, self.ledger, self.record = telemetry, pacer, ledger, record
 
     def choose(self, observation: DefenseObservation, *, rng: random.Random) -> PolicyChoice:
+        # A forced menu is not an inference/fallback. Both compact arms take
+        # the identical runtime choice, without reserving calls or model tokens.
+        if len(observation.menu) == 1:
+            return super().choose(observation, rng=rng)
         self.telemetry.check()
         self.pacer.before(int(self.model.config.device.split(":", 1)[1]))
         identifier = self.ledger.reserve("rollout", self.model.config.context_tokens)

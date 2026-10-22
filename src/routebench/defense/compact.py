@@ -182,8 +182,12 @@ class LocalCandidateModel:
 class CompactPolicy:
     def __init__(self, model: LocalCandidateModel, *, use_adapter: bool) -> None:
         self.model, self.use_adapter = model, use_adapter
+        self.singleton_bypasses = 0
 
     def choose(self, observation: DefenseObservation, *, rng: random.Random) -> PolicyChoice:
+        if len(observation.menu) == 1:
+            self.singleton_bypasses += 1
+            return PolicyChoice(observation.menu[0].candidate_id)
         return self.model.choose(observation, use_adapter=self.use_adapter, rng=rng)
 
 

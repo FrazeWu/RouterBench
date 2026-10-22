@@ -529,8 +529,66 @@ def test_local_selector_calls_share_hard_accounting_and_persist_fallbacks() -> N
     )
     import random
 
-    assert selector.choose(None, rng=random.Random(0)).candidate_id == "deny"  # type: ignore[arg-type]
+    observation = SimpleNamespace(menu=("TEST-candidate-a", "TEST-candidate-b"))
+    assert selector.choose(observation, rng=random.Random(0)).candidate_id == "deny"  # type: ignore[arg-type]
     assert ledger.calls == {"rollout": 1} and ledger.tokens == {"rollout": 23}
     assert records[0]["call"]["status"] == "invalid_output_fallback"
     with pytest.raises(RuntimeError, match="call budget"):
-        selector.choose(None, rng=random.Random(0))  # type: ignore[arg-type]
+        selector.choose(observation, rng=random.Random(0))  # type: ignore[arg-type]
+
+
+@pytest.mark.parametrize("use_adapter", [False, True])
+def test_singleton_menus_skip_model_work_without_spending_acquisition_budget(
+    use_adapter: bool,
+) -> None:
+    import random
+
+    study = fixture_study()
+    task = next(
+        task for task in study.tasks if task.entry.task_id == "ecpa_test_cumulative_disclosure"
+    )
+
+    async def observation() -> Any:
+        env = await replay_prefix(task, task.authoring.attack_path[:-1])
+        result = await env.observe(
+            AgentReply(kind=AgentReplyKind.PROPOSE, edge_id="send_extra_field")
+        )
+        assert result is not None and len(result.menu) == 1
+        return result
+
+    class UnexpectedWork:
+        config = study.spec.compact
+
+        def __init__(self) -> None:
+            self.calls: list[dict[str, object]] = []
+
+        def choose(self, *args: Any, **kwargs: Any) -> Any:
+            raise AssertionError("singleton must not invoke a model")
+
+        def check(self) -> None:
+            raise AssertionError("singleton must not request inference telemetry")
+
+        def before(self, *args: Any) -> None:
+            raise AssertionError("singleton must not wait for inference pacing")
+
+        def after(self) -> None:
+            raise AssertionError("singleton must not finish inference pacing")
+
+    ledger = AcquisitionLedger(1, 8192)
+    ledger.reserve("rollout", 8192)  # An exhausted model-call budget still permits forced choice.
+    calls_before, tokens_before = dict(ledger.calls), dict(ledger.tokens)
+    records: list[dict[str, Any]] = []
+    unexpected = UnexpectedWork()
+    selector = PacedStudySelector(
+        unexpected,  # type: ignore[arg-type]
+        use_adapter=use_adapter,
+        telemetry=unexpected,  # type: ignore[arg-type]
+        pacer=unexpected,  # type: ignore[arg-type]
+        ledger=ledger,
+        record=records.append,
+    )
+    view = asyncio.run(observation())
+    assert selector.choose(view, rng=random.Random(0)).candidate_id == view.menu[0].candidate_id
+    assert selector.singleton_bypasses == 1
+    assert ledger.calls == calls_before and ledger.tokens == tokens_before
+    assert not records and not unexpected.calls

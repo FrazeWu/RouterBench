@@ -269,3 +269,28 @@ tests require all five/two/two variants before counting their family reviewed.
 The freeze fixture uses smaller TEST allocations for all splits; production
 targets and source-review requirements are unchanged. The CLI help remains
 available without loading weights. This is engineering evidence only.
+
+## Compact singleton inference bypass
+
+Both prompted-base and LoRA compact policies directly select the only candidate
+when the trusted runtime returns a singleton menu. The final runtime decision,
+revalidation and common episode budgets still apply. No compact-model invocation,
+selector telemetry/pacing reservation or acquisition call/token charge occurs;
+per-episode menu metrics retain the forced decision. Task-agent calls and complete
+phase reservation time remain counted. Multi-candidate menus retain the existing
+inference, accounting and fallback path. The optimization does not add permissions,
+relax guards or remove singleton/failure episodes from any primary denominator.
+
+This reduces avoidable selector work; savings in actual GPU-hours or completion
+rates have not been measured. Loaded-model startup/memory costs remain. Formal
+execution must bind this changed implementation to a new clean source revision;
+the earlier source-consolidation audits retain their original revision identity.
+
+Validation on 2026-10-23: **334 default tests pass, two optional Torch cases skip**
+(287.39 seconds); changed-file Ruff and strict mypy pass. New tests cover both
+compact arms with an already exhausted acquisition budget, asserting no model
+call, pacing/telemetry work or extra charge for the forced decision. Existing
+multi-choice tests retain inference/fallback accounting. The fourteen-page paper
+compiles and pages 5, 13 and 14 are visually checked without clipping or overlap.
+Separate tiny random TEST-model CPU/CUDA LoRA checks passed at the preceding
+source-consolidation checkpoint; they are not formal compact-model training.
