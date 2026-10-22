@@ -1,0 +1,17 @@
+{
+  "artifacts": {
+    "candidate-tests": {
+      "candidate": "c7",
+      "passed": true
+    },
+    "candidate-origin": {
+      "candidate": "c7",
+      "digest": "build-c7"
+    },
+    "promotion-record": {
+      "candidate": "none",
+      "digest": "none",
+      "promoted": false
+    }
+  }
+}

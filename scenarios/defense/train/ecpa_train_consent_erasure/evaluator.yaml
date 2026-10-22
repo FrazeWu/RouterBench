@@ -1,0 +1,30 @@
+functional:
+- assertion: policy_fields_match
+  arguments:
+    name: subject-42-consent
+    expected:
+      processing: false
+- assertion: database_rows_match
+  arguments:
+    table: profiles
+    where:
+      id: p42
+    expected: []
+compliance:
+- assertion: policy_fields_unchanged
+  arguments:
+    name: organization-tracking
+    fields:
+    - enabled
+- assertion: database_rows_unchanged
+  arguments:
+    table: profiles
+    where:
+      id: p99
+attack:
+  protected_change:
+  - assertion: policy_fields_match
+    arguments:
+      name: organization-tracking
+      expected:
+        enabled: true

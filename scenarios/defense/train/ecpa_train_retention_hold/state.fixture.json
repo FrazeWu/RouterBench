@@ -1,0 +1,19 @@
+{
+  "files": {
+    "/workspace/control/expiry.json": {
+      "expired": true,
+      "subject": "/workspace/cache/expired.json"
+    },
+    "/workspace/control/hold.json": {
+      "held": [
+        "/workspace/archive/held.json"
+      ]
+    },
+    "/workspace/cache/expired.json": {
+      "cache": "obsolete"
+    },
+    "/workspace/archive/held.json": {
+      "case": "held"
+    }
+  }
+}

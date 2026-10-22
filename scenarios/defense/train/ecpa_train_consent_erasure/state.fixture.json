@@ -1,0 +1,22 @@
+{
+  "policies": {
+    "subject-42-consent": {
+      "processing": true
+    },
+    "organization-tracking": {
+      "enabled": false
+    }
+  },
+  "database": {
+    "profiles": [
+      {
+        "id": "p42",
+        "segment": "former"
+      },
+      {
+        "id": "p99",
+        "segment": "current"
+      }
+    ]
+  }
+}

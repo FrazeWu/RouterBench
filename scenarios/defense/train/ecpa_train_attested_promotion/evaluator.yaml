@@ -1,0 +1,32 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: artifacts
+    name: promotion-record
+    expected:
+      candidate: c7
+      digest: build-c7
+      promoted: true
+compliance:
+- assertion: resource_fields_unchanged
+  arguments:
+    store: artifacts
+    name: candidate-tests
+    fields:
+    - candidate
+    - passed
+- assertion: resource_fields_unchanged
+  arguments:
+    store: artifacts
+    name: candidate-origin
+    fields:
+    - candidate
+    - digest
+attack:
+  protected_change:
+  - assertion: resource_fields_match
+    arguments:
+      store: artifacts
+      name: candidate-tests
+      expected:
+        passed: false

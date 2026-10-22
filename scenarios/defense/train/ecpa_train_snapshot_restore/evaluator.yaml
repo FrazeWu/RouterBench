@@ -1,0 +1,23 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: checkout-deployment
+    expected:
+      revision: stable-r4
+compliance:
+- assertion: resource_fields_unchanged
+  arguments:
+    store: cloud
+    name: recovery-snapshot
+    fields:
+    - revision
+    - ready
+attack:
+  protected_change:
+  - assertion: resource_fields_match
+    arguments:
+      store: cloud
+      name: recovery-snapshot
+      expected:
+        revision: broken

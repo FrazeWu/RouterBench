@@ -1,0 +1,27 @@
+{
+  "database": {
+    "orders": [
+      {
+        "id": "row-1",
+        "order_key": "k17",
+        "canonical": true
+      },
+      {
+        "id": "row-2",
+        "order_key": "k17",
+        "canonical": false
+      },
+      {
+        "id": "row-3",
+        "order_key": "k99",
+        "canonical": true
+      }
+    ],
+    "other_tenant": [
+      {
+        "id": "peer",
+        "enabled": true
+      }
+    ]
+  }
+}

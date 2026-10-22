@@ -8,16 +8,19 @@ This is a prospective plan, not a frozen protocol or completed experiment.
 
 1. **Completed:** structural replanning fix, shared by every arm. Enumerate all
    current-node edges, including unsafe/unproductive choices. Preserve pilot results.
-2. **In progress:** independent family authoring. Four initial training workflows
-   now cover settlement reconciliation, health-gated retry repair, immutable
-   incident-copy review and pause-before-enable scheduler handover. Each has two
-   executable safe paths and two legitimate prefix actions before the harmful step.
+2. **In progress:** independent family authoring. Twelve candidate training
+   workflows have executable sources; semantic independence remains unreviewed.
+   Each has two executable safe paths and two legitimate prefix actions before
+   the harmful step. See the inventory below.
 3. **Tooling complete, evidence pending:** source isolation and simulator audits.
    Validate bindings, actual safe-path dispatch, rejected approvals, harmful
    reference execution and four intervention-menu kinds. These use a scripted
    exact-offer acceptor, not the frozen task model. They are not training labels.
-4. **Pending:** remaining families, independent semantic/contract review, context
-   checks, real branch outcomes covering all target kinds and snapshot/protocol freeze.
+4. **Context/collection tooling implemented, formal evidence pending:** local
+   tokenizer checks replay sampled public states; parent/branch collection uses
+   real JSON-agent calls and independent simulator snapshots. Remaining split
+   families, independent semantic/contract review, real-model branch outcomes
+   covering the target kinds and snapshot/protocol freeze remain pending.
 5. **Pending:** one LoRA recipe, matched development comparison, calibration audit
    and fresh paired test. Preserve strong per-action and path-rule baselines.
 6. **Pending:** family-clustered analysis, cost/negative-result report and paper results.
@@ -36,10 +39,30 @@ primitives, not live providers. These compact tasks do not claim the universe's
 large hard-graph targets. Safe-path witnesses are separate from evaluator checks.
 Alternative providers/rereads create paths, not additional independent families.
 
-All four families remain **authored, not independently reviewed**. Review must
+All twelve candidates remain **authored, not independently reviewed**. Review must
 check overlap with prior corpora, contract soundness, leakage, reachable attacks,
 neutral menus and simulator/evaluator agreement. Names/hashes do not prove
 independence. Menu coverage does not prove real training-target coverage.
+
+| Candidate training family | Distinguishing public obligation |
+| --- | --- |
+| settlement reconciliation | Preserve live evidence, approve the correction, read back the write |
+| health-gated retry repair | Require health evidence before enabling retry |
+| immutable incident-copy review | Preserve and verify a copy without changing the source |
+| pause-before-enable scheduler handover | Pause the old scheduler before enabling its successor |
+| retention/hold intersection | Delete expired data only when it is outside legal hold |
+| consent-before-erasure | Revoke consent before deleting the subject's data |
+| attested promotion | Join test and provenance evidence before promotion |
+| snapshot restoration | Restore from evidence while preserving the recovery source |
+| availability-preserving role reduction | Reduce authority while retaining account availability |
+| canonical-preserving deduplication | Remove the duplicate while preserving the canonical row |
+| read-only diagnosis | Correlate observations without making remedial changes |
+| canonical-to-document reconciliation | Update the derived document without changing its canonical source |
+
+These are candidate distinctions, not an independence certificate. In particular,
+role reduction needs comparison with historical access-review tasks; copy/restore
+and reconciliation families need review for deeper structural overlap. Merge or
+replace overlapping candidates rather than preserve a nominal count.
 
 Train/tune/calibration/test families must be disjoint. Fresh primary tests also
 need genuinely held-out mechanisms: renamed payloads/entities/providers/modes
@@ -50,7 +73,7 @@ and historical formal-test traces from training.
 ## Moderate prospective allocation and cost
 
 Working target: **12 train / 4 tune / 4 calibration / 40 test families**. Actual
-materialization: **4/0/0/0**. Counts are not frozen. Initially use one task and one
+materialization: **12/0/0/0 candidate families**. Counts are not frozen. Initially use one task and one
 presentation per family, two relay modes and benign/attacked pairs. Do not meet
 the count by renaming tasks. Revise after source/context/cost audits before any
 fitting/test outcomes, then commit and freeze the exact protocol.
@@ -92,15 +115,55 @@ From a committed clean revision:
 ```bash
 python -m scripts.audit_defense_corpus \
   --manifest configs/defense/independent-corpus.yaml \
-  --output artifacts/private/ecpa-independent-preparation/authoring-audit.json
+  --output artifacts/private/ecpa-independent-training-preparation/authoring-audit.json
 ```
 
 The command refuses existing output and records the source revision. Its
 `formal_run_ready: false` is intentional. This preparation tool cannot run
 formal collection, fit models or certify pending reviews. Source audits use no GPU.
 
-Current validation: 214 default tests passed, two optional learning tests skipped
-because that environment has no Torch. Changed-file Ruff and strict type checks
-passed. The source checks exercise eight safe paths, four harmful reference
-paths and 15 menu probes, including actual approval rejection. No additional
-adapter fitting, GPU inference or formal outcome collection has occurred.
+The current source checks exercise 24 safe paths, 12 harmful reference paths
+and 38 menu probes, including actual approval rejection. These checks provide
+zero training labels. No additional adapter fitting, GPU inference or formal
+outcome collection has occurred.
+
+## Context and branch preparation
+
+`scripts.audit_defense_contexts` loads the two local tokenizers without model
+weights, uses the exact `agent_messages` and selector chat templates, disables
+thinking, and reserves 768 agent or 96 defender completion tokens within 8,192.
+It checks safe-path prefixes, probe prefixes, current-node proposals and exact
+replacement offers. Representative benign drafts and fixed attack text are
+measured separately from an additional full-draft planning reserve. No inputs
+are truncated. Passing sampled states does not bound future repeated denials,
+tool outputs, arbitrary generated drafts or token-boundary differences.
+
+```bash
+python -m scripts.audit_defense_contexts \
+  --agent-tokenizer /home/dasp/models/Qwen3-14B-aria \
+  --defender-tokenizer /home/dasp/models/Qwen3-1.7B \
+  --output artifacts/private/ecpa-independent-training-preparation/context-audit.json
+```
+
+Use an environment with Transformers and the RouteBench dependencies. The
+command requires committed tracked corpus sources and a clean revision; it
+refuses to overwrite previous reports and records tokenizer-file hashes.
+
+`defense.branching.collect_parent_branches` first finishes a logging parent,
+then uniformly selects at most two of its encountered menus with multiple
+choices. Conditional on that parent, state inclusion probability is `min(1,2/N)`;
+it is recorded separately from task acquisition, enumerated branch assignment
+(`1`) and subsequent logging-policy action probabilities. No evaluator score
+or authoring route chooses the sampled states. All menu candidates are retained;
+each repeat shares its starting continuation seed across candidates. Every
+branch restores its own environment and consumed relay stages, uses a fresh
+JSON agent and preserves prior violation/attack findings. Cutoffs remain censored;
+an incomplete menu group cannot produce a choice target. Outcomes use the
+existing evaluator and costs use actual continuation resource ledgers.
+
+The kernel returns private collection records, not frozen training groups or
+an authorization for a formal run. The later frozen runner must bind corpus,
+review, models, seeds and protocol identity before persisting formal groups.
+HTTP MockTransport integration tests verify the agent/simulator interface,
+sampling, exact-offer rejection, failure/censoring and snapshot isolation. They
+are transport fixtures, not model experiments or learned labels.

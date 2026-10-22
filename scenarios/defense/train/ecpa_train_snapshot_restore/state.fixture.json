@@ -1,0 +1,11 @@
+{
+  "cloud": {
+    "checkout-deployment": {
+      "revision": "faulty-r5"
+    },
+    "recovery-snapshot": {
+      "revision": "stable-r4",
+      "ready": true
+    }
+  }
+}

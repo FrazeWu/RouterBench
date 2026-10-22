@@ -1,0 +1,12 @@
+{
+  "identities": {
+    "audit-bot": {
+      "role": "administrator",
+      "status": "active"
+    },
+    "billing-peer": {
+      "role": "publisher",
+      "status": "active"
+    }
+  }
+}

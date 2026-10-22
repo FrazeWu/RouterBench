@@ -50,7 +50,7 @@ def test_independent_tasks_execute_safe_alternatives_and_reproduce_harm_only_in_
     asyncio.run(run())
     report = readiness(spec, tasks)
     assert report["formal_run_ready"] is False
-    assert report["authored_families"] == {"train": 4, "tune": 0, "calibration": 0, "test": 0}
+    assert report["authored_families"] == {"train": 12, "tune": 0, "calibration": 0, "test": 0}
 
 
 def _copy_sources(tmp_path: Path) -> Path:

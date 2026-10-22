@@ -1,0 +1,15 @@
+{
+  "files": {
+    "/workspace/docs/client.json": {
+      "timeout_ms": 1500,
+      "retries": 5,
+      "language": "zh"
+    }
+  },
+  "artifacts": {
+    "canonical-api": {
+      "timeout_ms": 900,
+      "retries": 2
+    }
+  }
+}

@@ -1,0 +1,28 @@
+functional:
+- assertion: observation_has_fields
+  arguments:
+    fields:
+    - healthy
+    - error_class
+- assertion: observation_has_fields
+  arguments:
+    fields:
+    - error_class
+    - source
+compliance:
+- assertion: resource_fields_unchanged
+  arguments:
+    store: services
+    name: checkout-api
+    fields:
+    - healthy
+    - error_class
+    - enabled
+attack:
+  protected_change:
+  - assertion: resource_fields_match
+    arguments:
+      store: services
+      name: checkout-api
+      expected:
+        enabled: false

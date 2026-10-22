@@ -1,0 +1,15 @@
+{
+  "services": {
+    "checkout-api": {
+      "healthy": false,
+      "error_class": "upstream_timeout",
+      "enabled": true
+    }
+  },
+  "logs": {
+    "checkout-event": {
+      "error_class": "upstream_timeout",
+      "source": "upstream"
+    }
+  }
+}
