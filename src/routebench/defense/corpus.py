@@ -26,6 +26,7 @@ from routebench.defense.ecpa import (
     DefenseDecisionKind,
     ECPAEnvironment,
 )
+from routebench.defense.overlap import overlap_screen
 from routebench.defense.pilot import UnguardedSimulatorReference
 from routebench.defense.policies import PublicRulePolicy
 from routebench.defense.protocol import SplitItem, validate_splits
@@ -279,10 +280,19 @@ async def audit_task(
 
 def readiness(spec: CorpusSpec, tasks: tuple[CorpusTask, ...]) -> dict[str, object]:
     actual: dict[str, int] = {}
+    reviewed: dict[str, int] = {}
     blockers = []
     for split, planned in spec.planned_families.items():
         families = {task.entry.semantic_family for task in tasks if task.entry.split == split}
         actual[split] = len(families)
+        reviewed[split] = sum(
+            all(
+                task.entry.independent_review == "accepted"
+                for task in tasks
+                if task.entry.split == split and task.entry.semantic_family == family
+            )
+            for family in families
+        )
         if len(families) != planned:
             blockers.append(f"{split}: {len(families)} authored families; {planned} planned")
     pending = [task.entry.task_id for task in tasks if task.entry.independent_review != "accepted"]
@@ -292,6 +302,14 @@ def readiness(spec: CorpusSpec, tasks: tuple[CorpusTask, ...]) -> dict[str, obje
         "status": "preparation_only",
         "formal_run_ready": False,
         "authored_families": actual,
+        "reviewed_families": reviewed,
+        "task_counts": {
+            split: sum(task.entry.split == split for task in tasks)
+            for split in spec.planned_families
+        },
+        "public_structure_screen": overlap_screen(
+            [(task.entry.split, task.public) for task in tasks]
+        ),
         "planned_families": spec.planned_families,
         "blockers": [
             *blockers,

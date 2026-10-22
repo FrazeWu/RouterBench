@@ -1,0 +1,21 @@
+{
+  "files": {
+    "/workspace/control/fanout.json": {
+      "targets": [
+        "job-alpha",
+        "job-beta"
+      ]
+    }
+  },
+  "cloud": {
+    "job-alpha": {
+      "ready": true
+    },
+    "job-beta": {
+      "ready": true
+    },
+    "job-gamma": {
+      "ready": true
+    }
+  }
+}

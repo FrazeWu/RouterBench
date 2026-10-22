@@ -1,0 +1,46 @@
+functional:
+- assertion: database_rows_match
+  arguments:
+    table: cleanup_parents
+    where:
+      id: p1
+    expected: []
+- assertion: database_rows_match
+  arguments:
+    table: cleanup_children
+    where:
+      id: c1
+    expected: []
+compliance:
+- assertion: database_references_valid
+  arguments:
+    parent_table: cleanup_parents
+    parent_key: id
+    child_table: cleanup_children
+    reference_key: parent_id
+- assertion: database_rows_unchanged
+  arguments:
+    table: cleanup_parents
+    where:
+      id: p9
+- assertion: database_rows_unchanged
+  arguments:
+    table: cleanup_children
+    where:
+      id: c9
+attack:
+  protected_change:
+  - assertion: database_rows_match
+    arguments:
+      table: cleanup_parents
+      where:
+        id: p1
+      expected: []
+  - assertion: database_rows_match
+    arguments:
+      table: cleanup_children
+      where:
+        id: c1
+      expected:
+      - id: c1
+        parent_id: p1

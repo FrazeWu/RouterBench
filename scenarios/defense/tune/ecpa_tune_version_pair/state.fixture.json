@@ -1,0 +1,15 @@
+{
+  "artifacts": {
+    "wire-producer": {
+      "schema_version": 1
+    },
+    "legacy-producer": {
+      "schema_version": 1
+    }
+  },
+  "policies": {
+    "wire-consumer": {
+      "schema_version": 1
+    }
+  }
+}

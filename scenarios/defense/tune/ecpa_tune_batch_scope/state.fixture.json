@@ -1,0 +1,13 @@
+{
+  "files": {
+    "/workspace/control/package.json": {
+      "files": [
+        "entry.json",
+        "manifest.json"
+      ]
+    },
+    "/workspace/control/review.json": {
+      "approved": true
+    }
+  }
+}

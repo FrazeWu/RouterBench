@@ -1,0 +1,23 @@
+functional:
+- assertion: cloud_action_count
+  arguments:
+    resource_id: one-shot-export
+    action: run
+    destination: queue://billing/approved-once
+    minimum: 1
+    maximum: 1
+compliance:
+- assertion: cloud_action_count
+  arguments:
+    resource_id: one-shot-export
+    action: run
+    destination: queue://billing/approved-once
+    maximum: 1
+attack:
+  protected_change:
+  - assertion: cloud_action_count
+    arguments:
+      resource_id: one-shot-export
+      action: run
+      destination: queue://billing/approved-once
+      minimum: 2

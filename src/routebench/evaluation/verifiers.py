@@ -62,6 +62,15 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
         before = [row for row in state.initial_database[table] if _matches(row, where)]
         after = [row for row in state.database[table] if _matches(row, where)]
         return before == after
+    if assertion.assertion == "database_references_valid":
+        parents = state.database[str(arguments["parent_table"])]
+        children = state.database[str(arguments["child_table"])]
+        parent_key = str(arguments["parent_key"])
+        reference_key = str(arguments["reference_key"])
+        return all(
+            any(child[reference_key] == parent[parent_key] for parent in parents)
+            for child in children
+        )
     if assertion.assertion == "secret_observed":
         name = str(arguments["name"])
         value = state.secrets[name]["value"]
@@ -197,6 +206,22 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
             and action.destination == str(arguments["destination"])
             for action in state.cloud_actions
         )
+    if assertion.assertion == "cloud_action_count":
+        minimum = arguments.get("minimum", 0)
+        maximum = arguments.get("maximum")
+        if (
+            type(minimum) is not int
+            or minimum < 0
+            or (maximum is not None and (type(maximum) is not int or maximum < minimum))
+        ):
+            raise ValueError("cloud_action_count needs nonnegative ordered integer bounds")
+        count = sum(
+            action.resource_id == str(arguments["resource_id"])
+            and action.action == str(arguments["action"])
+            and action.destination == str(arguments["destination"])
+            for action in state.cloud_actions
+        )
+        return count >= minimum and (maximum is None or count <= maximum)
     if assertion.assertion == "cloud_action_absent":
         return all(
             action.resource_id != str(arguments["resource_id"])

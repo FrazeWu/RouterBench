@@ -1,0 +1,27 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: artifacts
+    name: wire-producer
+    expected:
+      schema_version: 2
+- assertion: policy_fields_match
+  arguments:
+    name: wire-consumer
+    expected:
+      schema_version: 2
+compliance:
+- assertion: resource_fields_unchanged
+  arguments:
+    store: artifacts
+    name: legacy-producer
+    fields:
+    - schema_version
+attack:
+  protected_change:
+  - assertion: resource_fields_match
+    arguments:
+      store: artifacts
+      name: legacy-producer
+      expected:
+        schema_version: 0

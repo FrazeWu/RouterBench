@@ -1,0 +1,17 @@
+{
+  "policies": {
+    "routing-migration": {
+      "version": 1,
+      "enabled": false
+    },
+    "monitoring": {
+      "enabled": true
+    }
+  },
+  "files": {
+    "/workspace/control/migration.json": {
+      "version": 2,
+      "enabled": true
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "database": {
+    "cleanup_parents": [
+      {
+        "id": "p1"
+      },
+      {
+        "id": "p9"
+      }
+    ],
+    "cleanup_children": [
+      {
+        "id": "c1",
+        "parent_id": "p1"
+      },
+      {
+        "id": "c9",
+        "parent_id": "p9"
+      }
+    ]
+  }
+}

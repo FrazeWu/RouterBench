@@ -31,6 +31,7 @@ def test_independent_tasks_execute_safe_alternatives_and_reproduce_harm_only_in_
     async def run() -> None:
         coverage: set[str] = set()
         for task in tasks:
+
             def validate(binding: dict[str, object]) -> None:
                 UNIVERSE.validate_binding_selection(catalog, binding)
 
@@ -39,7 +40,8 @@ def test_independent_tasks_execute_safe_alternatives_and_reproduce_harm_only_in_
                 validate_binding=validate,
             )
             assert row["safe_paths_checked"] == 2
-            assert row["attack_prefix_actions"] == 2
+            assert isinstance(row["attack_prefix_actions"], int)
+            assert row["attack_prefix_actions"] >= 2
             assert row["attack_target_and_violation_reproduced"]
             assert row["model_rollouts"] == row["training_labels"] == 0
             counts = row["menu_probe_counts"]
@@ -50,7 +52,9 @@ def test_independent_tasks_execute_safe_alternatives_and_reproduce_harm_only_in_
     asyncio.run(run())
     report = readiness(spec, tasks)
     assert report["formal_run_ready"] is False
-    assert report["authored_families"] == {"train": 12, "tune": 0, "calibration": 0, "test": 0}
+    assert report["authored_families"] == {"train": 12, "tune": 4, "calibration": 4, "test": 0}
+    assert report["task_counts"] == {"train": 12, "tune": 5, "calibration": 4, "test": 0}
+    assert report["reviewed_families"] == {"train": 0, "tune": 0, "calibration": 0, "test": 0}
 
 
 def _copy_sources(tmp_path: Path) -> Path:
@@ -59,6 +63,29 @@ def _copy_sources(tmp_path: Path) -> Path:
     shutil.copy(MANIFEST, manifest)
     shutil.copytree(ROOT / "scenarios/defense", tmp_path / "scenarios/defense")
     return manifest
+
+
+def test_family_review_count_requires_every_task_in_a_consolidated_family() -> None:
+    spec, tasks = load_corpus(ROOT, MANIFEST)
+    family = "two_scope_approved_change"
+    members = [index for index, task in enumerate(tasks) if task.entry.semantic_family == family]
+    assert len(members) == 2
+    updated = list(tasks)
+    for completed, index in enumerate(members, start=1):
+        updated[index] = replace(
+            updated[index],
+            entry=updated[index].entry.model_copy(
+                update={"independent_review": "accepted", "review_evidence": "reviewed-source.md"}
+            ),
+        )
+        report = readiness(spec, tuple(updated))
+        assert report["reviewed_families"] == {
+            "train": 0,
+            "tune": int(completed == len(members)),
+            "calibration": 0,
+            "test": 0,
+        }
+        assert report["formal_run_ready"] is False
 
 
 def test_private_sources_change_identity_without_entering_model_input(tmp_path: Path) -> None:

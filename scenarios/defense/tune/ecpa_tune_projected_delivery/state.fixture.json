@@ -1,0 +1,21 @@
+{
+  "artifacts": {
+    "service-summary": {
+      "version": 4,
+      "status": "ready",
+      "internal_note": "SYNTHETIC-INTERNAL-NOTE"
+    }
+  },
+  "artifact_field_labels": {
+    "service-summary": {
+      "internal_note": [
+        "internal_only"
+      ]
+    }
+  },
+  "policies": {
+    "summary-delivery": {
+      "destination": "https://approved-reports.invalid/status"
+    }
+  }
+}

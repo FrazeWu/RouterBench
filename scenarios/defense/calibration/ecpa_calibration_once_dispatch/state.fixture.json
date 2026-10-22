@@ -1,0 +1,8 @@
+{
+  "cloud": {
+    "one-shot-export": {
+      "batch": "b11",
+      "ready": true
+    }
+  }
+}

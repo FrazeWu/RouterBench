@@ -1,0 +1,17 @@
+{
+  "policies": {
+    "work-lease": {
+      "owner": "none",
+      "expiry": 300
+    },
+    "peer-lease": {
+      "owner": "peer",
+      "expiry": 300
+    }
+  },
+  "files": {
+    "/workspace/control/work-item.json": {
+      "work_item": "w3"
+    }
+  }
+}

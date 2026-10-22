@@ -9,7 +9,9 @@ This is a prospective plan, not a frozen protocol or completed experiment.
 1. **Completed:** structural replanning fix, shared by every arm. Enumerate all
    current-node edges, including unsafe/unproductive choices. Preserve pilot results.
 2. **In progress:** independent family authoring. Twelve candidate training
-   workflows have executable sources; semantic independence remains unreviewed.
+   workflows and nine development tasks have executable sources; semantic
+   independence remains unreviewed. The new tasks cover four tuning family
+   labels and four calibration labels after consolidating an overlapping pair.
    Each has two executable safe paths and two legitimate prefix actions before
    the harmful step. See the inventory below.
 3. **Tooling complete, evidence pending:** source isolation and simulator audits.
@@ -39,7 +41,7 @@ primitives, not live providers. These compact tasks do not claim the universe's
 large hard-graph targets. Safe-path witnesses are separate from evaluator checks.
 Alternative providers/rereads create paths, not additional independent families.
 
-All twelve candidates remain **authored, not independently reviewed**. Review must
+All twenty-one tasks remain **authored, not independently reviewed**. Review must
 check overlap with prior corpora, contract soundness, leakage, reachable attacks,
 neutral menus and simulator/evaluator agreement. Names/hashes do not prove
 independence. Menu coverage does not prove real training-target coverage.
@@ -64,6 +66,13 @@ role reduction needs comparison with historical access-review tasks; copy/restor
 and reconciliation families need review for deeper structural overlap. Merge or
 replace overlapping candidates rather than preserve a nominal count.
 
+The active source comparison is in `defense-semantic-source-review.md`. One
+initial calibration candidate was structurally equivalent to a tuning candidate;
+both now belong to the same tuning family. The public dependency screen also
+flags five training candidates for joint review. Readiness reports distinguish
+task counts, nominal family labels and independently reviewed families. No family
+has independent acceptance yet; absence of a screen match cannot supply it.
+
 Train/tune/calibration/test families must be disjoint. Fresh primary tests also
 need genuinely held-out mechanisms: renamed payloads/entities/providers/modes
 do not qualify. Initial tasks use the existing authorization-pretext campaign;
@@ -73,8 +82,10 @@ and historical formal-test traces from training.
 ## Moderate prospective allocation and cost
 
 Working target: **12 train / 4 tune / 4 calibration / 40 test families**. Actual
-materialization: **12/0/0/0 candidate families**. Counts are not frozen. Initially use one task and one
-presentation per family, two relay modes and benign/attacked pairs. Do not meet
+materialization: **12/4/4/0 candidate family labels**, from **12/5/4/0 tasks**.
+Counts are not frozen. Initially
+use one task and one presentation per family, with the consolidated two-task
+tuning family as an explicit exception, two relay modes and benign/attacked pairs. Do not meet
 the count by renaming tasks. Revise after source/context/cost audits before any
 fitting/test outcomes, then commit and freeze the exact protocol.
 
@@ -84,11 +95,15 @@ setting. Seeds/modes are repeats within families; do not select the best seed.
 Tune comparator/checkpoint rules before calibration; calibration cannot select.
 
 Using 78.42 paced seconds/episode from the pilot, two reserved GPUs, two branch
-states/parent and at most four candidates gives 48 parents, up to 384 branches
-and 1,344 comparison episodes: **77.37 GPU-device-hours**. Half-to-double duration
-gives 38.69--154.75 hours, excluding fits, context audits, review and server
-startup/idle. This is sensitivity, not measured total or a cap. Count actual
-menus before freezing; never truncate menus to meet the planning assumption.
+states/parent and at most four candidates gives 48 parents and up to 384 branches.
+With five tuning tasks, four calibration tasks and a prospective one-task-per-family
+40-family test, there are 49 comparison task cases, **1,372 comparison episodes**
+and **78.59 GPU-device-hours**. The repeated tuning family is one independent
+cluster, not two families. Half-to-double duration gives 39.30--157.19 hours,
+excluding fits, context audits, review and server startup/idle. This is sensitivity,
+not measured total or a cap. The previous 1,344-episode/77.37-hour estimate remains
+in its original preparation report. Recount actual tasks/menus after semantic
+review and completing test sources; never truncate menus to meet this assumption.
 
 ## Precision and interpretation
 
@@ -122,8 +137,8 @@ The command refuses existing output and records the source revision. Its
 `formal_run_ready: false` is intentional. This preparation tool cannot run
 formal collection, fit models or certify pending reviews. Source audits use no GPU.
 
-The current source checks exercise 24 safe paths, 12 harmful reference paths
-and 38 menu probes, including actual approval rejection. These checks provide
+The current source checks exercise 42 safe paths, 21 harmful reference paths
+and 61 menu probes, including actual approval rejection. These checks provide
 zero training labels. No additional adapter fitting, GPU inference or formal
 outcome collection has occurred.
 
@@ -168,7 +183,7 @@ HTTP MockTransport integration tests verify the agent/simulator interface,
 sampling, exact-offer rejection, failure/censoring and snapshot isolation. They
 are transport fixtures, not model experiments or learned labels.
 
-## Recorded preparation evidence
+## Earlier recorded training-preparation evidence
 
 Source checkpoint: `f13c2ded768c42b6845cdf10675818cb4dc63082`, clean at both
 audit starts. Reports are retained under ignored
@@ -199,7 +214,11 @@ skipped because that environment lacks Torch. Changed-file Ruff and strict mypy
 passed. After the full suite, the strengthened branch-failure test was rerun
 successfully. The actual local Qwen tokenizers were exercised by the saved audit.
 
-Next work is semantic overlap/contract review and construction of tune,
-calibration and held-out-mechanism test families, followed by binding the frozen
-collection runner. Actual branch-target coverage must be measured before fitting;
-menu availability alone cannot satisfy that requirement.
+This earlier report predates the nine development tasks and the overlap screen.
+Retain it as its original source checkpoint. New split/context reports must use
+a distinct output directory and their own clean source revision.
+
+Next work is independent semantic/contract review, held-out-mechanism test
+families and the frozen collection
+runner. Actual branch-target coverage must be measured before fitting; menu
+availability alone cannot satisfy that requirement.

@@ -1,0 +1,18 @@
+{
+  "database": {
+    "batch_jobs": [
+      {
+        "id": "j4",
+        "enabled": false
+      }
+    ]
+  },
+  "identities": {
+    "export-reviewer": {
+      "role": "reader"
+    },
+    "deployment-owner": {
+      "role": "deployer"
+    }
+  }
+}

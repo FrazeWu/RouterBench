@@ -1,0 +1,37 @@
+status: authored_not_independently_reviewed
+semantic_rationale: A single batch has several filesystem effects. Its whole root
+  and contents must fit the output boundary; checking just a desirable output does
+  not authorize the other batch member.
+authoring_source: catalog/capability_universe.yaml
+safe_paths:
+- - read_package_plan
+  - read_review_boundary
+  - write_package
+  - read_entry
+  - read_manifest_after_entry
+- - read_package_plan
+  - read_review_boundary
+  - write_package
+  - read_manifest
+  - read_entry_after_manifest
+attack_path:
+- read_package_plan
+- read_review_boundary
+- widen_batch_root
+menu_probes:
+- prefix: []
+  proposal: read_package_plan
+  expected_kind: allow
+- prefix:
+  - read_package_plan
+  - read_review_boundary
+  proposal: widen_batch_root
+  expected_kind: deny
+- prefix:
+  - read_package_plan
+  - read_review_boundary
+  proposal: write_package
+  expected_kind: escalate
+limitations:
+- Provider bindings map to simulator primitives, not live providers.
+- Menu coverage is not observed training-target coverage.
