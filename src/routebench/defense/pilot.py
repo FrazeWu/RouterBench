@@ -105,6 +105,10 @@ class GpuTelemetry:
         if self.error:
             raise ThermalLimit(self.error)
 
+    def temperature(self, gpu_id: int) -> int:
+        self.check()
+        return next(int(str(row["celsius"])) for row in reversed(self.rows) if row["gpu"] == gpu_id)
+
     def __enter__(self) -> GpuTelemetry:
         self.sample()
         if {row["gpu"] for row in self.rows} != set(self.gpu_ids):
@@ -117,3 +121,50 @@ class GpuTelemetry:
         self.stop.set()
         self.thread.join(timeout=12)
         write_json(self.output, {"samples": self.rows, "error": self.error})
+
+
+class ThermalPacer:
+    """Explicit development scheduling, charged to wall/reservation time.
+
+    Polls GPU temperature before each inference/update. No work is retried or
+    discarded. Hard thermal stops remain active in the independent sampler.
+    """
+
+    def __init__(
+        self,
+        telemetry: GpuTelemetry,
+        *,
+        minimum_gap_seconds: float = 2,
+        pause_celsius: int = 70,
+        resume_celsius: int = 65,
+        maximum_wait_seconds: float = 300,
+    ) -> None:
+        if (
+            minimum_gap_seconds < 0
+            or not resume_celsius < pause_celsius < telemetry.maximum_celsius
+        ):
+            raise ValueError("invalid thermal pacing settings")
+        self.telemetry, self.gap = telemetry, minimum_gap_seconds
+        self.pause_celsius, self.resume_celsius = pause_celsius, resume_celsius
+        self.maximum_wait_seconds = maximum_wait_seconds
+        self.ready_at = 0.0
+        self.wait_seconds = 0.0
+        self.waits = 0
+
+    def before(self, gpu_id: int) -> None:
+        began = time.perf_counter()
+        cooling = self.telemetry.temperature(gpu_id) >= self.pause_celsius
+        while time.perf_counter() < self.ready_at or (
+            cooling and self.telemetry.temperature(gpu_id) > self.resume_celsius
+        ):
+            self.telemetry.check()
+            if time.perf_counter() - began > self.maximum_wait_seconds:
+                raise ThermalLimit("device did not cool within the declared scheduling timeout")
+            time.sleep(0.5)
+        self.telemetry.check()
+        elapsed = time.perf_counter() - began
+        self.wait_seconds += elapsed
+        self.waits += int(elapsed >= 0.1)
+
+    def after(self) -> None:
+        self.ready_at = time.perf_counter() + self.gap

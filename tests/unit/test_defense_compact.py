@@ -37,7 +37,12 @@ from routebench.defense.lora import (
     train_lora,
     validate_adapter,
 )
-from routebench.defense.pilot import UnguardedSimulatorReference
+from routebench.defense.pilot import (
+    GpuTelemetry,
+    ThermalLimit,
+    ThermalPacer,
+    UnguardedSimulatorReference,
+)
 from routebench.defense.policies import PerActionAuthorizationPolicy, PublicRulePolicy
 from routebench.defense.relay import RelayCampaign, RelayStage, StagedResponseRelay
 from routebench.runtime.reference import ScenarioState
@@ -170,6 +175,26 @@ def test_answer_only_loss_and_no_context_truncation() -> None:
     assert ids == [2, 3, 4, 5, 6, 1] and labels == [-100, -100, -100, 5, 6, 1]
     with pytest.raises(ContextOverflow):
         answer_training_ids(Tokenizer(), observation(), "deny", context_tokens=5)
+
+
+def test_thermal_pacer_waits_for_cooling_and_never_ignores_a_hard_stop(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    telemetry = GpuTelemetry(tmp_path / "telemetry.json", gpu_ids=(0,))
+    telemetry.rows.append({"gpu": 0, "celsius": 72})
+    pacer = ThermalPacer(telemetry, minimum_gap_seconds=0, pause_celsius=70, resume_celsius=65)
+    cooled = []
+
+    def cool(seconds: float) -> None:
+        cooled.append(seconds)
+        telemetry.rows.append({"gpu": 0, "celsius": 65})
+
+    monkeypatch.setattr("routebench.defense.pilot.time.sleep", cool)
+    pacer.before(0)
+    assert cooled and telemetry.temperature(0) == 65
+    telemetry.error = "thermal slowdown"
+    with pytest.raises(ThermalLimit, match="thermal slowdown"):
+        pacer.before(0)
 
 
 def test_text_relay_pair_counts_actual_calls_and_does_not_enter_system_message() -> None:

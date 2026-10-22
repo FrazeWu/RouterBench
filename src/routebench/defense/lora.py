@@ -226,6 +226,7 @@ def train_lora(
     development_smoke: bool = False,
     formal_protocol_id: str | None = None,
     check: Callable[[], None] | None = None,
+    after_update: Callable[[], None] | None = None,
 ) -> dict[str, object]:
     import torch  # type: ignore[import-not-found]
     from peft import LoraConfig, get_peft_model  # type: ignore[import-not-found]
@@ -300,6 +301,8 @@ def train_lora(
             step_loss += float(loss.detach().cpu())
         torch.nn.utils.clip_grad_norm_([value for _, value in trainable], 1.0)
         optimizer.step()
+        if after_update is not None:
+            after_update()
         losses.append(step_loss)
     if not any(not torch.equal(initial[name], value.detach().cpu()) for name, value in trainable):
         raise ValueError("adapter parameters did not change")

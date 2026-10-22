@@ -32,6 +32,11 @@ The pilot places the large agent on GPU 1 and compact fitting/inference on GPU 0
 because the first continuous GPU-0 inference attempt triggered thermal throttling.
 Every requested GPU remains monitored; a device switch is not evidence of thermal
 stability until an uninterrupted measured run completes.
+The configured two-second gap after calls/updates and 70-to-65 C cooling
+hysteresis are explicit scheduling costs, applied to all arms. Cooling and idle
+reservation time are included; they are not hidden model latency or retries.
+Hard thermal stops remain active. Both initial unpaced attempts are retained as
+aborted development records rather than counted as completed experiments.
 
 ## Run and inspect
 

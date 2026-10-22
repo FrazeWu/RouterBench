@@ -54,7 +54,12 @@ from routebench.defense.lora import (
     model_fingerprint,
     train_lora,
 )
-from routebench.defense.pilot import GpuTelemetry, UnguardedSimulatorReference, clean_revision
+from routebench.defense.pilot import (
+    GpuTelemetry,
+    ThermalPacer,
+    UnguardedSimulatorReference,
+    clean_revision,
+)
 from routebench.defense.policies import (
     MixtureLoggingPolicy,
     PerActionAuthorizationPolicy,
@@ -81,15 +86,33 @@ class PilotConfig(StrictModel):
     maximum_branch_states_per_episode: int = Field(gt=0)
     gpu_ids: tuple[int, ...]
     maximum_celsius: int
+    minimum_request_gap_seconds: float = Field(ge=0)
+    cooling_pause_celsius: int
+    cooling_resume_celsius: int
     modes: tuple[Literal["text", "structured"], ...]
     campaigns: tuple[RelayCampaign, ...]
     branch_nodes: dict[str, tuple[str, ...]]
 
 
 class MeasuredAgent(JsonRecoveryAgent):
-    def __init__(self, *args: object, telemetry: GpuTelemetry, **kwargs: object):
+    def __init__(
+        self,
+        *args: object,
+        telemetry: GpuTelemetry,
+        pacer: ThermalPacer,
+        gpu_id: int,
+        **kwargs: object,
+    ):
         super().__init__(*args, **kwargs)  # type: ignore[arg-type]
         self.telemetry = telemetry
+        self.pacer, self.gpu_id = pacer, gpu_id
+
+    async def _complete(self, view: AgentView, **kwargs: Any) -> str:
+        self.pacer.before(self.gpu_id)
+        try:
+            return await super()._complete(view, **kwargs)
+        finally:
+            self.pacer.after()
 
     async def respond_budgeted(
         self, view: AgentView, *, seed: int, charge: Callable[[], None]
@@ -101,9 +124,23 @@ class MeasuredAgent(JsonRecoveryAgent):
         return await super().respond_budgeted(view, seed=seed, charge=checked_charge)
 
 
+class PacedCompactPolicy(CompactPolicy):
+    def __init__(self, model: LocalCandidateModel, *, use_adapter: bool, pacer: ThermalPacer):
+        super().__init__(model, use_adapter=use_adapter)
+        self.pacer = pacer
+
+    def choose(self, observation: DefenseObservation, *, rng: random.Random) -> PolicyChoice:
+        self.pacer.before(int(self.model.config.device.split(":")[-1]))
+        try:
+            return super().choose(observation, rng=rng)
+        finally:
+            self.pacer.after()
+
+
 class Pilot:
     def __init__(self, root: Path, config_path: Path, output: Path):
         self.root, self.output = root, output
+        self.pacer: ThermalPacer
         self.revision = clean_revision(root)
         self.config = PilotConfig.model_validate(yaml.safe_load(config_path.read_text()))
         self.agent_config = RecoveryAgentConfig.model_validate(
@@ -161,7 +198,12 @@ class Pilot:
 
     def agent(self, relay: StagedResponseRelay, telemetry: GpuTelemetry) -> MeasuredAgent:
         return MeasuredAgent(
-            self.agent_config, relay=relay, text_receiver=relay.mode == "text", telemetry=telemetry
+            self.agent_config,
+            relay=relay,
+            text_receiver=relay.mode == "text",
+            telemetry=telemetry,
+            pacer=self.pacer,
+            gpu_id=self.config.gpu_ids[0],
         )
 
     async def episode(
@@ -403,7 +445,8 @@ class Pilot:
             self.output / "adapter",
             source_revision=self.revision,
             development_smoke=True,
-            check=telemetry.check,
+            check=lambda: self.pacer.before(int(self.config.compact.device.split(":")[-1])),
+            after_update=self.pacer.after,
         )
         print(json.dumps(measurement), flush=True)
         gc.collect()
@@ -422,8 +465,8 @@ class Pilot:
             "unguarded": PerActionAuthorizationPolicy(),
             "per_action": PerActionAuthorizationPolicy(),
             "path_rule": PublicRulePolicy(),
-            "compact_base": CompactPolicy(compact, use_adapter=False),
-            "compact_lora": CompactPolicy(compact, use_adapter=True),
+            "compact_base": PacedCompactPolicy(compact, use_adapter=False, pacer=self.pacer),
+            "compact_lora": PacedCompactPolicy(compact, use_adapter=True, pacer=self.pacer),
         }
         jobs = [
             (task, mode, attacked, arm)
@@ -555,6 +598,12 @@ async def run(args: argparse.Namespace) -> None:
             gpu_ids=pilot.config.gpu_ids,
             maximum_celsius=pilot.config.maximum_celsius,
         ) as telemetry:
+            pilot.pacer = ThermalPacer(
+                telemetry,
+                minimum_gap_seconds=pilot.config.minimum_request_gap_seconds,
+                pause_celsius=pilot.config.cooling_pause_celsius,
+                resume_celsius=pilot.config.cooling_resume_celsius,
+            )
             try:
                 if phase == "collect":
                     await pilot.collect(telemetry)
@@ -566,8 +615,8 @@ async def run(args: argparse.Namespace) -> None:
                 status = "complete"
             finally:
                 elapsed = time.perf_counter() - began
-                # GPU0 remains reserved by the externally launched task server;
-                # GPU1 is reserved during fit/compare. Do not double count branches.
+                # The first configured GPU hosts the externally launched task server;
+                # both are reserved during fit/compare. Do not double count branches.
                 occupied = (
                     [pilot.config.gpu_ids[0]] if phase == "collect" else list(pilot.config.gpu_ids)
                 )
@@ -580,6 +629,8 @@ async def run(args: argparse.Namespace) -> None:
                         "wall_seconds": elapsed,
                         "reserved_gpu_ids": occupied,
                         "reserved_device_hours": elapsed * len(occupied) / 3600,
+                        "scheduled_wait_seconds": pilot.pacer.wait_seconds,
+                        "scheduled_wait_count": pilot.pacer.waits,
                         "note": "phase estimate; add server startup and idle gaps separately",
                         "packages": {
                             name: importlib.metadata.version(name)
