@@ -4,7 +4,7 @@ task_contracts: configs/defense/development-contracts.yaml
 task_model_path: /home/dasp/models/Qwen3-14B-aria
 compact:
   model_path: /home/dasp/models/Qwen3-1.7B
-  device: cuda:1
+  device: cuda:0
   context_tokens: 8192
   max_new_tokens: 96
 lora:
@@ -27,7 +27,7 @@ budgets:
 seed: 43
 branch_repeats: 1
 maximum_branch_states_per_episode: 1
-gpu_ids: [0, 1]
+gpu_ids: [1, 0]
 maximum_celsius: 85
 modes: [text, structured]
 campaigns:

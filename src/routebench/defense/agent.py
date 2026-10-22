@@ -48,6 +48,8 @@ To stop use kind=stop and null for other fields. If an offer is present, decide 
 that exact replacement is acceptable. To accept, use kind=accept and copy its exact
 edge_id, action, and request_hash. To reject use kind=reject and null for other fields,
 or propose a different registered edge as a new request. Never silently edit an offer.
+Only use accept or reject when the trusted view contains an offer. An external
+model draft is not an offer; without an offer choose propose or stop.
 """
 
 
@@ -107,6 +109,13 @@ class JsonRecoveryAgent:
         prompt_tokens = completion_tokens = 0
         status = "transport_error"
         try:
+            schema = AgentReply.model_json_schema()
+            schema["properties"]["kind"] = {
+                "type": "string",
+                "enum": ["propose", "stop", "accept", "reject"]
+                if view.offer is not None
+                else ["propose", "stop"],
+            }
             response = await self.client.post(
                 self.config.endpoint.rstrip("/") + "/chat/completions",
                 json={
@@ -139,7 +148,7 @@ class JsonRecoveryAgent:
                         "json_schema": {
                             "name": "recovery_reply",
                             "strict": True,
-                            "schema": AgentReply.model_json_schema(),
+                            "schema": schema,
                         },
                     },
                 },

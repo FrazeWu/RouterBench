@@ -211,6 +211,9 @@ def test_text_relay_pair_counts_actual_calls_and_does_not_enter_system_message()
                 assert len(agent.calls) == env.budget.used["agent_calls"] == 2
                 assert agent.calls[0].purpose == "relay_draft"
                 assert requests[0]["messages"][0] == requests[1]["messages"][0]
+                assert requests[1]["response_format"]["json_schema"]["schema"]["properties"][
+                    "kind"
+                ]["enum"] == ["propose", "stop"]
                 assert await env.call_agent(agent, seed=8) is None
                 assert (
                     len(agent.calls) == 2

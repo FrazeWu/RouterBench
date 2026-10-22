@@ -19,7 +19,7 @@ Start the frozen task agent (use the server environment's `bin` directory on PAT
 so native build utilities such as ninja are available):
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 vllm serve /home/dasp/models/Qwen3-14B-aria \
+CUDA_VISIBLE_DEVICES=1 vllm serve /home/dasp/models/Qwen3-14B-aria \
   --host 127.0.0.1 --port 8011 --served-model-name RouteBench/Qwen3-14B \
   --dtype bfloat16 --max-model-len 8192 --max-num-seqs 1 \
   --gpu-memory-utilization 0.90 --generation-config vllm --enforce-eager
@@ -28,6 +28,10 @@ CUDA_VISIBLE_DEVICES=0 vllm serve /home/dasp/models/Qwen3-14B-aria \
 Wait for `/v1/models` readiness. Keep server startup/stop timestamps and GPU
 reservations alongside the pilot; phase cost files exclude server startup and
 idle gaps. Stop only the server you started when done.
+The pilot places the large agent on GPU 1 and compact fitting/inference on GPU 0
+because the first continuous GPU-0 inference attempt triggered thermal throttling.
+Every requested GPU remains monitored; a device switch is not evidence of thermal
+stability until an uninterrupted measured run completes.
 
 ## Run and inspect
 
