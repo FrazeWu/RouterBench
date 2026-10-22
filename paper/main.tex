@@ -345,8 +345,9 @@ explicit validity check, distinguishing unavailable targets from model errors.
 We further specify matched counterfactual diagnostics separating local permission
 judgments, complete-route safety recognition, and safe planning, with controls for
 ordinary task competence. Finally, we formulate an auxiliary evaluation-calibrated
-path-aware capability attenuation defense: a trained scorer selects concrete
-recovery interventions inside trusted execution bounds. The benchmark is implemented;
+path-aware capability attenuation defense: a compact language model can be fine-tuned
+to select concrete recovery interventions inside trusted execution bounds.
+The benchmark is implemented;
 the diagnostic and defense extensions require empirical validation.
 \end{abstract}
 
@@ -389,7 +390,7 @@ The paper has three contributions:
  presentation controls.
  \item A specified auxiliary defense, evaluation-calibrated path-aware
  capability attenuation (ECPA), connecting development diagnostics to bounded
- runtime recovery and matched supervised/offline learning.
+ runtime recovery and outcome-supervised compact-model fine-tuning.
 \end{itemize}
 The latter two are methodological specifications, not claims of an observed
 diagnostic gap or validated defense improvement.
@@ -547,7 +548,7 @@ are out of scope.
 \draw[->] (intervene) -- (monitor);
 \draw[->] (monitor) -- (trace);
 \draw[->] (trace) |- (agent);
-\node[proposed] (learn) at (4.5,-4.35) {Frozen E5 + 128/64 scorer\\supervised; offline TD};
+\node[proposed] (learn) at (4.5,-4.35) {Compact LM with LoRA\\outcome-derived supervision};
 \draw[->] (trace) -- (learn);
 \draw[->] (learn) -- (intervene);
 \node[evaluator] (outcome) at (9,-4.35) {Evaluator outcomes\\safe recovery, cost, violation};
@@ -557,7 +558,8 @@ are out of scope.
 \caption{Complete RouteBench--ECPA framework. Solid arrows are implemented
 data paths; dashed nodes/arrows mark formal defense work still requiring a new
 protocol freeze. The bridge exports only aggregate/public evaluation metadata;
-private evaluator material remains outside the online scorer.}
+private evaluator outcomes may label realized training branches but never enter
+the online selector input.}
 \label{fig:overview}
 \end{figure*}
 
@@ -566,9 +568,9 @@ aggregate endpoint projection. It carries scenario digest, semantic family,
 route-length band, candidate/path counts, and public-route ambiguity into
 stratification and collection manifests. It does not carry hidden certificates,
 fixtures, private route costs, or evaluator-owned outcomes into the online
-scorer; those outcomes are joined only after a real recovery rollout for
-evaluation. This makes the connection operational without turning the historical
-v13 planner result into training data.
+selector input; actual rollout outcomes supply offline training labels and
+held-out evaluation results. This makes the connection operational without turning
+the historical v13 planner result into training data.
 
 \subsection{Catalog-Bound Authoring}
 
@@ -756,11 +758,12 @@ call, causing a frozen ordinary agent to propose a sequence of increasingly
 privileged or task-diverting actions. It cannot directly execute tools, alter
 trusted runtime state, or bypass authorization and final dispatch checks. This
 assumes compromise at or beyond a response relay; transport integrity alone is
-outside the defense claim. Each attack task is paired with the same benign task
+outside the defense claim. The local defender uses a separate trusted inference
+channel. Each attack task is paired with the same benign task
 without response tampering. The interleaved runtime, real task-agent interface
-and candidate scorer are implemented; an independent corpus, formal freeze and
-benefit comparison remain pending. Historical v13 is a separate pre-replay
-interface.
+and development scorer are implemented. The proposed compact-model LoRA adapter,
+independent corpus, formal freeze and benefit comparison remain pending.
+Historical v13 is a separate pre-replay interface.
 
 The trainable component selects concrete recovery interventions on every request.
 Public contracts determine admissibility; hidden verifiers, reference routes/costs
@@ -793,33 +796,43 @@ branch-assignment probabilities. Cutoff is censoring, not a failed terminal labe
 A sufficient independent corpus remains outstanding. Hold out task families and
 attack mechanisms across train, tuning, calibration and fresh tests.
 
-Compare outcome supervision and multi-step offline RL on the same frozen text
-encoder, learned state/history/candidate backbone, data and update budget. Predict
-safe completion, remaining cost, violations and return. The offline objective uses
-actual n-step returns and supported successor interventions; unsupported backups
-use observed returns. CQL regularization \citep{kumar2020cql} is optional.
-Low-support/disagreement fallbacks are heuristics, not risk certificates.
-Calibration audits a fixed tuned policy; it cannot select another policy.
+The primary learned method uses LoRA fine-tuning of one compact open-weight
+language model; Qwen3-1.7B is the initial recommendation, pending a memory/timing
+pilot and snapshot freeze. The task agent remains frozen. At sampled training
+states, execute candidate interventions in independent simulator branches under
+the same continuation policy and attack condition. Derive choice targets from
+realized violation, safe-completion and cost outcomes, preferring violation-free
+completion and then lower cost. These observations are noisy labels, not optimal
+route certificates. Use standard supervised candidate-choice training.
+
+Input contains the public task/contracts, structured proposal, trusted path
+history, resource counters and legal menu. Exclude raw untrusted response text
+and private evaluator material from inputs; actual evaluator outcomes supply
+offline labels only. Output is a current-menu candidate ID, without generated
+action parameters or rationales. Invalid output uses deterministic fallback;
+every choice receives trusted runtime revalidation. Calibration audits a fixed
+selected policy. LoRA and supervised learning are not new learning algorithms.
 
 \subsection{Guarantees and Empirical Burden}
 
 Complete mediation, sound contracts and authenticated approvals support an
 established reference-monitor argument, not a new theorem or learned-safety
-guarantee. The primary comparison uses four conditions: unguarded behavior as a
-reference, per-action authorization checks, deterministic path-state recovery,
-and the trained path-intervention selector. All guarded conditions share the
-same hard prohibitions and final recheck; the path-level conditions also share
-the concrete intervention menu. The primary trained method is outcome-supervised;
-offline RL is exploratory and is included only if the resource cap permits.
-Hold out task families and attack
-mechanisms across training and test. Pair tampered and benign versions of each
+guarantee. The primary comparison uses five conditions: unguarded behavior as an
+attack reference, per-action authorization, deterministic path-state recovery,
+the frozen compact base model, and that same model after LoRA fine-tuning. The
+last pair shares inputs, prompts, menus and decoding settings, isolating training
+benefit. Guarded methods share hard prohibitions and final rechecks; path-level
+methods also share concrete menus. Use one model and one supervised recipe;
+online RL and model-size sweeps are outside the primary plan.
+Hold out task families and attack mechanisms across training and test.
+Pair tampered and benign versions of each
 task, covering both text injection and forged structured calls. Report attack
 success, episode violations, benign completion, unnecessary interventions and
 total cost separately. Safe recovery requires actual completion, explicit stop
 and no episode violation. The defense corpus and formal freeze remain pending;
-sample size and repeated presentations will be set after timing a pilot under
-the 200-GPU-hour cap. Equality with deterministic control does not demonstrate
-learning's added value.
+sample size and repetitions will be set after a timed pilot, aiming for modest
+overall compute and fine-tuning only one small model, without a fixed hour ceiling.
+Equality with deterministic control does not demonstrate learning's added value.
 
 \section{Experiments}
 \label{sec:experiments}
@@ -1372,53 +1385,33 @@ uniqueness contract, not the formal ordinal endpoint.
 \section{Recovery Training and Evaluation Protocol}
 \label{app:training}
 
-The implemented objectives use identical concrete-menu features and a shared
-128/64-unit ReLU backbone with success, cost, violation and return heads.
-A frozen pretrained encoder embeds public task/contracts, state/proposal,
-history and candidate separately, with typed counters appended.
-The development encoder is pinned \nolinkurl{intfloat/e5-small-v2} revision
-\texttt{ffb93f3b} (full digest in the protocol manifest).
-Long components use deterministic chunk pooling without silent truncation;
-encoder weights do not authorize actions or receive gradients.
-Private traces contain permitted observations and actual outcomes;
-hashes serve as identifiers, not substitutes for learning features.
+The proposed paper method uses a single compact base language model with LoRA;
+base weights and the ordinary task agent remain frozen. Record the exact model
+snapshot, trainable parameter count, context length, precision, adapter settings,
+update count, training tokens and GPU hours. Pilot these settings before a formal
+freeze. Candidate-choice supervision comes from real simulator continuations and
+actual outcomes; define candidate ordering, ties and censoring before training.
+No hidden route, fixture or optimum is included in the input. Constrain output
+to a legal menu ID and recheck before dispatch. Include the identical base model
+without fine-tuning to measure training benefit. Use a small prespecified number
+of adapter seeds and no broad model-size or learning-algorithm sweep.
 
-For supervised learning, predict eventual safe completion, remaining actual
-cost, eventual violation and full observed return. This is long-term outcome
-supervision, not imitation of logged actions. For offline RL, retain the same
-auxiliary heads and use the multi-step target. Let $I_{t+k}$ equal one
-when the successor is supported and nonterminal, and zero otherwise:
-\begin{align*}
- y_t={}&\sum_{j=0}^{k-1}r_{t+j}\\
-       &+ I_{t+k}\max_{u\in\mathcal U(x_{t+k})}\bar Q(x_{t+k},u).
-\end{align*}
-Here $k$ ends at the selected horizon or true termination. The implemented
-$r_t$ already contains fixed execution, intervention, approval, agent-call, preview,
-and search costs, the first observed violation penalty, and a safe-completion reward
-only after an explicit valid stop.
-If no successor candidate meets the fixed support heuristic, use the actual
-full return instead of extrapolating an unsupported backup.
-Censored rollouts supply neither fabricated terminal outcomes nor full-return
-labels. A finite-menu log-sum-exp conservative penalty may supplement the TD
-loss \citep{kumar2020cql}; this is not a new RL algorithm.
-
-Engineering defaults are Adam $3\times10^{-4}$, batch 256, horizon $k=3$,
-discount 1 and target factor 0.005. Five independent controller seeds are planned.
-Tune update count, regularization, cost weights, support and fallback thresholds
-on tuning families before calibration. Kind/tool counts and ensemble disagreement
-are heuristics, not certificates of conditional support or per-action safety.
-Calibration audits a fixed policy; do not reselect on the same audit set.
+Existing engineering checks use frozen \nolinkurl{intfloat/e5-small-v2} revision
+\texttt{ffb93f3b} and a 128/64-unit scorer with outcome-supervised and offline TD
+objectives. Those development fits are not LoRA training, do not validate the new
+paper method, and do not determine its optimizer settings. The compact-model
+adapter and independent training corpus remain pending. Calibration audits a fixed
+selected policy rather than selecting a new policy on the audit set.
 
 A new corpus must split semantic families across training, tuning, calibration
 and fresh tests; primary test attack mechanisms are also held out.
 Entity renaming is not family independence. Other frozen task-agent models
 form separate transfer tests. Current development cases are insufficient.
-Diagnostic-guided acquisition mixes half uniform and half development-failure
-priority within training families. Its acquisition budget includes diagnostic
-calls and all branch continuations. Compare uniform acquisition at equal total
-calls/tokens, with equal-rollout comparisons supplementary; use the same
-architecture/update budget. Recovery benefit alone does not prove acquisition
-benefit.
+Use public graph strata and realized training-branch outcomes to connect the
+evaluator to data collection and supervision. Diagnostics-guided acquisition is
+an optional separate study: compare it with uniform acquisition at equal total
+calls/tokens, including diagnostic calls and branch continuations. Recovery
+benefit alone does not prove acquisition benefit.
 
 Within a concrete menu, the logging mixture is
 $\beta(u\mid x)=\frac12\beta_{\rm rule}(u\mid x)+
@@ -1430,12 +1423,11 @@ Actual approval may reject. Never infer successful recovery by relabeling a
 trace collected without that intervention.
 
 \paragraph{Comparisons and fixed criterion.}
-The primary comparison uses per-action authorization, deterministic path-state
-recovery and the outcome-supervised path-intervention scorer, with unguarded
-behavior as a reference. The path-level methods share menus, information,
-guards, witness/approval semantics and online budgets. Budgeted structural
-search, offline RL and block-then-recover are secondary comparisons only if they
-fit the resource cap.
+Compare unguarded behavior, per-action authorization, deterministic path-state
+recovery, the prompted compact base model, and its LoRA-fine-tuned version.
+The compact-model pair shares public inputs, menus, prompts and decoding.
+The path-level methods share guards, witness/approval semantics and online budgets.
+Offline RL and transfer-model sweeps are outside the primary plan.
 Report realized encoding, diagnostics, acquisition, training and total costs,
 not just controller inference overhead. Freeze the strongest comparator on
 tuning data before calibration/testing.
@@ -1456,8 +1448,10 @@ collection/training, not learned efficacy or generalization. Formal collection,
 independent contracts and the held-out comparison remain pending. The available
 host has two A100-PCIe-40GB GPUs and about 196 GiB RAM. Development inference uses
 frozen Qwen3-14B BF16, context 8192, maximum four sequences and 90\% GPU-memory
-utilization. Total formal compute is capped at 200 GPU hours; the sample plan
-will be frozen after a timed paired pilot. Planning approximations do not
+utilization. The author prefers modest overall compute and fine-tuning one small
+model, replacing the earlier hard 200-GPU-hour ceiling. Verify thermal stability
+and time collection, branching, adapter fitting and evaluation before freezing the
+sample plan and cost estimate. Planning approximations do not
 guarantee power. Formal runs require a committed clean
 revision and frozen identity, distinct from historical v13.
 \section{Runtime and Transition Contract}

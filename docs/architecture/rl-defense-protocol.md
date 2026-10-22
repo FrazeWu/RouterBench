@@ -1,23 +1,21 @@
 # ECPA: Trainable Safe Recovery Protocol
 
-Status, 2026-10-21: the author confirmed this design and authorized implementation
-and development feasibility measurements. The interleaved runtime, real JSON agent,
-concrete-menu policies, private rollout records, outcome-supervised scorer,
-multi-step offline TD scorer, and experiment accounting/statistics are implemented.
-Two public development overlays support engineering checks only. An independent
-corpus, frozen formal protocol, adaptive attacker and validated learned benefit
-remain pending. Historical v13 results retain their original interface and identity.
+Status, 2026-10-22: the interleaved runtime, real JSON agent, concrete-menu
+policies, rollout records, frozen-E5 development scorer and offline TD prototype
+are implemented. The revised paper method is LoRA fine-tuning of one compact
+language model; that adapter, independent corpus and formal comparison are not
+yet implemented or validated. Historical v13 keeps its original identity.
 
 ## Research question and claims
 
-Can a trained path-intervention selector contain an external response-relay attack
-while preserving benign task completion, compared with per-action checks and a
-deterministic path-state control under the same trusted boundary? RouteBench remains
-the primary contribution. Training alone is not novelty. The primary learned method
-is outcome supervision; offline RL is exploratory and included only if it fits the
-resource cap. When shared sound guards eliminate all modeled violations, compare
-completion and cost; never claim an extra reduction in violations or weaken guards
-to manufacture one.
+Can a compact, fine-tuned path-intervention selector contain an external
+response-relay attack while preserving task completion, compared with per-action
+checks, deterministic path-state recovery and the same model without fine-tuning?
+Training alone is not novelty. Use one small model and one supervised training
+recipe; no task-agent fine-tuning, full-parameter large-model training, online RL
+or model-size sweep is part of the primary plan. When sound shared guards eliminate
+modeled violations, compare completion and cost without claiming further safety
+gains or weakening the guards to manufacture them.
 
 ## Threat and information boundaries
 
@@ -34,6 +32,8 @@ Receipts, graph position, contracts, grants and provenance remain separate typed
 trusted data. Attack labels are evaluator-owned and hidden from agent/controller
 views. Run harmful effects only in the trusted simulator. Tests hold out attack
 mechanisms by family. Adaptive attacks are outside the first experiment.
+The local defender's weights, inputs and output channel are trusted and separate
+from the compromised task-model relay.
 
 Runtime sees public goals, executable preconditions/effects, legal transitions,
 trusted abstract facts, proposals, observations, history and remaining resources.
@@ -73,7 +73,7 @@ collection cutoff is censoring without fabricated failure labels. Failed model
 calls remain failures in the fixed denominator. No silent retry or input truncation.
 Simulator branches are training/development only; live execution has no trial/rollback.
 
-## Actual data and learned scorer
+## Actual data and learned selector
 
 Collect actual intervention-dependent rollouts, including rejection and failure.
 Some identical recorded states are branched into different interventions using
@@ -87,26 +87,35 @@ conditional intervention behavior probability and branch assignment probability.
 A half deterministic-rule/half uniform-menu logging mixture records its exact
 effective probability. No importance-weighted off-policy efficacy claim is made.
 
-The implemented encoder candidate is intfloat/e5-small-v2 at commit
-ffb93f3bd4047442299a41ebb6fa998a38507c52. Freeze its weights. Deterministically
-chunk/pool long components without silent truncation. Separately encode public
-task/contracts, current state/proposal, history and concrete candidate. Append actual
-resource counters and typed indicators. A learned 128/64 ReLU backbone has final
-safe-completion, remaining-cost, eventual-violation and return heads.
+### Planned compact-model fine-tuning
 
-Compare the same features, backbone, data, seed policy and update budget:
-- Supervised long-term actual outcomes/costs/full returns, not action imitation.
-- Multi-step offline TD with the same auxiliary heads, actual n-step rewards and a
-  target network over supported successor candidates. Unsupported backups use
-  observed full returns. Censored rollouts do not supply full-outcome targets.
-  A finite-menu conservative penalty is optional; CQL is not mandated.
+Recommend Qwen3-1.7B as the initial candidate, with LoRA adapters and frozen base
+weights. This is a proposed size, not a frozen checkpoint or measured feasibility
+claim. Pin the snapshot, context length, adapter settings and training budget after
+a short memory/timing pilot. The existing 14B task agent stays frozen.
 
-Engineering defaults: Adam 3e-4, batch 256, discount 1, n=3, target factor 0.005,
-2,000 updates per fit. Five independent training seeds are proposed for formal
-comparisons. Coarse kind/tool-count support and ensemble disagreement trigger a
-deterministic fallback; these are heuristics, not safety or conditional-support
-certificates. Tune thresholds, costs and comparator only on tuning data. Independent
-calibration audits the selected fixed policy; do not reselect on the same audit set.
+Input contains the public task/contracts, structured proposal, trusted execution
+history, resource counters and runtime-generated legal menu. Exclude raw untrusted
+response text and evaluator-private material from model inputs. Output is only a
+candidate ID from the current menu, with no generated action parameters or long
+rationale. Invalid outputs fall back to the fixed deterministic policy; the runtime
+revalidates all choices and the model never grants permissions.
+
+Create outcome-derived choice targets at sampled training states by actually
+branching legal candidates in independent simulator states under the same frozen
+continuation policy and attack condition. Use realized violation, safe-completion
+and cost labels: prefer violation-free safe completion, then lower total cost.
+Define ordering, ties and treatment of censored branches before fitting. These
+finite-sample outcomes are noisy observations, not optimal-action certificates.
+Evaluator outcomes may form offline labels; hidden fixtures, routes, verifiers and
+optima never become model inputs. Use standard supervised candidate-choice loss;
+LoRA or supervised fine-tuning itself is not claimed as a new algorithm.
+
+The existing E5/MLP and TD code remains development evidence, not the new paper
+method. Do not reuse its learning rate, five-seed plan or checkpoint identity as
+LoRA settings. A small prespecified number of adapter seeds should quantify
+training variability without a broad hyperparameter search. Calibration audits
+the selected fixed policy and cannot select another policy.
 
 ## Splits and diagnostics-guided acquisition
 
@@ -117,7 +126,9 @@ transfer tests. Existing development tasks are insufficient training data, and
 historical formal tests cannot be harvested for training. New capability tasks need
 manual universe/catalog selection under repository authoring rules.
 
-Diagnostics-guided acquisition mixes half uniform and half failure-prioritized
+The primary study uses public graph strata and realized branch outcomes; it does
+not require a second acquisition study. Optional diagnostics-guided acquisition
+mixes half uniform and half failure-prioritized
 sampling within training families. Compare uniform at the same total acquisition
 model-call/token cap INCLUDING diagnostics and branches, and report equal-rollout
 comparisons supplementarily. Use identical architectures/update budgets.
@@ -128,14 +139,15 @@ diagnostic-acquisition orchestrator.
 
 ## Baselines and frozen success rule
 
-The primary experiment has four conditions: unguarded behavior as a reference,
-per-action authorization checks, deterministic path-state recovery, and the
-outcome-supervised path-intervention scorer. All guarded methods share immutable
-guards and a final recheck; path-level methods also share concrete menus,
-witness/approval semantics, feedback/information and online budgets. Budgeted
-structural search, block-then-recover and offline RL are
-secondary comparisons only if they fit the cap; they are not required to answer
-the primary question.
+The primary experiment has five conditions: unguarded behavior as an attack
+reference, per-action authorization, deterministic path-state recovery, the compact
+base model with prompting only, and that same model with LoRA fine-tuning. The
+untrained compact-model control is necessary to measure the benefit of training.
+Guarded methods share immutable guards and a final recheck; path-level methods
+also share the menu, witness/approval semantics, public inputs and online budgets.
+The compact-model pair uses the same prompt, context and decoding settings.
+Offline RL, transfer models and broad search comparisons are outside the primary
+plan. Report adapter-training cost as well as total rollout/inference costs.
 
 Unguarded behavior is a separate reference. Hidden minimum-authority or reference
 path controls are privileged oracles. Report actual online, encoding/precompute,
@@ -168,13 +180,16 @@ Two A100-PCIe-40GB GPUs, about 196 GiB RAM and 654 GiB free disk were observed o
 four sequences and GPU utilization 0.90. Scorer fits use the other GPU.
 Pin snapshots/package versions and do not silently substitute a smaller agent.
 
-The author set a hard limit of 200 GPU hours. The broad illustrative workload below
-already approaches that limit for paired inference alone and excludes training and
-other costs, so it is not the formal sample plan. First time a small paired pilot,
-then choose the number of independent families, presentations and training seeds
-that fit the full cap, including fitting and evaluation. Freeze those counts before
-formal runs. Sample-size approximations are planning sensitivities, not guaranteed
-power; do not reduce the 5-point success threshold to fit compute.
+The author replaced the earlier hard 200-GPU-hour cap with a preference for modest
+overall compute and fine-tuning only one small model. Do not silently impose a
+new numerical ceiling or target. Measure data collection, branching, frozen-agent
+inference, compact-model inference and LoRA fitting together. GPU hours sum device
+occupancy across GPUs; report GPU type, peak memory, tokens and wall time as well.
+First verify thermal stability and run a short paired pilot. Then freeze a bounded
+sample plan and justified cost estimate. Prefer fewer training recipes and less
+redundant repetition over sacrificing independent test families or dropping the
+untrained-model comparison. No final compute estimate or sample size is established
+yet. Planning approximations do not guarantee power; retain the success thresholds.
 
 The dirty development smoke record at base revision
 55510043b40b8fa6eb7dc56965e3a978f5746bba measured 8.5 agent calls per episode,
@@ -189,11 +204,12 @@ diagnostics, adaptive attacks, transfer agents, fitting and encoding; batching c
 change wall time but not the recorded call/token totals. It is an illustrative
 planning envelope, not a frozen sample size, resource authorization or result.
 
-Formal fitting requires every training record and scorer artifact to carry the same
-frozen protocol identity. Formal scorer loading requires that expected identity and
+Formal fitting requires every training record and adapter/scorer artifact to carry
+the same frozen protocol identity. Existing formal scorer loading requires that identity and
 rejects development-smoke artifacts by default. This guard prevents accidental
 promotion of the two development overlays, but it does not create the independent
-corpus or formal protocol they still lack.
+corpus or formal protocol they still lack. The planned adapter loader must enforce
+the same provenance boundary before formal evaluation.
 
 Commit a coherent checkpoint after tests and staged-artifact review, verify a clean
 tree, then record its exact revision in run manifests. Raw prompts/model outputs

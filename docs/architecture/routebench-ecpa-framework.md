@@ -2,6 +2,7 @@
 
 这张图把现有评测模块、ECPA 运行时、训练数据和防御评估放在同一条数据流中。
 实线表示已经实现的接口；虚线表示正式防御实验仍需要冻结或补齐的部分。
+小模型 LoRA 是拟采用的论文主方法；既有 E5/MLP 与离线 TD 仅是开发原型。
 
 ```mermaid
 flowchart LR
@@ -27,11 +28,9 @@ flowchart LR
     G -. 仅用于 evaluator 端标签 .-> M
     L --> M
     M --> N[实际干预轨迹\n接受/拒绝/审批/失败/截断]
-    N --> O[冻结 E5 特征\n任务/状态/历史/候选]
-    O --> P[训练 scorer\n监督长期结果]
-    O --> Q[探索性离线 TD\n同骨干/同预算]
-    P --> R[候选排序器]
-    Q --> R
+    N -.-> O[真实分支结果构造选择标签\n安全完成/违规/成本]
+    O -.-> P[一个小型语言模型 LoRA 微调\n拟采用 Qwen3-1.7B]
+    P -.-> R[受限输出候选 ID\n可信运行时复检]
     R --> H
 
     R --> S[正式防御评估\n配对良性/篡改响应\n文本+结构化调用]
@@ -39,7 +38,7 @@ flowchart LR
     S --> T[safe recovery\nfunctional success\nviolation/attack/cost]
     T --> U[按 semantic family 聚类\n配对区间与资源报告]
 
-    V[当前状态\n已实现：桥接、运行时、采集、训练\n待完成：正式合同、独立语料、200 GPU小时内试运行定规模]:::note
+    V[当前状态\n已实现：桥接、运行时、采集、训练\n待完成：正式合同、独立语料、小模型LoRA、试运行估算总成本]:::note
     V -.-> U
 
     classDef note fill:#fff7d6,stroke:#9a6b00,color:#4b3600;
@@ -51,3 +50,10 @@ flowchart LR
 - `GraphSelectionResult.matches_hidden_certificate`、private fixture、reference route、verifier assertion 和 evaluator-owned optimum 不进入在线 scorer。
 - ECPA 的最终 outcome 只能在 evaluator 侧计算；训练器使用实际 rollout 标签，不能从隐藏结果反向改变运行时菜单。
 - 现有 v13 是规划前的图选择协议，ECPA 是交错执行/恢复协议。正式合并必须新建协议身份，不能直接合并历史结果。
+
+## 资源与对照组
+
+不再设置 200 GPU 小时硬上限；以适度总计算量、只微调一个小模型为约束。
+任务代理保持冻结，不做大模型全量微调或模型规模扫描。正式模型快照与预算在短测后冻结。
+主对照为：无防御、逐动作授权、路径规则、未微调小模型、同一小模型 LoRA。
+训练与未训练小模型使用相同输入、菜单和解码设置；必须单独核算轨迹采集与推理成本。
