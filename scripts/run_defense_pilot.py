@@ -14,6 +14,7 @@ import gc
 import importlib.metadata
 import json
 import random
+import shutil
 import time
 from collections import Counter, defaultdict
 from collections.abc import Callable
@@ -138,7 +139,9 @@ class PacedCompactPolicy(CompactPolicy):
 
 
 class Pilot:
-    def __init__(self, root: Path, config_path: Path, output: Path):
+    def __init__(
+        self, root: Path, config_path: Path, output: Path, *, collection_source: Path | None = None
+    ):
         self.root, self.output = root, output
         self.pacer: ThermalPacer
         self.revision = clean_revision(root)
@@ -184,12 +187,42 @@ class Pilot:
             "planned_comparison_episodes": len(self.tasks) * len(self.config.modes) * 2 * len(ARMS),
             "interpretation": "development integration smoke; no efficacy inference",
         }
+        if collection_source is not None:
+            collection_source = collection_source.resolve()
+            if not collection_source.is_relative_to((root / "artifacts/private").resolve()):
+                raise ValueError("import only ignored private development collections")
+            origin = json.loads((collection_source / "manifest.json").read_text())
+            cost = json.loads((collection_source / "collect-cost.json").read_text())
+            for key in (
+                "purpose",
+                "formal_evidence",
+                "formal_protocol_id",
+                "config",
+                "agent",
+                "task_snapshot_fingerprint",
+                "compact_snapshot_fingerprint",
+                "public_task_digests",
+            ):
+                if origin[key] != identity[key]:
+                    raise ValueError(f"development collection identity mismatch: {key}")
+            if cost["status"] != "complete" or cost["source_revision"] != origin["source_revision"]:
+                raise ValueError("only completed development collection phases can be reused")
+            identity["collection_origin"] = {
+                "path": str(collection_source),
+                "source_revision": origin["source_revision"],
+                "manifest_sha256": file_digest(collection_source / "manifest.json"),
+            }
         manifest_path = output / "manifest.json"
         if manifest_path.exists():
             if json.loads(manifest_path.read_text()) != identity:
                 raise ValueError("existing pilot manifest has a different source/config identity")
         else:
             write_json(manifest_path, identity)
+            if collection_source is not None:
+                shutil.copytree(collection_source / "collection", output / "collection")
+                for name in ("collect-cost.json", "collect-telemetry.json"):
+                    shutil.copyfile(collection_source / name, output / name)
+                write_json(output / "collection-source-manifest.json", origin)
 
     def campaign(self, task: DevelopmentTask) -> RelayCampaign:
         return next(
@@ -585,8 +618,19 @@ async def run(args: argparse.Namespace) -> None:
     output = Path(args.output).resolve()
     if not output.is_relative_to((root / "artifacts/private").resolve()):
         raise ValueError("pilot traces/adapters must remain under ignored artifacts/private")
-    pilot = Pilot(root, Path(args.config), output)
-    phases = ("collect", "fit", "compare") if args.phase == "all" else (args.phase,)
+    pilot = Pilot(
+        root,
+        Path(args.config),
+        output,
+        collection_source=Path(args.collection_source) if args.collection_source else None,
+    )
+    phases: tuple[str, ...] = (
+        ("collect", "fit", "compare") if args.phase == "all" else (args.phase,)
+    )
+    if args.collection_source and args.phase == "all":
+        phases = ("fit", "compare")
+    elif args.collection_source and args.phase == "collect":
+        raise ValueError("an imported development collection cannot be recollected in place")
     for phase in phases:
         if phase == "report":
             print(json.dumps(report(output)), flush=True)
@@ -645,6 +689,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default="configs/defense/compact-pilot.yaml")
     parser.add_argument("--output", required=True)
+    parser.add_argument(
+        "--collection-source", help="reuse a complete, identity-matched development collection"
+    )
     parser.add_argument(
         "--phase", choices=("all", "collect", "fit", "compare", "report"), default="all"
     )

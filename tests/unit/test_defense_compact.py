@@ -197,6 +197,47 @@ def test_thermal_pacer_waits_for_cooling_and_never_ignores_a_hard_stop(
         pacer.before(0)
 
 
+def test_development_collection_reuse_preserves_revision_and_rejects_changed_identity(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.syspath_prepend(str(ROOT))
+    from scripts.run_defense_pilot import Pilot
+
+    tasks = load_development_tasks(ROOT, ROOT / "configs/defense/development-contracts.yaml")
+    config_path = ROOT / "configs/defense/compact-pilot.yaml"
+    agent_path = tmp_path / "configs/defense/development-agent.yaml"
+    agent_path.parent.mkdir(parents=True)
+    agent_path.write_text((ROOT / "configs/defense/development-agent.yaml").read_text())
+    monkeypatch.setattr("scripts.run_defense_pilot.clean_revision", lambda root: "a" * 40)
+    monkeypatch.setattr("scripts.run_defense_pilot.model_fingerprint", lambda path: "test-hash")
+    monkeypatch.setattr("scripts.run_defense_pilot.load_development_tasks", lambda *args: tasks)
+    source, output = tmp_path / "artifacts/private/source", tmp_path / "artifacts/private/output"
+    Pilot(tmp_path, config_path, source)
+    (source / "collection").mkdir()
+    payload = group().model_dump_json()
+    (source / "collection/group.private.json").write_text(payload)
+    (source / "collect-cost.json").write_text(
+        json.dumps(
+            {
+                "status": "complete",
+                "source_revision": "a" * 40,
+            }
+        )
+    )
+    (source / "collect-telemetry.json").write_text("{}")
+    monkeypatch.setattr("scripts.run_defense_pilot.clean_revision", lambda root: "b" * 40)
+    Pilot(tmp_path, config_path, output, collection_source=source)
+    assert (output / "collection/group.private.json").read_text() == payload
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert manifest["source_revision"] == "b" * 40
+    assert manifest["collection_origin"]["source_revision"] == "a" * 40
+    original = json.loads((source / "manifest.json").read_text())
+    original["config"]["budgets"]["decisions"] += 1
+    (source / "manifest.json").write_text(json.dumps(original))
+    with pytest.raises(ValueError, match="identity mismatch"):
+        Pilot(tmp_path, config_path, tmp_path / "artifacts/private/bad", collection_source=source)
+
+
 def test_text_relay_pair_counts_actual_calls_and_does_not_enter_system_message() -> None:
     async def run() -> None:
         for attacked in (False, True):
@@ -328,9 +369,12 @@ def test_observation_callback_branches_independent_states_without_relabeling() -
     asyncio.run(run())
 
 
-def test_actual_tiny_lora_updates_reload_and_artifact_identity(tmp_path: Path) -> None:
+@pytest.mark.parametrize("device", ["cpu", "cuda:0"])
+def test_actual_tiny_lora_updates_reload_and_artifact_identity(tmp_path: Path, device: str) -> None:
     torch = pytest.importorskip("torch")
     pytest.importorskip("peft")
+    if device.startswith("cuda") and not torch.cuda.is_available():
+        pytest.skip("CUDA is unavailable")
     from tokenizers import Tokenizer  # type: ignore[import-not-found]
     from tokenizers.models import WordLevel  # type: ignore[import-not-found]
     from tokenizers.pre_tokenizers import WhitespaceSplit  # type: ignore[import-not-found]
@@ -368,7 +412,7 @@ def test_actual_tiny_lora_updates_reload_and_artifact_identity(tmp_path: Path) -
         )
     ).save_pretrained(base_path)
     fingerprint = model_fingerprint(str(base_path))
-    config = CompactConfig(model_path=str(base_path), device="cpu", context_tokens=8192)
+    config = CompactConfig(model_path=str(base_path), device=device, context_tokens=8192)
     measurement = train_lora(
         [group()],
         config,

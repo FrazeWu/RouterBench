@@ -58,6 +58,14 @@ collection, fit, or comparison refuses to overwrite its phase outputs. A failed
 phase is retained; use a fresh output directory for a changed implementation.
 The phase identity cannot silently change after collection.
 
+If a training-only fix needs a new source checkpoint, retain the completed
+collection and use `--collection-source <previous-run-directory>` with a **new**
+output directory. This development-only path checks the full task/model/config
+identity and completed collection status, copies its original cost/telemetry, and
+records the old source manifest/revision separately. Formal collection is rejected.
+Do not reuse data after changing collection semantics, task contracts, campaign,
+budgets or snapshots; collect afresh. `--phase all` then runs fit and compare only.
+
 Collection executes paired benign/attacked episodes in text and structured relay
 modes. At the configured public nodes, independently clone the simulator and
 enumerate every legal candidate, including deny. Candidate branches share a

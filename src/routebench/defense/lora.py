@@ -248,6 +248,7 @@ def train_lora(
     output.mkdir(parents=True, exist_ok=False)
     torch.manual_seed(spec.seed)
     if config.device.startswith("cuda"):
+        torch.cuda.init()
         torch.cuda.reset_peak_memory_stats(config.device)
     base = AutoModelForCausalLM.from_pretrained(
         config.model_path,
