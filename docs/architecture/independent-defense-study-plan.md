@@ -1,6 +1,6 @@
 # Independent compact-defense study preparation
 
-Status: authoring, 2026-10-22. The author chose a moderate study, retaining the
+Status: authoring, 2026-10-23. The author chose a moderate study, retaining the
 original success criteria and reporting inconclusive evidence when necessary.
 This is a prospective plan, not a frozen protocol or completed experiment.
 
@@ -23,6 +23,8 @@ This is a prospective plan, not a frozen protocol or completed experiment.
    real JSON-agent calls and independent simulator snapshots. Remaining split
    families, independent semantic/contract review, real-model branch outcomes
    covering the target kinds and snapshot/protocol freeze remain pending.
+   Source-bound freeze tooling is now implemented; see defense-study-freeze.md.
+   It rejects incomplete allocations and unaccepted/stale independent reviews.
 5. **Pending:** one LoRA recipe, matched development comparison, calibration audit
    and fresh paired test. Preserve strong per-action and path-rule baselines.
 6. **Pending:** family-clustered analysis, cost/negative-result report and paper results.
@@ -253,3 +255,47 @@ strict mypy passed. Actual simulator tests verify both duplicate dispatch counts
 and transient referential violations even when final deletion states match.
 No GPU inference, model fitting or formal outcome collection occurred, and
 the reports retain `formal_run_ready: false`.
+
+
+## Recorded relay and initial test-source preparation
+
+Source checkpoint: 826bb196794d42b8fad0a2664ff1624506d78667, clean at both
+audit starts. The preserved reports are under ignored
+artifacts/private/ecpa-relay-preparation/ as authoring-audit.json and
+context-audit.json. They bind corpus digest
+31516fb2e0f837d7df8b294d15cda67a7fda151b52a62260330885dc479e16cf.
+Earlier preparation and pilot outputs remain unchanged.
+
+The source audit passes **23 tasks**, **46 safe paths**, **23 harmful reference
+paths**, **70 relay stages per transport** and **65 menu probes** (23 allow,
+3 constrain, 16 escalate, 23 deny). Every campaign binds its declared text
+operator to executable behavior; structured telemetry explicitly reports shared
+proposal substitution. The two retained test candidates cover continuous
+replica availability and independent author/reviewer identities. An initial
+publication-pointer candidate was removed after source overlap/runtime checks.
+
+Actual local tokenizers measure **988 sampled chat inputs**, all within 8,192
+tokens without truncation, and **226 separate planning estimates**. Maximum
+agent proposal input is 3,541 with 768 completion reserve (3,883 headroom);
+maximum defender input is 3,244 with 96 reserve (4,852 headroom). The ordinary
+full-draft estimate leaves at least 3,080 tokens; the added attack-plus-draft
+estimate leaves 3,170. These estimates do not bound arbitrary future inputs.
+
+Report SHA-256 identities:
+
+- Authoring: 71b507a93c47c7b358ca63dfc5151abc8c85e72536d28799ce92c8e14e0aae92
+- Context: 9cb158e867a6fb65e262d160088a762301f8d82966f8517d3b80e35c8d4bd133
+
+At this checkpoint **244 default tests passed**, with two existing optional
+Torch-dependent tests skipped. Changed-file Ruff and strict mypy passed. The
+updated manuscript compiles with Tectonic, has no overfull boxes or unresolved
+reference warnings, and the edited body/appendix pages were visually checked.
+It has eight content pages plus limitations/references/appendices, fourteen
+pages total; this does not establish submission readiness.
+
+No model weights were loaded by these audits, no GPU inference/fitting was
+performed and no formal outcomes were collected. Counts remain 12/4/4/2
+candidate family labels, all independent reviews pending; the forty-family test
+target is incomplete. The source-bound freeze gate was implemented subsequently
+and is described in defense-study-freeze.md. It has not frozen this corpus or
+made the later frozen collection/comparison runner complete.
