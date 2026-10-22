@@ -72,6 +72,18 @@ class BlockThenRecoverPolicy:
         return PolicyChoice(candidate.candidate_id)
 
 
+class PerActionAuthorizationPolicy:
+    """Allow/check actual approval/deny, without choosing a replacement route."""
+
+    def choose(self, observation: DefenseObservation, *, rng: random.Random) -> PolicyChoice:
+        del rng
+        for kind in (DefenseDecisionKind.ALLOW, DefenseDecisionKind.ESCALATE):
+            for item in observation.menu:
+                if item.kind is kind:
+                    return PolicyChoice(item.candidate_id)
+        return PolicyChoice("deny")
+
+
 class PublicSearchPolicy:
     """Proactive contract feasibility baseline without private path/fixture access.
 

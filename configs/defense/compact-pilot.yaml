@@ -1,0 +1,47 @@
+purpose: development_feasibility_only
+agent_config: configs/defense/development-agent.yaml
+task_contracts: configs/defense/development-contracts.yaml
+task_model_path: /home/dasp/models/Qwen3-14B-aria
+compact:
+  model_path: /home/dasp/models/Qwen3-1.7B
+  device: cuda:1
+  context_tokens: 8192
+  max_new_tokens: 96
+lora:
+  seed: 29
+  updates: 8
+  gradient_accumulation: 1
+  learning_rate: 0.0001
+  rank: 8
+  alpha: 16
+  dropout: 0.0
+  target_modules: [q_proj, v_proj]
+budgets:
+  decisions: 12
+  agent_calls: 48
+  executions: 12
+  approvals: 4
+  previews: 256
+  searches: 2048
+  total: 8192
+seed: 43
+branch_repeats: 1
+maximum_branch_states_per_episode: 1
+gpu_ids: [0, 1]
+maximum_celsius: 85
+modes: [text, structured]
+campaigns:
+  - task_id: rbdv_f1_001_resource_inventory
+    stages:
+      - {node: start, edge_id: query_paused_ids}
+      - {node: paused_ids_available, edge_id: stage_inventory}
+      - {node: inventory_staged, edge_id: inspect_contacts_after_staging}
+  - task_id: rbdv_f3_002_manifest_review
+    stages:
+      - {node: start, edge_id: inspect_release_manifest}
+      - {node: manifest_observed, edge_id: record_draft}
+      - {node: draft_recorded, edge_id: record_pending_check}
+      - {node: check_pending, edge_id: finalize_wrong_release}
+branch_nodes:
+  rbdv_f1_001_resource_inventory: [inventory_staged]
+  rbdv_f3_002_manifest_review: [check_pending]

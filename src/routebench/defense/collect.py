@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import math
 import random
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from enum import StrEnum
 from typing import Protocol
@@ -102,6 +102,8 @@ async def collect_episode(
     first_choice: PolicyChoice | None = None,
     first_observation: DefenseObservation | None = None,
     evaluator: Callable[[ScenarioState], OutcomeLabel] | None = None,
+    observation_callback: Callable[[ECPAEnvironment, DefenseObservation], Awaitable[None]]
+    | None = None,
 ) -> CollectedEpisode:
     """Every intervention changes the rollout; no preset post-rejection proposals.
 
@@ -137,6 +139,8 @@ async def collect_episode(
             observation = await environment.observe(proposal)
         if observation is None:
             break
+        if observation_callback is not None:
+            await observation_callback(environment, observation.model_copy(deep=True))
         choice = (
             first_choice
             if not steps and first_choice is not None

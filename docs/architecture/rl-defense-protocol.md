@@ -2,9 +2,12 @@
 
 Status, 2026-10-22: the interleaved runtime, real JSON agent, concrete-menu
 policies, rollout records, frozen-E5 development scorer and offline TD prototype
-are implemented. The revised paper method is LoRA fine-tuning of one compact
-language model; that adapter, independent corpus and formal comparison are not
-yet implemented or validated. Historical v13 keeps its original identity.
+are implemented. Local compact-model candidate selection, outcome-derived choice
+targets, answer-only LoRA training/loading and a five-arm response-relay pilot
+runner are now implemented. A disposable development adapter measures feasibility
+only; an independent corpus and formal comparison remain outstanding. Historical
+v13 keeps its original identity. See `defense-implementation-plan.md` and
+`compact-defense-runbook.md` for the development chain.
 
 ## Research question and claims
 
@@ -175,8 +178,10 @@ safety equivalence. Do not change thresholds after observing tests.
 
 ### Executable study sequence
 
-The study has three non-overlapping stages; pilot episodes never enter training,
-threshold selection, or reported efficacy estimates.
+The study has three non-overlapping stages; pilot episodes and disposable timing
+adapters never enter formal training, threshold selection, or efficacy estimates.
+The operational pilot includes a short development-only fit to measure memory/time
+and verify adapter reload, not to select a formally evaluated policy.
 
 1. **Operational pilot.** Use a small set of development-only semantic families
    covering both attack forms and benign controls. Replay paired episodes with the

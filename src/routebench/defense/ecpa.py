@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import copy
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from enum import StrEnum
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 
 from pydantic import Field
 
@@ -170,6 +171,13 @@ class RecoveryAgent(Protocol):
     async def respond(self, view: AgentView, *, seed: int) -> AgentReply: ...
 
 
+@runtime_checkable
+class BudgetedRecoveryAgent(Protocol):
+    async def respond_budgeted(
+        self, view: AgentView, *, seed: int, charge: Callable[[], None]
+    ) -> AgentReply: ...
+
+
 class ToolContentProvider(Protocol):
     def present(self, tool: str, output: object, *, execution: int) -> object: ...
 
@@ -266,12 +274,17 @@ class ECPAEnvironment:
         self, agent: RecoveryAgent, *, seed: int, offer: DefenseCandidate | None = None
     ) -> AgentReply | None:
         try:
+            if isinstance(agent, BudgetedRecoveryAgent):
+                return await agent.respond_budgeted(
+                    self.agent_view(offer).model_copy(deep=True),
+                    seed=seed,
+                    charge=lambda: self.budget.charge("agent_calls"),
+                )
             self.budget.charge("agent_calls")
+            return await agent.respond(self.agent_view(offer).model_copy(deep=True), seed=seed)
         except BudgetExhausted as error:
             self.finish(f"budget_exhausted:{error}")
             return None
-        try:
-            return await agent.respond(self.agent_view(offer).model_copy(deep=True), seed=seed)
         except AgentResponseError:
             self.finish("agent_response_error")
             return None

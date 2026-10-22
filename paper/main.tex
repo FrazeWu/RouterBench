@@ -761,8 +761,9 @@ assumes compromise at or beyond a response relay; transport integrity alone is
 outside the defense claim. The local defender uses a separate trusted inference
 channel. Each attack task is paired with the same benign task
 without response tampering. The interleaved runtime, real task-agent interface
-and development scorer are implemented. The proposed compact-model LoRA adapter,
-independent corpus, formal freeze and benefit comparison remain pending.
+and development scorer are implemented. Local compact-model selection, LoRA
+training/loading and a development response-relay runner are also implemented;
+the independent corpus, formal freeze and benefit comparison remain pending.
 Historical v13 is a separate pre-replay interface.
 
 The trainable component selects concrete recovery interventions on every request.
@@ -838,7 +839,8 @@ Equality with deterministic control does not demonstrate learning's added value.
 The defense study separates feasibility from efficacy evidence. A development-only
 operational pilot will measure paired episode cost, branch completion,
 Qwen3-1.7B inference latency, LoRA memory and fit time, and thermal stability;
-pilot cases will not enter fitting, calibration, or the final estimate. New
+pilot cases and disposable timing adapters will not enter formal fitting,
+calibration, or the final estimate. New
 semantic families will be partitioned into training, tuning, calibration, and
 fresh-test sets before collection. The final test will run all five arms on matched
 benign and staged-relay episodes, covering text injection and forged structured
@@ -1416,7 +1418,8 @@ Existing engineering checks use frozen \nolinkurl{intfloat/e5-small-v2} revision
 \texttt{ffb93f3b} and a 128/64-unit scorer with outcome-supervised and offline TD
 objectives. Those development fits are not LoRA training, do not validate the new
 paper method, and do not determine its optimizer settings. The compact-model
-adapter and independent training corpus remain pending. Calibration audits a fixed
+training/loading implementation is separate; an independently trained formal
+adapter and corpus remain pending. Calibration audits a fixed
 selected policy rather than selecting a new policy on the audit set.
 
 A new corpus must split semantic families across training, tuning, calibration

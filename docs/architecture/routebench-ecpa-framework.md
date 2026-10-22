@@ -38,7 +38,7 @@ flowchart LR
     S --> T[safe recovery\nfunctional success\nviolation/attack/cost]
     T --> U[按 semantic family 聚类\n配对区间与资源报告]
 
-    V[当前状态\n已实现：桥接、运行时、采集、训练\n待完成：正式合同、独立语料、小模型LoRA、试运行估算总成本]:::note
+    V[当前状态\n已实现：桥接、运行时、分支采集、小模型LoRA链路\n待完成：独立语料与正式防御评估]:::note
     V -.-> U
 
     classDef note fill:#fff7d6,stroke:#9a6b00,color:#4b3600;
