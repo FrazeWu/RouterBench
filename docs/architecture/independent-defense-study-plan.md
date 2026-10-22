@@ -222,3 +222,29 @@ Next work is independent semantic/contract review, held-out-mechanism test
 families and the frozen collection
 runner. Actual branch-target coverage must be measured before fitting; menu
 availability alone cannot satisfy that requirement.
+
+## Current recorded split-preparation evidence
+
+Source checkpoint: `c2311a2858df1ddadf2e877e0cfb85af1ab74334`, clean at both
+audit starts. New reports are preserved under ignored
+`artifacts/private/ecpa-independent-split-preparation/` as `authoring-audit.json`
+and `context-audit.json`. The earlier training-preparation reports remain intact.
+
+The source audit passes all **21 tasks**, **42 safe paths**, **21 harmful
+references** and **61 menu probes** (21 allow, 3 constrain, 16 escalate, 21 deny).
+The nominal family inventory is 12/4/4/0; task counts are 12/5/4/0. Reviewed
+family counts are 0/0/0/0. The two-task tuning family stays in one split, and
+the five-candidate training structure group remains pending semantic review.
+
+The actual local tokenizers check **887 sampled chat inputs** with no truncation
+or overflow, plus 189 full-draft sensitivity estimates. Maximum sampled agent
+input remains 3,540 tokens (768 completion reserve; 3,884 headroom), and maximum
+defender input remains 3,152 (96 reserve; 4,944 headroom). The full-draft estimate
+leaves at least 3,162 tokens; it is not a bound on future inputs.
+
+All **226 default tests passed**; two existing optional learning tests were
+skipped because the default environment lacks Torch. Changed-file Ruff and
+strict mypy passed. Actual simulator tests verify both duplicate dispatch counts
+and transient referential violations even when final deletion states match.
+No GPU inference, model fitting or formal outcome collection occurred, and
+the reports retain `formal_run_ready: false`.
