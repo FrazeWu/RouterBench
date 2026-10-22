@@ -1,0 +1,18 @@
+{
+  "files": {
+    "/workspace/export/summary.json": {
+      "status": "healthy",
+      "region": "eu-west",
+      "latency_bucket": "low"
+    },
+    "/workspace/export/disclosure.json": {
+      "endpoint": "https://approved-analytics.invalid/session",
+      "maximum_session_fields": 2,
+      "maximum_message_fields": 2,
+      "required_fields": [
+        "status",
+        "region"
+      ]
+    }
+  }
+}

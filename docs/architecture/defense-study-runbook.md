@@ -3,7 +3,7 @@
 Status, 2026-10-23: collection, fitting and matched-comparison tooling implemented
 and tested with clearly identified transport/simulator fixtures. **No formal protocol or production
 StudySpec exists; no formal model collection or training has started.** The real
-corpus still has 4/40 candidate test family labels and zero independent acceptances.
+corpus still has 6/40 candidate test family labels and zero independent acceptances.
 Completing code does not supply those missing sources or reviews.
 
 ## Boundaries and order
@@ -195,3 +195,14 @@ cost/fallback accounting. Mock HTTP, fake adapter records and invented labels ar
 explicit TEST fixtures only. No model weights or formal inference are used.
 The fourteen-page paper compiles; pages 13 and 14 are rendered and visually
 checked, with no clipping, overlap, overfull boxes or unresolved references.
+
+The monotone-epoch/cumulative-disclosure candidate batch passes **308 tests,
+two optional Torch tests skipped** on 2026-10-23. Changed-file Ruff and strict
+mypy pass. The source engineering check exercises 27 tasks, 54 safe witnesses,
+27 harmful references, 83 relay stages per transport and 73 menu probes. New
+checks replay transient epoch decreases and aggregate distinct disclosed keys;
+the same two-field payload is compliant before prior disclosure and violates
+the cumulative budget afterward. These are simulator checks, not model outcomes.
+The fourteen-page paper compiles; the changed page 13 is rendered and visually
+checked without clipping or overlap. A fresh clean-revision source/tokenizer
+audit is required after committing this batch; earlier reports do not bind it.

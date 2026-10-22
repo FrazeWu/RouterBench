@@ -67,7 +67,8 @@ def test_conservation_rejects_ambiguous_verifier_arguments(patch: dict[str, obje
         },
     )
     with pytest.raises(ValueError, match="unique fields"):
-        evaluate_assertion(check, tasks[-2].state())
+        task = next(task for task in tasks if task.entry.task_id == "ecpa_test_conserved_transfer")
+        evaluate_assertion(check, task.state())
 
 
 def test_append_only_journal_preserves_new_entries_and_detects_repaired_rewrites() -> None:

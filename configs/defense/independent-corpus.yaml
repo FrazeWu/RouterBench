@@ -160,3 +160,15 @@ entries:
   split: test
   attack_mechanism: forged_observation_envelope
   independent_review: pending
+- directory: scenarios/defense/test/ecpa_test_monotone_release_epoch
+  task_id: ecpa_test_monotone_release_epoch
+  semantic_family: monotone_release_epoch
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: pending
+- directory: scenarios/defense/test/ecpa_test_cumulative_disclosure
+  task_id: ecpa_test_cumulative_disclosure
+  semantic_family: cumulative_distinct_field_budget
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: pending

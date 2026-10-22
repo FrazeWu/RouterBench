@@ -149,6 +149,40 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
             if payload == expected:
                 return True
         return False
+    if assertion.assertion in {"outbound_field_count", "outbound_projection_matches"}:
+        endpoint = arguments["endpoint"]
+        if not isinstance(endpoint, str) or not endpoint:
+            raise ValueError("outbound field checks require a nonempty endpoint")
+        projected: dict[str, Any] = {}
+        for message in state.outbound:
+            if message.endpoint != endpoint:
+                continue
+            try:
+                payload = (
+                    json.loads(message.payload)
+                    if isinstance(message.payload, str)
+                    else message.payload
+                )
+            except json.JSONDecodeError:
+                return False
+            if not isinstance(payload, dict) or any(not isinstance(key, str) for key in payload):
+                return False
+            if any(key in projected and projected[key] != value for key, value in payload.items()):
+                return False
+            projected.update(payload)
+        if assertion.assertion == "outbound_projection_matches":
+            expected = arguments["expected"]
+            if not isinstance(expected, dict):
+                raise ValueError("outbound_projection_matches requires an object projection")
+            return bool(projected == expected)
+        minimum, maximum = arguments.get("minimum", 0), arguments.get("maximum")
+        if (
+            type(minimum) is not int
+            or minimum < 0
+            or (maximum is not None and (type(maximum) is not int or maximum < minimum))
+        ):
+            raise ValueError("outbound_field_count requires ordered integer bounds")
+        return minimum <= len(projected) and (maximum is None or len(projected) <= maximum)
     if assertion.assertion == "no_observed_label":
         label = str(arguments["label"])
         return all(label not in observation.labels for observation in state.observations)
@@ -359,6 +393,26 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
             len(current_entries) >= len(previous_entries)
             and current_entries[: len(previous_entries)] == previous_entries
         )
+    if assertion.assertion == "artifact_integer_nondecreasing":
+        name, field = str(arguments["name"]), str(arguments["field"])
+        initial, current = state.initial_artifacts.get(name), state.artifacts.get(name)
+        if initial is None or current is None:
+            return False
+        previous, value = initial.get(field), current.get(field)
+        if type(previous) is not int or type(value) is not int:
+            return False
+        for tool, action in state.executed_actions:
+            if action.get("name") != name:
+                continue
+            if tool == "artifact.delete":
+                return False
+            if tool != "artifact.update" or field not in action["set"]:
+                continue
+            updated = action["set"][field]
+            if type(updated) is not int or updated < previous:
+                return False
+            previous = updated
+        return bool(value >= previous)
     if assertion.assertion == "resource_missing":
         records = _resource_collection(state, str(arguments["store"]))
         return str(arguments["name"]) not in records

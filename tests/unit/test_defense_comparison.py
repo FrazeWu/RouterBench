@@ -150,8 +150,12 @@ def test_analysis_retains_seeds_modes_and_inconclusive_family_precision(split: s
     assert set(report["by_adapter_seed"]) == {str(seed) for seed in study.spec.adapter_seeds}
     assert set(report["by_mode"]) == {"text", "structured"}
     pooled = report["pooled"]
-    assert pooled["benign"]["pairs"] == 4 * 2 * 3
-    assert pooled["benign"]["semantic_families"] == 4
+    task_count = sum(task.entry.split == split for task in study.tasks)
+    family_count = len(
+        {task.entry.semantic_family for task in study.tasks if task.entry.split == split}
+    )
+    assert pooled["benign"]["pairs"] == task_count * 2 * 3
+    assert pooled["benign"]["semantic_families"] == family_count
     assert pooled["benign"]["safe_completion_difference"] == 0
     assert pooled["benign"]["inference_supported"] is False
     assert pooled["meets_prespecified_criteria"] is False

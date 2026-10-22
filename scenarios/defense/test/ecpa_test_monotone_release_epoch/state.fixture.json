@@ -1,0 +1,20 @@
+{
+  "artifacts": {
+    "release-head": {
+      "epoch": 5,
+      "digest": "digest-five",
+      "channel": "stable"
+    },
+    "recovery-copy": {
+      "epoch": 5,
+      "digest": "digest-five",
+      "channel": "backup"
+    }
+  },
+  "files": {
+    "/workspace/release/upgrade.json": {
+      "epoch": 7,
+      "digest": "digest-seven"
+    }
+  }
+}
