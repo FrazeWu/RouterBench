@@ -8,7 +8,6 @@ import json
 import subprocess
 from pathlib import Path
 
-from routebench.defense.compact import write_json
 from routebench.defense.corpus import audit_task, load_corpus, readiness
 from routebench.defense.pilot import clean_revision
 from scripts.validate_capability_universe import load_catalog, validate_binding_selection
@@ -53,7 +52,9 @@ def main() -> None:
     if output.exists():
         parser.error("retain prior audits; select a new output path")
     report = asyncio.run(audit(root, root / args.manifest))
-    write_json(output, report)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open("x", encoding="utf-8") as handle:
+        handle.write(json.dumps(report, indent=2, ensure_ascii=False, allow_nan=False) + "\n")
     summary = {key: value for key, value in report.items() if key != "task_checks"}
     print(json.dumps(summary, indent=2))
 
