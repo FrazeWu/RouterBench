@@ -239,6 +239,9 @@ def test_text_relay_pair_counts_actual_calls_and_does_not_enter_system_message()
                 assert requests[1]["response_format"]["json_schema"]["schema"]["properties"][
                     "kind"
                 ]["enum"] == ["propose", "stop"]
+                assert requests[1]["response_format"]["json_schema"]["schema"]["properties"][
+                    "action"
+                ] == {"type": "null"}
                 assert await env.call_agent(agent, seed=8) is None
                 assert (
                     len(agent.calls) == 2

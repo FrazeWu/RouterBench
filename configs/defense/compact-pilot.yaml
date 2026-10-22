@@ -30,8 +30,8 @@ maximum_branch_states_per_episode: 1
 gpu_ids: [1, 0]
 maximum_celsius: 85
 minimum_request_gap_seconds: 2
-cooling_pause_celsius: 70
-cooling_resume_celsius: 68
+cooling_pause_celsius: 73
+cooling_resume_celsius: 71
 modes: [text, structured]
 campaigns:
   - task_id: rbdv_f1_001_resource_inventory

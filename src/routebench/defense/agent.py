@@ -116,6 +116,12 @@ class JsonRecoveryAgent:
                 if view.offer is not None
                 else ["propose", "stop"],
             }
+            if view.offer is None:
+                # Ordinary requests identify registered graph edges. Concrete
+                # arguments and request hashes are needed only for exact offer
+                # acceptance, not regenerated copies on every proposal.
+                schema["properties"]["action"] = {"type": "null"}
+                schema["properties"]["request_hash"] = {"type": "null"}
             response = await self.client.post(
                 self.config.endpoint.rstrip("/") + "/chat/completions",
                 json={
