@@ -74,6 +74,13 @@ declared transition, not guaranteed human consent. Witnesses do not guarantee ag
 compliance, contract correctness or actual future approval.
 
 The agent explicitly chooses STOP/CONTINUE; hidden success never stops it.
+For future collections the JSON response schema enumerates every edge leaving
+the current public graph node, plus null for STOP/rejection. This repairs the
+pilot's repeated later-node proposals using structural information alone: unsafe,
+ungranted and unproductive outgoing edges remain available. All arms and both
+transport calls use the same schema. Relay forgeries still pass through runtime
+validation. This interface change does not relabel or replace the earlier pilot;
+new measured work must record the new committed revision.
 Count decisions, agent calls including acceptance, executions, approvals, previews,
 search expansions and total resources independently. Exhaustion is terminal;
 collection cutoff is censoring without fabricated failure labels. Failed model
