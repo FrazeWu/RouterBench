@@ -89,6 +89,10 @@ def fixture_study() -> FrozenStudy:
                 "lowest_violations_then_highest_safe_completion_then_cost_on_tune"
             ),
             "checkpoint_selection": "single_prespecified_update_count",
+            "comparison_schedule": "seeded_arm_blocks_common_episode_seeds",
+            "comparator_arms": ["path_rule", "per_action", "compact_base"],
+            "comparator_cost": "family_mean_online_budget_units",
+            "calibration_policy": "audit_fixed_policy_no_selection_or_test_gate",
             "precision_interpretation": "retain_criteria_report_inconclusive",
             "structured_mechanism_claim": "shared_proposal_substitution_no_holdout",
         }

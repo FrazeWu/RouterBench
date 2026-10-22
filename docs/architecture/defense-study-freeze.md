@@ -51,7 +51,10 @@ chosen by the unit-test fixture.
 
 The tuning comparator rule first minimizes observed violations, then maximizes
 safe completion, then compares cost. The single update count is prespecified;
-calibration does not select a new checkpoint or comparator. Keep the recovery
+calibration does not select a new checkpoint or comparator. The spec additionally
+requires seeded arm-block scheduling, all three guarded comparator arms with an
+explicit tie order, family-mean online-budget cost and fixed-policy calibration
+without selection or an outcome-dependent test gate. Keep the recovery
 gain at five points, benign loss margin at two points and minimum inference
 family requirement at least twenty. Report inconclusive evidence when needed.
 Structured mode explicitly retains shared proposal substitution, with no
@@ -62,9 +65,10 @@ identity and the still-clean revision, and uses exclusive creation. Training,
 adapter and outcome flags remain false. The collection/fitting entry point is now
 implemented in scripts.run_defense_study; see defense-study-runbook.md. It checks
 the frozen sources/models, acquisition/thermal accounting and complete-menu
-target coverage. A formal comparison runner, tuning/calibration decision record
-and the fresh efficacy study still remain pending. Neither entry point has run
-on formal model data.
+target coverage. The same runner now implements tuning, fixed-policy calibration
+and fresh tests, retaining all seeds and exact prerequisite/file identities.
+The actual tuning/calibration records and fresh efficacy study remain pending.
+Neither entry point has run on formal model data.
 
 ## Validation boundary
 

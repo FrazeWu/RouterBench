@@ -1,7 +1,7 @@
-# Frozen compact-defense collection and fitting
+# Frozen compact-defense study execution
 
-Status, 2026-10-23: collection/fitting tooling implemented and tested with clearly
-identified transport/simulator fixtures. **No formal protocol or production
+Status, 2026-10-23: collection, fitting and matched-comparison tooling implemented
+and tested with clearly identified transport/simulator fixtures. **No formal protocol or production
 StudySpec exists; no formal model collection or training has started.** The real
 corpus still has 4/40 candidate test family labels and zero independent acceptances.
 Completing code does not supply those missing sources or reviews.
@@ -24,8 +24,16 @@ Completing code does not supply those missing sources or reviews.
    alone does not pass. Do not fabricate labels or add post-outcome task cases.
 5. Use --phase fit with the verified collection and another new output directory.
    The runner fits all three prespecified LoRA seeds, with one fixed recipe and
-   update count. The separate matched tuning/calibration/fresh-test runner is
-   still required; these phases cannot establish defense effectiveness.
+   update count. Fitting alone cannot establish defense effectiveness.
+6. Use --phase tune with --fit pointing to that completed phase. All seven arms
+   run: four shared controls and all three trained seeds. Choose the comparator
+   only from the three guarded controls using the declared lexicographic rule.
+7. Use --phase calibration with the same --fit and completed --tune directories.
+   Audit the fixed selection, retaining failures and uncertainty. Do not retune,
+   choose a seed, or condition whether tests run on the calibration outcome.
+8. Use --phase test with the same --fit, --tune and completed --calibration.
+   Persist all fresh cases, then report pooled, mode-stratified and per-seed
+   family-clustered comparisons. Completion does not imply statistical success.
 
 If collection lacks a required target, preserve the result and report the failed
 coverage gate. A justified source/protocol change requires a new committed
@@ -58,6 +66,35 @@ Retain all raw copies and report the duplicate IDs. Exact ties use the establish
 rule-preference/lexical tie break; no evaluator route is an input to the model.
 Structural matching does not make different task families independent.
 
+## Matched comparison and fixed selection
+
+The schedule uses seeded arm blocks so each compact model is loaded once per
+split. Within each arm, enumerate every task, mode and benign/attacked condition
+once. The four shared controls are not rerun for each adapter seed. The same
+episode seed is used for every arm and condition at a given task/mode; response
+histories may diverge after interventions. Arm order is frozen before outcomes.
+Blocking saves load cost, but it does not randomize away all temporal effects;
+report reservation time and thermal telemetry for each complete phase.
+
+Tuning ranks per-action authorization, the path rule and the prompted compact
+base by violation rate, safe completion and online budget units, in that order.
+Each semantic family contributes an equally weighted within-family mean across
+all modes, conditions and task variants. Exact ties use the explicit comparator
+order in StudySpec. The unguarded simulator is descriptive, never a candidate
+for the primary guarded comparator. Adapter seeds and update count are not
+selected. Online budget units are a prespecified tie breaker, not a GPU-time or
+latency claim; actual model calls, tokens, selector fallbacks and time remain
+separate measurements.
+
+Calibration and test reload the completed fitted adapters and recompute the
+tuning decision from the complete recorded tuning schedule. Prerequisite hashes
+bind the same fit, collection and source identity through all stages. Calibration
+records do not alter that decision or provide a pass/fail gate for running the
+test. Every learned seed is paired with its already collected shared comparator;
+family resampling retains those repetitions rather than treating them as new
+families. Zero-width intervals and fewer than twenty independent families cannot
+pass the prespecified joint rule. The source-review gate remains mandatory.
+
 ## Cost, context and thermal accounting
 
 Count each actual HTTP request, including draft, receiving and offer acceptance,
@@ -76,7 +113,10 @@ Do not terminate other jobs. Reservation time includes server startup, cooling,
 idle and shutdown within the phase; external environment setup and model hashing
 are excluded and must be reported separately in total study cost.
 
-The per-phase acquisition ledger is relevant to collection. Training reports its
+The per-phase acquisition ledger charges collection and comparison calls. Local
+selector invocations share the phase's hard call/token cap with HTTP task-agent
+requests. Measured selector tokens are reconciled; errors and overflow fallbacks
+retain the full context reservation and their outcomes. Training reports its
 own actual processed tokens, update time and memory through train_lora; a zero
 HTTP count during fitting is not a zero-cost training claim. No global GPU-hour
 ceiling is introduced by these tools.
@@ -86,7 +126,8 @@ ceiling is introduced by these tools.
 The implementation requires the RouteBench learning dependencies and vLLM in the
 same Python environment for collection. Run from the project root with a clean
 tree. --help is available without loading weights. After a real freeze, provide
-its path as --manifest, choose collect or fit with --phase, and select a new
+its path as --manifest, choose collect, fit, tune, calibration or test with --phase,
+and select a new
 artifacts/private path with --output. Fitting additionally takes --collection
 pointing to the previous phase's collection subdirectory.
 
@@ -99,6 +140,10 @@ rollouts, all group files and collection.json. Completed phase results bind
 collection-file hashes. Fitting verifies those identities and actual target
 coverage again before allocating the compact model. Three adapter directories
 retain base/adapter hashes and their source-group provenance.
+Comparison phases additionally persist the exact schedule, each row and raw
+rollout, mode-specific descriptive totals, immutable tuning decision and the
+fixed-policy analysis. Their successful measured phase binds every output file;
+an aborted or changed phase cannot supply later-stage evidence.
 
 These are ignored runtime artifacts. Never commit raw model data, server logs,
 generated records, adapters or the TEST-only review attestations used by unit
@@ -132,3 +177,21 @@ counts describe authored reachability, not model outcomes or accepted independen
 families. The updated fourteen-page paper compiles; page 13 is rendered and
 visually checked without clipping or overlap. Fresh clean-revision source and
 tokenizer audits are recorded separately after committing this batch.
+
+Those audits now bind clean candidate checkpoint
+2ae819579841c9574e94318f73348f0109aa315e under ignored
+artifacts/private/ecpa-relational-checkpoint. They confirm 25 source tasks and
+1,060 actual tokenizer measurements plus 250 separate planning estimates, with
+no sampled overflow at 8,192 tokens. No model weights were loaded and no model
+rollouts were performed. They do not bind later comparison-tooling changes.
+
+The matched-comparison implementation passes the complete default suite on
+2026-10-23: **293 tests passed, two optional Torch tests skipped**. Changed-file
+Ruff and strict mypy pass. Ten comparison tests exercise exact arm/seed schedules,
+common episode seeds, safety-first equal-family comparator selection, retained
+HTTP failures, fixed-policy precision limits, raw/row/phase integrity, collection
+and adapter recipe bindings, unchanged tuning/calibration decisions and selector
+cost/fallback accounting. Mock HTTP, fake adapter records and invented labels are
+explicit TEST fixtures only. No model weights or formal inference are used.
+The fourteen-page paper compiles; pages 13 and 14 are rendered and visually
+checked, with no clipping, overlap, overfull boxes or unresolved references.

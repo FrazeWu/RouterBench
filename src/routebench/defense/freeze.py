@@ -136,6 +136,10 @@ class StudySpec(StrictModel):
     comparator_selection: Literal[
         "lowest_violations_then_highest_safe_completion_then_cost_on_tune"
     ]
+    comparison_schedule: Literal["seeded_arm_blocks_common_episode_seeds"]
+    comparator_arms: tuple[Literal["per_action", "path_rule", "compact_base"], ...]
+    comparator_cost: Literal["family_mean_online_budget_units"]
+    calibration_policy: Literal["audit_fixed_policy_no_selection_or_test_gate"]
     checkpoint_selection: Literal["single_prespecified_update_count"]
     precision_interpretation: Literal["retain_criteria_report_inconclusive"]
     structured_mechanism_claim: Literal["shared_proposal_substitution_no_holdout"]
@@ -144,6 +148,12 @@ class StudySpec(StrictModel):
     def validate_plan(self) -> StudySpec:
         if len(set(self.adapter_seeds)) != 3 or self.lora.seed not in self.adapter_seeds:
             raise ValueError("three distinct adapter seeds including the recipe seed are required")
+        if len(self.comparator_arms) != 3 or set(self.comparator_arms) != {
+            "per_action",
+            "path_rule",
+            "compact_base",
+        }:
+            raise ValueError("retain every guarded comparator and an explicit tie order")
         if len(self.modes) != 2 or set(self.modes) != {"text", "structured"}:
             raise ValueError("both paired relay transports must be prespecified exactly once")
         if len(self.required_training_target_kinds) != 4 or set(

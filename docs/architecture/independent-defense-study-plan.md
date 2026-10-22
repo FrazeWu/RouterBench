@@ -27,7 +27,8 @@ This is a prospective plan, not a frozen protocol or completed experiment.
    It rejects incomplete allocations and unaccepted/stale independent reviews.
    Frozen collection and three-seed fitting entry points are implemented; see
    defense-study-runbook.md. Their transport-fixture checks are not formal runs.
-   The comparison/tuning/calibration runner remains pending.
+   The same runner now implements matched tuning, fixed-policy calibration and
+   fresh-test phases with exact schedules and measured prerequisite identities.
 5. **Pending:** one LoRA recipe, matched development comparison, calibration audit
    and fresh paired test. Preserve strong per-action and path-rule baselines.
 6. **Pending:** family-clustered analysis, cost/negative-result report and paper results.
@@ -102,6 +103,11 @@ One Qwen3-1.7B architecture and LoRA recipe, three prespecified adapter seeds.
 Run the learned arm per seed and four shared control/reference arms once per
 setting. Seeds/modes are repeats within families; do not select the best seed.
 Tune comparator/checkpoint rules before calibration; calibration cannot select.
+Use seeded arm blocks with common task/mode episode seeds to avoid repeated
+model loading. Rank guarded controls by equal-family mean violations, safe
+completion and online budget units; freeze the explicit tie order. Calibration
+audits that fixed choice and never gates running tests on its outcome. All seed,
+mode and case failures remain in the fresh-test denominator.
 
 Using 78.42 paced seconds/episode from the pilot, two reserved GPUs, two branch
 states/parent and at most four candidates gives 48 parents and up to 384 branches.

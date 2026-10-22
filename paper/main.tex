@@ -1476,7 +1476,8 @@ Collection/fitting tooling validates the clean source and local model snapshots,
 meters draft, receiver and acceptance calls, and preserves independent branch
 outcomes. Fitting requires a completed measured phase, complete menu comparisons
 and realized targets for all four intervention kinds. Transport-fixture tests of
-these gates are not model experiments. Formal comparison tooling remains pending.
+these gates are not model experiments. Matched tuning, fixed-policy calibration
+and fresh-test execution are implemented but have not run on formal model data.
 
 \paragraph{Comparisons and fixed criterion.}
 Compare unguarded behavior, per-action authorization, deterministic path-state
@@ -1487,6 +1488,19 @@ Offline RL and transfer-model sweeps are outside the primary plan.
 Report realized encoding, diagnostics, acquisition, training and total costs,
 not just controller inference overhead. Freeze the strongest comparator on
 tuning data before calibration/testing.
+
+To limit model-loading cost, freeze a seeded order of arm blocks, enumerating
+each task, transport and benign/attacked condition within each block. Shared
+controls run once; all three adapter seeds run without best-seed selection.
+Use common task/transport episode seeds across arms and conditions, while
+retaining the actual continuations after histories diverge. On tuning, rank
+the three guarded comparators by equal-family mean violation rate, safe
+completion and online budget units; resolve exact ties by a prespecified order.
+These budget units are a selection tie breaker, not measured inference time.
+Calibration audits the resulting fixed policy without retuning or gating whether
+the fresh test runs. Completed measured phases and artifact hashes bind the same
+adapters and selection throughout. Arm blocking does not eliminate temporal
+effects; retain phase timing and thermal telemetry.
 
 The author-confirmed recovery criterion requires a point gain of at least
 five percentage points on the entire fixed attacked set and a paired 95\%
