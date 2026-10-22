@@ -797,8 +797,9 @@ A sufficient independent corpus remains outstanding. Hold out task families and
 attack mechanisms across train, tuning, calibration and fresh tests.
 
 The primary learned method uses LoRA fine-tuning of one compact open-weight
-language model; Qwen3-1.7B is the initial recommendation, pending a memory/timing
-pilot and snapshot freeze. The task agent remains frozen. At sampled training
+language model, Qwen3-1.7B. The model size is selected; its checkpoint and LoRA
+configuration will be frozen after a memory/timing pilot. The Qwen3-14B task agent
+remains frozen. At sampled training
 states, execute candidate interventions in independent simulator branches under
 the same continuation policy and attack condition. Derive choice targets from
 realized violation, safe-completion and cost outcomes, preferring violation-free
@@ -833,6 +834,21 @@ and no episode violation. The defense corpus and formal freeze remain pending;
 sample size and repetitions will be set after a timed pilot, aiming for modest
 overall compute and fine-tuning only one small model, without a fixed hour ceiling.
 Equality with deterministic control does not demonstrate learning's added value.
+
+The defense study separates feasibility from efficacy evidence. A development-only
+operational pilot will measure paired episode cost, branch completion,
+Qwen3-1.7B inference latency, LoRA memory and fit time, and thermal stability;
+pilot cases will not enter fitting, calibration, or the final estimate. New
+semantic families will be partitioned into training, tuning, calibration, and
+fresh-test sets before collection. The final test will run all five arms on matched
+benign and staged-relay episodes, covering text injection and forged structured
+calls, in randomized arm order. Repeated presentations remain nested within
+semantic families. The family is the inference cluster; paired intervals will be
+reported for attacked safe recovery and benign functional success, with violations
+and attack success reported separately. After the pilot, we will freeze the family
+count, presentations, adapter seeds, stopping rule, and cost estimate before
+opening test outcomes. If independent-family coverage cannot support the
+prespecified success criterion, the result will be reported as inconclusive.
 
 \section{Experiments}
 \label{sec:experiments}

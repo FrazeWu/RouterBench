@@ -89,10 +89,10 @@ effective probability. No importance-weighted off-policy efficacy claim is made.
 
 ### Planned compact-model fine-tuning
 
-Recommend Qwen3-1.7B as the initial candidate, with LoRA adapters and frozen base
-weights. This is a proposed size, not a frozen checkpoint or measured feasibility
-claim. Pin the snapshot, context length, adapter settings and training budget after
-a short memory/timing pilot. The existing 14B task agent stays frozen.
+Use Qwen3-1.7B as the single primary defense model, with LoRA adapters and frozen
+base weights. The model size is selected; checkpoint, context length, adapter
+settings and training budget are pinned after a short memory/timing pilot. The
+Qwen3-14B task agent stays frozen.
 
 Input contains the public task/contracts, structured proposal, trusted execution
 history, resource counters and runtime-generated legal menu. Exclude raw untrusted
@@ -173,6 +173,50 @@ Cluster percentile intervals require enough independent families. Two-family
 software checks are not credible inference. Zero observed violations does not prove
 safety equivalence. Do not change thresholds after observing tests.
 
+### Executable study sequence
+
+The study has three non-overlapping stages; pilot episodes never enter training,
+threshold selection, or reported efficacy estimates.
+
+1. **Operational pilot.** Use a small set of development-only semantic families
+   covering both attack forms and benign controls. Replay paired episodes with the
+   frozen Qwen3-14B agent and measure end-to-end episode time, calls/tokens,
+   intervention branch success, Qwen3-1.7B inference latency, LoRA peak memory and
+   fit time, and GPU temperature/throttling. This stage tests the data/runner path
+   and estimates cost; it does not tune the defense or estimate its efficacy.
+2. **Development and calibration.** Partition new task families before collecting
+   data into train, tune, and calibration sets. Train the single LoRA recipe on
+   actual branch outcomes from training families. Use tuning families to freeze
+   the selected checkpoint and deterministic comparator. Use calibration families
+   only for a prespecified operating-point audit and fallback-rate checks. Keep
+   attack mechanisms used for the primary test out of every development split.
+3. **Fresh paired test.** Run all five arms on the same held-out task/attack
+   instances, with the same frozen agent snapshot, budgets, and response schedule.
+   For each test instance, pair a benign episode with a staged-relay attack
+   episode; include plain-text injection and forged structured-call campaigns. Run
+   each arm on the same instances in randomized order. Repetitions, if justified
+   by the pilot, are repeated presentations within a family, not independent
+   samples.
+
+The primary unit is the semantic task family. Report family-clustered paired
+intervals for (a) safe recovery on attacked episodes and (b) benign functional
+success; also report episode violation rate and attack success as separate safety
+outcomes. The primary learned-versus-strongest-guarded comparison is selected using
+development data and then frozen. The unguarded arm is an attack reference, not a
+candidate comparator. The trained-versus-base compact-model contrast estimates the
+contribution of fine-tuning under matched prompts, menus and decoding. Report the
+full five-arm table, including cases where learned selection ties or loses to the
+deterministic policy.
+
+After the operational pilot, choose the smallest fresh-test family count for which
+the planned family-cluster interval procedure is estimable and the measured cost is
+feasible. Document expected interval precision under a range of plausible
+within-family correlations; do not call this a power guarantee. Freeze family
+counts, per-family instances, presentations, adapter seeds, stopping rule and total
+cost estimate before opening fresh-test outcomes. If the available independent
+families cannot support the frozen success rule, report the study as inconclusive
+rather than relaxing the threshold or treating repeated episodes as independent.
+
 ## Resource decision and Git provenance
 
 Two A100-PCIe-40GB GPUs, about 196 GiB RAM and 654 GiB free disk were observed on
@@ -195,14 +239,12 @@ The dirty development smoke record at base revision
 55510043b40b8fa6eb7dc56965e3a978f5746bba measured 8.5 agent calls per episode,
 1.57 seconds per call and about 3.54k prompt tokens per call. It is a feasibility
 measurement only and must be remeasured from the checkpoint selected for formal
-work. For a transparent serialized-inference sensitivity, 132 families times eight
-cases, paired attacked/benign conditions, five controller arms and five repeated
-presentations gives 52,800 episodes. At the measured rates that is about 448,800
-calls, 196 serialized GPU hours and 1.59 billion prompt tokens. This deliberately
-excludes independent training/tuning/calibration families, branch continuations,
-diagnostics, adaptive attacks, transfer agents, fitting and encoding; batching can
-change wall time but not the recorded call/token totals. It is an illustrative
-planning envelope, not a frozen sample size, resource authorization or result.
+work. The earlier 132-family arithmetic (52,800 episodes and about 196 serialized
+GPU hours) is retained only to explain why that broad design was discarded; it is
+not the current sample plan or a compute target. The current design has no frozen
+sample count or GPU-hour estimate. Remeasure on the selected clean checkpoint and
+size the study from the pilot and independent-family availability; include
+branching, development, calibration, all arms and training in the estimate.
 
 Formal fitting requires every training record and adapter/scorer artifact to carry
 the same frozen protocol identity. Existing formal scorer loading requires that identity and
