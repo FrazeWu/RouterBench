@@ -31,7 +31,7 @@ gpu_ids: [1, 0]
 maximum_celsius: 85
 minimum_request_gap_seconds: 2
 cooling_pause_celsius: 70
-cooling_resume_celsius: 65
+cooling_resume_celsius: 68
 modes: [text, structured]
 campaigns:
   - task_id: rbdv_f1_001_resource_inventory
