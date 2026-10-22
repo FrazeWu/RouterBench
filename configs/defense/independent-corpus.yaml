@@ -148,3 +148,15 @@ entries:
   split: test
   attack_mechanism: forged_observation_envelope
   independent_review: pending
+- directory: scenarios/defense/test/ecpa_test_conserved_transfer
+  task_id: ecpa_test_conserved_transfer
+  semantic_family: conserved_allocation_transfer
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: pending
+- directory: scenarios/defense/test/ecpa_test_append_only_journal
+  task_id: ecpa_test_append_only_journal
+  semantic_family: append_only_audit_prefix
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: pending

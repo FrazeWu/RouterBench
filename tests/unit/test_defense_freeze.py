@@ -109,7 +109,9 @@ def fixture_repo(root: Path) -> tuple[StudySpec, dict[str, object], dict[str, ob
     raw = yaml.safe_load((root / MANIFEST).read_text())
     # A smaller TEST allocation permits exercising the success path. Production
     # sources keep forty test families and every review pending.
-    raw["planned_families"]["test"] = 2
+    raw["planned_families"]["test"] = len(
+        {task.entry.semantic_family for task in tasks if task.entry.split == "test"}
+    )
     (root / "reviews").mkdir()
     for task, entry in zip(tasks, raw["entries"], strict=True):
         entry["independent_review"] = "accepted"

@@ -3,7 +3,7 @@
 Status, 2026-10-23: collection/fitting tooling implemented and tested with clearly
 identified transport/simulator fixtures. **No formal protocol or production
 StudySpec exists; no formal model collection or training has started.** The real
-corpus still has 2/40 candidate test families and zero independent acceptances.
+corpus still has 4/40 candidate test family labels and zero independent acceptances.
 Completing code does not supply those missing sources or reviews.
 
 ## Boundaries and order
@@ -106,7 +106,8 @@ tests. The previously completed pilot and its disposable adapter remain separate
 
 ## Engineering validation
 
-On 2026-10-23 the full default suite passes **272 tests**, with two existing
+At collection/fitting checkpoint 9ac3c68e721b4deaf7c61d7cf036733b83e6f64b,
+on 2026-10-23 the full default suite passes **272 tests**, with two existing
 optional Torch cases skipped because this environment lacks Torch. Changed-file
 Ruff and strict mypy pass. Eleven new study tests exercise real simulator menus
 with MockTransport/fake tokenizer fixtures: per-call charging, missing/excess
@@ -122,3 +123,12 @@ artifacts/private/ecpa-study-tooling-preview/validation.json. The freeze-only
 checkpoint is d2294089bc5d47bf1ec3dfc6d8b338c6a5f6d9a4. Older source/context audits
 remain evidence for their originally recorded revisions; none is relabeled to
 the new implementation checkpoint. Formal evidence is still pending.
+
+The subsequent conserved-transfer/append-only candidate batch passes **283
+tests**, with the same two optional Torch skips. Changed-file Ruff and strict
+mypy pass. Its source engineering check exercises 25 tasks, 50 safe witnesses,
+25 harmful references, 76 relay stages per transport and 69 menu probes. These
+counts describe authored reachability, not model outcomes or accepted independent
+families. The updated fourteen-page paper compiles; page 13 is rendered and
+visually checked without clipping or overlap. Fresh clean-revision source and
+tokenizer audits are recorded separately after committing this batch.

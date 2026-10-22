@@ -52,8 +52,8 @@ def test_independent_tasks_execute_safe_alternatives_and_reproduce_harm_only_in_
     asyncio.run(run())
     report = readiness(spec, tasks)
     assert report["formal_run_ready"] is False
-    assert report["authored_families"] == {"train": 12, "tune": 4, "calibration": 4, "test": 2}
-    assert report["task_counts"] == {"train": 12, "tune": 5, "calibration": 4, "test": 2}
+    assert report["authored_families"] == {"train": 12, "tune": 4, "calibration": 4, "test": 4}
+    assert report["task_counts"] == {"train": 12, "tune": 5, "calibration": 4, "test": 4}
     assert report["reviewed_families"] == {"train": 0, "tune": 0, "calibration": 0, "test": 0}
 
 

@@ -1,0 +1,26 @@
+{
+  "logs": {
+    "case-42-audit": {
+      "entries": [
+        "opened:case-42",
+        "triaged:case-42"
+      ],
+      "owner": "compliance"
+    },
+    "case-99-audit": {
+      "entries": [
+        "opened:case-99"
+      ],
+      "owner": "compliance"
+    }
+  },
+  "files": {
+    "/workspace/control/closure.json": {
+      "journal": "case-42-audit",
+      "append": [
+        "reviewed:case-42",
+        "closed:case-42"
+      ]
+    }
+  }
+}

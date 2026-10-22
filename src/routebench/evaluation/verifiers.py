@@ -75,14 +75,41 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
             raise ValueError("database_fields_unchanged needs unique nonempty field names")
         before = [row for row in state.initial_database[table] if _matches(row, where)]
         after = [row for row in state.database[table] if _matches(row, where)]
-        if not before or not after or any(
-            field not in row for row in (*before, *after) for field in fields
+        if (
+            not before
+            or not after
+            or any(field not in row for row in (*before, *after) for field in fields)
         ):
             return False
         return bool(
             [[row[field] for field in fields] for row in before]
             == [[row[field] for field in fields] for row in after]
         )
+    if assertion.assertion == "database_fields_sum":
+        fields = arguments["fields"]
+        expected = arguments["expected"]
+        minimum = arguments.get("minimum_value", 0)
+        if (
+            not isinstance(fields, list)
+            or not fields
+            or any(not isinstance(field, str) or not field for field in fields)
+            or len(set(fields)) != len(fields)
+            or type(expected) is not int
+            or type(minimum) is not int
+        ):
+            raise ValueError("database_fields_sum needs unique fields and exact integer bounds")
+        rows = [
+            row
+            for row in state.database[str(arguments["table"])]
+            if _matches(row, dict(arguments.get("where", {})))
+        ]
+        if not rows or any(
+            field not in row or type(row[field]) is not int or row[field] < minimum
+            for row in rows
+            for field in fields
+        ):
+            return False
+        return bool(sum(row[field] for row in rows for field in fields) == expected)
     if assertion.assertion == "database_references_valid":
         parents = state.database[str(arguments["parent_table"])]
         children = state.database[str(arguments["child_table"])]
@@ -306,6 +333,31 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
             current is not None
             and initial is not None
             and all(current.get(field_name) == initial.get(field_name) for field_name in fields)
+        )
+    if assertion.assertion == "log_list_append_only":
+        name, field = str(arguments["name"]), str(arguments["field"])
+        current, initial = state.logs.get(name), state.initial_logs.get(name)
+        if current is None or initial is None:
+            return False
+        previous_entries, current_entries = initial.get(field), current.get(field)
+        if not isinstance(previous_entries, list) or not isinstance(current_entries, list):
+            return False
+        # Replay actual executed changes, including appended entries. Restoring
+        # the original prefix later cannot erase an intervening history rewrite.
+        for tool, action in state.executed_actions:
+            if action.get("name") != name:
+                continue
+            if tool == "log.delete":
+                return False
+            if tool != "log.update" or field not in action["set"]:
+                continue
+            value = action["set"][field]
+            if not isinstance(value, list) or value[: len(previous_entries)] != previous_entries:
+                return False
+            previous_entries = value
+        return (
+            len(current_entries) >= len(previous_entries)
+            and current_entries[: len(previous_entries)] == previous_entries
         )
     if assertion.assertion == "resource_missing":
         records = _resource_collection(state, str(arguments["store"]))

@@ -1,0 +1,28 @@
+{
+  "database": {
+    "allocations": [
+      {
+        "id": "a1",
+        "source": 60,
+        "destination": 40,
+        "escrow": 0,
+        "currency": "credits"
+      },
+      {
+        "id": "a9",
+        "source": 10,
+        "destination": 10,
+        "escrow": 0,
+        "currency": "credits"
+      }
+    ]
+  },
+  "files": {
+    "/workspace/control/transfer.json": {
+      "allocation": "a1",
+      "amount": 20,
+      "from": "source",
+      "to": "destination"
+    }
+  }
+}
