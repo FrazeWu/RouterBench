@@ -4,6 +4,9 @@ Scope: two existing development overlays, one frozen Qwen3-14B task agent, one
 Qwen3-1.7B base, one short LoRA recipe, two relay modes and five comparison arms.
 This is an engineering pilot. Its reused development families and short adapter
 fit cannot establish defense effectiveness or generalization.
+The completed 2026-10-22 measurement is documented in
+`compact-defense-pilot-results.md`, including failed probes and the matched-rule
+result; do not treat the timing adapter as a formal defense checkpoint.
 
 ## Preparation
 

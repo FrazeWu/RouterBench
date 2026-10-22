@@ -6,6 +6,12 @@ results and tests are not training data. No new capability-routing tasks are
 authored in this implementation: the two existing development overlays exercise
 interfaces only and do not constitute an independent corpus.
 
+Status, 2026-10-22: all six implementation deliverables below are complete. The
+real-model pilot finished eight parent episodes, 18 branch continuations, one
+disposable LoRA fit/reload and the full 40-episode comparison. See
+`compact-defense-pilot-results.md` for provenance, measured costs, negative
+results, tests and the boundary to the still-pending independent formal study.
+
 ## Deliverables and order
 
 1. A shared, explicitly filtered public observation serializer and trusted local

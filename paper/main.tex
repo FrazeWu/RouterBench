@@ -837,9 +837,10 @@ overall compute and fine-tuning only one small model, without a fixed hour ceili
 Equality with deterministic control does not demonstrate learning's added value.
 
 The defense study separates feasibility from efficacy evidence. A development-only
-operational pilot will measure paired episode cost, branch completion,
-Qwen3-1.7B inference latency, LoRA memory and fit time, and thermal stability;
-pilot cases and disposable timing adapters will not enter formal fitting,
+operational pilot measured paired episode cost, branch completion,
+Qwen3-1.7B inference latency, LoRA memory and fit time, and thermal stability
+(Appendix~\ref{app:training}); pilot cases and disposable timing adapters will not
+enter formal fitting,
 calibration, or the final estimate. New
 semantic families will be partitioned into training, tuning, calibration, and
 fresh-test sets before collection. The final test will run all five arms on matched
@@ -1421,6 +1422,16 @@ paper method, and do not determine its optimizer settings. The compact-model
 training/loading implementation is separate; an independently trained formal
 adapter and corpus remain pending. Calibration audits a fixed
 selected policy rather than selecting a new policy on the audit set.
+
+A separate compact-model engineering pilot collected eight parent episodes and
+18 actual intervention branches from two reused development families, then fitted
+and reloaded a disposable Qwen3-1.7B LoRA adapter. Eight updates trained 1.61 million
+parameters in 18.94 seconds, with 11.55 GiB peak allocated tensor memory. The full
+40-episode integration comparison gave six safe completions in eight episodes for
+both the adapter and deterministic path rule, versus zero for the compact base.
+The adapter used four deterministic fallbacks across 56 selections. These reused
+workflows and eight choice labels are not independent efficacy evidence and show
+no advantage over the path rule; neither the records nor adapter enter formal work.
 
 A new corpus must split semantic families across training, tuning, calibration
 and fresh tests; primary test attack mechanisms are also held out.

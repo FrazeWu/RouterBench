@@ -8,6 +8,10 @@ runner are now implemented. A disposable development adapter measures feasibilit
 only; an independent corpus and formal comparison remain outstanding. Historical
 v13 keeps its original identity. See `defense-implementation-plan.md` and
 `compact-defense-runbook.md` for the development chain.
+The completed two-family operational pilot is recorded in
+`compact-defense-pilot-results.md`: 40/40 comparison episodes, real LoRA update
+and reload, 2.16 phase GPU-device-hours, and no recovery gain over the path rule.
+It is not formal training data, a calibrated policy, or efficacy evidence.
 
 ## Research question and claims
 
