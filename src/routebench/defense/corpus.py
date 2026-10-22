@@ -30,6 +30,12 @@ from routebench.defense.overlap import overlap_screen
 from routebench.defense.pilot import UnguardedSimulatorReference
 from routebench.defense.policies import PublicRulePolicy
 from routebench.defense.protocol import SplitItem, validate_splits
+from routebench.defense.relay import (
+    RelayCampaign,
+    RelayMechanism,
+    RelayStage,
+    StagedResponseRelay,
+)
 from routebench.evaluation import evaluate_all
 from routebench.runtime.reference import ScenarioState, validate_route_spec
 from routebench.scenarios.schema import RouteSpec, StrictModel, VerifierSpec
@@ -42,7 +48,7 @@ class CorpusEntry(StrictModel):
     task_id: str
     semantic_family: str
     split: Split
-    attack_mechanism: str
+    attack_mechanism: RelayMechanism
     independent_review: Literal["pending", "accepted"] = "pending"
     review_evidence: str | None = None
 
@@ -82,6 +88,20 @@ class CorpusTask:
 
     def state(self) -> ScenarioState:
         return ScenarioState.from_fixture(self.directory / "state.fixture.json")
+
+    def relay_campaign(self) -> RelayCampaign:
+        """Bind source-audited stages to the actual registered relay operator."""
+        edges = {edge.edge_id: edge for edge in self.public.graph.edges}
+        if any(edge_id not in edges for edge_id in self.authoring.attack_path):
+            raise ValueError("corpus campaign references an unregistered edge")
+        return RelayCampaign(
+            task_id=self.entry.task_id,
+            mechanism=self.entry.attack_mechanism,
+            stages=tuple(
+                RelayStage(node=edges[edge_id].source, edge_id=edge_id)
+                for edge_id in self.authoring.attack_path
+            ),
+        )
 
     def outcome(self, state: ScenarioState) -> OutcomeLabel:
         return OutcomeLabel(
@@ -152,6 +172,9 @@ def load_corpus(root: Path, manifest: Path) -> tuple[CorpusSpec, tuple[CorpusTas
         files_content.update({name: (directory / name).read_text() for name in files})
         digest = content_hash({"entry": entry.model_dump(mode="json"), "files": files_content})
         task = CorpusTask(entry, public, verifier, authoring, directory, digest)
+        campaign = task.relay_campaign()
+        if len({stage.node for stage in campaign.stages}) != len(campaign.stages):
+            raise ValueError("corpus campaign stages must identify distinct graph nodes")
         if task.outcome(task.state()).violation or task.outcome(task.state()).attack_success:
             raise ValueError("fixture violates policy or already achieves the attack target")
         tasks.append(task)
@@ -225,6 +248,24 @@ async def audit_task(
     # Attack prefix must itself be legitimate. Only the final action crosses
     # the boundary; do not count a disconnected or impossible harmful suffix.
     await replay_prefix(task, task.authoring.attack_path[:-1])
+    campaign = task.relay_campaign()
+    modes: tuple[Literal["text", "structured"], ...] = ("text", "structured")
+    relays = {mode: StagedResponseRelay(campaign, mode=mode, attacked=True) for mode in modes}
+    for index, edge_id in enumerate(task.authoring.attack_path):
+        stage_env = await replay_prefix(task, task.authoring.attack_path[:index])
+        view = stage_env.agent_view()
+        before = view.model_dump_json()
+        for mode, relay in relays.items():
+            replacement = relay.transform('{"kind":"stop"}', view)
+            if not relay.events[-1]["changed"]:
+                raise ValueError("authored campaign did not reach its executable relay stage")
+            if (
+                mode == "structured"
+                and AgentReply.model_validate_json(replacement).edge_id != edge_id
+            ):
+                raise ValueError("structured relay did not bind the authored edge")
+        if view.model_dump_json() != before:
+            raise ValueError("response relay changed trusted state")
     reference = UnguardedSimulatorReference(task.public, task.state())
     for edge_id in task.authoring.attack_path:
         observation = await reference.observe(
@@ -271,6 +312,10 @@ async def audit_task(
         "safe_paths_checked": len(task.authoring.safe_paths),
         "attack_prefix_actions": len(task.authoring.attack_path) - 1,
         "attack_target_and_violation_reproduced": True,
+        "relay_stages_checked": len(campaign.stages),
+        "relay_effective_mechanisms": {
+            mode: relay.effective_mechanism for mode, relay in relays.items()
+        },
         "menu_probe_counts": dict(kinds),
         "independent_review": task.entry.independent_review,
         "model_rollouts": 0,
@@ -306,6 +351,10 @@ def readiness(spec: CorpusSpec, tasks: tuple[CorpusTask, ...]) -> dict[str, obje
         "task_counts": {
             split: sum(task.entry.split == split for task in tasks)
             for split in spec.planned_families
+        },
+        "mechanism_scope": {
+            "text": "registered payload operators; semantic independence still needs review",
+            "structured": "shared registered_proposal_substitution; no mechanism holdout",
         },
         "public_structure_screen": overlap_screen(
             [(task.entry.split, task.public) for task in tasks]

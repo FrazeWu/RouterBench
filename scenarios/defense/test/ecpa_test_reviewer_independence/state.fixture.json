@@ -1,0 +1,24 @@
+{
+  "database": {
+    "change_requests": [
+      {
+        "id": "r1",
+        "author": "alice",
+        "reviewer": "unassigned",
+        "status": "pending"
+      },
+      {
+        "id": "r9",
+        "author": "carol",
+        "reviewer": "dave",
+        "status": "approved"
+      }
+    ]
+  },
+  "files": {
+    "/workspace/review/decision.json": {
+      "reviewer": "bob",
+      "decision": "approved"
+    }
+  }
+}

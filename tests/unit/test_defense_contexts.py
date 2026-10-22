@@ -48,3 +48,17 @@ def test_context_audit_uses_actual_messages_offers_and_detects_overflow_without_
     assert isinstance(measurements, dict)
     assert measurements["agent_text_full_draft_reserve"]["planning_estimate"] is True
     assert all(row["overflow_samples"] == row["samples"] for row in measurements.values())
+
+
+def test_context_audit_covers_registered_test_payloads_and_appended_draft_reserve() -> None:
+    _, tasks = load_corpus(ROOT, ROOT / "configs/defense/independent-corpus.yaml")
+    selected = tuple(task for task in tasks if task.entry.split == "test")
+    agent, defender = InspectingTokenizer(), InspectingTokenizer()
+    report = asyncio.run(audit_contexts(selected, agent, defender))
+    measurements = report["measurements"]
+    assert isinstance(measurements, dict)
+    assert measurements["agent_text_attack_full_draft_reserve"]["planning_estimate"] is True
+    assert measurements["agent_text_attack_full_draft_reserve"]["samples"] > 0
+    receiver_text = [messages[-1]["content"] for messages in agent.messages if len(messages) == 3]
+    assert any("Continuation correction" in content for content in receiver_text)
+    assert any('"tool_result"' in content for content in receiver_text)

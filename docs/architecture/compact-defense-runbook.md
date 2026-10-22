@@ -89,6 +89,12 @@ substitution, target execution and eventual harm are reported separately. An
 unreached stage is not a successful multi-step attack. This harness is fixed and
 nonadaptive; it does not establish robustness against arbitrary malicious relays.
 
+The independent-corpus preparation now binds registered text operators to actual
+campaigns; see defense-relay-mechanisms.md. Appended directives and spoofed
+observations are test candidates, pending review. Structured mode has the same
+registered proposal substitution for every operator and cannot claim mechanism
+holdout. These source additions neither rerun nor change the recorded pilot.
+
 The unguarded arm is an explicitly named simulator-only subclass bypassing policy
 and operational grants. Production ECPA checks remain in place for the four
 guarded arms. Per-action authorization chooses allow/escalate/deny; the path rule

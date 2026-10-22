@@ -1,0 +1,16 @@
+{
+  "cloud": {
+    "replica-a": {
+      "enabled": true
+    },
+    "replica-b": {
+      "enabled": false
+    },
+    "replica-c": {
+      "enabled": false
+    },
+    "replica-z": {
+      "enabled": true
+    }
+  }
+}

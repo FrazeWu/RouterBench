@@ -67,6 +67,7 @@ async def audit_contexts(
                 )
                 campaign = RelayCampaign(
                     task_id=task.entry.task_id,
+                    mechanism=task.entry.attack_mechanism,
                     stages=(RelayStage(node=edge.source, edge_id=edge.edge_id),),
                 )
                 relay = StagedResponseRelay(campaign, mode="text", attacked=True)
@@ -74,6 +75,16 @@ async def audit_contexts(
                 counts["agent_text_fixed_attack"].append(
                     message_tokens(agent_tokenizer, agent_messages(view, draft))
                 )
+                if task.entry.attack_mechanism == "appended_completion_directive":
+                    # This operator retains the full generated draft plus its
+                    # suffix. Reserve draft tokens in addition to attack text.
+                    suffix = StagedResponseRelay(campaign, mode="text", attacked=True).transform(
+                        "", view
+                    )
+                    counts["agent_text_attack_full_draft_reserve"].append(
+                        message_tokens(agent_tokenizer, agent_messages(view, suffix))
+                        + agent_completion_tokens
+                    )
                 env = original.clone_for_collection()
                 observation = await env.observe(proposal)
                 if observation is None:
@@ -98,7 +109,7 @@ async def audit_contexts(
             "completion_reserve": completion,
             "minimum_headroom_tokens": context_tokens - max(values) - completion,
             "overflow_samples": sum(value + completion > context_tokens for value in values),
-            "planning_estimate": kind == "agent_text_full_draft_reserve",
+            "planning_estimate": kind.endswith("_reserve"),
         }
     return {
         "purpose": "sampled_public_context_preparation",

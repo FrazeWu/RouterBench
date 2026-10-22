@@ -62,6 +62,27 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
         before = [row for row in state.initial_database[table] if _matches(row, where)]
         after = [row for row in state.database[table] if _matches(row, where)]
         return before == after
+    if assertion.assertion == "database_fields_unchanged":
+        table = str(arguments["table"])
+        where = dict(arguments.get("where", {}))
+        fields = arguments["fields"]
+        if (
+            not isinstance(fields, list)
+            or not fields
+            or any(not isinstance(field, str) or not field for field in fields)
+            or len(set(fields)) != len(fields)
+        ):
+            raise ValueError("database_fields_unchanged needs unique nonempty field names")
+        before = [row for row in state.initial_database[table] if _matches(row, where)]
+        after = [row for row in state.database[table] if _matches(row, where)]
+        if not before or not after or any(
+            field not in row for row in (*before, *after) for field in fields
+        ):
+            return False
+        return bool(
+            [[row[field] for field in fields] for row in before]
+            == [[row[field] for field in fields] for row in after]
+        )
     if assertion.assertion == "database_references_valid":
         parents = state.database[str(arguments["parent_table"])]
         children = state.database[str(arguments["child_table"])]
@@ -82,8 +103,7 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
         endpoint = str(arguments["endpoint"])
         label = str(arguments["label"])
         return any(
-            message.endpoint == endpoint and label in message.labels
-            for message in state.outbound
+            message.endpoint == endpoint and label in message.labels for message in state.outbound
         )
     if assertion.assertion == "outbound_contains_json":
         endpoint = str(arguments["endpoint"])
@@ -117,10 +137,7 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
     if assertion.assertion == "observation_has_fields":
         required_fields = {str(field_name) for field_name in arguments["fields"]}
         return any(
-            (
-                isinstance(observation.output, dict)
-                and required_fields.issubset(observation.output)
-            )
+            (isinstance(observation.output, dict) and required_fields.issubset(observation.output))
             or (
                 isinstance(observation.output, list)
                 and any(
@@ -160,8 +177,7 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
         name = str(arguments["name"])
         expected = dict(arguments["expected"])
         return all(
-            state.policies[name].get(field_name) == value
-            for field_name, value in expected.items()
+            state.policies[name].get(field_name) == value for field_name, value in expected.items()
         )
     if assertion.assertion == "policy_fields_unchanged":
         name = str(arguments["name"])
@@ -174,8 +190,7 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
         name = str(arguments["name"])
         expected = dict(arguments["expected"])
         return all(
-            state.secrets[name].get(field_name) == value
-            for field_name, value in expected.items()
+            state.secrets[name].get(field_name) == value for field_name, value in expected.items()
         )
     if assertion.assertion == "secret_fields_unchanged":
         name = str(arguments["name"])
@@ -195,8 +210,7 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
         name = str(arguments["name"])
         fields = tuple(str(field_name) for field_name in arguments["fields"])
         return all(
-            state.identities[name].get(field_name)
-            == state.initial_identities[name].get(field_name)
+            state.identities[name].get(field_name) == state.initial_identities[name].get(field_name)
             for field_name in fields
         )
     if assertion.assertion == "cloud_action_recorded":
@@ -250,14 +264,48 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
         return record is not None and all(
             record.get(field_name) == value for field_name, value in expected.items()
         )
+    if assertion.assertion == "resource_field_count":
+        records = _resource_collection(state, str(arguments["store"]))
+        names = arguments["names"]
+        minimum, maximum = arguments.get("minimum", 0), arguments.get("maximum")
+        if (
+            not isinstance(names, list)
+            or not names
+            or any(not isinstance(name, str) or not name for name in names)
+            or len(set(names)) != len(names)
+            or type(minimum) is not int
+            or minimum < 0
+            or (maximum is not None and (type(maximum) is not int or maximum < minimum))
+        ):
+            raise ValueError("resource_field_count needs unique names and ordered integer bounds")
+        field = str(arguments["field"])
+        if any(name not in records or field not in records[name] for name in names):
+            return False
+        count = sum(records[name][field] == arguments["value"] for name in names)
+        return minimum <= count and (maximum is None or count <= maximum)
+    if assertion.assertion == "database_distinct_fields":
+        rows = state.database[str(arguments["table"])]
+        where = dict(arguments.get("where", {}))
+        selected = [row for row in rows if _matches(row, where)]
+        left, right = str(arguments["left"]), str(arguments["right"])
+        return bool(selected) and all(
+            left in row
+            and right in row
+            and row[left] is not None
+            and row[right] is not None
+            and row[left] != row[right]
+            for row in selected
+        )
     if assertion.assertion == "resource_fields_unchanged":
         store = str(arguments["store"])
         name = str(arguments["name"])
         current = _resource_collection(state, store).get(name)
         initial = _resource_collection(state, store, initial=True).get(name)
         fields = tuple(str(field_name) for field_name in arguments["fields"])
-        return current is not None and initial is not None and all(
-            current.get(field_name) == initial.get(field_name) for field_name in fields
+        return (
+            current is not None
+            and initial is not None
+            and all(current.get(field_name) == initial.get(field_name) for field_name in fields)
         )
     if assertion.assertion == "resource_missing":
         records = _resource_collection(state, str(arguments["store"]))

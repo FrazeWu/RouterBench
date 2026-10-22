@@ -52,8 +52,8 @@ def test_independent_tasks_execute_safe_alternatives_and_reproduce_harm_only_in_
     asyncio.run(run())
     report = readiness(spec, tasks)
     assert report["formal_run_ready"] is False
-    assert report["authored_families"] == {"train": 12, "tune": 4, "calibration": 4, "test": 0}
-    assert report["task_counts"] == {"train": 12, "tune": 5, "calibration": 4, "test": 0}
+    assert report["authored_families"] == {"train": 12, "tune": 4, "calibration": 4, "test": 2}
+    assert report["task_counts"] == {"train": 12, "tune": 5, "calibration": 4, "test": 2}
     assert report["reviewed_families"] == {"train": 0, "tune": 0, "calibration": 0, "test": 0}
 
 
@@ -112,7 +112,9 @@ def test_private_sources_change_identity_without_entering_model_input(tmp_path: 
     asyncio.run(run())
 
 
-@pytest.mark.parametrize("mutation", ["pilot", "family", "mechanism", "review", "duplicate"])
+@pytest.mark.parametrize(
+    "mutation", ["pilot", "family", "mechanism", "unregistered_mechanism", "review", "duplicate"]
+)
 def test_corpus_rejects_contamination_and_unsubstantiated_review(
     tmp_path: Path, mutation: str
 ) -> None:
@@ -125,6 +127,8 @@ def test_corpus_rejects_contamination_and_unsubstantiated_review(
         first["semantic_family"] = "silently_renamed_family"
     elif mutation == "mechanism":
         raw["entries"][1]["split"] = "test"
+    elif mutation == "unregistered_mechanism":
+        first["attack_mechanism"] = "only_renamed_payload"
     elif mutation == "review":
         first["independent_review"] = "accepted"
     else:

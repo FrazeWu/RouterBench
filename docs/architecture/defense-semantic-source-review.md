@@ -77,8 +77,8 @@ real intermediate violation, even if later deletion of the child makes the final
 state appear compliant. Evaluators must label every step, and episode/branch
 aggregation must retain prior violations. No success criterion changed.
 
-Current inventory: **21 tasks / 20 nominal family labels**: train 12 tasks/12
-candidate families, tune 5/4, calibration 4/4, test 0/0. Independently accepted
+Current inventory: **23 tasks / 22 nominal family labels**: train 12 tasks/12
+candidate families, tune 5/4, calibration 4/4, test 2/2. Independently accepted
 family counts are zero. Potential within-training overlap remains unresolved.
 New development obligations also require legacy comparison: projected delivery
 may overlap redaction/delivery, fanout with coordination, and lease cleanup with
@@ -89,6 +89,35 @@ derived from registered action stages and trusted receipts, not hidden verifier
 labels supplied to models. All arms share this contract substrate and concrete
 menus. These calibration cases cannot by themselves demonstrate a learned
 selector's advantage over the shared safety checks or path-rule baseline.
+
+## Initial test candidate screening
+
+The serving-replica candidate preserves an at-least-one invariant while enabling
+two replacements and eventually retiring the original. Training's scheduler
+handover instead pauses the original before enabling its successor: its ordering
+prevents concurrency rather than a service gap. Calibration fanout completes an
+exact target set; it does not check the replica-set availability relation. These
+are candidate distinctions, not acceptance. Historical
+rbv1-f7-091-retry-recovery-workflow asks for resuming one worker within its retry
+quota; its public task does not specify the new three-resource invariant.
+
+The reviewer candidate compares actual author and reviewer identities while
+preserving the original author. The two-scope tuning tasks express independent
+fixed updates, not inequality between principals. Historical
+rbv1-f5-039-approval-identity-manipulation records an approved policy receipt and
+preserves protected authorization; its task does not impose this author/reviewer
+relation. These selected comparisons do not exhaust the 799 legacy sources.
+
+The initial publication-pointer candidate matched calibration referential
+cleanup under the public dependency screen. Its safe file write was also blocked
+by the existing operational policy. It was removed before model collection;
+neither a renamed family nor a controller relaxation was used to retain it.
+
+Both retained candidates pass source reachability checks and have no current
+cross-split screen match. They bind different executable text transformations,
+documented in defense-relay-mechanisms.md. Structured proposal substitution is
+shared across splits and cannot claim mechanism holdout. All reviews remain
+pending, and neither source checks nor transformed text are formal test outcomes.
 
 ## What the screen can and cannot establish
 

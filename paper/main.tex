@@ -794,12 +794,12 @@ Collect actual intervention-dependent continuations, retaining failures, rejecti
 approval and independent simulator branches. Record allowed state/history/menu
 features and actual outcomes. Separate task-sampling, intervention-behavior and
 branch-assignment probabilities. Cutoff is censoring, not a failed terminal label.
-A sufficient independent corpus remains outstanding. Hold out task families and
-attack mechanisms across train, tuning, calibration and fresh tests.
+A sufficient independent corpus remains outstanding. Separate semantic families
+across all four splits and reserve text-attack operators for fresh tests.
 
 The primary learned method uses LoRA fine-tuning of one compact open-weight
-language model, Qwen3-1.7B. The model size is selected; its checkpoint and LoRA
-configuration will be frozen after a memory/timing pilot. The Qwen3-14B task agent
+language model, Qwen3-1.7B. The model size is selected; exact snapshots and the
+formal recipe remain to be frozen after the completed timing pilot. The Qwen3-14B task agent
 remains frozen. At sampled training
 states, execute candidate interventions in independent simulator branches under
 the same continuation policy and attack condition. Derive choice targets from
@@ -826,7 +826,7 @@ last pair shares inputs, prompts, menus and decoding settings, isolating trainin
 benefit. Guarded methods share hard prohibitions and final rechecks; path-level
 methods also share concrete menus. Use one model and one supervised recipe;
 online RL and model-size sweeps are outside the primary plan.
-Hold out task families and attack mechanisms across training and test.
+Hold out task families across training and test; text operators are also held out.
 Pair tampered and benign versions of each
 task, covering both text injection and forged structured calls. Report attack
 success, episode violations, benign completion, unnecessary interventions and
@@ -1434,7 +1434,7 @@ workflows and eight choice labels are not independent efficacy evidence and show
 no advantage over the path rule; neither the records nor adapter enter formal work.
 
 A new corpus must split semantic families across training, tuning, calibration
-and fresh tests; primary test attack mechanisms are also held out.
+and fresh tests; primary text-attack operators are also held out.
 Entity renaming is not family independence. Other frozen task-agent models
 form separate transfer tests. Current development cases are insufficient.
 Use public graph strata and realized training-branch outcomes to connect the
@@ -1451,6 +1451,26 @@ branch assignments. Branching changes simulator state and real agent
 continuations independently; rejected offers and failures remain observations.
 Actual approval may reject. Never infer successful recovery by relabeling a
 trace collected without that intervention.
+
+\paragraph{Relay implementation and claim scope.}
+Development campaigns replace a model draft with an authorization pretext.
+Two reserved text operators instead append a completion directive to the
+original draft or replace it with a spoofed observation envelope. Apparent tool
+roles and prerequisite facts remain untrusted response text; they do not update
+runtime facts or grants. In structured mode these operators all reduce to the
+same registered-proposal substitution. Structured results therefore assess
+task-family transfer, not held-out attack mechanisms. Keep mode-stratified
+results: text mode uses draft and receiver calls, so mode differences are not
+a controlled format-only effect.
+
+Current source preparation contains 23 tasks with 22 candidate family labels:
+12 training tasks, five tuning tasks in four families, four calibration tasks,
+and two initial test candidates. Independent acceptance is pending throughout.
+The test candidates check continuous replica availability and distinct author
+and reviewer identities using actual simulator state. Shared public effect
+contracts are hard controls, not evidence that learning improves safety.
+Source reachability and tokenizer audits produce neither training labels nor
+efficacy estimates; the remaining test corpus and formal freeze are outstanding.
 
 \paragraph{Comparisons and fixed criterion.}
 Compare unguarded behavior, per-action authorization, deterministic path-state

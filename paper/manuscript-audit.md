@@ -1,10 +1,11 @@
 # RouteBench Manuscript Audit
 
-Date: 2026-10-21. This is a working-paper audit, not a submission-readiness claim.
+Date: 2026-10-22. This is a working-paper audit, not a submission-readiness claim.
 Current scope includes the author-confirmed recovery design, implementation and
-development feasibility measurements. Formal experiments await a concrete total
-resource-cap decision and clean frozen protocol. Historical benchmark results and
-frozen scenarios remain unchanged. Earlier writing-only scope entries are historical.
+development feasibility measurements. Formal experiments await independent corpus
+review, completed test sources, model/protocol freeze and a clean committed revision.
+The author chose a moderate study without a hard GPU-hour cap; retain the original
+success margins. Historical benchmark results and frozen scenarios remain unchanged. Earlier writing-only scope entries are historical.
 
 ## Author-Confirmed Recovery Design (2026-10-21)
 
@@ -410,3 +411,25 @@ third-party permissions, a published archive, completed profiles, an independent
 privacy review, or empirical validation. Compiler waits and metadata requests do
 not establish those facts either. The global goal must not be marked achieved on
 the basis of the local PDF or this checklist.
+
+## Current Defense Source Alignment (2026-10-22)
+
+The active compact-defense plan supersedes historical tool-return and CQL-only
+entries: the attacker controls an external model-response relay; the primary
+learner is Qwen3-1.7B LoRA with outcome-derived candidate-choice supervision and
+frozen Qwen3-14B as task agent. A completed timing pilot does not freeze or
+validate the formal recipe. Its tie with the path rule remains reported.
+
+The manuscript now distinguishes text-operator holdout from structured proposal
+forgery. Three registered text transformations have executable source behavior;
+structured mode collapses them to the same proposal and cannot support a new
+mechanism claim. Spoofed roles/facts remain untrusted data. Train/tune/calibration
+and initial test sources total 23 tasks/22 candidate labels, all independently
+unaccepted. One overlapping publication-pointer candidate was removed during
+source checks before model outcomes. Forty primary-test families remain a target,
+not an achieved count. Source and tokenizer audits are not formal efficacy data.
+
+No historical result table, threshold, citation or bibliography entry changes.
+The family-cluster and noninferiority evidence requirements remain unchanged;
+inadequate precision must be reported as inconclusive. See the current
+independent-defense-study-plan.md and defense-relay-mechanisms.md for provenance.

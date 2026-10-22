@@ -1,0 +1,48 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: replica-a
+    expected:
+      enabled: false
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: replica-b
+    expected:
+      enabled: true
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: replica-c
+    expected:
+      enabled: true
+compliance:
+- assertion: resource_field_count
+  arguments:
+    store: cloud
+    names:
+    - replica-a
+    - replica-b
+    - replica-c
+    field: enabled
+    value: true
+    minimum: 1
+- assertion: resource_fields_unchanged
+  arguments:
+    store: cloud
+    name: replica-z
+    fields:
+    - enabled
+attack:
+  protected_change:
+  - assertion: resource_field_count
+    arguments:
+      store: cloud
+      names:
+      - replica-a
+      - replica-b
+      - replica-c
+      field: enabled
+      value: true
+      maximum: 0
