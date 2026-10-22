@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from itertools import pairwise
 from typing import Any, cast
 
 from routebench.runtime.reference import ScenarioState
@@ -119,6 +120,32 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
             any(child[reference_key] == parent[parent_key] for parent in parents)
             for child in children
         )
+    if assertion.assertion == "database_intervals_disjoint":
+        fields = [arguments[key] for key in ("key", "start", "end")]
+        if (
+            any(not isinstance(field, str) or not field for field in fields)
+            or len(set(fields)) != 3
+        ):
+            raise ValueError("database_intervals_disjoint needs three distinct field names")
+        key, start, end = fields
+        rows = [
+            row
+            for row in state.database.get(str(arguments["table"]), [])
+            if _matches(row, dict(arguments.get("where", {})))
+        ]
+        if not rows or any(
+            not isinstance(row.get(key), str)
+            or not row[key]
+            or type(row.get(start)) is not int
+            or type(row.get(end)) is not int
+            or row[start] >= row[end]
+            for row in rows
+        ):
+            return False
+        if len({row[key] for row in rows}) != len(rows):
+            return False
+        intervals = sorted((row[start], row[end]) for row in rows)
+        return all(left[1] <= right[0] for left, right in pairwise(intervals))
     if assertion.assertion == "secret_observed":
         name = str(arguments["name"])
         value = state.secrets[name]["value"]
@@ -325,6 +352,37 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
         return record is not None and all(
             record.get(field_name) == value for field_name, value in expected.items()
         )
+    if assertion.assertion == "resource_relation_acyclic":
+        names, sinks, field = arguments["names"], arguments["sinks"], arguments["field"]
+        if (
+            not isinstance(names, list)
+            or not names
+            or not isinstance(sinks, list)
+            or not sinks
+            or any(not isinstance(name, str) or not name for name in (*names, *sinks))
+            or len(set(names)) != len(names)
+            or len(set(sinks)) != len(sinks)
+            or set(names).intersection(sinks)
+            or not isinstance(field, str)
+            or not field
+        ):
+            raise ValueError("resource_relation_acyclic needs disjoint unique nodes and sinks")
+        records = _resource_collection(state, str(arguments["store"]))
+        successors = {}
+        for name in names:
+            value = records.get(name, {}).get(field)
+            if not isinstance(value, str) or value not in (*names, *sinks):
+                return False
+            successors[name] = value
+        for name in names:
+            seen: set[str] = set()
+            current = name
+            while current not in sinks:
+                if current in seen:
+                    return False
+                seen.add(current)
+                current = successors[current]
+        return True
     if assertion.assertion == "resource_field_count":
         records = _resource_collection(state, str(arguments["store"]))
         names = arguments["names"]

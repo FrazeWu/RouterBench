@@ -9,7 +9,7 @@ This is a prospective plan, not a frozen protocol or completed experiment.
 1. **Completed:** structural replanning fix, shared by every arm. Enumerate all
    current-node edges, including unsafe/unproductive choices. Preserve pilot results.
 2. **In progress:** independent family authoring. Twelve candidate training
-   workflows, nine development tasks and six initial test candidates have executable
+   workflows, nine development tasks and eight initial test candidates have executable
    sources; semantic independence remains unreviewed. The new tasks cover four tuning family
    labels and four calibration labels after consolidating an overlapping pair.
    Each has two executable safe paths and two legitimate prefix actions before
@@ -47,7 +47,7 @@ primitives, not live providers. These compact tasks do not claim the universe's
 large hard-graph targets. Safe-path witnesses are separate from evaluator checks.
 Alternative providers/rereads create paths, not additional independent families.
 
-All twenty-seven tasks remain **authored, not independently reviewed**. Review must
+All twenty-nine tasks remain **authored, not independently reviewed**. Review must
 check overlap with prior corpora, contract soundness, leakage, reachable attacks,
 neutral menus and simulator/evaluator agreement. Names/hashes do not prove
 independence. Menu coverage does not prove real training-target coverage.
@@ -92,7 +92,7 @@ and historical formal-test traces from training.
 ## Moderate prospective allocation and cost
 
 Working target: **12 train / 4 tune / 4 calibration / 40 test families**. Actual
-materialization: **12/4/4/6 candidate family labels**, from **12/5/4/6 tasks**.
+materialization: **12/4/4/8 candidate family labels**, from **12/5/4/8 tasks**.
 Counts are not frozen. Initially
 use one task and one presentation per family, with the consolidated two-task
 tuning family as an explicit exception, two relay modes and benign/attacked pairs. Do not meet
@@ -152,8 +152,8 @@ The command refuses existing output and records the source revision. Its
 `formal_run_ready: false` is intentional. This preparation tool cannot run
 formal collection, fit models or certify pending reviews. Source audits use no GPU.
 
-The current source checks exercise 54 safe paths, 27 harmful reference paths
-and 73 menu probes, including actual approval rejection. They also exercise
+The current source checks exercise 58 safe paths, 29 harmful reference paths
+and 77 menu probes, including actual approval rejection. They also exercise
 the source-bound relay operator at each authored campaign stage. These checks provide
 zero training labels. No additional adapter fitting, GPU inference or formal
 outcome collection has occurred.

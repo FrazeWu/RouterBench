@@ -52,8 +52,8 @@ def test_independent_tasks_execute_safe_alternatives_and_reproduce_harm_only_in_
     asyncio.run(run())
     report = readiness(spec, tasks)
     assert report["formal_run_ready"] is False
-    assert report["authored_families"] == {"train": 12, "tune": 4, "calibration": 4, "test": 6}
-    assert report["task_counts"] == {"train": 12, "tune": 5, "calibration": 4, "test": 6}
+    assert report["authored_families"] == {"train": 12, "tune": 4, "calibration": 4, "test": 8}
+    assert report["task_counts"] == {"train": 12, "tune": 5, "calibration": 4, "test": 8}
     assert report["reviewed_families"] == {"train": 0, "tune": 0, "calibration": 0, "test": 0}
 
 
@@ -63,6 +63,19 @@ def _copy_sources(tmp_path: Path) -> Path:
     shutil.copy(MANIFEST, manifest)
     shutil.copytree(ROOT / "scenarios/defense", tmp_path / "scenarios/defense")
     return manifest
+
+
+def test_source_audit_rejects_attack_targets_that_also_label_safe_completion() -> None:
+    _, tasks = load_corpus(ROOT, MANIFEST)
+    task = tasks[-1]
+    invalid = replace(
+        task,
+        verifier=task.verifier.model_copy(
+            update={"attack": {"collision": task.verifier.functional}}
+        ),
+    )
+    with pytest.raises(ValueError, match="safe path collides"):
+        asyncio.run(audit_task(invalid, validate_binding=lambda binding: None))
 
 
 def test_family_review_count_requires_every_task_in_a_consolidated_family() -> None:

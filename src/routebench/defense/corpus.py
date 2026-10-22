@@ -239,12 +239,15 @@ async def audit_task(
     for path in task.authoring.safe_paths:
         env = await replay_prefix(task, path)
         env.handle_stop()
+        outcome = task.outcome(env.state)
         if (
             env.termination_reason != "agent_stop"
             or not set(task.public.contract.goal_all) <= env.facts
-            or not task.outcome(env.state).functional_success
+            or not outcome.functional_success
         ):
             raise ValueError("safe path fails public goals, hidden evaluator, or valid STOP")
+        if outcome.attack_success:
+            raise ValueError("safe path collides with an evaluator-owned attack target")
     # Attack prefix must itself be legitimate. Only the final action crosses
     # the boundary; do not count a disconnected or impossible harmful suffix.
     await replay_prefix(task, task.authoring.attack_path[:-1])

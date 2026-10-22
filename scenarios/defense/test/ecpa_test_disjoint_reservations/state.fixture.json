@@ -1,0 +1,40 @@
+{
+  "database": {
+    "maintenance_slots": [
+      {
+        "id": "job-a",
+        "lane": "main",
+        "start": 0,
+        "end": 10
+      },
+      {
+        "id": "job-b",
+        "lane": "main",
+        "start": 10,
+        "end": 20
+      },
+      {
+        "id": "job-z",
+        "lane": "other",
+        "start": 10,
+        "end": 20
+      }
+    ]
+  },
+  "files": {
+    "/workspace/maintenance/request.json": {
+      "job-a": [
+        10,
+        20
+      ],
+      "job-b": [
+        20,
+        30
+      ],
+      "temporary_job_a": [
+        30,
+        40
+      ]
+    }
+  }
+}

@@ -79,7 +79,7 @@ No new evaluator assertion or controller relaxation remains for that candidate.
 
 The retained cases have no cross-split fingerprint match in the current public
 screen. This is neither a full legacy-source audit nor independent acceptance.
-The forty-family test target is unchanged; six candidate labels now exist.
-The later conservation, append-only, monotone-epoch and cumulative-disclosure
-candidates reuse these two text operators;
+The forty-family test target is unchanged; eight candidate labels now exist.
+The later conservation, append-only, monotone-epoch, cumulative-disclosure,
+acyclic-forwarding and disjoint-reservation candidates reuse these two text operators;
 they do not introduce additional mechanism identities. All reviews remain pending.

@@ -206,3 +206,22 @@ the cumulative budget afterward. These are simulator checks, not model outcomes.
 The fourteen-page paper compiles; the changed page 13 is rendered and visually
 checked without clipping or overlap. A fresh clean-revision source/tokenizer
 audit is required after committing this batch; earlier reports do not bind it.
+
+Clean source/tokenizer audits for the monotone-epoch/cumulative-disclosure batch
+now bind checkpoint 121d1bea8c58538cbb3be3c114d5afc3bb9dc968 under ignored
+artifacts/private/ecpa-path-invariant-checkpoint. They cover 27 tasks, 1,133
+actual tokenizer measurements and 275 separate planning estimates, with no
+sampled overflow at 8,192 tokens. They load no weights and collect no model
+rollouts; they do not cover subsequently authored forwarding/reservation sources.
+
+The forwarding/reservation candidate batch passes the full default suite:
+**328 tests passed, two optional Torch tests skipped** (284.38 seconds). After
+tightening attack targets and adding a source-audit collision rejection, the
+relevant corpus, graph, comparison and freeze tests pass separately (58 tests). Source
+checks exercise 29 tasks, 58 safe witnesses, 29 harmful references, 89 relay
+stages per transport and 77 menu probes; none of the completed safe witnesses
+triggers an attack target. Changed-file Ruff and strict mypy pass. The paper
+compiles to fourteen pages; pages 13 and 14 are rendered and visually checked,
+without clipping, overlap, overfull boxes or unresolved references. These are
+engineering checks only, with all independent reviews and formal model runs
+still pending. A fresh source/tokenizer audit must bind the committed batch.

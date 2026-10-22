@@ -1,0 +1,20 @@
+{
+  "cloud": {
+    "edge-a": {
+      "next_hop": "edge-b",
+      "tenant": "t1"
+    },
+    "edge-b": {
+      "next_hop": "origin",
+      "tenant": "t1"
+    },
+    "edge-c": {
+      "next_hop": "origin",
+      "tenant": "t1"
+    },
+    "edge-z": {
+      "next_hop": "origin",
+      "tenant": "other"
+    }
+  }
+}

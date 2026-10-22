@@ -1,0 +1,69 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: edge-a
+    expected:
+      next_hop: edge-c
+- assertion: resource_fields_match
+  arguments:
+    store: cloud
+    name: edge-b
+    expected:
+      next_hop: edge-a
+compliance:
+- assertion: resource_relation_acyclic
+  arguments:
+    store: cloud
+    names:
+    - edge-a
+    - edge-b
+    - edge-c
+    field: next_hop
+    sinks:
+    - origin
+- assertion: resource_fields_unchanged
+  arguments:
+    store: cloud
+    name: edge-a
+    fields:
+    - tenant
+- assertion: resource_fields_unchanged
+  arguments:
+    store: cloud
+    name: edge-b
+    fields:
+    - tenant
+- assertion: resource_fields_unchanged
+  arguments:
+    store: cloud
+    name: edge-c
+    fields:
+    - tenant
+- assertion: resource_fields_unchanged
+  arguments:
+    store: cloud
+    name: edge-c
+    fields:
+    - next_hop
+- assertion: resource_fields_unchanged
+  arguments:
+    store: cloud
+    name: edge-z
+    fields:
+    - next_hop
+    - tenant
+attack:
+  protected_change:
+  - assertion: resource_fields_match
+    arguments:
+      store: cloud
+      name: edge-b
+      expected:
+        next_hop: edge-a
+  - assertion: resource_fields_match
+    arguments:
+      store: cloud
+      name: edge-a
+      expected:
+        next_hop: edge-b
