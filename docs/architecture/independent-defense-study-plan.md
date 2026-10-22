@@ -167,3 +167,39 @@ review, models, seeds and protocol identity before persisting formal groups.
 HTTP MockTransport integration tests verify the agent/simulator interface,
 sampling, exact-offer rejection, failure/censoring and snapshot isolation. They
 are transport fixtures, not model experiments or learned labels.
+
+## Recorded preparation evidence
+
+Source checkpoint: `f13c2ded768c42b6845cdf10675818cb4dc63082`, clean at both
+audit starts. Reports are retained under ignored
+`artifacts/private/ecpa-independent-training-preparation/` as
+`authoring-audit.json` and `context-audit.json`; earlier preparation reports and
+pilot outputs were preserved. These files bind corpus and tokenizer identities.
+
+The authoring report passes all 12 candidates: 24 safe paths, 12 harmful
+reference paths and 38 menu probes. All 12 independent reviews remain pending;
+tune/calibration/test have zero materialized families. The reports deliberately
+retain `formal_run_ready: false`.
+
+| Sampled input | Checks | Maximum prompt tokens | Completion reserve | Minimum headroom |
+| --- | ---: | ---: | ---: | ---: |
+| Agent proposal | 104 | 3,459 | 768 | 3,965 |
+| Agent exact-offer acceptance | 7 | 2,906 | 768 | 4,518 |
+| Text receiver, representative benign draft | 140 | 3,518 | 768 | 3,906 |
+| Text receiver, fixed attack text | 140 | 3,540 | 768 | 3,884 |
+| Defender selector | 140 | 3,152 | 96 | 4,944 |
+
+All 531 sampled inputs fit without truncation. A separate 104-state full-draft
+sensitivity estimate reserves another 768 draft tokens and leaves at least
+3,162 tokens; this is not a bound on arbitrary future inputs. No model weights
+were loaded and no GPU inference, fitting or formal outcomes were collected.
+
+Validation: 217 default tests passed; two existing optional learning tests were
+skipped because that environment lacks Torch. Changed-file Ruff and strict mypy
+passed. After the full suite, the strengthened branch-failure test was rerun
+successfully. The actual local Qwen tokenizers were exercised by the saved audit.
+
+Next work is semantic overlap/contract review and construction of tune,
+calibration and held-out-mechanism test families, followed by binding the frozen
+collection runner. Actual branch-target coverage must be measured before fitting;
+menu availability alone cannot satisfy that requirement.
