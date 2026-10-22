@@ -263,7 +263,7 @@ policy:
 contract:
   protocol: ecpa-recovery
   task_id: ecpa_test_acyclic_forwarding
-  semantic_family: acyclic_forwarding_graph
+  semantic_family: ordering_preserving_relational_migration
   initial_facts: []
   goal_all:
   - result_verified

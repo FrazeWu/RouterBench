@@ -3,7 +3,8 @@
 Status, 2026-10-23: collection, fitting and matched-comparison tooling implemented
 and tested with clearly identified transport/simulator fixtures. **No formal protocol or production
 StudySpec exists; no formal model collection or training has started.** The real
-corpus still has 6/40 candidate test family labels and zero independent acceptances.
+corpus has 8/12 training and 7/40 test candidate family labels, with zero
+independent acceptances.
 Completing code does not supply those missing sources or reviews.
 
 ## Boundaries and order
@@ -225,3 +226,46 @@ compiles to fourteen pages; pages 13 and 14 are rendered and visually checked,
 without clipping, overlap, overfull boxes or unresolved references. These are
 engineering checks only, with all independent reviews and formal model runs
 still pending. A fresh source/tokenizer audit must bind the committed batch.
+
+## Source-review consolidation and decision-menu accounting
+
+The independent agent source review is bound only to
+bfdcd9cf571d34e53f350c2721fb6a9c026ef68c, with its report and 132-file source
+manifest under artifacts/private/ecpa-source-review-current. It supplies no
+accepted attestation. Follow-up conservatively clusters forwarding/reservations
+as one ordering migration family and five fixed-fixture read/change training
+cases as one family. All 29 tasks remain; the 23 candidate clusters are
+8/4/4/7 across train/tune/calibration/test. The unchanged working allocation
+still needs four training and thirty-three test families, plus source review.
+
+The reviewed registered harmful edges all fail shared public effect guards.
+Blocking them is not a learned safety gain. Receipt facts are valid for fixed
+authored fixtures and do not certify arbitrary tool-output conditions. Shared
+guards and authority-subset recovery restrictions remain intact.
+
+The matched runner now records per-episode actual decision menu sizes, singleton,
+choice and multiple-non-deny counts, candidate kinds and selected kinds. Summaries
+retain every scheduled episode, including response failures without decisions,
+and describe completion, violations, interventions, budget, calls and duration by
+no-recorded-decision, singleton-only and choice-exposed episode cohorts. Cohort
+exposure may differ after interventions and is not a causal comparison. Only
+recorded steps are counted; a proposal stopped before a step adds no decision.
+Primary denominators and prespecified thresholds are unchanged. Persisted rows
+are checked against their raw rollout metrics before loading later phases.
+
+Validation of the consolidation before menu tooling: 58 relevant tests pass.
+The later fourteen-page paper renders pages 13 and 14 without clipping or overlap.
+The full 329-test run started on clean bfdcd9cf and finished while family/docs
+edits were beginning; it cannot certify those later bytes. Fresh full/targeted
+checks and clean-revision source/context audits are recorded separately for this
+checkpoint. No formal collection, fitting or efficacy inference has begun.
+
+Final validation on 2026-10-23: **332 tests pass, two optional Torch cases skip**
+in the default environment (285.06 seconds). Changed-file Ruff and strict mypy
+pass across seven files. The new actual-menu simulator test distinguishes forced
+denial from two legal recovery alternatives, retains no-decision episodes and
+checks unchanged total denominators/cost accounting. Consolidated-family review
+tests require all five/two/two variants before counting their family reviewed.
+The freeze fixture uses smaller TEST allocations for all splits; production
+targets and source-review requirements are unchanged. The CLI help remains
+available without loading weights. This is engineering evidence only.

@@ -1,8 +1,9 @@
 # Source-bound independent defense study freeze
 
 Status: tooling implemented, 2026-10-23. **No formal protocol is frozen.**
-The current corpus has eight of forty planned test candidates and no accepted
-independent reviews. Formal collection, fitting and efficacy comparison remain
+The current corpus has eight of twelve planned training candidate families
+(twelve tasks), seven of forty planned test candidate families (eight tasks),
+and no accepted independent reviews. Formal collection, fitting and efficacy comparison remain
 pending. This gate supplies provenance checks, not reviewer attestations.
 
 ## Preconditions and identities

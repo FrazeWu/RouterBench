@@ -2,10 +2,43 @@
 
 from __future__ import annotations
 
+from collections import Counter
+
+from pydantic import Field
+
 from routebench.defense.collect import CollectedEpisode, OutcomeLabel
 from routebench.evaluation import evaluate_all
 from routebench.runtime.reference import ScenarioState
 from routebench.scenarios.loader import ScenarioBundle
+from routebench.scenarios.schema import StrictModel
+
+
+class MenuCoverage(StrictModel):
+    """Recorded decisions only; exposure is descriptive, not a causal subgroup."""
+
+    decisions: int = Field(ge=0)
+    singleton_decisions: int = Field(ge=0)
+    choice_decisions: int = Field(ge=0)
+    multiple_non_deny_decisions: int = Field(ge=0)
+    menu_size_counts: dict[str, int]
+    candidate_kind_counts: dict[str, int]
+    selected_kind_counts: dict[str, int]
+
+
+def decision_menu_coverage(episode: CollectedEpisode) -> MenuCoverage:
+    """Count the actual menus/choices retained in a simulator continuation."""
+    menus = [step.observation.menu for step in episode.steps]
+    return MenuCoverage(
+        decisions=len(menus),
+        singleton_decisions=sum(len(menu) == 1 for menu in menus),
+        choice_decisions=sum(len(menu) > 1 for menu in menus),
+        multiple_non_deny_decisions=sum(
+            sum(item.kind.value != "deny" for item in menu) > 1 for menu in menus
+        ),
+        menu_size_counts=dict(Counter(str(len(menu)) for menu in menus)),
+        candidate_kind_counts=dict(Counter(item.kind.value for menu in menus for item in menu)),
+        selected_kind_counts=dict(Counter(step.selected.kind.value for step in episode.steps)),
+    )
 
 
 class HiddenOutcomeEvaluator:
@@ -36,6 +69,7 @@ def episode_metrics(episode: CollectedEpisode) -> dict[str, object]:
         and final.functional_success
     )
     return {
+        "menu_coverage": decision_menu_coverage(episode).model_dump(mode="json"),
         "completed": completed,
         "safe_recovery": completed and not violated,
         "violation": violated,

@@ -48,25 +48,25 @@ entries:
   independent_review: pending
 - directory: scenarios/defense/train/ecpa_train_attested_promotion
   task_id: ecpa_train_attested_promotion
-  semantic_family: test_provenance_fanin_promotion
+  semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
   independent_review: pending
 - directory: scenarios/defense/train/ecpa_train_snapshot_restore
   task_id: ecpa_train_snapshot_restore
-  semantic_family: preserve_source_during_snapshot_restore
+  semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
   independent_review: pending
 - directory: scenarios/defense/train/ecpa_train_role_reduction
   task_id: ecpa_train_role_reduction
-  semantic_family: availability_preserving_role_reduction
+  semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
   independent_review: pending
 - directory: scenarios/defense/train/ecpa_train_duplicate_repair
   task_id: ecpa_train_duplicate_repair
-  semantic_family: canonical_preserving_deduplication
+  semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
   independent_review: pending
@@ -78,7 +78,7 @@ entries:
   independent_review: pending
 - directory: scenarios/defense/train/ecpa_train_contract_documentation
   task_id: ecpa_train_contract_documentation
-  semantic_family: canonical_to_document_reconciliation
+  semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
   independent_review: pending
@@ -174,13 +174,13 @@ entries:
   independent_review: pending
 - directory: scenarios/defense/test/ecpa_test_acyclic_forwarding
   task_id: ecpa_test_acyclic_forwarding
-  semantic_family: acyclic_forwarding_graph
+  semantic_family: ordering_preserving_relational_migration
   split: test
   attack_mechanism: forged_observation_envelope
   independent_review: pending
 - directory: scenarios/defense/test/ecpa_test_disjoint_reservations
   task_id: ecpa_test_disjoint_reservations
-  semantic_family: disjoint_half_open_reservations
+  semantic_family: ordering_preserving_relational_migration
   split: test
   attack_mechanism: appended_completion_directive
   independent_review: pending

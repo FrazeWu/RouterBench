@@ -25,7 +25,7 @@ from routebench.defense.collect import DefensePolicy, collect_episode
 from routebench.defense.contracts import content_hash
 from routebench.defense.development import SimulatedApprover
 from routebench.defense.ecpa import ECPAEnvironment
-from routebench.defense.evaluation import episode_metrics
+from routebench.defense.evaluation import MenuCoverage, episode_metrics
 from routebench.defense.freeze import SHARED_ARMS
 from routebench.defense.lora import file_digest, validate_adapter
 from routebench.defense.pilot import UnguardedSimulatorReference
@@ -72,6 +72,7 @@ class ComparisonRow(StrictModel):
     agent_calls: int = Field(ge=0)
     selector_calls: int = Field(ge=0)
     elapsed_seconds: float = Field(ge=0, allow_inf_nan=False)
+    menu_coverage: MenuCoverage
     rollout_file: str
     rollout_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
@@ -206,6 +207,7 @@ async def run_comparison(
                     agent_calls=len(agent.calls),
                     selector_calls=len(session.calls) - first_call,
                     elapsed_seconds=elapsed,
+                    menu_coverage=MenuCoverage.model_validate(metrics["menu_coverage"]),
                     rollout_file=filename,
                     rollout_sha256=file_digest(output / filename),
                 )
@@ -253,8 +255,63 @@ def descriptive_summary(rows: Sequence[ComparisonRow]) -> dict[str, Any]:
                         "agent_calls": sum(row.agent_calls for row in group),
                         "selector_calls": sum(row.selector_calls for row in group),
                         "episode_seconds": sum(row.elapsed_seconds for row in group),
+                        "menu_coverage": menu_summary(group),
                     }
     return result
+
+
+def menu_summary(rows: Sequence[ComparisonRow]) -> dict[str, Any]:
+    """Retain every episode, including failures without a recorded decision."""
+    totals: dict[str, object] = {
+        key: sum(getattr(row.menu_coverage, key) for row in rows)
+        for key in (
+            "decisions",
+            "singleton_decisions",
+            "choice_decisions",
+            "multiple_non_deny_decisions",
+        )
+    }
+    for key in ("menu_size_counts", "candidate_kind_counts", "selected_kind_counts"):
+        counts: dict[str, int] = defaultdict(int)
+        for row in rows:
+            for name, count in getattr(row.menu_coverage, key).items():
+                counts[name] += count
+        totals[key] = dict(counts)
+    cohorts = {
+        "no_recorded_decisions": [row for row in rows if row.menu_coverage.decisions == 0],
+        "singleton_only": [
+            row
+            for row in rows
+            if row.menu_coverage.decisions > 0 and row.menu_coverage.choice_decisions == 0
+        ],
+        "choice_exposed": [row for row in rows if row.menu_coverage.choice_decisions > 0],
+    }
+    return {
+        **totals,
+        "by_episode_exposure": {
+            name: {
+                "episodes": len(group),
+                "safe_completions": sum(row.safe_recovery for row in group),
+                "violations": sum(row.violation for row in group),
+                "interventions": sum(
+                    count
+                    for row in group
+                    for kind, count in row.menu_coverage.selected_kind_counts.items()
+                    if kind != "allow"
+                ),
+                "online_budget_units": sum(row.online_budget_units for row in group),
+                "agent_calls": sum(row.agent_calls for row in group),
+                "selector_calls": sum(row.selector_calls for row in group),
+                "episode_seconds": sum(row.elapsed_seconds for row in group),
+            }
+            for name, group in cohorts.items()
+        },
+        "interpretation": (
+            "Recorded decisions only; exposure may differ after interventions. "
+            "Descriptive cohorts are not causal comparisons; "
+            "primary denominators retain all episodes."
+        ),
+    }
 
 
 def _identity(study: FrozenStudy) -> dict[str, str]:
@@ -392,6 +449,8 @@ def load_comparison(path: Path, study: FrozenStudy, split: EvaluationSplit) -> l
         ):
             if getattr(row, key) != raw["metrics"][key]:
                 raise ValueError("comparison metrics differ from recorded rollout")
+        if row.menu_coverage.model_dump(mode="json") != raw["metrics"]["menu_coverage"]:
+            raise ValueError("comparison menu coverage differs from recorded rollout")
         if (
             row.online_budget_units != raw["budget_used"].get("total", 0)
             or row.agent_calls != len(raw["calls"])

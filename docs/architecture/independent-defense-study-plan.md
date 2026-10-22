@@ -52,7 +52,7 @@ check overlap with prior corpora, contract soundness, leakage, reachable attacks
 neutral menus and simulator/evaluator agreement. Names/hashes do not prove
 independence. Menu coverage does not prove real training-target coverage.
 
-| Candidate training family | Distinguishing public obligation |
+| Training task variant | Authored fixed-fixture obligation |
 | --- | --- |
 | settlement reconciliation | Preserve live evidence, approve the correction, read back the write |
 | health-gated retry repair | Require health evidence before enabling retry |
@@ -75,7 +75,9 @@ replace overlapping candidates rather than preserve a nominal count.
 The active source comparison is in `defense-semantic-source-review.md`. One
 initial calibration candidate was structurally equivalent to a tuning candidate;
 both now belong to the same tuning family. The public dependency screen also
-flags five training candidates for joint review. Readiness reports distinguish
+identified five training candidates now consolidated into one fixed-fixture
+read/change cluster. The twelve cases count as eight candidate families, with
+four distinct training families still missing. Readiness reports distinguish
 task counts, nominal family labels and independently reviewed families. No family
 has independent acceptance yet; absence of a screen match cannot supply it.
 
@@ -89,13 +91,39 @@ so its results cannot claim mechanism holdout. See defense-relay-mechanisms.md.
 Exclude pilot data/adapters
 and historical formal-test traces from training.
 
+## Choice opportunities and learnable contribution
+
+The independent agent source audit of bfdcd9cf found that all known violating
+registered paths include an edge rejected by the public effect policy. Shared
+hard guards, rather than the learned selector, provide that blocking. Many
+training/calibration harmful proposals offer only denial; the cumulative
+disclosure harmful proposal also has a singleton menu because its otherwise
+safe completion read uses different authority from the network-send proposal.
+Preserve the subset rule and count these episodes in every primary denominator.
+
+Report actual encountered menu sizes and candidate kinds separately, with
+descriptive completion/intervention/cost outcomes for singleton versus genuine
+choice opportunities. Never interpret common singleton blocking as a learning
+benefit, discard those episodes to increase gains, or replace an unavailable
+menu action with a hidden recovery path. The causal hypothesis is improved
+selection among admissible recovery choices under real agent continuations.
+The comparison runner now records actual menu sizes, all candidate and selected
+intervention kinds, and descriptive no-decision/singleton-only/choice-exposed
+episode counts and outcomes. Exposure can change after intervention, so these
+cohorts are not causal subgroups or replacements for the primary analysis.
+Counts concern recorded decisions, not proposals interrupted before a step.
+Contracts certify receipt-derived facts for fixed authored fixtures; they do
+not yet validate arbitrary runtime data or unseen dynamic policy conditions.
+
 ## Moderate prospective allocation and cost
 
 Working target: **12 train / 4 tune / 4 calibration / 40 test families**. Actual
-materialization: **12/4/4/8 candidate family labels**, from **12/5/4/8 tasks**.
+materialization: **8/4/4/7 candidate family labels**, from **12/5/4/8 tasks**.
 Counts are not frozen. Initially
-use one task and one presentation per family, with the consolidated two-task
-tuning family as an explicit exception, two relay modes and benign/attacked pairs. Do not meet
+use one presentation per task, two relay modes and benign/attacked pairs.
+Allow five training cases in one fixed-fixture change family and two cases each
+in the consolidated tuning and relational-migration test families. Add one task
+per missing independent family. Do not meet
 the count by renaming tasks. Revise after source/context/cost audits before any
 fitting/test outcomes, then commit and freeze the exact protocol.
 
@@ -110,11 +138,14 @@ audits that fixed choice and never gates running tests on its outcome. All seed,
 mode and case failures remain in the fresh-test denominator.
 
 Using 78.42 paced seconds/episode from the pilot, two reserved GPUs, two branch
-states/parent and at most four candidates gives 48 parents and up to 384 branches.
+states/parent and at most four candidates, the prospective sixteen training
+tasks give 64 parents and up to 512 branches.
 With five tuning tasks, four calibration tasks and a prospective one-task-per-family
-40-family test, there are 49 comparison task cases, **1,372 comparison episodes**
-and **78.59 GPU-device-hours**. The repeated tuning family is one independent
-cluster, not two families. Half-to-double duration gives 39.30--157.19 hours,
+40-family test retaining its two-task migration family, there are 50 comparison
+task cases and **1,400 comparison episodes**. With the 64 parents and at most
+512 training branches, the estimate is **86.09 GPU-device-hours**. Each repeated
+family remains one independent cluster. Half-to-double duration gives
+43.04--172.18 hours,
 excluding fits, context audits, review and server startup/idle. This is sensitivity,
 not measured total or a cap. The previous 1,344-episode/77.37-hour estimate remains
 in its original preparation report. Recount actual tasks/menus after semantic

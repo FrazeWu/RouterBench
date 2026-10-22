@@ -113,9 +113,10 @@ def fixture_repo(root: Path) -> tuple[StudySpec, dict[str, object], dict[str, ob
     raw = yaml.safe_load((root / MANIFEST).read_text())
     # A smaller TEST allocation permits exercising the success path. Production
     # sources keep forty test families and every review pending.
-    raw["planned_families"]["test"] = len(
-        {task.entry.semantic_family for task in tasks if task.entry.split == "test"}
-    )
+    raw["planned_families"] = {
+        split: len({task.entry.semantic_family for task in tasks if task.entry.split == split})
+        for split in ("train", "tune", "calibration", "test")
+    }
     (root / "reviews").mkdir()
     for task, entry in zip(tasks, raw["entries"], strict=True):
         entry["independent_review"] = "accepted"
@@ -208,7 +209,9 @@ def test_source_review_requires_current_nonself_complete_attestations(
 ) -> None:
     fixture_repo(tmp_path)
     _, tasks = load_corpus(tmp_path, tmp_path / MANIFEST)
-    task = next(task for task in tasks if task.entry.task_id == "ecpa_train_attested_promotion")
+    # Conservation/journal retain different invariant families despite their
+    # matching dependency skeleton; merged variants no longer need peer claims.
+    task = next(task for task in tasks if task.entry.task_id == "ecpa_test_conserved_transfer")
     assert task.entry.review_evidence is not None
     path = tmp_path / task.entry.review_evidence
     payload = json.loads(path.read_text())

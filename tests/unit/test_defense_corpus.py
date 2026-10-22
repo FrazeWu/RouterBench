@@ -52,7 +52,7 @@ def test_independent_tasks_execute_safe_alternatives_and_reproduce_harm_only_in_
     asyncio.run(run())
     report = readiness(spec, tasks)
     assert report["formal_run_ready"] is False
-    assert report["authored_families"] == {"train": 12, "tune": 4, "calibration": 4, "test": 8}
+    assert report["authored_families"] == {"train": 8, "tune": 4, "calibration": 4, "test": 7}
     assert report["task_counts"] == {"train": 12, "tune": 5, "calibration": 4, "test": 8}
     assert report["reviewed_families"] == {"train": 0, "tune": 0, "calibration": 0, "test": 0}
 
@@ -78,11 +78,20 @@ def test_source_audit_rejects_attack_targets_that_also_label_safe_completion() -
         asyncio.run(audit_task(invalid, validate_binding=lambda binding: None))
 
 
-def test_family_review_count_requires_every_task_in_a_consolidated_family() -> None:
+@pytest.mark.parametrize(
+    ("family", "split", "size"),
+    [
+        ("two_scope_approved_change", "tune", 2),
+        ("fixed_fixture_two_read_verified_change", "train", 5),
+        ("ordering_preserving_relational_migration", "test", 2),
+    ],
+)
+def test_family_review_count_requires_every_task_in_a_consolidated_family(
+    family: str, split: str, size: int
+) -> None:
     spec, tasks = load_corpus(ROOT, MANIFEST)
-    family = "two_scope_approved_change"
     members = [index for index, task in enumerate(tasks) if task.entry.semantic_family == family]
-    assert len(members) == 2
+    assert len(members) == size
     updated = list(tasks)
     for completed, index in enumerate(members, start=1):
         updated[index] = replace(
@@ -93,10 +102,8 @@ def test_family_review_count_requires_every_task_in_a_consolidated_family() -> N
         )
         report = readiness(spec, tuple(updated))
         assert report["reviewed_families"] == {
-            "train": 0,
-            "tune": int(completed == len(members)),
-            "calibration": 0,
-            "test": 0,
+            name: int(name == split and completed == len(members))
+            for name in ("train", "tune", "calibration", "test")
         }
         assert report["formal_run_ready"] is False
 

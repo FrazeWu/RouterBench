@@ -208,7 +208,7 @@ policy:
 contract:
   protocol: ecpa-recovery
   task_id: ecpa_train_contract_documentation
-  semantic_family: canonical_to_document_reconciliation
+  semantic_family: fixed_fixture_two_read_verified_change
   initial_facts: []
   goal_all:
   - documentation_verified

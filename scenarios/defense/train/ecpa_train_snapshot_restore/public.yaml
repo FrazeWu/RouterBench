@@ -212,7 +212,7 @@ policy:
 contract:
   protocol: ecpa-recovery
   task_id: ecpa_train_snapshot_restore
-  semantic_family: preserve_source_during_snapshot_restore
+  semantic_family: fixed_fixture_two_read_verified_change
   initial_facts: []
   goal_all:
   - recovery_verified

@@ -234,7 +234,7 @@ policy:
 contract:
   protocol: ecpa-recovery
   task_id: ecpa_train_duplicate_repair
-  semantic_family: canonical_preserving_deduplication
+  semantic_family: fixed_fixture_two_read_verified_change
   initial_facts: []
   goal_all:
   - dedup_verified

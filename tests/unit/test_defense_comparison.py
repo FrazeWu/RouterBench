@@ -18,6 +18,7 @@ import pytest
 from test_defense_study import fixture_study
 
 from routebench.defense.agent import JsonRecoveryAgent
+from routebench.defense.collect import CollectedEpisode, OutcomeLabel
 from routebench.defense.comparison import (
     ComparisonRow,
     PolicySession,
@@ -31,7 +32,9 @@ from routebench.defense.comparison import (
     run_comparison,
     select_comparator,
 )
-from routebench.defense.ecpa import AgentReply, AgentReplyKind, AgentView
+from routebench.defense.corpus import load_corpus, replay_prefix
+from routebench.defense.ecpa import AgentReply, AgentReplyKind, AgentView, ECPAStep
+from routebench.defense.evaluation import MenuCoverage, decision_menu_coverage
 from routebench.defense.lora import file_digest
 from routebench.defense.policies import PerActionAuthorizationPolicy, PublicRulePolicy
 from routebench.defense.protocol import AcquisitionLedger
@@ -56,6 +59,15 @@ def case_rows(study: FrozenStudy, split: str = "tune") -> list[ComparisonRow]:
             agent_calls=4,
             selector_calls=0,
             elapsed_seconds=1,
+            menu_coverage=MenuCoverage(
+                decisions=0,
+                singleton_decisions=0,
+                choice_decisions=0,
+                multiple_non_deny_decisions=0,
+                menu_size_counts={},
+                candidate_kind_counts={},
+                selected_kind_counts={},
+            ),
             rollout_file=f"{case.case_id}.rollout.private.json",
             rollout_sha256="c" * 64,
         )
@@ -139,6 +151,83 @@ def test_tune_selection_uses_safety_first_family_means_and_explicit_tie_order() 
         select_comparator(rows[:-1], study)
     with pytest.raises(ValueError, match="tuning schedule"):
         select_comparator(case_rows(study, "test"), study)
+
+
+def test_menu_summary_distinguishes_forced_denial_choices_and_no_decisions() -> None:
+    root = Path(__file__).parents[2]
+    _, tasks = load_corpus(root, root / "configs/defense/independent-corpus.yaml")
+    cumulative = next(
+        task for task in tasks if task.entry.task_id == "ecpa_test_cumulative_disclosure"
+    )
+    reservations = next(
+        task for task in tasks if task.entry.task_id == "ecpa_test_disjoint_reservations"
+    )
+
+    class NoAgentCall:
+        async def respond(self, view: AgentView, *, seed: int) -> AgentReply:
+            raise AssertionError("denial must not call the agent")
+
+    async def observed_steps() -> tuple[ECPAStep, ECPAStep]:
+        singleton_env = await replay_prefix(cumulative, cumulative.authoring.attack_path[:-1])
+        singleton = await singleton_env.observe(
+            AgentReply(kind=AgentReplyKind.PROPOSE, edge_id="send_extra_field")
+        )
+        assert singleton is not None and len(singleton.menu) == 1
+        first = await singleton_env.step(
+            singleton, singleton.menu[0].candidate_id, agent=NoAgentCall(), seed=0
+        )
+        choice_env = await replay_prefix(reservations, reservations.authoring.attack_path[:-1])
+        choices = await choice_env.observe(
+            AgentReply(kind=AgentReplyKind.PROPOSE, edge_id="overlap_slots")
+        )
+        assert choices is not None and len(choices.menu) == 3
+        denial = next(item for item in choices.menu if item.kind.value == "deny")
+        second = await choice_env.step(choices, denial.candidate_id, agent=NoAgentCall(), seed=0)
+        return first, second
+
+    forced, optional = asyncio.run(observed_steps())
+    episode = CollectedEpisode(
+        steps=(forced, optional),
+        intervention_probabilities=(1.0, 1.0),
+        proposal_sampling_probability=1.0,
+        terminated=True,
+        truncated=False,
+        termination_reason="TEST-only",
+        final_state={},
+        final_outcome=OutcomeLabel(functional_success=False, violation=False),
+    )
+    coverage = decision_menu_coverage(episode)
+    assert coverage.decisions == 2 and coverage.singleton_decisions == 1
+    assert coverage.choice_decisions == coverage.multiple_non_deny_decisions == 1
+    assert coverage.menu_size_counts == {"1": 1, "3": 1}
+    assert coverage.candidate_kind_counts == {"deny": 2, "constrain": 2}
+    assert coverage.selected_kind_counts == {"deny": 2}
+    base = case_rows(fixture_study())[0]
+    rows = [
+        base.model_copy(update={"menu_coverage": coverage}),
+        base.model_copy(
+            update={
+                "safe_recovery": False,
+                "menu_coverage": decision_menu_coverage(replace(episode, steps=(forced,))),
+            }
+        ),
+        base,
+    ]
+    summary = next(iter(descriptive_summary(rows)[base.case.arm].values()))
+    exposure = summary["menu_coverage"]["by_episode_exposure"]
+    assert summary["episodes"] == 3 and summary["safe_completions"] == 2
+    assert {key: value["episodes"] for key, value in exposure.items()} == {
+        "choice_exposed": 1,
+        "singleton_only": 1,
+        "no_recorded_decisions": 1,
+    }
+    assert summary["menu_coverage"]["decisions"] == 3
+    assert exposure["singleton_only"]["safe_completions"] == 0
+    assert exposure["choice_exposed"]["interventions"] == 2
+    assert (
+        sum(value["online_budget_units"] for value in exposure.values())
+        == (summary["online_budget_units"])
+    )
 
 
 @pytest.mark.parametrize("split", ["calibration", "test"])
@@ -247,6 +336,17 @@ def test_matched_kernel_retains_http_failures_and_validates_measured_artifacts(
     assert all(
         not row.completed and row.termination_reason == "agent_response_error" for row in failures
     )
+    assert all(row.menu_coverage.decisions == 0 for row in failures)
+    for modes in report["summary"].values():
+        for summary in modes.values():
+            coverage = summary["menu_coverage"]
+            cohorts = coverage["by_episode_exposure"]
+            assert sum(item["episodes"] for item in cohorts.values()) == summary["episodes"]
+            assert cohorts["no_recorded_decisions"]["episodes"] == 1
+            assert (
+                sum(item["safe_completions"] for item in cohorts.values())
+                == (summary["safe_completions"])
+            )
     assert len(list((tmp_path / "comparison").glob("*.rollout.private.json"))) == len(rows)
     assert report["summary"] == descriptive_summary(rows)
     with pytest.raises(FileNotFoundError):

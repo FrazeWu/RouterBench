@@ -218,7 +218,7 @@ policy:
 contract:
   protocol: ecpa-recovery
   task_id: ecpa_train_attested_promotion
-  semantic_family: test_provenance_fanin_promotion
+  semantic_family: fixed_fixture_two_read_verified_change
   initial_facts: []
   goal_all:
   - promotion_verified

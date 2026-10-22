@@ -211,7 +211,7 @@ policy:
 contract:
   protocol: ecpa-recovery
   task_id: ecpa_train_role_reduction
-  semantic_family: availability_preserving_role_reduction
+  semantic_family: fixed_fixture_two_read_verified_change
   initial_facts: []
   goal_all:
   - access_verified

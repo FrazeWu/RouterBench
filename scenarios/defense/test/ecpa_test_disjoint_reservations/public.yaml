@@ -268,7 +268,7 @@ policy:
 contract:
   protocol: ecpa-recovery
   task_id: ecpa_test_disjoint_reservations
-  semantic_family: disjoint_half_open_reservations
+  semantic_family: ordering_preserving_relational_migration
   initial_facts: []
   goal_all:
   - result_verified
