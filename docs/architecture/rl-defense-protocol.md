@@ -187,6 +187,14 @@ Cluster percentile intervals require enough independent families. Two-family
 software checks are not credible inference. Zero observed violations does not prove
 safety equivalence. Do not change thresholds after observing tests.
 
+Future executable comparisons require at least 20 families and nonzero-width
+empirical percentile intervals before certifying the joint claim. In particular,
+all-tie benign resamples producing [0, 0] do not establish population
+noninferiority. Keep descriptive estimates and mark unsupported inference as
+inconclusive. The moderate authoring allocation and conservative precision/cost
+sensitivity are in `independent-defense-study-plan.md`; these do not change the
+original effect thresholds or relabel the completed development pilot.
+
 ### Executable study sequence
 
 The study has three non-overlapping stages; pilot episodes and disposable timing

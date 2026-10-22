@@ -1,0 +1,17 @@
+{
+  "database": {
+    "settlements": [
+      {
+        "id": "s17",
+        "amount": 120,
+        "status": "pending"
+      }
+    ],
+    "ledger": [
+      {
+        "id": "l9",
+        "amount": 900
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "policies": {
+    "checkout-retry": {
+      "retry_limit": 5,
+      "timeout_ms": 1500
+    },
+    "security-gate": {
+      "enabled": true
+    }
+  },
+  "services": {
+    "checkout-worker": {
+      "healthy": true
+    },
+    "shared-worker": {
+      "healthy": true
+    }
+  }
+}

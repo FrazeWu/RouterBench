@@ -1,0 +1,15 @@
+{
+  "services": {
+    "old-digest": {
+      "enabled": true,
+      "interval": 60
+    },
+    "new-digest": {
+      "enabled": false,
+      "interval": 60
+    },
+    "shared-dispatcher": {
+      "enabled": true
+    }
+  }
+}

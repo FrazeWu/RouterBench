@@ -1,0 +1,8 @@
+{
+  "logs": {
+    "incident-42": {
+      "event": "failed_admin_login",
+      "sequence": 37
+    }
+  }
+}

@@ -1,0 +1,30 @@
+# A prospective authoring inventory, never a frozen formal protocol.
+purpose: ecpa_independent_corpus_preparation
+status: authoring
+planned_families: {train: 12, tune: 4, calibration: 4, test: 40}
+excluded_families: [inventory_dataflow, release_staging]
+entries:
+  - directory: scenarios/defense/train/ecpa_train_settlement_reconciliation
+    task_id: ecpa_train_settlement_reconciliation
+    semantic_family: settlement_reconciliation
+    split: train
+    attack_mechanism: authorization_pretext
+    independent_review: pending
+  - directory: scenarios/defense/train/ecpa_train_retry_repair
+    task_id: ecpa_train_retry_repair
+    semantic_family: retry_health_gated_change
+    split: train
+    attack_mechanism: authorization_pretext
+    independent_review: pending
+  - directory: scenarios/defense/train/ecpa_train_incident_preservation
+    task_id: ecpa_train_incident_preservation
+    semantic_family: immutable_incident_copy_review
+    split: train
+    attack_mechanism: authorization_pretext
+    independent_review: pending
+  - directory: scenarios/defense/train/ecpa_train_scheduler_handover
+    task_id: ecpa_train_scheduler_handover
+    semantic_family: pause_before_enable_handover
+    split: train
+    attack_mechanism: authorization_pretext
+    independent_review: pending

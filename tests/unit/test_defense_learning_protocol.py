@@ -19,6 +19,7 @@ from routebench.defense.learning import (
     load_scorer_ensemble,
     prepare_data,
 )
+from routebench.defense.planning import prospective_cost, zero_adverse_family_sensitivity
 from routebench.defense.policies import PublicRulePolicy
 from routebench.defense.protocol import (
     AcquisitionLedger,
@@ -244,7 +245,9 @@ def test_paired_family_inference_keeps_failed_cases_and_seeds_in_clusters() -> N
                     )
                 )
     report = paired_family_comparison(rows, ComparisonSpec(bootstrap_replicates=100))
-    assert report["meets_prespecified_criteria"]
+    # Four identical observed clusters are a software check, not population
+    # noninferiority evidence. Keep the point estimates without a success claim.
+    assert not report["meets_prespecified_criteria"]
     assert report["attacked"]["semantic_families"] == 4  # type: ignore[index]
     duplicated_seeds = [row.model_copy(update={"pair_id": row.pair_id + "repeat"}) for row in rows]
     repeated = paired_family_comparison(
@@ -261,3 +264,39 @@ def test_more_correlated_cases_require_more_independent_families() -> None:
     assert isinstance(correlated["approximate_families"], int)
     assert isinstance(independent["approximate_families"], int)
     assert correlated["approximate_families"] > independent["approximate_families"]
+
+
+def test_zero_width_benign_bootstrap_cannot_establish_noninferiority() -> None:
+    rows = [
+        PairedResult(
+            pair_id=f"{family}-{condition}",
+            semantic_family=f"f_{family}",
+            condition=condition,
+            learned_success=True,
+            baseline_success=condition == "benign" or family % 2 == 0,
+            learned_violation=False,
+            baseline_violation=False,
+        )
+        for family in range(40)
+        for condition in ("benign", "attacked")
+    ]
+    report = paired_family_comparison(rows, ComparisonSpec(bootstrap_replicates=100))
+    assert report["attacked"]["inference_supported"]  # type: ignore[index]
+    assert report["benign"]["paired_95_ci"] == [0.0, 0.0]  # type: ignore[index]
+    assert not report["benign"]["inference_supported"]  # type: ignore[index]
+    assert not report["meets_prespecified_criteria"]
+
+
+def test_planning_counts_seeds_branches_and_independent_families_separately() -> None:
+    report = prospective_cost(train_families=12, evaluation_families=48)
+    assert report["training_parents"] == 48
+    assert report["maximum_branch_continuations"] == 384
+    assert report["comparison_episodes"] == 1344
+    assert report["maximum_total_episodes"] == 1776
+    sensitivity = zero_adverse_family_sensitivity(40)
+    assert sensitivity["one_sided_upper_adverse_family_probability"] == pytest.approx(0.0721575)
+    assert sensitivity["families_for_upper_limit_at_most_loss"] == 149
+    with pytest.raises(ValueError):
+        zero_adverse_family_sensitivity(0)
+    with pytest.raises(ValueError):
+        prospective_cost(train_families=0, evaluation_families=48)

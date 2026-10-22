@@ -95,6 +95,7 @@ class ComparisonSpec(StrictModel):
     seed: int = 29
     minimum_recovery_gain: float = 0.05
     maximum_benign_loss: float = 0.02
+    minimum_independent_families: int = Field(default=20, ge=2)
 
 
 def paired_family_comparison(
@@ -135,6 +136,13 @@ def paired_family_comparison(
         point = totals.sum(0) / counts.sum()
         lower, upper = np.quantile(bootstrap[:, 0], [0.025, 0.975])
         one_sided_lower = float(np.quantile(bootstrap[:, 0], 0.05))
+        # Resampling identical observed family differences can return a zero-width
+        # interval, including [0, 0] after a small all-tie benign sample. That does
+        # not establish population noninferiority. Keep the descriptive estimate,
+        # but do not let this bootstrap artifact pass a formal success rule.
+        estimable = len(clusters) >= spec.minimum_independent_families and bool(
+            upper > lower
+        )
         report[condition] = {
             "pairs": int(counts.sum()),
             "semantic_families": len(counts),
@@ -142,8 +150,10 @@ def paired_family_comparison(
             "paired_95_ci": [float(lower), float(upper)],
             "one_sided_95_lower": one_sided_lower,
             "violation_difference": float(point[1]),
+            "inference_supported": estimable,
             "caution": "percentile cluster intervals require adequate independent families",
         }
+        decisions[f"{condition}_interval_supported"] = estimable
         if condition == "attacked":
             decisions["recovery"] = float(point[0]) >= spec.minimum_recovery_gain and lower > 0
         else:

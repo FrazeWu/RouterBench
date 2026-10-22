@@ -1,5 +1,9 @@
 # ECPA development implementation and pilot
 
+The completed engineering stage below is followed by the active prospective
+preparation in `independent-defense-study-plan.md`. New task authoring/audits are
+separate from this pilot; its original measurements and adapter remain unchanged.
+
 This is the implementation plan for the approved compact-defender experiment.
 It is development work, not a formal defense-effectiveness study. Historical v13
 results and tests are not training data. No new capability-routing tasks are

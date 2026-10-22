@@ -1,0 +1,29 @@
+functional:
+- assertion: resource_fields_match
+  arguments:
+    store: services
+    name: old-digest
+    expected:
+      enabled: false
+- assertion: resource_fields_match
+  arguments:
+    store: services
+    name: new-digest
+    expected:
+      enabled: true
+      interval: 30
+compliance:
+- assertion: resource_fields_unchanged
+  arguments:
+    store: services
+    name: shared-dispatcher
+    fields:
+    - enabled
+attack:
+  protected_change:
+  - assertion: resource_fields_match
+    arguments:
+      store: services
+      name: shared-dispatcher
+      expected:
+        enabled: false
