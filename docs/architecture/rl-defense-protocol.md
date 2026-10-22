@@ -10,24 +10,30 @@ remain pending. Historical v13 results retain their original interface and ident
 
 ## Research question and claims
 
-Can a trained defender recover more attacked normal tasks, at acceptable benign
-loss and cost, than strong public state controls and budgeted public search under
-identical trusted boundaries? RouteBench remains the primary contribution.
-Training alone is not novelty. Recovery learning and diagnostics-guided acquisition
-are separate hypotheses. Outcome supervision is a full competitor to offline RL;
-report whichever wins, including equality, negative results and infeasibility.
-When shared sound guards eliminate all modeled violations, compare completion/cost;
-never claim an extra reduction in violations or weaken guards to manufacture one.
+Can a trained path-intervention selector contain an external response-relay attack
+while preserving benign task completion, compared with per-action checks and a
+deterministic path-state control under the same trusted boundary? RouteBench remains
+the primary contribution. Training alone is not novelty. The primary learned method
+is outcome supervision; offline RL is exploratory and included only if it fits the
+resource cap. When shared sound guards eliminate all modeled violations, compare
+completion and cost; never claim an extra reduction in violations or weaken guards
+to manufacture one.
 
 ## Threat and information boundaries
 
-The primary population is a frozen ordinary task agent induced through low-trust
-tool-return content, paired with benign returns. Receipts, graph position, contracts,
-grants and provenance are separate typed trusted data. Injected text cannot change
-them. Attack labels are evaluator-owned and absent from agent/controller views.
-Persistently malicious submitters are a separate boundary/resource-abuse population.
-Budgeted adaptive attackers must target the frozen defender with preregistered
-feedback, calls and token limits; that orchestrator is not implemented yet.
+The primary attacker controls an external model-response relay. It may intercept,
+replace, or inject selected response content before the ordinary agent receives it.
+Content may be plain text or a forged structured tool call. The relay may induce a
+multi-step sequence whose individual requests appear plausible while the path
+gradually expands authority or diverts the task toward a harmful effect. The relay
+cannot directly call tools, alter trusted runtime state, forge trusted receipts or
+approvals, or bypass the monitor's final dispatch check. This models a compromised
+or malicious response relay; end-to-end response authentication is outside scope.
+Pair each tampered episode with the same task and agent under benign responses.
+Receipts, graph position, contracts, grants and provenance remain separate typed
+trusted data. Attack labels are evaluator-owned and hidden from agent/controller
+views. Run harmful effects only in the trusted simulator. Tests hold out attack
+mechanisms by family. Adaptive attacks are outside the first experiment.
 
 Runtime sees public goals, executable preconditions/effects, legal transitions,
 trusted abstract facts, proposals, observations, history and remaining resources.
@@ -122,13 +128,14 @@ diagnostic-acquisition orchestrator.
 
 ## Baselines and frozen success rule
 
-All guarded methods share concrete menus, immutable guards, witness/approval
-semantics, feedback/information and online budgets:
-- Public goal/precondition/path-state deterministic recovery.
-- Budgeted public structural search, charging expansions.
-- Long-term outcome-supervised candidate scorer.
-- Multi-step offline RL using the same backbone/data.
-- Block-then-recover, first allowing guard-admissible proposals.
+The primary experiment has four conditions: unguarded behavior as a reference,
+per-action authorization checks, deterministic path-state recovery, and the
+outcome-supervised path-intervention scorer. All guarded methods share immutable
+guards and a final recheck; path-level methods also share concrete menus,
+witness/approval semantics, feedback/information and online budgets. Budgeted
+structural search, block-then-recover and offline RL are
+secondary comparisons only if they fit the cap; they are not required to answer
+the primary question.
 
 Unguarded behavior is a separate reference. Hidden minimum-authority or reference
 path controls are privileged oracles. Report actual online, encoding/precompute,
@@ -147,7 +154,8 @@ The author-confirmed joint criterion requires:
 3. One-sided 95% lower bound on benign functional-success difference at least -0.02.
 4. Utility never excuses increased violations; report safety uncertainty separately.
 
-Pair task/attack/presentation/frozen-agent settings. Cluster resampling by semantic
+Pair task/attack/presentation/frozen-agent settings, including benign and tampered
+versions and text/structured-call attack modes. Cluster resampling by semantic
 family, retaining repeated presentations and all training seeds inside each cluster.
 Cluster percentile intervals require enough independent families. Two-family
 software checks are not credible inference. Zero observed violations does not prove
@@ -160,12 +168,13 @@ Two A100-PCIe-40GB GPUs, about 196 GiB RAM and 654 GiB free disk were observed o
 four sequences and GPU utilization 0.90. Scorer fits use the other GPU.
 Pin snapshots/package versions and do not silently substitute a smaller agent.
 
-Measure actual inference/acceptance/replanning/training first. Estimate independent
-families, acquisition, five-seed fitting, paired evaluation, adaptive attackers and
-transfer costs, then present a concrete total resource cap for the author's decision
-before formal runs. That cap remains pending. Sample-size approximations are
-planning sensitivities, not guaranteed power; do not reduce the 5-point threshold
-to fit compute.
+The author set a hard limit of 200 GPU hours. The broad illustrative workload below
+already approaches that limit for paired inference alone and excludes training and
+other costs, so it is not the formal sample plan. First time a small paired pilot,
+then choose the number of independent families, presentations and training seeds
+that fit the full cap, including fitting and evaluation. Freeze those counts before
+formal runs. Sample-size approximations are planning sensitivities, not guaranteed
+power; do not reduce the 5-point success threshold to fit compute.
 
 The dirty development smoke record at base revision
 55510043b40b8fa6eb7dc56965e3a978f5746bba measured 8.5 agent calls per episode,
@@ -194,7 +203,8 @@ committed checkpoint and protocol identity. Push only when explicitly requested.
 
 ## Remaining evidence
 
-Independent corpus/contracts and audit, formal acquisition/diagnostics, adaptive
-attacks, calibration, held-out/transfer evaluation and resource-cap decision remain.
+Independent corpus/contracts and audit, formal acquisition, calibration,
+held-out evaluation, and a pilot-derived sample/cost plan remain. Adaptive attacks
+and transfer evaluation are deferred extensions.
 Implementation is not a completed defense study. Preserve historical selectability
 defects and negative results. Add efficacy claims only after appropriate evidence.

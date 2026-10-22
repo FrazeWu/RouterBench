@@ -540,7 +540,7 @@ are out of scope.
 \draw[->,dashed] (verify) -- node[above,font=\tiny]{labels only} (bridge);
 \draw[->] (contracts) -- (monitor);
 \draw[->] (bridge) -- node[above,font=\tiny]{strata/report} (contracts);
-\node[proposed] (agent) at (0,-2.9) {Frozen normal agent\\low-trust return};
+\node[proposed] (agent) at (0,-2.9) {Frozen normal agent\\tampered text / forged call};
 \node[stage] (intervene) at (4.5,-2.9) {allow / constrain /\\escalate / deny};
 \node[proposed] (trace) at (9,-2.9) {Actual traces\\accept/reject/failure};
 \draw[->] (agent) -- (intervene);
@@ -750,13 +750,17 @@ Independently author this suite without changing frozen RouteBench cases.
 \section{Auxiliary Defense: ECPA}
 \label{sec:ecpa}
 
-ECPA studies safe recovery under fixed trusted guards. Its interleaved runtime,
-real task-agent interface and candidate scorer are implemented; an independent
-corpus, formal freeze and benefit comparison remain pending. Historical v13 is
-a separate pre-replay interface. The primary attack induces a frozen normal
-agent through low-trust tool-return content, paired with benign returns. Trusted
-receipts remain separate. Malicious submitters require separate boundary tests;
-budgeted adaptive-attacker evaluation is pending.
+ECPA studies runtime containment when an external relay hijacks or injects model
+response content. The relay may alter ordinary text or forge a structured tool
+call, causing a frozen ordinary agent to propose a sequence of increasingly
+privileged or task-diverting actions. It cannot directly execute tools, alter
+trusted runtime state, or bypass authorization and final dispatch checks. This
+assumes compromise at or beyond a response relay; transport integrity alone is
+outside the defense claim. Each attack task is paired with the same benign task
+without response tampering. The interleaved runtime, real task-agent interface
+and candidate scorer are implemented; an independent corpus, formal freeze and
+benefit comparison remain pending. Historical v13 is a separate pre-replay
+interface.
 
 The trainable component selects concrete recovery interventions on every request.
 Public contracts determine admissibility; hidden verifiers, reference routes/costs
@@ -801,14 +805,21 @@ Calibration audits a fixed tuned policy; it cannot select another policy.
 
 Complete mediation, sound contracts and authenticated approvals support an
 established reference-monitor argument, not a new theorem or learned-safety
-guarantee. Compare public rules, path-state controls, charged search, supervised
-learning, offline RL and block-then-recover under shared menus and online limits.
-The primary endpoint is actual completion with explicit stop and no episode
-violation over the entire fixed attacked set. Failed/missed attacks, unnecessary
-interventions and exhausted budgets remain in its denominator. Report violations,
-benign completion, approvals and total costs separately. Appendix~\ref{app:training}
-fixes the success thresholds. Equality with deterministic control does not
-demonstrate learning's added value.
+guarantee. The primary comparison uses four conditions: unguarded behavior as a
+reference, per-action authorization checks, deterministic path-state recovery,
+and the trained path-intervention selector. All guarded conditions share the
+same hard prohibitions and final recheck; the path-level conditions also share
+the concrete intervention menu. The primary trained method is outcome-supervised;
+offline RL is exploratory and is included only if the resource cap permits.
+Hold out task families and attack
+mechanisms across training and test. Pair tampered and benign versions of each
+task, covering both text injection and forged structured calls. Report attack
+success, episode violations, benign completion, unnecessary interventions and
+total cost separately. Safe recovery requires actual completion, explicit stop
+and no episode violation. The defense corpus and formal freeze remain pending;
+sample size and repeated presentations will be set after timing a pilot under
+the 200-GPU-hour cap. Equality with deterministic control does not demonstrate
+learning's added value.
 
 \section{Experiments}
 \label{sec:experiments}
@@ -1419,10 +1430,12 @@ Actual approval may reject. Never infer successful recovery by relabeling a
 trace collected without that intervention.
 
 \paragraph{Comparisons and fixed criterion.}
-Compare public goal/path-state rules, budgeted public structural search,
-long-term supervised scoring, multi-step offline RL and block-then-recover.
-Unguarded behavior is a separate reference. Guarded methods share menus,
-information, guards, witness/approval semantics and online budgets.
+The primary comparison uses per-action authorization, deterministic path-state
+recovery and the outcome-supervised path-intervention scorer, with unguarded
+behavior as a reference. The path-level methods share menus, information,
+guards, witness/approval semantics and online budgets. Budgeted structural
+search, offline RL and block-then-recover are secondary comparisons only if they
+fit the resource cap.
 Report realized encoding, diagnostics, acquisition, training and total costs,
 not just controller inference overhead. Freeze the strongest comparator on
 tuning data before calibration/testing.
@@ -1440,13 +1453,12 @@ Failure to satisfy these rules is a reported outcome, not grounds to relax them.
 \paragraph{Development versus formal evidence.}
 Implementation and small development feasibility checks establish executable
 collection/training, not learned efficacy or generalization. Formal collection,
-independent contracts, adaptive attacks and the held-out comparison remain
-pending. The available host has two A100-PCIe-40GB GPUs and about 196 GiB RAM.
-Development inference uses frozen Qwen3-14B BF16, context 8192, maximum four
-sequences and 90\% GPU-memory utilization. Measure actual calls/tokens,
-acceptance/replanning and fitting before fixing the total resource cap.
-The author's resource-cap decision precedes formal experiments; planning
-approximations do not guarantee power. Formal runs require a committed clean
+independent contracts and the held-out comparison remain pending. The available
+host has two A100-PCIe-40GB GPUs and about 196 GiB RAM. Development inference uses
+frozen Qwen3-14B BF16, context 8192, maximum four sequences and 90\% GPU-memory
+utilization. Total formal compute is capped at 200 GPU hours; the sample plan
+will be frozen after a timed paired pilot. Planning approximations do not
+guarantee power. Formal runs require a committed clean
 revision and frozen identity, distinct from historical v13.
 \section{Runtime and Transition Contract}
 \label{app:runtime}

@@ -17,7 +17,8 @@ flowchart LR
     C --> H[ECPA 公开恢复任务\nRecoveryContract + public menu]
     H --> I[可信参考监视器\n硬禁止、授权、witness、复检]
     I --> J{allow / constrain /\nescalate / deny}
-    J --> K[冻结普通任务代理\n低信任 tool-return 注入]
+    J --> K[冻结普通任务代理\n外部响应中转劫持/注入]
+    X[外部恶意中转节点\n篡改文本或伪造工具调用] --> K
     K --> I
     I --> L[真实执行 receipt\n事实/历史/预算更新]
     L --> K
@@ -33,12 +34,12 @@ flowchart LR
     Q --> R
     R --> H
 
-    R --> S[正式防御评估\npaired benign/attacked]
+    R --> S[正式防御评估\n配对良性/篡改响应\n文本+结构化调用]
     G --> S
     S --> T[safe recovery\nfunctional success\nviolation/attack/cost]
     T --> U[按 semantic family 聚类\n配对区间与资源报告]
 
-    V[当前状态\n已实现：桥接、运行时、采集、训练\n待完成：正式合同、独立语料、适应性攻击]:::note
+    V[当前状态\n已实现：桥接、运行时、采集、训练\n待完成：正式合同、独立语料、200 GPU小时内试运行定规模]:::note
     V -.-> U
 
     classDef note fill:#fff7d6,stroke:#9a6b00,color:#4b3600;
