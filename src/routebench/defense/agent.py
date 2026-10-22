@@ -28,6 +28,7 @@ class AgentCall(StrictModel):
     elapsed_seconds: float
     prompt_tokens: int = 0
     completion_tokens: int = 0
+    usage_reported: bool = False
     status: str
 
 
@@ -129,6 +130,7 @@ class JsonRecoveryAgent:
         charge()
         started = time.perf_counter()
         prompt_tokens = completion_tokens = 0
+        usage_reported = False
         status = "transport_error"
         try:
             schema = AgentReply.model_json_schema()
@@ -176,8 +178,13 @@ class JsonRecoveryAgent:
             response.raise_for_status()
             body = response.json()
             usage = body.get("usage", {})
-            prompt_tokens = int(usage.get("prompt_tokens", 0))
-            completion_tokens = int(usage.get("completion_tokens", 0))
+            usage_reported = isinstance(usage, dict) and all(
+                type(usage.get(name)) is int and usage[name] >= 0
+                for name in ("prompt_tokens", "completion_tokens")
+            )
+            if usage_reported:
+                prompt_tokens = usage["prompt_tokens"]
+                completion_tokens = usage["completion_tokens"]
             status = "invalid_response"
             choice = body["choices"][0]
             if choice.get("finish_reason") != "stop":
@@ -205,6 +212,7 @@ class JsonRecoveryAgent:
                     elapsed_seconds=time.perf_counter() - started,
                     prompt_tokens=prompt_tokens,
                     completion_tokens=completion_tokens,
+                    usage_reported=usage_reported,
                     status=status,
                 )
             )

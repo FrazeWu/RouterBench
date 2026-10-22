@@ -49,6 +49,7 @@ class BranchGroup(StrictModel):
     formal_protocol_id: str | None = Field(default=None, pattern=r"^ecpa-[a-z0-9][a-z0-9._-]*$")
     branch_assignment_probability: float = Field(default=1.0, ge=1, le=1)
     proposal_sampling_probability: float = Field(gt=0, le=1)
+    state_inclusion_probability: float = Field(default=1.0, gt=0, le=1)
     outcomes: tuple[BranchOutcome, ...]
 
 

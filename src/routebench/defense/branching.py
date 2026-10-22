@@ -32,6 +32,7 @@ class RecordedRollout:
     episode: CollectedEpisode
     calls: tuple[AgentCall, ...]
     relay_events: tuple[dict[str, object], ...]
+    relay_event_offset: int = 0
 
 
 @dataclass(frozen=True)
@@ -102,6 +103,7 @@ async def _rollout(
     choice: PolicyChoice | None = None,
     snapshots: list[_Snapshot] | None = None,
 ) -> RecordedRollout:
+    relay_event_offset = len(relay.events)
     sticky = _StickyEvaluator(evaluator)
     sticky(env.state)
 
@@ -132,7 +134,9 @@ async def _rollout(
         )
     finally:
         await agent.aclose()
-    return RecordedRollout(episode, tuple(agent.calls), tuple(copy.deepcopy(relay.events)))
+    return RecordedRollout(
+        episode, tuple(agent.calls), tuple(copy.deepcopy(relay.events)), relay_event_offset
+    )
 
 
 async def collect_parent_branches(
@@ -149,6 +153,7 @@ async def collect_parent_branches(
     repeats: int = 1,
     proposal_sampling_probability: float = 1.0,
     max_collection_steps: int | None = None,
+    record_rollout: Callable[[str, RecordedRollout], None] | None = None,
 ) -> ParentBranches:
     """Finish parent, sample states uniformly, enumerate each complete menu.
 
@@ -172,6 +177,8 @@ async def collect_parent_branches(
         max_collection_steps=max_collection_steps,
         snapshots=snapshots,
     )
+    if record_rollout is not None:
+        record_rollout("parent", parent)
     count = len(snapshots)
     indices = sorted(
         random.Random(state_selection_seed).sample(range(count), k=min(maximum_states, count))
@@ -201,6 +208,10 @@ async def collect_parent_branches(
                     choice=PolicyChoice(candidate.candidate_id),
                 )
                 episode = rollout.episode
+                if record_rollout is not None:
+                    record_rollout(
+                        f"state-{index}:repeat-{repeat}:{candidate.candidate_id}", rollout
+                    )
                 metrics, transitions = episode_metrics(episode), build_transitions(episode)
                 branches.append(
                     RecordedBranch(

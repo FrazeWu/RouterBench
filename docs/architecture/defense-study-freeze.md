@@ -44,8 +44,10 @@ StudySpec makes all LoRA recipe fields explicit instead of silently inheriting
 the disposable pilot's defaults. It records three distinct adapter seeds, matched
 agent/defender context budgets, both relay modes, presentations, rollout/order/
 state-selection/continuation seeds, logging mixture, branch states/repeats, episode
-budgets and acquisition call/token caps. No production values are chosen by the
-unit-test fixture.
+budgets and acquisition call/token caps. It now also requires explicit reserved
+GPU IDs, thermal stop/cooling settings, the one-presentation enumerated training
+schedule and all four required realized target kinds. No production values are
+chosen by the unit-test fixture.
 
 The tuning comparator rule first minimizes observed violations, then maximizes
 safe completion, then compares cost. The single update count is prespecified;
@@ -57,10 +59,12 @@ held-out-mechanism claim.
 
 The manifest's protocol_id hashes its full content. Persisting checks both that
 identity and the still-clean revision, and uses exclusive creation. Training,
-adapter and outcome flags remain false. A subsequent runner still must enforce
-the frozen inputs, acquisition/thermal accounting, exact stage records and
-realized complete-menu target coverage before fitting. This tool does not claim
-that runner is complete.
+adapter and outcome flags remain false. The collection/fitting entry point is now
+implemented in scripts.run_defense_study; see defense-study-runbook.md. It checks
+the frozen sources/models, acquisition/thermal accounting and complete-menu
+target coverage. A formal comparison runner, tuning/calibration decision record
+and the fresh efficacy study still remain pending. Neither entry point has run
+on formal model data.
 
 ## Validation boundary
 
@@ -71,7 +75,8 @@ dispositions, dirty revisions, stale audit/tokenizer identities, relaxed criteri
 model-weight identity changes, tampered payloads and attempted output overwrites.
 The real corpus remains unaccepted and fails the freeze preconditions.
 
-Validation on 2026-10-23: the complete default suite passes **258 tests**, with
+Freeze checkpoint d2294089bc5d47bf1ec3dfc6d8b338c6a5f6d9a4 validation on
+2026-10-23: the complete default suite passes **258 tests**, with
 two existing optional Torch tests skipped in the default environment. All fourteen
 freeze tests pass. Changed-file Ruff and strict mypy pass. These checks exercise
 the tooling only; they supply no research review, training label or model outcome.

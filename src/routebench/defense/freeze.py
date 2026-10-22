@@ -87,6 +87,26 @@ class FormalLoraSpec(LoraSpec):
     target_modules: tuple[str, ...] = Field(min_length=1)
 
 
+class StudyResources(StrictModel):
+    gpu_ids: tuple[int, ...] = Field(min_length=1)
+    task_agent_gpu: int = Field(ge=0)
+    maximum_celsius: int = Field(ge=40, le=90)
+    minimum_request_gap_seconds: float = Field(ge=0)
+    cooling_pause_celsius: int
+    cooling_resume_celsius: int
+    maximum_cooling_wait_seconds: float = Field(gt=0)
+
+    @model_validator(mode="after")
+    def validate_devices_and_cooling(self) -> StudyResources:
+        if len(set(self.gpu_ids)) != len(self.gpu_ids) or any(gpu < 0 for gpu in self.gpu_ids):
+            raise ValueError("reserved GPU identifiers must be unique nonnegative indices")
+        if self.task_agent_gpu not in self.gpu_ids:
+            raise ValueError("task-agent GPU must be included in the reservation")
+        if not self.cooling_resume_celsius < self.cooling_pause_celsius < self.maximum_celsius:
+            raise ValueError("cooling thresholds must precede the hard thermal stop")
+        return self
+
+
 class StudySpec(StrictModel):
     purpose: Literal["ecpa_independent_formal_study"]
     corpus_manifest: str
@@ -109,6 +129,9 @@ class StudySpec(StrictModel):
     logging_uniform_weight: float = Field(ge=0, le=1)
     acquisition_call_limit: int = Field(gt=0)
     acquisition_token_limit: int = Field(gt=0)
+    resources: StudyResources
+    training_acquisition: Literal["enumerate_each_train_task_transport_condition_once"]
+    required_training_target_kinds: tuple[Literal["allow", "constrain", "escalate", "deny"], ...]
     # Chosen on tuning, never silently on calibration or test.
     comparator_selection: Literal[
         "lowest_violations_then_highest_safe_completion_then_cost_on_tune"
@@ -123,6 +146,17 @@ class StudySpec(StrictModel):
             raise ValueError("three distinct adapter seeds including the recipe seed are required")
         if len(self.modes) != 2 or set(self.modes) != {"text", "structured"}:
             raise ValueError("both paired relay transports must be prespecified exactly once")
+        if len(self.required_training_target_kinds) != 4 or set(
+            self.required_training_target_kinds
+        ) != {"allow", "constrain", "escalate", "deny"}:
+            raise ValueError("prespecify all four realized training-target kinds")
+        if self.presentations != 1:
+            raise ValueError("this collection protocol implements one source presentation per task")
+        if (
+            self.compact.device.startswith("cuda:")
+            and int(self.compact.device.split(":", 1)[1]) not in self.resources.gpu_ids
+        ):
+            raise ValueError("compact model GPU must be included in the reservation")
         if self.agent.context_tokens != self.compact.context_tokens:
             raise ValueError("task-agent and defender context budgets must match")
         if self.agent.max_completion_tokens >= self.agent.context_tokens or (
@@ -314,6 +348,7 @@ def freeze_study(
         "purpose": spec.purpose,
         "source_revision": revision,
         "study": spec.model_dump(mode="json"),
+        "configuration_source": str(config_path.resolve().relative_to(root)),
         "corpus_digest": digest,
         "task_digests": {task.entry.task_id: task.digest for task in tasks},
         "source_files": {str(path.relative_to(root)): file_digest(path) for path in sources},

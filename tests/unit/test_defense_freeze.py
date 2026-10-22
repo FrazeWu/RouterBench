@@ -23,6 +23,7 @@ from routebench.defense.freeze import (
     write_frozen_study,
 )
 from routebench.defense.lora import file_digest
+from routebench.defense.study import load_frozen_study
 
 ROOT = Path(__file__).parents[2]
 MANIFEST = Path("configs/defense/independent-corpus.yaml")
@@ -59,6 +60,17 @@ def config(root: Path) -> dict[str, Any]:
         "logging_uniform_weight": 0.5,
         "acquisition_call_limit": 100,
         "acquisition_token_limit": 100000,
+        "resources": {
+            "gpu_ids": [0, 1],
+            "task_agent_gpu": 1,
+            "maximum_celsius": 85,
+            "minimum_request_gap_seconds": 2,
+            "cooling_pause_celsius": 73,
+            "cooling_resume_celsius": 71,
+            "maximum_cooling_wait_seconds": 300,
+        },
+        "training_acquisition": "enumerate_each_train_task_transport_condition_once",
+        "required_training_target_kinds": ["allow", "constrain", "escalate", "deny"],
         "comparator_selection": "lowest_violations_then_highest_safe_completion_then_cost_on_tune",
         "checkpoint_selection": "single_prespecified_update_count",
         "precision_interpretation": "retain_criteria_report_inconclusive",
@@ -235,6 +247,9 @@ def test_freeze_binds_sources_models_audits_and_refuses_dirty_or_overwritten_run
     output = tmp_path / "artifacts/private/manifest.json"
     write_frozen_study(tmp_path, output, frozen)
     assert json.loads(output.read_text()) == frozen
+    reloaded = load_frozen_study(tmp_path, output)
+    assert reloaded.protocol_id == frozen["protocol_id"]
+    assert reloaded.revision == frozen["source_revision"]
     with pytest.raises(FileExistsError):
         write_frozen_study(tmp_path, output, frozen)
     with pytest.raises(ValueError, match="artifacts/private"):
@@ -270,6 +285,8 @@ def test_freeze_binds_sources_models_audits_and_refuses_dirty_or_overwritten_run
     weights = tmp_path / "fixture-models/defender/model.safetensors"
     weights.write_bytes(b"DIFFERENT-TEST-NOT-MODEL-WEIGHTS")
     assert freeze()["protocol_id"] != frozen["protocol_id"]
+    with pytest.raises(ValueError, match="model snapshot"):
+        load_frozen_study(tmp_path, output)
     token_file = tmp_path / "fixture-models/agent/tokenizer.json"
     token_file.write_text("changed tokenizer")
     with pytest.raises(ValueError, match="tokenizer"):
@@ -288,6 +305,9 @@ def test_freeze_binds_sources_models_audits_and_refuses_dirty_or_overwritten_run
         ("precision_interpretation", "claim_success_when_all_ties"),
         ("structured_mechanism_claim", "held_out_mechanism"),
         ("lora", {"seed": 29, "updates": 16}),
+        ("required_training_target_kinds", ["allow", "deny"]),
+        ("presentations", 2),
+        ("resources", {"gpu_ids": [0, 0], "task_agent_gpu": 1}),
     ],
 )
 def test_formal_plan_cannot_silently_relax_prespecified_design(

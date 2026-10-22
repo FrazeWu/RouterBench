@@ -148,6 +148,8 @@ def test_real_http_agent_branches_keep_snapshots_seeds_probabilities_and_censori
                         100 + repeat
                     }
                     for branch in branches:
+                        assert branch.rollout.relay_event_offset > 0
+                        assert branch.rollout.relay_events[: branch.rollout.relay_event_offset]
                         episode = branch.rollout.episode
                         assert episode.proposal_sampling_probability == 0.25
                         assert episode.intervention_probabilities[0] == 1

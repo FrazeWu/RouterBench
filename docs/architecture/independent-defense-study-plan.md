@@ -25,6 +25,9 @@ This is a prospective plan, not a frozen protocol or completed experiment.
    covering the target kinds and snapshot/protocol freeze remain pending.
    Source-bound freeze tooling is now implemented; see defense-study-freeze.md.
    It rejects incomplete allocations and unaccepted/stale independent reviews.
+   Frozen collection and three-seed fitting entry points are implemented; see
+   defense-study-runbook.md. Their transport-fixture checks are not formal runs.
+   The comparison/tuning/calibration runner remains pending.
 5. **Pending:** one LoRA recipe, matched development comparison, calibration audit
    and fresh paired test. Preserve strong per-action and path-rule baselines.
 6. **Pending:** family-clustered analysis, cost/negative-result report and paper results.
