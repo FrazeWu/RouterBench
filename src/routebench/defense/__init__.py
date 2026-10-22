@@ -19,6 +19,12 @@ from routebench.defense.ecpa import (
     ECPAEnvironment,
     ECPAStep,
 )
+from routebench.defense.evaluation_bridge import (
+    PublicBaselineResult,
+    PublicEvaluationContext,
+    build_public_evaluation_context,
+    project_graph_selection_result,
+)
 from routebench.defense.policies import MixtureLoggingPolicy, PublicRulePolicy, PublicSearchPolicy
 
 __all__ = [
@@ -34,12 +40,16 @@ __all__ = [
     "ECPAStep",
     "MixtureLoggingPolicy",
     "PolicyChoice",
+    "PublicBaselineResult",
+    "PublicEvaluationContext",
     "PublicRecoveryTask",
     "PublicRulePolicy",
     "PublicSearchPolicy",
     "RecoveryContract",
     "branch_interventions",
+    "build_public_evaluation_context",
     "collect_episode",
     "completion_witness",
+    "project_graph_selection_result",
     "sample_tasks",
 ]

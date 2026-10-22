@@ -9,6 +9,10 @@ import yaml
 
 from routebench.defense.contracts import ApprovalRule, PublicRecoveryTask, RecoveryContract
 from routebench.defense.ecpa import ApprovalReceipt
+from routebench.defense.evaluation_bridge import (
+    PublicEvaluationContext,
+    build_public_evaluation_context,
+)
 from routebench.scenarios.loader import ScenarioBundle, load_scenario
 from routebench.scenarios.schema import ScenarioSplit
 
@@ -17,6 +21,7 @@ from routebench.scenarios.schema import ScenarioSplit
 class DevelopmentTask:
     public: PublicRecoveryTask
     bundle: ScenarioBundle
+    evaluation_context: PublicEvaluationContext
 
 
 def load_development_tasks(root: Path, config: Path) -> tuple[DevelopmentTask, ...]:
@@ -44,6 +49,7 @@ def load_development_tasks(root: Path, config: Path) -> tuple[DevelopmentTask, .
                     contract=contract,
                 ),
                 bundle,
+                build_public_evaluation_context(bundle),
             )
         )
     return tuple(tasks)

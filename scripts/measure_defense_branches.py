@@ -17,6 +17,7 @@ from routebench.defense.collect import PolicyChoice, collect_episode
 from routebench.defense.development import SimulatedApprover, load_development_tasks
 from routebench.defense.ecpa import AgentReply, AgentReplyKind, BudgetLimits, ECPAEnvironment
 from routebench.defense.evaluation import HiddenOutcomeEvaluator, episode_metrics
+from routebench.defense.evaluation_bridge import evaluation_context_manifest
 from routebench.defense.policies import PublicRulePolicy
 from routebench.defense.traces import build_transitions
 from routebench.runtime.reference import ScenarioState
@@ -61,6 +62,7 @@ async def measure(args: argparse.Namespace) -> None:
         "branch_assignment": "enumerate_all_registered_interventions",
         "branch_assignment_probability": 1.0,
         "agent": config.model_dump(mode="json"),
+        "evaluation_context": evaluation_context_manifest(task.evaluation_context),
     }
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     for index, candidate in enumerate(observation.menu):

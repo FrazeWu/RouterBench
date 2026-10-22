@@ -21,6 +21,7 @@ from routebench.defense.development import (
 )
 from routebench.defense.ecpa import BudgetLimits, ECPAEnvironment
 from routebench.defense.evaluation import HiddenOutcomeEvaluator, episode_metrics
+from routebench.defense.evaluation_bridge import evaluation_context_manifest
 from routebench.defense.features import FeatureBuilder, FrozenTransformerEncoder
 from routebench.defense.learning import load_scorer_ensemble
 from routebench.defense.policies import PublicRulePolicy, PublicSearchPolicy
@@ -51,6 +52,9 @@ async def measure(args: argparse.Namespace) -> None:
         "agent": config.model_dump(mode="json"),
         "budgets": limits.model_dump(mode="json"),
         "task_ids": [item.public.contract.task_id for item in tasks],
+        "evaluation_contexts": [
+            evaluation_context_manifest(item.evaluation_context) for item in tasks
+        ],
         "formal_evidence": False,
         "formal_protocol_id": None,
         "seeds": [args.seed],
@@ -136,6 +140,7 @@ async def measure(args: argparse.Namespace) -> None:
                     "intervention_probabilities": episode.intervention_probabilities,
                     "proposal_sampling_probability": episode.proposal_sampling_probability,
                     "final_state": episode.final_state,
+                    "evaluation_context": evaluation_context_manifest(item.evaluation_context),
                 }
                 (output / f"{identity}.private.json").write_text(
                     json.dumps(private, indent=2) + "\n"

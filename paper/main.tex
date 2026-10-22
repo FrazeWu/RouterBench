@@ -521,26 +521,54 @@ are out of scope.
 \begin{figure*}[t]
 \centering
 \begin{tikzpicture}[
- stage/.style={draw,align=center,text width=4.2cm,minimum height=1.15cm,inner sep=5pt},
+ stage/.style={draw,align=center,font=\scriptsize,text width=2.75cm,minimum height=0.72cm,inner sep=3pt},
  proposed/.style={stage,dashed},
+ evaluator/.style={stage,draw=red!65!black},
+ bridge/.style={stage,draw=green!45!black},
  >=Stealth
 ]
-\node[stage] (task) at (0,0) {Public task and graph\\catalog-bound typed actions};
-\node[stage] (planner) at (5.2,0) {Route selection\\frozen response protocol};
-\node[stage] (verify) at (10.4,0) {Trusted replay\\task, policy, and optimality};
+\node[stage] (task) at (0,0) {Frozen ScenarioBundle\\task, graph, actions};
+\node[stage] (planner) at (4.5,0) {Existing graph evaluation\\selection / adherence};
+\node[evaluator] (verify) at (9,0) {Private evaluator\\fixture, verifier, certificate};
 \draw[->] (task) -- (planner);
 \draw[->] (planner) -- (verify);
-\node[proposed] (dev) at (0,-1.95) {Independent development\\and calibration families};
-\node[proposed] (diagnostic) at (5.2,-1.95) {Counterfactual diagnostics\\local / recognition / planning};
-\node[proposed] (defense) at (10.4,-1.95) {ECPA interventions\\offline learner + trusted bounds};
-\draw[->] (dev) -- (diagnostic);
-\draw[->] (diagnostic) -- (defense);
+\node[bridge] (bridge) at (4.5,-1.45) {Public evaluation bridge\\counts, family, length};
+\node[proposed] (contracts) at (0,-1.45) {Public recovery contract\\menu and witness};
+\node[stage] (monitor) at (9,-1.45) {Trusted ECPA monitor\\approval, recheck, receipt};
+\draw[->] (task) -- (bridge);
+\draw[->] (planner) -- (bridge);
+\draw[->,dashed] (verify) -- node[above,font=\tiny]{labels only} (bridge);
+\draw[->] (contracts) -- (monitor);
+\draw[->] (bridge) -- node[above,font=\tiny]{strata/report} (contracts);
+\node[proposed] (agent) at (0,-2.9) {Frozen normal agent\\low-trust return};
+\node[stage] (intervene) at (4.5,-2.9) {allow / constrain /\\escalate / deny};
+\node[proposed] (trace) at (9,-2.9) {Actual traces\\accept/reject/failure};
+\draw[->] (agent) -- (intervene);
+\draw[->] (intervene) -- (monitor);
+\draw[->] (monitor) -- (trace);
+\draw[->] (trace) |- (agent);
+\node[proposed] (learn) at (4.5,-4.35) {Frozen E5 + 128/64 scorer\\supervised; offline TD};
+\draw[->] (trace) -- (learn);
+\draw[->] (learn) -- (intervene);
+\node[evaluator] (outcome) at (9,-4.35) {Evaluator outcomes\\safe recovery, cost, violation};
+\draw[->] (monitor) -- (outcome);
+\draw[->] (outcome) -- (learn);
 \end{tikzpicture}
-\caption{Implemented benchmark (solid) and proposed protocols (dashed).
-The lower row uses independent development data. Formal test runs do not
-feed diagnostic calibration or defense training.}
+\caption{Complete RouteBench--ECPA framework. Solid arrows are implemented
+data paths; dashed nodes/arrows mark formal defense work still requiring a new
+protocol freeze. The bridge exports only aggregate/public evaluation metadata;
+private evaluator material remains outside the online scorer.}
 \label{fig:overview}
 \end{figure*}
+
+The defense bridge now consumes the existing evaluator's public graph audit and
+aggregate endpoint projection. It carries scenario digest, semantic family,
+route-length band, candidate/path counts, and public-route ambiguity into
+stratification and collection manifests. It does not carry hidden certificates,
+fixtures, private route costs, or evaluator-owned outcomes into the online
+scorer; those outcomes are joined only after a real recovery rollout for
+evaluation. This makes the connection operational without turning the historical
+v13 planner result into training data.
 
 \subsection{Catalog-Bound Authoring}
 
