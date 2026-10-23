@@ -363,7 +363,7 @@ def load_fit_phase(path: Path, study: FrozenStudy) -> dict[int, Path]:
             "adapter_seeds": list(study.spec.adapter_seeds),
         }.items()
     ):
-        raise ValueError("fit must contain all prespecified seeds")
+        raise ValueError("fit must contain the single prespecified adapter seed")
     adapters = {}
     for seed in study.spec.adapter_seeds:
         directory = path / f"adapter-seed-{seed}"
@@ -382,7 +382,7 @@ def load_fit_phase(path: Path, study: FrozenStudy) -> dict[int, Path]:
     if {file.name for file in path.glob("adapter-seed-*")} != {
         file.name for file in adapters.values()
     }:
-        raise ValueError("fit must retain exactly the three declared adapters")
+        raise ValueError("fit must retain exactly the single declared adapter")
     return adapters
 
 
@@ -561,5 +561,8 @@ def comparison_analysis(
         "pooled": report,
         "by_mode": modes,
         "by_adapter_seed": per_seed,
-        "interpretation": "family-clustered estimates; no seed selection or calibration retuning",
+        "interpretation": (
+            "family-clustered estimates conditional on one fitted adapter; "
+            "training-seed variability not estimated; no calibration retuning"
+        ),
     }

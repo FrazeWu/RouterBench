@@ -10,8 +10,8 @@ Completing code does not supply those missing sources or reviews.
 ## Boundaries and order
 
 1. Complete the task sources and genuine independent semantic/contract review.
-   Commit the exact family allocation, one-presentation schedule, recipe, three
-   adapter seeds, resource reservations, thermal limits, budgets and original
+   Commit the exact family allocation, one-presentation schedule, recipe, one
+   adapter seed (29), resource reservations, thermal limits, budgets and original
    success criteria. Do not copy TEST fixtures into the research configuration.
 2. From that clean checkpoint, rerun the authoring/tokenizer audits and use
    scripts.freeze_defense_study to write the source/model-bound manifest. This
@@ -24,17 +24,23 @@ Completing code does not supply those missing sources or reviews.
    or absent realized allow/constrain/escalate/deny targets. Menu availability
    alone does not pass. Do not fabricate labels or add post-outcome task cases.
 5. Use --phase fit with the verified collection and another new output directory.
-   The runner fits all three prespecified LoRA seeds, with one fixed recipe and
+   The runner fits one Qwen3-1.7B LoRA adapter, with one fixed seed, recipe and
    update count. Fitting alone cannot establish defense effectiveness.
-6. Use --phase tune with --fit pointing to that completed phase. All seven arms
-   run: four shared controls and all three trained seeds. Choose the comparator
+6. Use --phase tune with --fit pointing to that completed phase. All five arms
+   run: four shared controls and the single trained adapter. Choose the comparator
    only from the three guarded controls using the declared lexicographic rule.
 7. Use --phase calibration with the same --fit and completed --tune directories.
-   Audit the fixed selection, retaining failures and uncertainty. Do not retune,
-   choose a seed, or condition whether tests run on the calibration outcome.
+   Audit the fixed selection, retaining failures and uncertainty. Do not retune
+   or condition whether tests run on the calibration outcome.
 8. Use --phase test with the same --fit, --tune and completed --calibration.
-   Persist all fresh cases, then report pooled, mode-stratified and per-seed
+   Persist all fresh cases, then report pooled and mode-stratified
    family-clustered comparisons. Completion does not imply statistical success.
+
+Only the compact defender is fitted. Qwen3-14B remains the frozen task agent;
+the prompted Qwen3-1.7B base is an unfitted control using the same base snapshot.
+There is one fit and one final adapter, with no training-seed or checkpoint sweep.
+Family-clustered intervals describe variation across task families conditional
+on that fit; they do not estimate robustness to training randomness.
 
 If collection lacks a required target, preserve the result and report the failed
 coverage gate. A justified source/protocol change requires a new committed
@@ -71,7 +77,7 @@ Structural matching does not make different task families independent.
 
 The schedule uses seeded arm blocks so each compact model is loaded once per
 split. Within each arm, enumerate every task, mode and benign/attacked condition
-once. The four shared controls are not rerun for each adapter seed. The same
+once. The four shared controls and the single learned arm each run once. The same
 episode seed is used for every arm and condition at a given task/mode; response
 histories may diverge after interventions. Arm order is frozen before outcomes.
 Blocking saves load cost, but it does not randomize away all temporal effects;
@@ -82,19 +88,20 @@ base by violation rate, safe completion and online budget units, in that order.
 Each semantic family contributes an equally weighted within-family mean across
 all modes, conditions and task variants. Exact ties use the explicit comparator
 order in StudySpec. The unguarded simulator is descriptive, never a candidate
-for the primary guarded comparator. Adapter seeds and update count are not
+for the primary guarded comparator. The adapter seed and update count are not
 selected. Online budget units are a prespecified tie breaker, not a GPU-time or
 latency claim; actual model calls, tokens, selector fallbacks and time remain
 separate measurements.
 
-Calibration and test reload the completed fitted adapters and recompute the
+Calibration and test reload the completed fitted adapter and recompute the
 tuning decision from the complete recorded tuning schedule. Prerequisite hashes
 bind the same fit, collection and source identity through all stages. Calibration
 records do not alter that decision or provide a pass/fail gate for running the
-test. Every learned seed is paired with its already collected shared comparator;
-family resampling retains those repetitions rather than treating them as new
-families. Zero-width intervals and fewer than twenty independent families cannot
-pass the prespecified joint rule. The source-review gate remains mandatory.
+test. The learned arm is paired with its already collected shared comparator;
+family resampling retains modes and task variants within each family rather than
+treating them as new families. Zero-width intervals and fewer than twenty
+independent families cannot pass the prespecified joint rule. The source-review
+gate remains mandatory.
 
 ## Cost, context and thermal accounting
 
@@ -139,8 +146,8 @@ Outputs include phase-manifest.json, phase-result.json, telemetry.json, private
 per-call accounting, the owned task-server command/PID/log, individual private
 rollouts, all group files and collection.json. Completed phase results bind
 collection-file hashes. Fitting verifies those identities and actual target
-coverage again before allocating the compact model. Three adapter directories
-retain base/adapter hashes and their source-group provenance.
+coverage again before allocating the compact model. The single adapter directory
+retains base/adapter hashes and its source-group provenance.
 Comparison phases additionally persist the exact schedule, each row and raw
 rollout, mode-specific descriptive totals, immutable tuning decision and the
 fixed-policy analysis. Their successful measured phase binds every output file;
@@ -294,3 +301,31 @@ multi-choice tests retain inference/fallback accounting. The fourteen-page paper
 compiles and pages 5, 13 and 14 are visually checked without clipping or overlap.
 Separate tiny random TEST-model CPU/CUDA LoRA checks passed at the preceding
 source-consolidation checkpoint; they are not formal compact-model training.
+
+## Single trained model
+
+Author decision, 2026-10-23: the prospective study fits exactly one Qwen3-1.7B
+LoRA adapter at fixed seed 29 and a prespecified update count. The frozen task
+agent, unfitted compact-base control and deterministic controls require no
+additional fitting. StudySpec rejects empty/multiple training seeds or a seed
+that differs from the recipe; fit loading rejects additional adapter directories.
+The five-arm schedule retains every failure and uses family-level paired
+inference conditional on this fit, with no training-seed stability claim.
+Original recovery, benign noninferiority and violation criteria remain intact.
+
+The prospective 50 comparison task cases now require 1,000 rather than 1,400
+episodes. Under the existing timing assumptions, collection/branch/comparison
+cost is 68.66 GPU-device-hours, excluding fitting, setup and review; this is a
+planning sensitivity rather than measured savings or a total cost guarantee.
+
+Validation: **337 default tests pass, two optional Torch cases skip** in
+293.54 seconds; the 44 focused freeze/study/comparison tests pass separately.
+Changed-file Ruff, formatting and strict mypy pass. Tests cover rejection of
+multiple/mismatched seeds and extra adapter directories, exactly five scheduled
+arms, correct paired counts and unchanged failure denominators. The fourteen-page
+paper compiles; pages 5, 12, 13 and 14 are visually checked without clipping or
+overlap. CLI help remains available without loading model weights. No training
+or formal model experiment was started for this change. Previous source/context
+audit records retain their original revisions; a final formal freeze still
+requires completed sources, accepted independent reviews and new clean-revision
+audit evidence.

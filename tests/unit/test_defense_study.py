@@ -62,7 +62,7 @@ def fixture_study() -> FrozenStudy:
             },
             "budgets": {"decisions": 6, "agent_calls": 24},
             "comparison": {},
-            "adapter_seeds": [29, 31, 37],
+            "adapter_seeds": [29],
             "presentations": 1,
             "episode_seed": 43,
             "arm_order_seed": 47,

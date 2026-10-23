@@ -305,7 +305,7 @@ class PacedStudySelector(CompactPolicy):
 def evaluation_inputs(study: FrozenStudy, args: argparse.Namespace, root: Path) -> dict[str, Any]:
     """Validate the full prerequisite chain before allocating models."""
     if args.fit is None:
-        raise ValueError("held-out comparisons require the completed three-seed --fit phase")
+        raise ValueError("held-out comparisons require the completed single-adapter --fit phase")
     fit_path = private_output(root, root / args.fit)
     adapters = load_fit_phase(fit_path, study)
     identity: dict[str, Any] = {
@@ -324,7 +324,7 @@ def evaluation_inputs(study: FrozenStudy, args: argparse.Namespace, root: Path) 
             raise ValueError("tuning decision differs from its complete matched outcomes")
         manifest = json.loads((tune_path / "phase-manifest.json").read_text())
         if manifest.get("prerequisites") != identity:
-            raise ValueError("tuning must use these exact three fitted adapters")
+            raise ValueError("tuning must use this exact fitted adapter")
         identity.update(
             {
                 "tune": str(tune_path),

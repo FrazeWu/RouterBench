@@ -99,7 +99,14 @@ def test_schedule_retains_every_arm_seed_and_common_case_seed() -> None:
     study = fixture_study()
     rows = comparison_schedule(study, "tune")
     assert rows == comparison_schedule(study, "tune")
-    assert len(rows) == 5 * 2 * 2 * 7
+    assert len(rows) == 5 * 2 * 2 * 5
+    assert set(row.arm for row in rows) == {
+        "unguarded",
+        "per_action",
+        "path_rule",
+        "compact_base",
+        "compact_lora_seed_29",
+    }
     assert len({row.case_id for row in rows}) == len(rows)
     assert {row.task_id for row in rows} == {
         task.entry.task_id for task in study.tasks if task.entry.split == "tune"
@@ -243,12 +250,12 @@ def test_analysis_retains_seeds_modes_and_inconclusive_family_precision(split: s
     family_count = len(
         {task.entry.semantic_family for task in study.tasks if task.entry.split == split}
     )
-    assert pooled["benign"]["pairs"] == task_count * 2 * 3
+    assert pooled["benign"]["pairs"] == task_count * 2
     assert pooled["benign"]["semantic_families"] == family_count
     assert pooled["benign"]["safe_completion_difference"] == 0
     assert pooled["benign"]["inference_supported"] is False
     assert pooled["meets_prespecified_criteria"] is False
-    # All training seeds are retained after a failure in any one seed.
+    # Failures remain in the sole trained adapter's denominator.
     failed = next(row for row in rows if row.case.adapter_seed and not row.case.attacked)
     rows = [
         row.model_copy(update={"completed": False, "safe_recovery": False, "violation": True})
@@ -329,10 +336,10 @@ def test_matched_kernel_retains_http_failures_and_validates_measured_artifacts(
 
     report = asyncio.run(run())
     rows = [ComparisonRow.model_validate(row) for row in report["rows"]]
-    assert len(rows) == 2 * 4 * 7 and len(sessions) == 7
+    assert len(rows) == 2 * 4 * 5 and len(sessions) == 5
     assert set(used) == {task.entry.task_id for task in heldout}
     failures = [row for row in rows if row.case.task_id == heldout[0].entry.task_id]
-    assert len(failures) == 28
+    assert len(failures) == 20
     assert all(
         not row.completed and row.termination_reason == "agent_response_error" for row in failures
     )
@@ -380,13 +387,13 @@ def test_prerequisites_refuse_missing_fit_and_tuning_before_model_allocation(
 ) -> None:
     study = fixture_study()
     args = argparse.Namespace(phase="test", fit=None, tune=None, calibration=None)
-    with pytest.raises(ValueError, match="three-seed"):
+    with pytest.raises(ValueError, match="single-adapter"):
         evaluation_inputs(study, args, tmp_path)
     with pytest.raises(FileNotFoundError):
         load_fit_phase(tmp_path / "missing-fit", study)
 
 
-def test_fit_loader_binds_all_seed_recipes_and_the_verified_collection(
+def test_fit_loader_binds_single_adapter_recipe_and_the_verified_collection(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     from routebench.defense.contracts import content_hash
@@ -434,7 +441,13 @@ def test_fit_loader_binds_all_seed_recipes_and_the_verified_collection(
     )
     monkeypatch.setattr("routebench.defense.comparison.validate_adapter", adapter_manifest)
     complete_phase(fit, study, "fit")
-    assert set(load_fit_phase(fit, study)) == set(study.spec.adapter_seeds)
+    assert set(load_fit_phase(fit, study)) == {29}
+
+    extra = fit / "adapter-seed-31"
+    extra.mkdir()
+    with pytest.raises(ValueError, match="single declared adapter"):
+        load_fit_phase(fit, study)
+    extra.rmdir()
 
     def wrong_recipe(path: Path, *args: Any, **kwargs: Any) -> dict[str, Any]:
         manifest = adapter_manifest(path)
@@ -487,7 +500,7 @@ def test_test_entry_requires_same_fit_tuning_and_calibration_decisions(
         evaluation_inputs(study, args, tmp_path)
     (calibration / "decision.json").write_text(json.dumps(selection))
     (fit / "phase-result.json").write_text('{"TEST":"different fit"}')
-    with pytest.raises(ValueError, match="exact three fitted adapters"):
+    with pytest.raises(ValueError, match="exact fitted adapter"):
         evaluation_inputs(study, args, tmp_path)
 
 

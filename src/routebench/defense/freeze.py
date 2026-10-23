@@ -117,7 +117,7 @@ class StudySpec(StrictModel):
     budgets: BudgetLimits
     comparison: ComparisonSpec
     # No pilot defaults become a formal recipe implicitly.
-    adapter_seeds: tuple[int, ...] = Field(min_length=3, max_length=3)
+    adapter_seeds: tuple[int, ...] = Field(min_length=1, max_length=1)
     presentations: int = Field(gt=0)
     episode_seed: int
     arm_order_seed: int
@@ -146,8 +146,8 @@ class StudySpec(StrictModel):
 
     @model_validator(mode="after")
     def validate_plan(self) -> StudySpec:
-        if len(set(self.adapter_seeds)) != 3 or self.lora.seed not in self.adapter_seeds:
-            raise ValueError("three distinct adapter seeds including the recipe seed are required")
+        if self.adapter_seeds != (self.lora.seed,):
+            raise ValueError("exactly one adapter seed matching the recipe seed is required")
         if len(self.comparator_arms) != 3 or set(self.comparator_arms) != {
             "per_action",
             "path_rule",

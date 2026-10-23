@@ -25,7 +25,7 @@ This is a prospective plan, not a frozen protocol or completed experiment.
    covering the target kinds and snapshot/protocol freeze remain pending.
    Source-bound freeze tooling is now implemented; see defense-study-freeze.md.
    It rejects incomplete allocations and unaccepted/stale independent reviews.
-   Frozen collection and three-seed fitting entry points are implemented; see
+   Frozen collection and single-adapter fitting entry points are implemented; see
    defense-study-runbook.md. Their transport-fixture checks are not formal runs.
    The same runner now implements matched tuning, fixed-policy calibration and
    fresh-test phases with exact schedules and measured prerequisite identities.
@@ -131,14 +131,17 @@ per missing independent family. Do not meet
 the count by renaming tasks. Revise after source/context/cost audits before any
 fitting/test outcomes, then commit and freeze the exact protocol.
 
-One Qwen3-1.7B architecture and LoRA recipe, three prespecified adapter seeds.
-Run the learned arm per seed and four shared control/reference arms once per
-setting. Seeds/modes are repeats within families; do not select the best seed.
+Train one Qwen3-1.7B LoRA adapter with one prespecified seed (29), recipe and
+update count. Run this learned arm and four shared control/reference arms once
+per setting. The prompted compact base and Qwen3-14B task agent remain frozen.
+Do not perform training-seed or checkpoint sweeps. Modes and task variants are
+repeats within families. Inference is conditional on the single fitted model;
+it cannot establish robustness across training seeds.
 Tune comparator/checkpoint rules before calibration; calibration cannot select.
 Use seeded arm blocks with common task/mode episode seeds to avoid repeated
 model loading. Rank guarded controls by equal-family mean violations, safe
 completion and online budget units; freeze the explicit tie order. Calibration
-audits that fixed choice and never gates running tests on its outcome. All seed,
+audits that fixed choice and never gates running tests on its outcome. All
 mode and case failures remain in the fresh-test denominator.
 
 Using 78.42 paced seconds/episode from the pilot, two reserved GPUs, two branch
@@ -146,10 +149,11 @@ states/parent and at most four candidates, the prospective sixteen training
 tasks give 64 parents and up to 512 branches.
 With five tuning tasks, four calibration tasks and a prospective one-task-per-family
 40-family test retaining its two-task migration family, there are 50 comparison
-task cases and **1,400 comparison episodes**. With the 64 parents and at most
-512 training branches, the estimate is **86.09 GPU-device-hours**. Each repeated
+task cases and **1,000 comparison episodes** (five arms, two modes and two
+conditions per case). With the 64 parents and at most 512 training branches,
+the estimate is **68.66 GPU-device-hours**. Each repeated
 family remains one independent cluster. Half-to-double duration gives
-43.04--172.18 hours,
+34.33--137.32 hours,
 excluding fits, context audits, review and server startup/idle. This is sensitivity,
 not measured total or a cap. The previous 1,344-episode/77.37-hour estimate remains
 in its original preparation report. Recount actual tasks/menus after semantic

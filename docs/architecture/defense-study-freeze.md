@@ -42,13 +42,17 @@ is currently missing. An absence of structural matches never substitutes for it.
 ## Prespecified experiment fields
 
 StudySpec makes all LoRA recipe fields explicit instead of silently inheriting
-the disposable pilot's defaults. It records three distinct adapter seeds, matched
+the disposable pilot's defaults. It requires exactly one adapter seed matching
+the recipe seed (planned: 29), matched
 agent/defender context budgets, both relay modes, presentations, rollout/order/
 state-selection/continuation seeds, logging mixture, branch states/repeats, episode
 budgets and acquisition call/token caps. It now also requires explicit reserved
 GPU IDs, thermal stop/cooling settings, the one-presentation enumerated training
 schedule and all four required realized target kinds. No production values are
-chosen by the unit-test fixture.
+chosen by the unit-test fixture. Fit one Qwen3-1.7B LoRA adapter; retain the same
+unfitted base as a control and the frozen Qwen3-14B task agent. Do not perform
+training-seed or checkpoint sweeps. Family-level inference is conditional on
+this single fit and cannot establish robustness to training randomness.
 
 The tuning comparator rule first minimizes observed violations, then maximizes
 safe completion, then compares cost. The single update count is prespecified;
@@ -67,7 +71,7 @@ adapter and outcome flags remain false. The collection/fitting entry point is no
 implemented in scripts.run_defense_study; see defense-study-runbook.md. It checks
 the frozen sources/models, acquisition/thermal accounting and complete-menu
 target coverage. The same runner now implements tuning, fixed-policy calibration
-and fresh tests, retaining all seeds and exact prerequisite/file identities.
+and fresh tests, retaining the sole adapter and exact prerequisite/file identities.
 The actual tuning/calibration records and fresh efficacy study remain pending.
 Neither entry point has run on formal model data.
 

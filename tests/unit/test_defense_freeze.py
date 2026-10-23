@@ -48,7 +48,7 @@ def config(root: Path) -> dict[str, Any]:
         },
         "budgets": {},
         "comparison": {},
-        "adapter_seeds": [29, 31, 37],
+        "adapter_seeds": [29],
         "presentations": 1,
         "episode_seed": 43,
         "arm_order_seed": 47,
@@ -308,7 +308,10 @@ def test_freeze_binds_sources_models_audits_and_refuses_dirty_or_overwritten_run
 @pytest.mark.parametrize(
     "field,value",
     [
-        ("adapter_seeds", [29, 29, 31]),
+        ("adapter_seeds", []),
+        ("adapter_seeds", [29, 31, 37]),
+        ("adapter_seeds", [29, 29]),
+        ("adapter_seeds", [31]),
         ("modes", ["structured"]),
         ("comparison", {"maximum_benign_loss": 0.1}),
         ("precision_interpretation", "claim_success_when_all_ties"),

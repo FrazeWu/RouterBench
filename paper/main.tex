@@ -849,7 +849,7 @@ calls, in randomized arm order. Repeated presentations remain nested within
 semantic families. The family is the inference cluster; paired intervals will be
 reported for attacked safe recovery and benign functional success, with violations
 and attack success reported separately. After the pilot, we will freeze the family
-count, presentations, adapter seeds, stopping rule, and cost estimate before
+count, presentations, single training seed, stopping rule, and cost estimate before
 opening test outcomes. If independent-family coverage cannot support the
 prespecified success criterion, the result will be reported as inconclusive.
 
@@ -1411,9 +1411,9 @@ update count, training tokens and GPU hours. Pilot these settings before a forma
 freeze. Candidate-choice supervision comes from real simulator continuations and
 actual outcomes; define candidate ordering, ties and censoring before training.
 No hidden route, fixture or optimum is included in the input. Constrain output
-to a legal menu ID and recheck before dispatch. Include the identical base model
-without fine-tuning to measure training benefit. Use a small prespecified number
-of adapter seeds and no broad model-size or learning-algorithm sweep.
+to a legal menu ID and recheck before dispatch. Include the identical unfitted
+base as a control. Fit one Qwen3-1.7B LoRA adapter with fixed seed 29, recipe
+and update count; do not select among training runs or checkpoints.
 
 Existing engineering checks use frozen \nolinkurl{intfloat/e5-small-v2} revision
 \texttt{ffb93f3b} and a 128/64-unit scorer with outcome-supervised and offline TD
@@ -1494,7 +1494,7 @@ tuning data before calibration/testing.
 
 To limit model-loading cost, freeze a seeded order of arm blocks, enumerating
 each task, transport and benign/attacked condition within each block. Shared
-controls run once; all three adapter seeds run without best-seed selection.
+controls and the single fitted adapter each run once per setting.
 Use common task/transport episode seeds across arms and conditions, while
 retaining the actual continuations after histories diverge. On tuning, rank
 the three guarded comparators by equal-family mean violation rate, safe
@@ -1511,8 +1511,8 @@ interval lower bound above zero. The one-sided 95\% lower bound for benign
 functional-success difference must be at least $-0.02$. Utility cannot offset
 more violations; report safety differences and uncertainty independently.
 Common zero violations imply no demonstrated additional violation reduction.
-Resample semantic families, retaining presentations and all training seeds
-within each cluster; repeated seeds are not independent families.
+Resample whole semantic families, retaining presentations, modes and variants.
+Intervals condition on one fit and exclude training-seed variability.
 Failure to satisfy these rules is a reported outcome, not grounds to relax them.
 
 \paragraph{Development versus formal evidence.}
