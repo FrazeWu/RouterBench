@@ -1,0 +1,71 @@
+# Prospective StudySpec draft only. Do not use as a frozen formal protocol.
+# Values marked provisional in docs/architecture/ecpa-next-phase-preparation-20261101.md
+# require author review before any freeze or model collection.
+purpose: ecpa_independent_formal_study
+corpus_manifest: configs/defense/independent-corpus.yaml
+agent:
+  endpoint: http://127.0.0.1:8011/v1
+  model: RouteBench/Qwen3-14B
+  temperature: 0.2
+  max_completion_tokens: 768
+  context_tokens: 8192
+  timeout_seconds: 120
+task_model_path: /home/dasp/models/Qwen3-14B-aria
+compact:
+  model_path: /home/dasp/models/Qwen3-1.7B
+  device: cuda:0
+  context_tokens: 8192
+  max_new_tokens: 96
+lora:
+  seed: 29
+  updates: 64
+  gradient_accumulation: 1
+  learning_rate: 0.0001
+  rank: 8
+  alpha: 16
+  dropout: 0.0
+  target_modules: [q_proj, v_proj]
+budgets:
+  decisions: 12
+  agent_calls: 48
+  executions: 12
+  approvals: 4
+  previews: 256
+  searches: 2048
+  total: 8192
+comparison:
+  bootstrap_replicates: 10000
+  seed: 29
+  minimum_recovery_gain: 0.05
+  maximum_benign_loss: 0.02
+  minimum_independent_families: 20
+adapter_seeds: [29]
+presentations: 1
+episode_seed: 43
+arm_order_seed: 47
+state_selection_seed: 53
+continuation_seed: 59
+maximum_branch_states_per_parent: 2
+branch_repeats: 1
+modes: [text, structured]
+logging_uniform_weight: 0.5
+acquisition_call_limit: 75000
+acquisition_token_limit: 614400000
+resources:
+  gpu_ids: [0, 1]
+  task_agent_gpu: 1
+  maximum_celsius: 85
+  minimum_request_gap_seconds: 2
+  cooling_pause_celsius: 73
+  cooling_resume_celsius: 71
+  maximum_cooling_wait_seconds: 300
+training_acquisition: enumerate_each_train_task_transport_condition_once
+required_training_target_kinds: [allow, constrain, escalate, deny]
+comparator_selection: lowest_violations_then_highest_safe_completion_then_cost_on_tune
+comparison_schedule: seeded_arm_blocks_common_episode_seeds
+comparator_arms: [path_rule, per_action, compact_base]
+comparator_cost: family_mean_online_budget_units
+calibration_policy: audit_fixed_policy_no_selection_or_test_gate
+checkpoint_selection: single_prespecified_update_count
+precision_interpretation: retain_criteria_report_inconclusive
+structured_mechanism_claim: shared_proposal_substitution_no_holdout
