@@ -124,3 +124,31 @@ continuations.
 
 No source-review acceptance, corpus source creation, protocol freeze, model
 collection, training or GPU job was started in this preparation pass.
+
+## Source-audit follow-up, 2026-11-02
+
+The committed corpus at `52daae324b452e31c2c76963bcd651d07d5474f2` passed
+`scripts/audit_defense_corpus.py` as a source-only simulator audit. The report
+is retained under ignored `artifacts/private/ecpa-training-gap-audit-20261102-52daae3.json`.
+It checked all 29 tasks, 58 safe-path witnesses, 60 legitimate attack-prefix
+actions and 77 menu probes. It made no model calls and emitted no training
+labels. The corpus digest was
+`afd504aebda99216f1163475455b64654c8b968aa85a42335b06f1423650156a`.
+
+The audit confirms the authored-family counts remain 8/4/4/7 against targets
+12/4/4/40, with zero reviewed families and formal readiness false. Its public
+structure screen flags the five fixed-fixture training variants, the two test
+relational-migration tasks, and the two tuning approved-change tasks; these
+matches remain review prompts, not semantic certificates. A metadata inventory
+contains 776 legacy formal-test sources, but that count and keyword search do
+not substitute for task-by-task comparison. The selected historical comparisons
+in `defense-semantic-source-review.md` remain examples, not an exhaustive audit.
+
+The four missing training obligations are still authoring work, not accepted
+families. Do not assign them from template names or from the dependency screen.
+Each new source needs a concrete invariant and counterfactual, nearest current
+and legacy source comparisons, manually selected catalog bindings, and the
+simulator checks described above. Keep all independent-review fields pending
+until task authorship and an actual independent reviewer are documented. No
+protocol freeze, model collection, training or GPU work is authorized by this
+source audit.
