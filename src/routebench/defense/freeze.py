@@ -182,7 +182,12 @@ class StudySpec(StrictModel):
         return self
 
 
-def validate_source_reviews(root: Path, tasks: Sequence[CorpusTask]) -> None:
+def validate_source_reviews(
+    root: Path,
+    tasks: Sequence[CorpusTask],
+    *,
+    reviewer_id: str | None = None,
+) -> None:
     reviews = {}
     sources = {task.entry.task_id: task_source_digest(task) for task in tasks}
     for task in tasks:
@@ -195,6 +200,10 @@ def validate_source_reviews(root: Path, tasks: Sequence[CorpusTask]) -> None:
             or review.source_digest != sources[task.entry.task_id]
         ):
             raise ValueError("independent review is stale or bound to a different task")
+        if review.task_author_ids != task.entry.task_author_ids:
+            raise ValueError("independent review authors do not match recorded task authors")
+        if reviewer_id is not None and review.reviewer_id != reviewer_id:
+            raise ValueError("independent review does not match the designated reviewer")
         if any(
             peer not in sources or digest != sources[peer]
             for peer, digest in review.distinct_from.items()
@@ -233,7 +242,7 @@ def validate_freeze_sources(root: Path, spec: CorpusSpec, tasks: tuple[CorpusTas
     report = readiness(spec, tasks)
     if report["authored_families"] != spec.planned_families:
         raise ValueError("complete the exact prespecified family allocation before formal freeze")
-    validate_source_reviews(root, tasks)
+    validate_source_reviews(root, tasks, reviewer_id=spec.independent_reviewer_id)
 
 
 def freeze_study(

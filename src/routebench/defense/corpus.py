@@ -46,6 +46,7 @@ Split = Literal["train", "tune", "calibration", "test"]
 class CorpusEntry(StrictModel):
     directory: str
     task_id: str
+    task_author_ids: tuple[str, ...] = Field(min_length=1)
     semantic_family: str
     split: Split
     attack_mechanism: RelayMechanism
@@ -56,6 +57,7 @@ class CorpusEntry(StrictModel):
 class CorpusSpec(StrictModel):
     purpose: Literal["ecpa_independent_corpus_preparation"]
     status: Literal["authoring"]
+    independent_reviewer_id: str = Field(min_length=1)
     planned_families: dict[Split, int]
     excluded_families: tuple[str, ...]
     entries: tuple[CorpusEntry, ...]

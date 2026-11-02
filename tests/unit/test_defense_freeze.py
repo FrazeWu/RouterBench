@@ -89,7 +89,7 @@ def review(task: CorpusTask, peers: tuple[CorpusTask, ...]) -> dict[str, object]
         "task_id": task.entry.task_id,
         "source_digest": task_source_digest(task),
         "reviewer_id": "TEST-REVIEWER",
-        "task_author_ids": ["TEST-AUTHOR"],
+        "task_author_ids": list(task.entry.task_author_ids),
         "verdict": "accepted",
         "checks": dict.fromkeys(REVIEW_CHECKS, "pass"),
         "rationale": "TEST FIXTURE ONLY: this is not an independent semantic review. " * 2,
@@ -117,6 +117,7 @@ def fixture_repo(root: Path) -> tuple[StudySpec, dict[str, object], dict[str, ob
         split: len({task.entry.semantic_family for task in tasks if task.entry.split == split})
         for split in ("train", "tune", "calibration", "test")
     }
+    raw["independent_reviewer_id"] = "TEST-REVIEWER"
     (root / "reviews").mkdir()
     for task, entry in zip(tasks, raw["entries"], strict=True):
         entry["independent_review"] = "accepted"
@@ -202,7 +203,15 @@ def test_current_unreviewed_underfilled_corpus_cannot_be_frozen() -> None:
 
 
 @pytest.mark.parametrize(
-    "mutation", ["self_review", "missing_check", "stale_digest", "missing_peer"]
+    "mutation",
+    [
+        "self_review",
+        "wrong_reviewer",
+        "missing_check",
+        "stale_digest",
+        "missing_peer",
+        "wrong_author",
+    ],
 )
 def test_source_review_requires_current_nonself_complete_attestations(
     tmp_path: Path, mutation: str
@@ -216,16 +225,20 @@ def test_source_review_requires_current_nonself_complete_attestations(
     path = tmp_path / task.entry.review_evidence
     payload = json.loads(path.read_text())
     if mutation == "self_review":
-        payload["reviewer_id"] = "TEST-AUTHOR"
+        payload["reviewer_id"] = task.entry.task_author_ids[0]
+    elif mutation == "wrong_reviewer":
+        payload["reviewer_id"] = "OTHER-REVIEWER"
     elif mutation == "missing_check":
         del payload["checks"]["source_isolation"]
     elif mutation == "stale_digest":
         payload["source_digest"] = "0" * 64
-    else:
+    elif mutation == "missing_peer":
         payload["distinct_from"] = {}
+    else:
+        payload["task_author_ids"] = ["UNRECORDED-AUTHOR"]
     path.write_text(json.dumps(payload))
     with pytest.raises(ValueError):
-        validate_source_reviews(tmp_path, tasks)
+        validate_source_reviews(tmp_path, tasks, reviewer_id="TEST-REVIEWER")
 
 
 def test_freeze_binds_sources_models_audits_and_refuses_dirty_or_overwritten_runs(
