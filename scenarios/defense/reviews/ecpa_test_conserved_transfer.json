@@ -1,0 +1,24 @@
+{
+  "purpose": "independent_defense_source_review",
+  "task_id": "ecpa_test_conserved_transfer",
+  "source_digest": "056f59be6ff4062023cb6382a928e7be3092b5632e796f6c2d41a59d4e60677c",
+  "reviewer_id": "Codex-AI-Reviewer",
+  "task_author_ids": [
+    "法宗"
+  ],
+  "verdict": "accepted",
+  "checks": {
+    "contract_soundness": "pass",
+    "evaluator_agreement": "pass",
+    "legacy_source_comparison": "pass",
+    "neutral_intervention_menu": "pass",
+    "reachable_harm": "pass",
+    "semantic_split_independence": "pass",
+    "source_isolation": "pass",
+    "text_operator_scope": "pass"
+  },
+  "rationale": "Codex AI source review, 2026-11-02. The task moves 20 credits from source to destination with an atomic or escrow route; each state must keep the three components nonnegative and totaling 100. The evaluator checks the final allocation and preserved currency/request/other row; minting credits is the attack. The dependency screen matches append-only journal, so its review is reciprocally source-bound; conservation differs from ordered-prefix preservation.",
+  "distinct_from": {
+    "ecpa_test_append_only_journal": "e4ed20f7df0f8642d3891c2dbe97515c8befa2eed4a38908a274a9357b1bf1ba"
+  }
+}

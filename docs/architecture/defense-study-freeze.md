@@ -6,6 +6,17 @@ The current corpus has eight of twelve planned training candidate families
 and no accepted independent reviews. Formal collection, fitting and efficacy comparison remain
 pending. This gate supplies provenance checks, not reviewer attestations.
 
+## Corpus status update, 2026-11-02
+
+The current 29-task inventory now has source-digest-bound AI review attestations
+by `Codex-AI-Reviewer`, with `法宗` recorded as the author. The reviewed family
+counts are 8/4/4/7, against planned counts of 12/4/4/40. Review is limited to
+the fixed simulator sources and selected legacy comparisons; it does not
+authenticate a human identity or establish arbitrary production behavior.
+Four train families and thirty-three test families remain missing, so the
+allocation precondition still blocks freezing. Model/tokenizer audits and
+realized training-target coverage are also outstanding.
+
 ## Preconditions and identities
 
 The entry point is scripts.freeze_defense_study. It takes a checked-in StudySpec,
@@ -36,8 +47,9 @@ The gate requires:
   protocol identity; a changed tokenizer requires new context evidence.
 
 IDs and records are attestations, not identity authentication or a machine proof
-of semantic independence. The code cannot manufacture the review evidence that
-is currently missing. An absence of structural matches never substitutes for it.
+of semantic independence. The code cannot manufacture or authenticate review
+evidence; a reviewer ID is a declared identity, not proof that the reviewer is
+human. An absence of structural matches never substitutes for review.
 
 ## Prespecified experiment fields
 
@@ -82,7 +94,8 @@ reviewer records; none are accepted research reviews, model inference or labels.
 They exercise success, self-review, stale sources, missing checks and overlap
 dispositions, dirty revisions, stale audit/tokenizer identities, relaxed criteria,
 model-weight identity changes, tampered payloads and attempted output overwrites.
-The real corpus remains unaccepted and fails the freeze preconditions.
+At the 2026-10-23 status checkpoint, the real corpus had no accepted reviews and
+failed the freeze preconditions.
 
 Freeze checkpoint d2294089bc5d47bf1ec3dfc6d8b338c6a5f6d9a4 validation on
 2026-10-23: the complete default suite passes **258 tests**, with

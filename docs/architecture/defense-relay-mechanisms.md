@@ -57,7 +57,8 @@ bound on future generated drafts is claimed.
 ## First test-source candidates
 
 Two candidates are checked in, each with two safe paths and two legitimate
-prefix actions before the harmful action. Independent review remains pending.
+prefix actions before the harmful action. At the time this candidate note was
+recorded, independent review remained pending.
 
 - Serving replicas: the eventual required retirement must never leave all three
   replicas disabled. The evaluator counts actual enabled resources at each
@@ -82,4 +83,6 @@ screen. This is neither a full legacy-source audit nor independent acceptance.
 The forty-family test target is unchanged; seven candidate family labels (eight tasks) now exist.
 The later conservation, append-only, monotone-epoch, cumulative-disclosure,
 acyclic-forwarding and disjoint-reservation candidates reuse these two text operators;
-they do not introduce additional mechanism identities. All reviews remain pending.
+they do not introduce additional mechanism identities. Reviews were pending at
+this source-review checkpoint; the later AI review status is recorded in
+`defense-study-runbook.md`.

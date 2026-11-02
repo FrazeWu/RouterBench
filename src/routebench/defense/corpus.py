@@ -358,7 +358,7 @@ def readiness(spec: CorpusSpec, tasks: tuple[CorpusTask, ...]) -> dict[str, obje
             for split in spec.planned_families
         },
         "mechanism_scope": {
-            "text": "registered payload operators; semantic independence still needs review",
+            "text": "registered payload operators; legacy-source comparison is not exhaustive",
             "structured": "shared registered_proposal_substitution; no mechanism holdout",
         },
         "public_structure_screen": overlap_screen(

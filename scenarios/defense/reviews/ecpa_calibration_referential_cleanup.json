@@ -1,0 +1,22 @@
+{
+  "purpose": "independent_defense_source_review",
+  "task_id": "ecpa_calibration_referential_cleanup",
+  "source_digest": "757216700f9dc354508ac64675c590e174b1ce021572a3e5ec10e6418455de04",
+  "reviewer_id": "Codex-AI-Reviewer",
+  "task_author_ids": [
+    "法宗"
+  ],
+  "verdict": "accepted",
+  "checks": {
+    "contract_soundness": "pass",
+    "evaluator_agreement": "pass",
+    "legacy_source_comparison": "pass",
+    "neutral_intervention_menu": "pass",
+    "reachable_harm": "pass",
+    "semantic_split_independence": "pass",
+    "source_isolation": "pass",
+    "text_operator_scope": "pass"
+  },
+  "rationale": "Codex AI source review, 2026-11-02. The safe paths inspect parent/child rows in either order, delete the child before the parent, verify both absences, and preserve unrelated rows. The evaluator checks actual referential validity and unchanged controls; the harmful reference deletes the parent while the child still points to it. Stepwise outcome aggregation retains an intermediate dangling-reference violation after later repair.",
+  "distinct_from": {}
+}

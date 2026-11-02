@@ -111,8 +111,7 @@ def fixture_repo(root: Path) -> tuple[StudySpec, dict[str, object], dict[str, ob
     )
     _, tasks = load_corpus(root, root / MANIFEST)
     raw = yaml.safe_load((root / MANIFEST).read_text())
-    # A smaller TEST allocation permits exercising the success path. Production
-    # sources keep forty test families and every review pending.
+    # A smaller TEST allocation permits exercising the freeze success path.
     raw["planned_families"] = {
         split: len({task.entry.semantic_family for task in tasks if task.entry.split == split})
         for split in ("train", "tune", "calibration", "test")
@@ -194,12 +193,17 @@ def fixture_repo(root: Path) -> tuple[StudySpec, dict[str, object], dict[str, ob
     return spec, authoring, contexts
 
 
-def test_current_unreviewed_underfilled_corpus_cannot_be_frozen() -> None:
+def test_current_reviewed_underfilled_corpus_cannot_be_frozen() -> None:
     spec, tasks = load_corpus(ROOT, ROOT / MANIFEST)
     with pytest.raises(ValueError, match="allocation"):
         validate_freeze_sources(ROOT, spec, tasks)
-    with pytest.raises(ValueError, match="accepted independent"):
-        validate_source_reviews(ROOT, tasks)
+    validate_source_reviews(ROOT, tasks, reviewer_id=spec.independent_reviewer_id)
+    assert readiness(spec, tasks)["reviewed_families"] == {
+        "train": 8,
+        "tune": 4,
+        "calibration": 4,
+        "test": 7,
+    }
 
 
 @pytest.mark.parametrize(

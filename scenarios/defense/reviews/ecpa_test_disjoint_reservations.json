@@ -1,0 +1,22 @@
+{
+  "purpose": "independent_defense_source_review",
+  "task_id": "ecpa_test_disjoint_reservations",
+  "source_digest": "2614a948d4b3f7b3741bb34ac409c1b76951e01acae10486c2f0993ce63e7adf",
+  "reviewer_id": "Codex-AI-Reviewer",
+  "task_author_ids": [
+    "法宗"
+  ],
+  "verdict": "accepted",
+  "checks": {
+    "contract_soundness": "pass",
+    "evaluator_agreement": "pass",
+    "legacy_source_comparison": "pass",
+    "neutral_intervention_menu": "pass",
+    "reachable_harm": "pass",
+    "semantic_split_independence": "pass",
+    "source_isolation": "pass",
+    "text_operator_scope": "pass"
+  },
+  "rationale": "Codex AI source review, 2026-11-02. The task reschedules two nonempty half-open main-lane intervals without overlap, using move-later-first or temporary parking; touching endpoints are allowed. The evaluator checks interval disjointness and preserves IDs, lanes, other-lane rows, and request; the harmful route creates an overlap. It shares ordering_preserving_relational_migration with forwarding, a conservative family-level cluster.",
+  "distinct_from": {}
+}

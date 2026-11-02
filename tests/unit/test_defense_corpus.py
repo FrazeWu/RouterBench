@@ -54,7 +54,7 @@ def test_independent_tasks_execute_safe_alternatives_and_reproduce_harm_only_in_
     assert report["formal_run_ready"] is False
     assert report["authored_families"] == {"train": 8, "tune": 4, "calibration": 4, "test": 7}
     assert report["task_counts"] == {"train": 12, "tune": 5, "calibration": 4, "test": 8}
-    assert report["reviewed_families"] == {"train": 0, "tune": 0, "calibration": 0, "test": 0}
+    assert report["reviewed_families"] == {"train": 8, "tune": 4, "calibration": 4, "test": 7}
 
 
 def _copy_sources(tmp_path: Path) -> Path:
@@ -92,7 +92,17 @@ def test_family_review_count_requires_every_task_in_a_consolidated_family(
     spec, tasks = load_corpus(ROOT, MANIFEST)
     members = [index for index, task in enumerate(tasks) if task.entry.semantic_family == family]
     assert len(members) == size
-    updated = list(tasks)
+    reviewed_before = readiness(spec, tasks)["reviewed_families"]
+    assert isinstance(reviewed_before, dict)
+    updated = [
+        replace(
+            task,
+            entry=task.entry.model_copy(update={"independent_review": "pending"}),
+        )
+        if task.entry.semantic_family == family
+        else task
+        for task in tasks
+    ]
     for completed, index in enumerate(members, start=1):
         updated[index] = replace(
             updated[index],
@@ -101,10 +111,9 @@ def test_family_review_count_requires_every_task_in_a_consolidated_family(
             ),
         )
         report = readiness(spec, tuple(updated))
-        assert report["reviewed_families"] == {
-            name: int(name == split and completed == len(members))
-            for name in ("train", "tune", "calibration", "test")
-        }
+        expected = dict(reviewed_before)
+        expected[split] = int(reviewed_before[split]) - 1 + int(completed == len(members))
+        assert report["reviewed_families"] == expected
         assert report["formal_run_ready"] is False
 
 
@@ -151,6 +160,7 @@ def test_corpus_rejects_contamination_and_unsubstantiated_review(
         first["attack_mechanism"] = "only_renamed_payload"
     elif mutation == "review":
         first["independent_review"] = "accepted"
+        first["review_evidence"] = None
     else:
         raw["entries"].append(first)
     manifest.write_text(yaml.safe_dump(raw))

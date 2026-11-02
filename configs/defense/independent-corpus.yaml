@@ -1,7 +1,7 @@
 # Prospective authoring inventory; not a frozen formal protocol.
 purpose: ecpa_independent_corpus_preparation
 status: authoring
-independent_reviewer_id: 玉娇
+independent_reviewer_id: Codex-AI-Reviewer
 planned_families:
   train: 12
   tune: 4
@@ -17,200 +17,229 @@ entries:
   semantic_family: settlement_reconciliation
   split: train
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_settlement_reconciliation.json
 - directory: scenarios/defense/train/ecpa_train_retry_repair
   task_id: ecpa_train_retry_repair
   task_author_ids: [法宗]
   semantic_family: retry_health_gated_change
   split: train
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_retry_repair.json
 - directory: scenarios/defense/train/ecpa_train_incident_preservation
   task_id: ecpa_train_incident_preservation
   task_author_ids: [法宗]
   semantic_family: immutable_incident_copy_review
   split: train
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_incident_preservation.json
 - directory: scenarios/defense/train/ecpa_train_scheduler_handover
   task_id: ecpa_train_scheduler_handover
   task_author_ids: [法宗]
   semantic_family: pause_before_enable_handover
   split: train
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_scheduler_handover.json
 - directory: scenarios/defense/train/ecpa_train_retention_hold
   task_id: ecpa_train_retention_hold
   task_author_ids: [法宗]
   semantic_family: retention_hold_intersection
   split: train
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_retention_hold.json
 - directory: scenarios/defense/train/ecpa_train_consent_erasure
   task_id: ecpa_train_consent_erasure
   task_author_ids: [法宗]
   semantic_family: revoke_before_subject_erasure
   split: train
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_consent_erasure.json
 - directory: scenarios/defense/train/ecpa_train_attested_promotion
   task_id: ecpa_train_attested_promotion
   task_author_ids: [法宗]
   semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_attested_promotion.json
 - directory: scenarios/defense/train/ecpa_train_snapshot_restore
   task_id: ecpa_train_snapshot_restore
   task_author_ids: [法宗]
   semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_snapshot_restore.json
 - directory: scenarios/defense/train/ecpa_train_role_reduction
   task_id: ecpa_train_role_reduction
   task_author_ids: [法宗]
   semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_role_reduction.json
 - directory: scenarios/defense/train/ecpa_train_duplicate_repair
   task_id: ecpa_train_duplicate_repair
   task_author_ids: [法宗]
   semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_duplicate_repair.json
 - directory: scenarios/defense/train/ecpa_train_readonly_diagnosis
   task_id: ecpa_train_readonly_diagnosis
   task_author_ids: [法宗]
   semantic_family: diagnose_without_remediation
   split: train
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_readonly_diagnosis.json
 - directory: scenarios/defense/train/ecpa_train_contract_documentation
   task_id: ecpa_train_contract_documentation
   task_author_ids: [法宗]
   semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_contract_documentation.json
 - directory: scenarios/defense/tune/ecpa_tune_generation_revalidation
   task_id: ecpa_tune_generation_revalidation
   task_author_ids: [法宗]
   semantic_family: mutation_invalidates_verification
   split: tune
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_tune_generation_revalidation.json
 - directory: scenarios/defense/tune/ecpa_tune_batch_scope
   task_id: ecpa_tune_batch_scope
   task_author_ids: [法宗]
   semantic_family: indivisible_batch_output_scope
   split: tune
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_tune_batch_scope.json
 - directory: scenarios/defense/tune/ecpa_tune_projected_delivery
   task_id: ecpa_tune_projected_delivery
   task_author_ids: [法宗]
   semantic_family: payload_projection_before_approved_delivery
   split: tune
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_tune_projected_delivery.json
 - directory: scenarios/defense/tune/ecpa_tune_version_pair
   task_id: ecpa_tune_version_pair
   task_author_ids: [法宗]
   semantic_family: two_scope_approved_change
   split: tune
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_tune_version_pair.json
 - directory: scenarios/defense/tune/ecpa_tune_separate_approvals
   task_id: ecpa_tune_separate_approvals
   task_author_ids: [法宗]
   semantic_family: two_scope_approved_change
   split: tune
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_tune_separate_approvals.json
 - directory: scenarios/defense/calibration/ecpa_calibration_once_dispatch
   task_id: ecpa_calibration_once_dispatch
   task_author_ids: [法宗]
   semantic_family: at_most_once_nonidempotent_dispatch
   split: calibration
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_calibration_once_dispatch.json
 - directory: scenarios/defense/calibration/ecpa_calibration_bounded_fanout
   task_id: ecpa_calibration_bounded_fanout
   task_author_ids: [法宗]
   semantic_family: explicit_target_set_fanout
   split: calibration
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_calibration_bounded_fanout.json
 - directory: scenarios/defense/calibration/ecpa_calibration_lease_cleanup
   task_id: ecpa_calibration_lease_cleanup
   task_author_ids: [法宗]
   semantic_family: release_temporary_authority_after_work
   split: calibration
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_calibration_lease_cleanup.json
 - directory: scenarios/defense/calibration/ecpa_calibration_referential_cleanup
   task_id: ecpa_calibration_referential_cleanup
   task_author_ids: [法宗]
   semantic_family: dependent_before_parent_erasure
   split: calibration
   attack_mechanism: authorization_pretext
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_calibration_referential_cleanup.json
 - directory: scenarios/defense/test/ecpa_test_replica_availability
   task_id: ecpa_test_replica_availability
   task_author_ids: [法宗]
   semantic_family: at_least_one_serving_replica
   split: test
   attack_mechanism: appended_completion_directive
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_replica_availability.json
 - directory: scenarios/defense/test/ecpa_test_reviewer_independence
   task_id: ecpa_test_reviewer_independence
   task_author_ids: [法宗]
   semantic_family: distinct_author_and_reviewer
   split: test
   attack_mechanism: forged_observation_envelope
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_reviewer_independence.json
 - directory: scenarios/defense/test/ecpa_test_conserved_transfer
   task_id: ecpa_test_conserved_transfer
   task_author_ids: [法宗]
   semantic_family: conserved_allocation_transfer
   split: test
   attack_mechanism: appended_completion_directive
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_conserved_transfer.json
 - directory: scenarios/defense/test/ecpa_test_append_only_journal
   task_id: ecpa_test_append_only_journal
   task_author_ids: [法宗]
   semantic_family: append_only_audit_prefix
   split: test
   attack_mechanism: forged_observation_envelope
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_append_only_journal.json
 - directory: scenarios/defense/test/ecpa_test_monotone_release_epoch
   task_id: ecpa_test_monotone_release_epoch
   task_author_ids: [法宗]
   semantic_family: monotone_release_epoch
   split: test
   attack_mechanism: forged_observation_envelope
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_monotone_release_epoch.json
 - directory: scenarios/defense/test/ecpa_test_cumulative_disclosure
   task_id: ecpa_test_cumulative_disclosure
   task_author_ids: [法宗]
   semantic_family: cumulative_distinct_field_budget
   split: test
   attack_mechanism: appended_completion_directive
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_cumulative_disclosure.json
 - directory: scenarios/defense/test/ecpa_test_acyclic_forwarding
   task_id: ecpa_test_acyclic_forwarding
   task_author_ids: [法宗]
   semantic_family: ordering_preserving_relational_migration
   split: test
   attack_mechanism: forged_observation_envelope
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_acyclic_forwarding.json
 - directory: scenarios/defense/test/ecpa_test_disjoint_reservations
   task_id: ecpa_test_disjoint_reservations
   task_author_ids: [法宗]
   semantic_family: ordering_preserving_relational_migration
   split: test
   attack_mechanism: appended_completion_directive
-  independent_review: pending
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_disjoint_reservations.json

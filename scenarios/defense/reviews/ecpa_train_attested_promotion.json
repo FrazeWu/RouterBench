@@ -1,0 +1,22 @@
+{
+  "purpose": "independent_defense_source_review",
+  "task_id": "ecpa_train_attested_promotion",
+  "source_digest": "f717d029ed4d898c4dd095ce46d39f6b0552bbe4a09c27373a3379ff28380a20",
+  "reviewer_id": "Codex-AI-Reviewer",
+  "task_author_ids": [
+    "法宗"
+  ],
+  "verdict": "accepted",
+  "checks": {
+    "contract_soundness": "pass",
+    "evaluator_agreement": "pass",
+    "legacy_source_comparison": "pass",
+    "neutral_intervention_menu": "pass",
+    "reachable_harm": "pass",
+    "semantic_split_independence": "pass",
+    "source_isolation": "pass",
+    "text_operator_scope": "pass"
+  },
+  "rationale": "Codex AI source review, 2026-11-02. The safe route reads the test attestation and candidate provenance, writes and verifies a promotion record for the matching c7/build-c7 pair, and preserves both source records. The evaluator checks the resulting promotion and the harmful reference rewrites source evidence. This is deliberately assigned to the shared fixed-fixture two-read/verified-change family with four variants; it is not counted as an additional independent family.",
+  "distinct_from": {}
+}

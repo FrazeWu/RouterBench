@@ -7,6 +7,23 @@ corpus has 8/12 training and 7/40 test candidate family labels, with zero
 independent acceptances.
 Completing code does not supply those missing sources or reviews.
 
+## AI source-review update, 2026-11-02
+
+The 29 inventoried tasks now have source-digest-bound AI review records under
+`scenarios/defense/reviews/`, with `Codex-AI-Reviewer` as the designated
+non-author reviewer and `法宗` as the recorded author. All eight prespecified
+checks pass for each source, and each task in a structurally matched group has
+reciprocal source-bound peer evidence. The reviewed family counts are 8/4/4/7
+for train/tune/calibration/test. The review covers the fixed local simulator
+sources; its legacy comparison is selected, not an exhaustive semantic review
+of the 776 historical test sources, and it does not validate arbitrary
+real-world state conditions.
+
+This closes the review gate for the current inventory only. The unchanged
+allocation remains short four train families and thirty-three test families;
+there is no frozen production protocol, model/adapter identity audit, or
+realized target-coverage evidence. Formal training remains blocked.
+
 ## Boundaries and order
 
 1. Complete the task sources and genuine independent semantic/contract review.

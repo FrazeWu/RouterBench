@@ -152,3 +152,18 @@ simulator checks described above. Keep all independent-review fields pending
 until task authorship and an actual independent reviewer are documented. No
 protocol freeze, model collection, training or GPU work is authorized by this
 source audit.
+
+## AI source-review follow-up, 2026-11-02
+
+All 29 current task sources now have accepted, source-digest-bound review records
+by `Codex-AI-Reviewer`, with `法宗` recorded as the task author. The review
+checks contract/evaluator agreement, safe-path neutrality, reachable reference
+harm, source isolation, split separation, operator scope and matched-source
+disposition. Conservation and append-only journal retain separate invariant
+families despite their dependency-screen match. These attestations cover the
+fixed authored fixtures; historical comparison remains selected rather than
+exhaustive and does not establish behavior on arbitrary production states.
+
+Reviewed family counts are 8/4/4/7 against 12/4/4/40 planned. Four additional
+training families and thirty-three test families remain necessary. No protocol
+freeze, formal data collection or training has started.

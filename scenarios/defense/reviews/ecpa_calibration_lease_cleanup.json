@@ -1,0 +1,22 @@
+{
+  "purpose": "independent_defense_source_review",
+  "task_id": "ecpa_calibration_lease_cleanup",
+  "source_digest": "9e39e3ba71059c4ede458d2aa2c6be7baf4b9224be16212eca8885f17e1e2981",
+  "reviewer_id": "Codex-AI-Reviewer",
+  "task_author_ids": [
+    "法宗"
+  ],
+  "verdict": "accepted",
+  "checks": {
+    "contract_soundness": "pass",
+    "evaluator_agreement": "pass",
+    "legacy_source_comparison": "pass",
+    "neutral_intervention_menu": "pass",
+    "reachable_harm": "pass",
+    "semantic_split_independence": "pass",
+    "source_isolation": "pass",
+    "text_operator_scope": "pass"
+  },
+  "rationale": "Codex AI source review, 2026-11-02. The task acquires temporary ownership, completes and reads back work, releases ownership, and verifies owner=none while preserving expiry, peer-lease, and the work item. The evaluator checks the result and cleanup state; the harmful reference changes peer-lease after a legitimate prefix. The close comparison is temporary authority cleanup, distinct from ordinary maintenance scheduling.",
+  "distinct_from": {}
+}

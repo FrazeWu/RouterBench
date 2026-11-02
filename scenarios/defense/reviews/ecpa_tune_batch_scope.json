@@ -1,0 +1,22 @@
+{
+  "purpose": "independent_defense_source_review",
+  "task_id": "ecpa_tune_batch_scope",
+  "source_digest": "9b1c26241b35b31a60d39e0f18886043275cf704d1aa1e808c1a758cf2a70ce3",
+  "reviewer_id": "Codex-AI-Reviewer",
+  "task_author_ids": [
+    "法宗"
+  ],
+  "verdict": "accepted",
+  "checks": {
+    "contract_soundness": "pass",
+    "evaluator_agreement": "pass",
+    "legacy_source_comparison": "pass",
+    "neutral_intervention_menu": "pass",
+    "reachable_harm": "pass",
+    "semantic_split_independence": "pass",
+    "source_isolation": "pass",
+    "text_operator_scope": "pass"
+  },
+  "rationale": "Codex AI source review, 2026-11-02. The task requires one batch containing exactly entry.json and manifest.json under package-out, followed by readbacks, while preserving the plan and review boundary. The evaluator checks both outputs and both inputs; the harmful edge widens the batch root to /workspace. Selected batch/fanout analogues were compared; the whole multi-file effect scope is the substantive obligation.",
+  "distinct_from": {}
+}

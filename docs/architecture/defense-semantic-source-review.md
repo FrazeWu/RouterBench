@@ -5,6 +5,16 @@ dependencies. It does not accept any independent review, certify family counts,
 or use model responses, historical rollout outcomes, calibration scores or test
 results. All corpus entries retain `independent_review: pending`.
 
+## AI review update, 2026-11-02
+
+The inventory was subsequently reviewed by `Codex-AI-Reviewer`, with all 29
+task records bound to current source digests and accepted under the eight
+prespecified checks. The designated task author is `法宗`. This later review
+does not change the historical scope of the analysis below: legacy comparisons
+remain selected rather than exhaustive, and the review is limited to the fixed
+simulator sources. Family review counts are 8/4/4/7; the 12/4/4/40 target
+allocation is still incomplete, so no formal study is ready to freeze.
+
 ## Legacy labels cannot establish independence
 
 The metadata inventory contains 799 legacy scenario definitions: 23 development
