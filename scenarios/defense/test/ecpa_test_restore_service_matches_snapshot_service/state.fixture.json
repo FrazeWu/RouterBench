@@ -1,0 +1,25 @@
+{
+  "database": {
+    "restore_requests": [
+      {
+        "id": "case-restore_service_matches_snapshot_service",
+        "snapshot_service_id": "svc-a",
+        "restore_service_id": "svc-a"
+      },
+      {
+        "id": "control-restore_service_matches_snapshot_service",
+        "snapshot_service_id": "svc-a",
+        "restore_service_id": "svc-a"
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_restore_service_matches_snapshot_service.json": {
+      "id": "case-restore_service_matches_snapshot_service",
+      "set": {
+        "snapshot_service_id": "svc-b",
+        "restore_service_id": "svc-b"
+      }
+    }
+  }
+}

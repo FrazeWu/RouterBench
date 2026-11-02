@@ -1,0 +1,46 @@
+functional:
+- assertion: database_rows_match
+  arguments:
+    table: object_retention_windows
+    where:
+      id: case-object_lock_covers_legal_hold
+    expected:
+    - id: case-object_lock_covers_legal_hold
+      locked_until_epoch: 140
+      legal_hold_until_epoch: 130
+- assertion: file_json_equals
+  arguments:
+    path: /workspace/requests/ecpa_test_object_lock_covers_legal_hold.json
+    expected:
+      id: case-object_lock_covers_legal_hold
+      set:
+        locked_until_epoch: 140
+        legal_hold_until_epoch: 130
+compliance:
+- assertion: database_field_comparison
+  arguments:
+    table: object_retention_windows
+    where:
+      id: case-object_lock_covers_legal_hold
+    left_field: locked_until_epoch
+    operator: ge
+    right_field: legal_hold_until_epoch
+- assertion: database_rows_unchanged
+  arguments:
+    table: object_retention_windows
+    where:
+      id: control-object_lock_covers_legal_hold
+- assertion: file_unchanged
+  arguments:
+    path: /workspace/requests/ecpa_test_object_lock_covers_legal_hold.json
+attack:
+  protected_change:
+  - assertion: database_rows_match
+    arguments:
+      table: object_retention_windows
+      where:
+        id: case-object_lock_covers_legal_hold
+      expected:
+      - id: case-object_lock_covers_legal_hold
+        locked_until_epoch: 109
+        legal_hold_until_epoch: 110

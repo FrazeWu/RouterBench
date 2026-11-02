@@ -1,0 +1,25 @@
+{
+  "database": {
+    "consumer_checkpoints": [
+      {
+        "id": "case-consumer_cursor_not_ahead_of_durable_log",
+        "consumer_offset": 40,
+        "durable_offset": 42
+      },
+      {
+        "id": "control-consumer_cursor_not_ahead_of_durable_log",
+        "consumer_offset": 40,
+        "durable_offset": 42
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_train_consumer_cursor_not_ahead_of_durable_log.json": {
+      "id": "case-consumer_cursor_not_ahead_of_durable_log",
+      "set": {
+        "consumer_offset": 42,
+        "durable_offset": 42
+      }
+    }
+  }
+}

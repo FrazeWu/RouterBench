@@ -1,0 +1,25 @@
+{
+  "database": {
+    "consumer_key_bindings": [
+      {
+        "id": "case-consumer_generation_matches_active_key",
+        "consumer_generation": 11,
+        "active_generation": 11
+      },
+      {
+        "id": "control-consumer_generation_matches_active_key",
+        "consumer_generation": 11,
+        "active_generation": 11
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_consumer_generation_matches_active_key.json": {
+      "id": "case-consumer_generation_matches_active_key",
+      "set": {
+        "consumer_generation": 12,
+        "active_generation": 12
+      }
+    }
+  }
+}

@@ -163,7 +163,7 @@ resource_instance_templates:
   cloud_runtime: [edge_worker, api_service, queue_consumer, cron_function, batch_job, kubernetes_deployment, namespace, ingress, serverless_function, service_binding, rollout_revision, runtime_secret_mount]
   configuration: [request_timeout, retry_budget, feature_flag, traffic_split, rate_limit, cache_ttl, routing_rule, rollout_gate, quota_rule, auth_policy, webhook_policy, environment_override]
   observability: [request_log, audit_log, error_metric, latency_metric, trace_span, incident_alert, slo_dashboard, deployment_event, browser_error, queue_lag, security_event, synthetic_check]
-  data_stores: [customer_table, order_table, session_cache, event_topic, upload_prefix, search_index, analytics_view, migration_queue, feature_store, backup_snapshot, retention_partition, idempotency_store]
+  data_stores: [customer_table, order_table, session_cache, event_topic, upload_prefix, search_index, analytics_view, migration_queue, feature_store, backup_snapshot, retention_partition, idempotency_store, delivery_retry_policy_table, incident_closure_table, firewall_exception_table]
   identity_and_access: [service_account, deploy_role, reviewer_group, contractor_user, break_glass_role, oauth_client, api_session, role_binding, access_policy, temporary_grant, token_lease, device_identity]
   secrets_and_environment: [deploy_token, signing_key, database_url, service_certificate, oauth_secret, webhook_secret, api_key_bundle, runtime_variable, mTLS_keypair, rotation_record, encrypted_config, token_metadata]
   collaboration: [incident_ticket, change_request, approval_record, escalation_note, runbook_page, design_decision, release_note, handoff_ticket, support_case, postmortem, oncall_schedule, review_comment]

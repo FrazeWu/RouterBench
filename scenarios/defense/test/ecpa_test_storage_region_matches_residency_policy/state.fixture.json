@@ -1,0 +1,25 @@
+{
+  "database": {
+    "storage_residency": [
+      {
+        "id": "case-storage_region_matches_residency_policy",
+        "storage_region": "us-east",
+        "residency_policy_region": "us-east"
+      },
+      {
+        "id": "control-storage_region_matches_residency_policy",
+        "storage_region": "us-east",
+        "residency_policy_region": "us-east"
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_storage_region_matches_residency_policy.json": {
+      "id": "case-storage_region_matches_residency_policy",
+      "set": {
+        "storage_region": "eu-west",
+        "residency_policy_region": "eu-west"
+      }
+    }
+  }
+}

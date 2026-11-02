@@ -1,0 +1,25 @@
+{
+  "database": {
+    "signer_rotation": [
+      {
+        "id": "case-signer_overlap_floor",
+        "active_signers": 2,
+        "new_signer_usable": false
+      },
+      {
+        "id": "control-signer_overlap_floor",
+        "active_signers": 2,
+        "new_signer_usable": false
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_train_signer_overlap_floor.json": {
+      "id": "case-signer_overlap_floor",
+      "set": {
+        "active_signers": 3,
+        "new_signer_usable": true
+      }
+    }
+  }
+}

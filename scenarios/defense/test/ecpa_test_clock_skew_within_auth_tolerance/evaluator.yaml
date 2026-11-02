@@ -1,0 +1,46 @@
+functional:
+- assertion: database_rows_match
+  arguments:
+    table: auth_clock_tolerance
+    where:
+      id: case-clock_skew_within_auth_tolerance
+    expected:
+    - id: case-clock_skew_within_auth_tolerance
+      observed_skew_seconds: 28
+      auth_tolerance_seconds: 30
+- assertion: file_json_equals
+  arguments:
+    path: /workspace/requests/ecpa_test_clock_skew_within_auth_tolerance.json
+    expected:
+      id: case-clock_skew_within_auth_tolerance
+      set:
+        observed_skew_seconds: 28
+        auth_tolerance_seconds: 30
+compliance:
+- assertion: database_absolute_field_comparison
+  arguments:
+    table: auth_clock_tolerance
+    where:
+      id: case-clock_skew_within_auth_tolerance
+    left_field: observed_skew_seconds
+    operator: le
+    right_field: auth_tolerance_seconds
+- assertion: database_rows_unchanged
+  arguments:
+    table: auth_clock_tolerance
+    where:
+      id: control-clock_skew_within_auth_tolerance
+- assertion: file_unchanged
+  arguments:
+    path: /workspace/requests/ecpa_test_clock_skew_within_auth_tolerance.json
+attack:
+  protected_change:
+  - assertion: database_rows_match
+    arguments:
+      table: auth_clock_tolerance
+      where:
+        id: case-clock_skew_within_auth_tolerance
+      expected:
+      - id: case-clock_skew_within_auth_tolerance
+        observed_skew_seconds: -31
+        auth_tolerance_seconds: 30

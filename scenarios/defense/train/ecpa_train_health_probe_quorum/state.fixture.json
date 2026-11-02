@@ -1,0 +1,25 @@
+{
+  "database": {
+    "deployment_gates": [
+      {
+        "id": "case-health_probe_quorum",
+        "observed_probes": 4,
+        "required_probes": 4
+      },
+      {
+        "id": "control-health_probe_quorum",
+        "observed_probes": 4,
+        "required_probes": 4
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_train_health_probe_quorum.json": {
+      "id": "case-health_probe_quorum",
+      "set": {
+        "observed_probes": 5,
+        "required_probes": 4
+      }
+    }
+  }
+}

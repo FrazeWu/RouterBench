@@ -1,0 +1,25 @@
+{
+  "database": {
+    "object_retention_windows": [
+      {
+        "id": "case-object_lock_covers_legal_hold",
+        "locked_until_epoch": 120,
+        "legal_hold_until_epoch": 110
+      },
+      {
+        "id": "control-object_lock_covers_legal_hold",
+        "locked_until_epoch": 120,
+        "legal_hold_until_epoch": 110
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_object_lock_covers_legal_hold.json": {
+      "id": "case-object_lock_covers_legal_hold",
+      "set": {
+        "locked_until_epoch": 140,
+        "legal_hold_until_epoch": 130
+      }
+    }
+  }
+}

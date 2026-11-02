@@ -1,0 +1,25 @@
+{
+  "database": {
+    "quota_thresholds": [
+      {
+        "id": "case-soft_quota_below_hard_quota",
+        "soft_limit": 80,
+        "hard_limit": 100
+      },
+      {
+        "id": "control-soft_quota_below_hard_quota",
+        "soft_limit": 80,
+        "hard_limit": 100
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_soft_quota_below_hard_quota.json": {
+      "id": "case-soft_quota_below_hard_quota",
+      "set": {
+        "soft_limit": 95,
+        "hard_limit": 100
+      }
+    }
+  }
+}

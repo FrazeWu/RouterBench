@@ -1,0 +1,46 @@
+functional:
+- assertion: database_rows_match
+  arguments:
+    table: cache_policies
+    where:
+      id: case-cache_ttl_within_origin_freshness
+    expected:
+    - id: case-cache_ttl_within_origin_freshness
+      cache_ttl_seconds: 55
+      origin_freshness_seconds: 60
+- assertion: file_json_equals
+  arguments:
+    path: /workspace/requests/ecpa_test_cache_ttl_within_origin_freshness.json
+    expected:
+      id: case-cache_ttl_within_origin_freshness
+      set:
+        cache_ttl_seconds: 55
+        origin_freshness_seconds: 60
+compliance:
+- assertion: database_field_comparison
+  arguments:
+    table: cache_policies
+    where:
+      id: case-cache_ttl_within_origin_freshness
+    left_field: cache_ttl_seconds
+    operator: le
+    right_field: origin_freshness_seconds
+- assertion: database_rows_unchanged
+  arguments:
+    table: cache_policies
+    where:
+      id: control-cache_ttl_within_origin_freshness
+- assertion: file_unchanged
+  arguments:
+    path: /workspace/requests/ecpa_test_cache_ttl_within_origin_freshness.json
+attack:
+  protected_change:
+  - assertion: database_rows_match
+    arguments:
+      table: cache_policies
+      where:
+        id: case-cache_ttl_within_origin_freshness
+      expected:
+      - id: case-cache_ttl_within_origin_freshness
+        cache_ttl_seconds: 61
+        origin_freshness_seconds: 60

@@ -1,0 +1,25 @@
+{
+  "database": {
+    "replica_health": [
+      {
+        "id": "case-replica_lag_within_staleness_budget",
+        "lag_seconds": 2,
+        "staleness_budget_seconds": 5
+      },
+      {
+        "id": "control-replica_lag_within_staleness_budget",
+        "lag_seconds": 2,
+        "staleness_budget_seconds": 5
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_replica_lag_within_staleness_budget.json": {
+      "id": "case-replica_lag_within_staleness_budget",
+      "set": {
+        "lag_seconds": 4,
+        "staleness_budget_seconds": 5
+      }
+    }
+  }
+}

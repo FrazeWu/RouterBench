@@ -1,0 +1,25 @@
+{
+  "database": {
+    "credential_deactivation": [
+      {
+        "id": "case-revocation_count_at_least_active_count",
+        "revoked_credentials": 3,
+        "active_credentials": 3
+      },
+      {
+        "id": "control-revocation_count_at_least_active_count",
+        "revoked_credentials": 3,
+        "active_credentials": 3
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_revocation_count_at_least_active_count.json": {
+      "id": "case-revocation_count_at_least_active_count",
+      "set": {
+        "revoked_credentials": 4,
+        "active_credentials": 4
+      }
+    }
+  }
+}

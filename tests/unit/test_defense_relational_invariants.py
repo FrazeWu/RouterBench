@@ -41,6 +41,71 @@ def test_conserved_transfer_checks_real_balances_and_all_intermediate_states() -
     assert task.outcome(state).violation
 
 
+def test_numeric_field_comparison_checks_bounds_and_rejects_invalid_values() -> None:
+    _, tasks = load_corpus(ROOT, ROOT / "configs/defense/independent-corpus.yaml")
+    task = next(task for task in tasks if task.entry.task_id == "ecpa_test_conserved_transfer")
+    check = AssertionSpec(
+        assertion="database_field_comparison",
+        arguments={
+            "table": "allocations",
+            "where": {"id": "a1"},
+            "left_field": "escrow",
+            "operator": "le",
+            "right_value": 20,
+        },
+    )
+    state = task.state()
+    assert evaluate_assertion(check, state)
+    state.database["allocations"][0]["escrow"] = 21
+    assert not evaluate_assertion(check, state)
+    state.database["allocations"][0]["escrow"] = True
+    assert not evaluate_assertion(check, state)
+
+
+def test_absolute_field_comparison_checks_both_skew_directions() -> None:
+    _, tasks = load_corpus(ROOT, ROOT / "configs/defense/independent-corpus.yaml")
+    task = next(
+        task for task in tasks if task.entry.task_id == "ecpa_test_clock_skew_within_auth_tolerance"
+    )
+    check = AssertionSpec(
+        assertion="database_absolute_field_comparison",
+        arguments={
+            "table": "auth_clock_tolerance",
+            "where": {"id": "case-clock_skew_within_auth_tolerance"},
+            "left_field": "observed_skew_seconds",
+            "right_field": "auth_tolerance_seconds",
+        },
+    )
+    state = task.state()
+    assert evaluate_assertion(check, state)
+    state.database["auth_clock_tolerance"][0]["observed_skew_seconds"] = -31
+    assert not evaluate_assertion(check, state)
+    state.database["auth_clock_tolerance"][0]["observed_skew_seconds"] = -28
+    assert evaluate_assertion(check, state)
+
+
+@pytest.mark.parametrize(
+    "arguments",
+    [
+        {"left_field": "source", "operator": "le"},
+        {"left_field": "source", "right_field": "destination", "right_value": 1, "operator": "le"},
+        {"left_field": "source", "right_value": True, "operator": "le"},
+        {"left_field": "source", "right_value": 1, "operator": "approx"},
+    ],
+)
+def test_numeric_field_comparison_rejects_ambiguous_arguments(
+    arguments: dict[str, object],
+) -> None:
+    _, tasks = load_corpus(ROOT, ROOT / "configs/defense/independent-corpus.yaml")
+    task = next(task for task in tasks if task.entry.task_id == "ecpa_test_conserved_transfer")
+    check = AssertionSpec(
+        assertion="database_field_comparison",
+        arguments={"table": "allocations", **arguments},
+    )
+    with pytest.raises(ValueError, match="one right operand"):
+        evaluate_assertion(check, task.state())
+
+
 @pytest.mark.parametrize("value", [True, 60.0, "60", float("nan"), None])
 def test_conservation_rejects_noninteger_or_missing_balance_values(value: object) -> None:
     _, tasks = load_corpus(ROOT, ROOT / "configs/defense/independent-corpus.yaml")

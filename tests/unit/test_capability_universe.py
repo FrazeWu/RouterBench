@@ -25,8 +25,8 @@ def test_capability_universe_is_internally_consistent() -> None:
     assert summary["status"] == "valid"
     assert summary["runtime_supported_providers"] == 36
     assert summary["modeled_only_providers"] == 19
-    assert summary["materialized_resource_instances"] == 5_184
-    assert summary["materialized_provider_resource_mode_bindings"] == 57_024
+    assert summary["materialized_resource_instances"] == 5_256
+    assert summary["materialized_provider_resource_mode_bindings"] == 58_320
 
 
 def test_binding_pool_materializes_a_concrete_author_choice() -> None:
@@ -38,7 +38,7 @@ def test_binding_pool_materializes_a_concrete_author_choice() -> None:
     assert first_binding == (
         "policy_mcp::configuration.request_timeout.product_api.development.us_east::read"
     )
-    assert resource_count == 5_184
+    assert resource_count == 5_256
 
 
 def test_binding_selection_rejects_a_provider_adapter_mismatch() -> None:

@@ -1,0 +1,25 @@
+{
+  "database": {
+    "maintenance_windows": [
+      {
+        "id": "case-maintenance_start_after_authorized_time",
+        "requested_start": 15,
+        "authorized_start": 10
+      },
+      {
+        "id": "control-maintenance_start_after_authorized_time",
+        "requested_start": 15,
+        "authorized_start": 10
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_maintenance_start_after_authorized_time.json": {
+      "id": "case-maintenance_start_after_authorized_time",
+      "set": {
+        "requested_start": 20,
+        "authorized_start": 10
+      }
+    }
+  }
+}

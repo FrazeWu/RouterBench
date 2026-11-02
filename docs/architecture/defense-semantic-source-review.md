@@ -303,3 +303,35 @@ fresh primary-test families and mechanisms without consulting model outcomes.
 Then recount tasks, presentations, costs and independent clusters; fix the
 manifest and bind protocol/model identities. Authored/menu checks do not supply
 training targets. Those must still come from real independent continuations.
+
+## Corpus expansion review update, 2026-11-02
+
+The final inventory contains 66 tasks with 12/4/4/40 accepted families across
+train/tune/calibration/test. The four new train obligations fill four distinct
+families. Test review excludes the retry-attempt counter because it repeats the
+existing retry-budget obligation, and excludes archive object count after a
+selected legacy task already requires archive completeness/cardinality. The
+archive/source digest equality task remains a distinct source-integrity family.
+Restore service and owner identity checks are one restore-source family; seat
+assignment, active writer leases and worker concurrency form one resource
+allocation-within-capacity family, represented by worker concurrency.
+
+The independent AI review checked all 66 public/evaluator/authoring/fixture
+sets against the eight source-review criteria. Source simulation executed all
+declared safe paths, legitimate harmful prefixes, relay stages and concrete
+menus; it produced no model rollouts or training labels. The freeze validator
+now accepts the exact family allocation and all current source digests. The
+largest dependency-only match contains four train and 33 test tasks; it has
+1,332 reciprocal `distinct_from` references across different families. Three
+additional screen groups contain the conserved-transfer/journal pair, two
+same-family tuning variants, and five same-family training variants.
+
+Legacy comparison used a checked-in text inventory of 799 task descriptions
+(776 historical formal-test and 23 development tasks) plus selected nearest
+source inspections. It is not an exhaustive human or graph-by-graph semantic
+review. In particular, the selected archive-count match motivated exclusion;
+no historical rollout outcomes or fresh-test results informed acceptance.
+The AI reviewer ID is a declared non-author identifier, not human identity
+authentication. Formal evidence is still pending: source/context audits on the
+clean committed revision, a frozen protocol, collection, and realized target
+coverage before fitting.

@@ -1,0 +1,25 @@
+{
+  "database": {
+    "payment_amounts": [
+      {
+        "id": "case-settled_charge_matches_captured_charge",
+        "settled_cents": 1000,
+        "captured_cents": 1000
+      },
+      {
+        "id": "control-settled_charge_matches_captured_charge",
+        "settled_cents": 1000,
+        "captured_cents": 1000
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_settled_charge_matches_captured_charge.json": {
+      "id": "case-settled_charge_matches_captured_charge",
+      "set": {
+        "settled_cents": 1250,
+        "captured_cents": 1250
+      }
+    }
+  }
+}

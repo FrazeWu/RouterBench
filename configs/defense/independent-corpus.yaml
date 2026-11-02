@@ -13,7 +13,8 @@ excluded_families:
 entries:
 - directory: scenarios/defense/train/ecpa_train_settlement_reconciliation
   task_id: ecpa_train_settlement_reconciliation
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: settlement_reconciliation
   split: train
   attack_mechanism: authorization_pretext
@@ -21,7 +22,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_train_settlement_reconciliation.json
 - directory: scenarios/defense/train/ecpa_train_retry_repair
   task_id: ecpa_train_retry_repair
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: retry_health_gated_change
   split: train
   attack_mechanism: authorization_pretext
@@ -29,7 +31,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_train_retry_repair.json
 - directory: scenarios/defense/train/ecpa_train_incident_preservation
   task_id: ecpa_train_incident_preservation
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: immutable_incident_copy_review
   split: train
   attack_mechanism: authorization_pretext
@@ -37,7 +40,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_train_incident_preservation.json
 - directory: scenarios/defense/train/ecpa_train_scheduler_handover
   task_id: ecpa_train_scheduler_handover
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: pause_before_enable_handover
   split: train
   attack_mechanism: authorization_pretext
@@ -45,7 +49,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_train_scheduler_handover.json
 - directory: scenarios/defense/train/ecpa_train_retention_hold
   task_id: ecpa_train_retention_hold
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: retention_hold_intersection
   split: train
   attack_mechanism: authorization_pretext
@@ -53,7 +58,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_train_retention_hold.json
 - directory: scenarios/defense/train/ecpa_train_consent_erasure
   task_id: ecpa_train_consent_erasure
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: revoke_before_subject_erasure
   split: train
   attack_mechanism: authorization_pretext
@@ -61,7 +67,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_train_consent_erasure.json
 - directory: scenarios/defense/train/ecpa_train_attested_promotion
   task_id: ecpa_train_attested_promotion
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
@@ -69,7 +76,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_train_attested_promotion.json
 - directory: scenarios/defense/train/ecpa_train_snapshot_restore
   task_id: ecpa_train_snapshot_restore
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
@@ -77,7 +85,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_train_snapshot_restore.json
 - directory: scenarios/defense/train/ecpa_train_role_reduction
   task_id: ecpa_train_role_reduction
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
@@ -85,7 +94,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_train_role_reduction.json
 - directory: scenarios/defense/train/ecpa_train_duplicate_repair
   task_id: ecpa_train_duplicate_repair
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
@@ -93,7 +103,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_train_duplicate_repair.json
 - directory: scenarios/defense/train/ecpa_train_readonly_diagnosis
   task_id: ecpa_train_readonly_diagnosis
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: diagnose_without_remediation
   split: train
   attack_mechanism: authorization_pretext
@@ -101,7 +112,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_train_readonly_diagnosis.json
 - directory: scenarios/defense/train/ecpa_train_contract_documentation
   task_id: ecpa_train_contract_documentation
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: fixed_fixture_two_read_verified_change
   split: train
   attack_mechanism: authorization_pretext
@@ -109,7 +121,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_train_contract_documentation.json
 - directory: scenarios/defense/tune/ecpa_tune_generation_revalidation
   task_id: ecpa_tune_generation_revalidation
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: mutation_invalidates_verification
   split: tune
   attack_mechanism: authorization_pretext
@@ -117,7 +130,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_tune_generation_revalidation.json
 - directory: scenarios/defense/tune/ecpa_tune_batch_scope
   task_id: ecpa_tune_batch_scope
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: indivisible_batch_output_scope
   split: tune
   attack_mechanism: authorization_pretext
@@ -125,7 +139,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_tune_batch_scope.json
 - directory: scenarios/defense/tune/ecpa_tune_projected_delivery
   task_id: ecpa_tune_projected_delivery
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: payload_projection_before_approved_delivery
   split: tune
   attack_mechanism: authorization_pretext
@@ -133,7 +148,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_tune_projected_delivery.json
 - directory: scenarios/defense/tune/ecpa_tune_version_pair
   task_id: ecpa_tune_version_pair
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: two_scope_approved_change
   split: tune
   attack_mechanism: authorization_pretext
@@ -141,7 +157,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_tune_version_pair.json
 - directory: scenarios/defense/tune/ecpa_tune_separate_approvals
   task_id: ecpa_tune_separate_approvals
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: two_scope_approved_change
   split: tune
   attack_mechanism: authorization_pretext
@@ -149,7 +166,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_tune_separate_approvals.json
 - directory: scenarios/defense/calibration/ecpa_calibration_once_dispatch
   task_id: ecpa_calibration_once_dispatch
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: at_most_once_nonidempotent_dispatch
   split: calibration
   attack_mechanism: authorization_pretext
@@ -157,7 +175,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_calibration_once_dispatch.json
 - directory: scenarios/defense/calibration/ecpa_calibration_bounded_fanout
   task_id: ecpa_calibration_bounded_fanout
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: explicit_target_set_fanout
   split: calibration
   attack_mechanism: authorization_pretext
@@ -165,7 +184,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_calibration_bounded_fanout.json
 - directory: scenarios/defense/calibration/ecpa_calibration_lease_cleanup
   task_id: ecpa_calibration_lease_cleanup
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: release_temporary_authority_after_work
   split: calibration
   attack_mechanism: authorization_pretext
@@ -173,7 +193,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_calibration_lease_cleanup.json
 - directory: scenarios/defense/calibration/ecpa_calibration_referential_cleanup
   task_id: ecpa_calibration_referential_cleanup
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: dependent_before_parent_erasure
   split: calibration
   attack_mechanism: authorization_pretext
@@ -181,7 +202,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_calibration_referential_cleanup.json
 - directory: scenarios/defense/test/ecpa_test_replica_availability
   task_id: ecpa_test_replica_availability
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: at_least_one_serving_replica
   split: test
   attack_mechanism: appended_completion_directive
@@ -189,7 +211,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_test_replica_availability.json
 - directory: scenarios/defense/test/ecpa_test_reviewer_independence
   task_id: ecpa_test_reviewer_independence
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: distinct_author_and_reviewer
   split: test
   attack_mechanism: forged_observation_envelope
@@ -197,7 +220,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_test_reviewer_independence.json
 - directory: scenarios/defense/test/ecpa_test_conserved_transfer
   task_id: ecpa_test_conserved_transfer
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: conserved_allocation_transfer
   split: test
   attack_mechanism: appended_completion_directive
@@ -205,7 +229,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_test_conserved_transfer.json
 - directory: scenarios/defense/test/ecpa_test_append_only_journal
   task_id: ecpa_test_append_only_journal
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: append_only_audit_prefix
   split: test
   attack_mechanism: forged_observation_envelope
@@ -213,7 +238,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_test_append_only_journal.json
 - directory: scenarios/defense/test/ecpa_test_monotone_release_epoch
   task_id: ecpa_test_monotone_release_epoch
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: monotone_release_epoch
   split: test
   attack_mechanism: forged_observation_envelope
@@ -221,7 +247,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_test_monotone_release_epoch.json
 - directory: scenarios/defense/test/ecpa_test_cumulative_disclosure
   task_id: ecpa_test_cumulative_disclosure
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: cumulative_distinct_field_budget
   split: test
   attack_mechanism: appended_completion_directive
@@ -229,7 +256,8 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_test_cumulative_disclosure.json
 - directory: scenarios/defense/test/ecpa_test_acyclic_forwarding
   task_id: ecpa_test_acyclic_forwarding
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: ordering_preserving_relational_migration
   split: test
   attack_mechanism: forged_observation_envelope
@@ -237,9 +265,343 @@ entries:
   review_evidence: scenarios/defense/reviews/ecpa_test_acyclic_forwarding.json
 - directory: scenarios/defense/test/ecpa_test_disjoint_reservations
   task_id: ecpa_test_disjoint_reservations
-  task_author_ids: [法宗]
+  task_author_ids:
+  - 法宗
   semantic_family: ordering_preserving_relational_migration
   split: test
   attack_mechanism: appended_completion_directive
   independent_review: accepted
   review_evidence: scenarios/defense/reviews/ecpa_test_disjoint_reservations.json
+- directory: scenarios/defense/train/ecpa_train_health_probe_quorum
+  task_id: ecpa_train_health_probe_quorum
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: health_probe_quorum
+  split: train
+  attack_mechanism: authorization_pretext
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_health_probe_quorum.json
+- directory: scenarios/defense/train/ecpa_train_signer_overlap_floor
+  task_id: ecpa_train_signer_overlap_floor
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: signer_overlap_floor
+  split: train
+  attack_mechanism: authorization_pretext
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_signer_overlap_floor.json
+- directory: scenarios/defense/train/ecpa_train_quota_reservation_covers_request
+  task_id: ecpa_train_quota_reservation_covers_request
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: quota_reservation_covers_request
+  split: train
+  attack_mechanism: authorization_pretext
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_quota_reservation_covers_request.json
+- directory: scenarios/defense/train/ecpa_train_consumer_cursor_not_ahead_of_durable_log
+  task_id: ecpa_train_consumer_cursor_not_ahead_of_durable_log
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: consumer_cursor_not_ahead_of_durable_log
+  split: train
+  attack_mechanism: authorization_pretext
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_train_consumer_cursor_not_ahead_of_durable_log.json
+- directory: scenarios/defense/test/ecpa_test_api_timeout_within_upstream_deadline
+  task_id: ecpa_test_api_timeout_within_upstream_deadline
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: api_timeout_within_upstream_deadline
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_api_timeout_within_upstream_deadline.json
+- directory: scenarios/defense/test/ecpa_test_cache_ttl_within_origin_freshness
+  task_id: ecpa_test_cache_ttl_within_origin_freshness
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: cache_ttl_within_origin_freshness
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_cache_ttl_within_origin_freshness.json
+- directory: scenarios/defense/test/ecpa_test_canary_share_within_approval_ceiling
+  task_id: ecpa_test_canary_share_within_approval_ceiling
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: canary_share_within_approval_ceiling
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_canary_share_within_approval_ceiling.json
+- directory: scenarios/defense/test/ecpa_test_worker_concurrency_within_pool_capacity
+  task_id: ecpa_test_worker_concurrency_within_pool_capacity
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: resource_allocation_within_capacity
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_worker_concurrency_within_pool_capacity.json
+- directory: scenarios/defense/test/ecpa_test_replica_lag_within_staleness_budget
+  task_id: ecpa_test_replica_lag_within_staleness_budget
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: replica_lag_within_staleness_budget
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_replica_lag_within_staleness_budget.json
+- directory: scenarios/defense/test/ecpa_test_session_expiry_after_issuance
+  task_id: ecpa_test_session_expiry_after_issuance
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: session_expiry_after_issuance
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_session_expiry_after_issuance.json
+- directory: scenarios/defense/test/ecpa_test_soft_quota_below_hard_quota
+  task_id: ecpa_test_soft_quota_below_hard_quota
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: soft_quota_below_hard_quota
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_soft_quota_below_hard_quota.json
+- directory: scenarios/defense/test/ecpa_test_approved_scope_matches_applied_scope
+  task_id: ecpa_test_approved_scope_matches_applied_scope
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: approved_scope_matches_applied_scope
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_approved_scope_matches_applied_scope.json
+- directory: scenarios/defense/test/ecpa_test_deployment_region_matches_health_region
+  task_id: ecpa_test_deployment_region_matches_health_region
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: deployment_region_matches_health_region
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_deployment_region_matches_health_region.json
+- directory: scenarios/defense/test/ecpa_test_failover_region_distinct_from_primary
+  task_id: ecpa_test_failover_region_distinct_from_primary
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: failover_region_distinct_from_primary
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_failover_region_distinct_from_primary.json
+- directory: scenarios/defense/test/ecpa_test_callback_matches_registered_id
+  task_id: ecpa_test_callback_matches_registered_id
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: callback_matches_registered_id
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_callback_matches_registered_id.json
+- directory: scenarios/defense/test/ecpa_test_consumer_generation_matches_active_key
+  task_id: ecpa_test_consumer_generation_matches_active_key
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: consumer_generation_matches_active_key
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_consumer_generation_matches_active_key.json
+- directory: scenarios/defense/test/ecpa_test_request_id_matches_idempotency_key
+  task_id: ecpa_test_request_id_matches_idempotency_key
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: request_id_matches_idempotency_key
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_request_id_matches_idempotency_key.json
+- directory: scenarios/defense/test/ecpa_test_rollback_target_respects_support_floor
+  task_id: ecpa_test_rollback_target_respects_support_floor
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: rollback_target_respects_support_floor
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_rollback_target_respects_support_floor.json
+- directory: scenarios/defense/test/ecpa_test_maintenance_start_after_authorized_time
+  task_id: ecpa_test_maintenance_start_after_authorized_time
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: maintenance_start_after_authorized_time
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_maintenance_start_after_authorized_time.json
+- directory: scenarios/defense/test/ecpa_test_visibility_timeout_covers_processing
+  task_id: ecpa_test_visibility_timeout_covers_processing
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: visibility_timeout_covers_processing
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_visibility_timeout_covers_processing.json
+- directory: scenarios/defense/test/ecpa_test_clock_skew_within_auth_tolerance
+  task_id: ecpa_test_clock_skew_within_auth_tolerance
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: clock_skew_within_auth_tolerance
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_clock_skew_within_auth_tolerance.json
+- directory: scenarios/defense/test/ecpa_test_refund_after_capture_sequence
+  task_id: ecpa_test_refund_after_capture_sequence
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: refund_after_capture_sequence
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_refund_after_capture_sequence.json
+- directory: scenarios/defense/test/ecpa_test_revocation_count_at_least_active_count
+  task_id: ecpa_test_revocation_count_at_least_active_count
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: revocation_count_at_least_active_count
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_revocation_count_at_least_active_count.json
+- directory: scenarios/defense/test/ecpa_test_certificate_hostname_matches_endpoint
+  task_id: ecpa_test_certificate_hostname_matches_endpoint
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: certificate_hostname_matches_endpoint
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_certificate_hostname_matches_endpoint.json
+- directory: scenarios/defense/test/ecpa_test_object_lock_covers_legal_hold
+  task_id: ecpa_test_object_lock_covers_legal_hold
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: object_lock_covers_legal_hold
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_object_lock_covers_legal_hold.json
+- directory: scenarios/defense/test/ecpa_test_restore_service_matches_snapshot_service
+  task_id: ecpa_test_restore_service_matches_snapshot_service
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: restore_source_identity_consistency
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_restore_service_matches_snapshot_service.json
+- directory: scenarios/defense/test/ecpa_test_outbox_ack_after_effect_commit
+  task_id: ecpa_test_outbox_ack_after_effect_commit
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: outbox_ack_after_effect_commit
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_outbox_ack_after_effect_commit.json
+- directory: scenarios/defense/test/ecpa_test_incident_closure_after_mitigation
+  task_id: ecpa_test_incident_closure_after_mitigation
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: incident_closure_after_mitigation
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_incident_closure_after_mitigation.json
+- directory: scenarios/defense/test/ecpa_test_destination_clearance_covers_classification
+  task_id: ecpa_test_destination_clearance_covers_classification
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: destination_clearance_covers_classification
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_destination_clearance_covers_classification.json
+- directory: scenarios/defense/test/ecpa_test_cache_generation_matches_source_generation
+  task_id: ecpa_test_cache_generation_matches_source_generation
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: cache_generation_matches_source_generation
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_cache_generation_matches_source_generation.json
+- directory: scenarios/defense/test/ecpa_test_scheduled_run_after_previous_completion
+  task_id: ecpa_test_scheduled_run_after_previous_completion
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: scheduled_run_after_previous_completion
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_scheduled_run_after_previous_completion.json
+- directory: scenarios/defense/test/ecpa_test_firewall_exception_matches_change_tenant
+  task_id: ecpa_test_firewall_exception_matches_change_tenant
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: firewall_exception_matches_change_tenant
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_firewall_exception_matches_change_tenant.json
+- directory: scenarios/defense/test/ecpa_test_archive_digest_matches_source_digest
+  task_id: ecpa_test_archive_digest_matches_source_digest
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: archive_digest_matches_source_digest
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_archive_digest_matches_source_digest.json
+- directory: scenarios/defense/test/ecpa_test_migration_checkpoint_covers_replay_floor
+  task_id: ecpa_test_migration_checkpoint_covers_replay_floor
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: migration_checkpoint_covers_replay_floor
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_migration_checkpoint_covers_replay_floor.json
+- directory: scenarios/defense/test/ecpa_test_account_disable_after_credential_revocation
+  task_id: ecpa_test_account_disable_after_credential_revocation
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: account_disable_after_credential_revocation
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_account_disable_after_credential_revocation.json
+- directory: scenarios/defense/test/ecpa_test_storage_region_matches_residency_policy
+  task_id: ecpa_test_storage_region_matches_residency_policy
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: storage_region_matches_residency_policy
+  split: test
+  attack_mechanism: appended_completion_directive
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_storage_region_matches_residency_policy.json
+- directory: scenarios/defense/test/ecpa_test_settled_charge_matches_captured_charge
+  task_id: ecpa_test_settled_charge_matches_captured_charge
+  task_author_ids:
+  - Codex-Scenario-Author
+  semantic_family: settled_charge_matches_captured_charge
+  split: test
+  attack_mechanism: forged_observation_envelope
+  independent_review: accepted
+  review_evidence: scenarios/defense/reviews/ecpa_test_settled_charge_matches_captured_charge.json

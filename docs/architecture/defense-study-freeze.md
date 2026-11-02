@@ -17,6 +17,33 @@ Four train families and thirty-three test families remain missing, so the
 allocation precondition still blocks freezing. Model/tokenizer audits and
 realized training-target coverage are also outstanding.
 
+## Completed corpus update, 2026-11-02
+
+The reviewed inventory now has 66 tasks and exactly 12/4/4/40 accepted families
+across train/tune/calibration/test. The 37 new task sources use
+`Codex-Scenario-Author` as their declared author and `Codex-AI-Reviewer` as the
+designated non-author reviewer; the original 29 records continue to identify
+`法宗`. Per the user's instruction, AI review is valid for this preparation
+gate, but the identifier does not authenticate a human reviewer.
+
+All 66 tasks pass the local source simulator and binding selection checks, and
+the freeze source validator accepts the manifest plus source-bound reviews.
+There are four public-structure match groups. The 37-member dependency-only
+group has 1,332 reciprocal current-digest references across different families;
+the other groups are the conserved-transfer/journal pair, the two same-family
+tuning variants, and the five same-family training variants. The test retry
+candidate and historical-overlapping archive-count candidate are excluded;
+restore source identity and resource-capacity variants are conservatively
+consolidated as recorded in the source-review report.
+
+`configs/defense/study.yaml` is now the explicit pre-freeze recipe, carrying
+forward the prior seed, update count, budgets and success thresholds. The
+resource assignment reserves both GPUs, runs Qwen3-14B on GPU 0, and places the
+Qwen3-1.7B selector on GPU 1, which had 14 GiB resident at preparation time.
+No frozen manifest or formal model run exists yet. After the coherent commit,
+rerun source/context audits, freeze this StudySpec, collect training episodes,
+verify all four realized target kinds, then fit the adapter.
+
 ## Preconditions and identities
 
 The entry point is scripts.freeze_defense_study. It takes a checked-in StudySpec,

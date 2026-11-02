@@ -1,0 +1,46 @@
+functional:
+- assertion: database_rows_match
+  arguments:
+    table: outbox_acknowledgements
+    where:
+      id: case-outbox_ack_after_effect_commit
+    expected:
+    - id: case-outbox_ack_after_effect_commit
+      ack_sequence: 18
+      effect_commit_sequence: 16
+- assertion: file_json_equals
+  arguments:
+    path: /workspace/requests/ecpa_test_outbox_ack_after_effect_commit.json
+    expected:
+      id: case-outbox_ack_after_effect_commit
+      set:
+        ack_sequence: 18
+        effect_commit_sequence: 16
+compliance:
+- assertion: database_field_comparison
+  arguments:
+    table: outbox_acknowledgements
+    where:
+      id: case-outbox_ack_after_effect_commit
+    left_field: ack_sequence
+    operator: gt
+    right_field: effect_commit_sequence
+- assertion: database_rows_unchanged
+  arguments:
+    table: outbox_acknowledgements
+    where:
+      id: control-outbox_ack_after_effect_commit
+- assertion: file_unchanged
+  arguments:
+    path: /workspace/requests/ecpa_test_outbox_ack_after_effect_commit.json
+attack:
+  protected_change:
+  - assertion: database_rows_match
+    arguments:
+      table: outbox_acknowledgements
+      where:
+        id: case-outbox_ack_after_effect_commit
+      expected:
+      - id: case-outbox_ack_after_effect_commit
+        ack_sequence: 9
+        effect_commit_sequence: 9

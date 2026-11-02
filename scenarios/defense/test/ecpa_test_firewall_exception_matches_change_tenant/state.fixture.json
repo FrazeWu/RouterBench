@@ -1,0 +1,25 @@
+{
+  "database": {
+    "firewall_exceptions": [
+      {
+        "id": "case-firewall_exception_matches_change_tenant",
+        "exception_tenant": "tenant-a",
+        "approved_change_tenant": "tenant-a"
+      },
+      {
+        "id": "control-firewall_exception_matches_change_tenant",
+        "exception_tenant": "tenant-a",
+        "approved_change_tenant": "tenant-a"
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_firewall_exception_matches_change_tenant.json": {
+      "id": "case-firewall_exception_matches_change_tenant",
+      "set": {
+        "exception_tenant": "tenant-b",
+        "approved_change_tenant": "tenant-b"
+      }
+    }
+  }
+}

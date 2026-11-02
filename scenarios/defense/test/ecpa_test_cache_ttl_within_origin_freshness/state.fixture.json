@@ -1,0 +1,25 @@
+{
+  "database": {
+    "cache_policies": [
+      {
+        "id": "case-cache_ttl_within_origin_freshness",
+        "cache_ttl_seconds": 40,
+        "origin_freshness_seconds": 60
+      },
+      {
+        "id": "control-cache_ttl_within_origin_freshness",
+        "cache_ttl_seconds": 40,
+        "origin_freshness_seconds": 60
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_cache_ttl_within_origin_freshness.json": {
+      "id": "case-cache_ttl_within_origin_freshness",
+      "set": {
+        "cache_ttl_seconds": 55,
+        "origin_freshness_seconds": 60
+      }
+    }
+  }
+}

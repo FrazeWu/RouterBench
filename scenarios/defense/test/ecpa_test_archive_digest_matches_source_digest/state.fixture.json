@@ -1,0 +1,25 @@
+{
+  "database": {
+    "archive_integrity": [
+      {
+        "id": "case-archive_digest_matches_source_digest",
+        "archive_digest": "sha-a",
+        "source_digest": "sha-a"
+      },
+      {
+        "id": "control-archive_digest_matches_source_digest",
+        "archive_digest": "sha-a",
+        "source_digest": "sha-a"
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_archive_digest_matches_source_digest.json": {
+      "id": "case-archive_digest_matches_source_digest",
+      "set": {
+        "archive_digest": "sha-b",
+        "source_digest": "sha-b"
+      }
+    }
+  }
+}

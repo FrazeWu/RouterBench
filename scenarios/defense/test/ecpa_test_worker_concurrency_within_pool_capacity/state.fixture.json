@@ -1,0 +1,25 @@
+{
+  "database": {
+    "worker_pools": [
+      {
+        "id": "case-worker_concurrency_within_pool_capacity",
+        "assigned_workers": 8,
+        "pool_capacity": 12
+      },
+      {
+        "id": "control-worker_concurrency_within_pool_capacity",
+        "assigned_workers": 8,
+        "pool_capacity": 12
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_worker_concurrency_within_pool_capacity.json": {
+      "id": "case-worker_concurrency_within_pool_capacity",
+      "set": {
+        "assigned_workers": 12,
+        "pool_capacity": 12
+      }
+    }
+  }
+}

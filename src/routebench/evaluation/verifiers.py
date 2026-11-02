@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import math
 from itertools import pairwise
+from operator import eq, ge, gt, le, lt, ne
 from typing import Any, cast
 
 from routebench.runtime.reference import ScenarioState
@@ -111,6 +113,73 @@ def evaluate_assertion(assertion: AssertionSpec, state: ScenarioState) -> bool:
         ):
             return False
         return bool(sum(row[field] for row in rows for field in fields) == expected)
+    if assertion.assertion == "database_field_comparison":
+        table = str(arguments["table"])
+        where = dict(arguments.get("where", {}))
+        left_field = arguments.get("left_field")
+        right_field = arguments.get("right_field")
+        right_value = arguments.get("right_value")
+        operator = arguments.get("operator")
+        comparisons = {"lt": lt, "le": le, "eq": eq, "ne": ne, "ge": ge, "gt": gt}
+        has_right_field = "right_field" in arguments
+        has_right_value = "right_value" in arguments
+        if (
+            not isinstance(left_field, str)
+            or not left_field
+            or has_right_field == has_right_value
+            or (has_right_field and (not isinstance(right_field, str) or not right_field))
+            or (has_right_value and type(right_value) not in (int, float, str))
+            or not isinstance(operator, str)
+            or operator not in comparisons
+        ):
+            raise ValueError(
+                "database_field_comparison needs fields, one right operand and operator"
+            )
+        compare = comparisons[operator]
+        rows = [row for row in state.database[table] if _matches(row, where)]
+        if not rows:
+            return False
+        for row in rows:
+            left = row.get(left_field)
+            right = row.get(right_field) if right_field is not None else right_value
+            numeric_pair = type(left) in (int, float) and type(right) in (int, float)
+            string_pair = isinstance(left, str) and isinstance(right, str)
+            if not (numeric_pair or (operator in {"eq", "ne"} and string_pair)):
+                return False
+            if (isinstance(left, float) and not math.isfinite(left)) or (
+                isinstance(right, float) and not math.isfinite(right)
+            ):
+                return False
+            if not compare(cast(Any, left), cast(Any, right)):
+                return False
+        return True
+    if assertion.assertion == "database_absolute_field_comparison":
+        table = str(arguments["table"])
+        where = dict(arguments.get("where", {}))
+        left_field = arguments.get("left_field")
+        right_field = arguments.get("right_field")
+        if (
+            not isinstance(left_field, str)
+            or not left_field
+            or not isinstance(right_field, str)
+            or not right_field
+        ):
+            raise ValueError("database_absolute_field_comparison needs two fields")
+        rows = [row for row in state.database[table] if _matches(row, where)]
+        if not rows:
+            return False
+        for row in rows:
+            observed = row.get(left_field)
+            tolerance = row.get(right_field)
+            if type(observed) not in (int, float) or type(tolerance) not in (int, float):
+                return False
+            if (isinstance(observed, float) and not math.isfinite(observed)) or (
+                isinstance(tolerance, float) and not math.isfinite(tolerance)
+            ):
+                return False
+            if cast(Any, tolerance) < 0 or abs(cast(Any, observed)) > cast(Any, tolerance):
+                return False
+        return True
     if assertion.assertion == "database_references_valid":
         parents = state.database[str(arguments["parent_table"])]
         children = state.database[str(arguments["child_table"])]

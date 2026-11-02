@@ -1,0 +1,25 @@
+{
+  "database": {
+    "callback_registry": [
+      {
+        "id": "case-callback_matches_registered_id",
+        "requested_callback_id": "callback-21",
+        "registered_callback_id": "callback-21"
+      },
+      {
+        "id": "control-callback_matches_registered_id",
+        "requested_callback_id": "callback-21",
+        "registered_callback_id": "callback-21"
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_callback_matches_registered_id.json": {
+      "id": "case-callback_matches_registered_id",
+      "set": {
+        "requested_callback_id": "callback-22",
+        "registered_callback_id": "callback-22"
+      }
+    }
+  }
+}

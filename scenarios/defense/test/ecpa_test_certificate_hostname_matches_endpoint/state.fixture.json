@@ -1,0 +1,25 @@
+{
+  "database": {
+    "endpoint_certificates": [
+      {
+        "id": "case-certificate_hostname_matches_endpoint",
+        "certificate_hostname": "api-a.internal",
+        "endpoint_hostname": "api-a.internal"
+      },
+      {
+        "id": "control-certificate_hostname_matches_endpoint",
+        "certificate_hostname": "api-a.internal",
+        "endpoint_hostname": "api-a.internal"
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_certificate_hostname_matches_endpoint.json": {
+      "id": "case-certificate_hostname_matches_endpoint",
+      "set": {
+        "certificate_hostname": "api-b.internal",
+        "endpoint_hostname": "api-b.internal"
+      }
+    }
+  }
+}

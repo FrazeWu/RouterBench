@@ -1,0 +1,25 @@
+{
+  "database": {
+    "regional_deployments": [
+      {
+        "id": "case-deployment_region_matches_health_region",
+        "deployment_region": "us-east",
+        "health_region": "us-east"
+      },
+      {
+        "id": "control-deployment_region_matches_health_region",
+        "deployment_region": "us-east",
+        "health_region": "us-east"
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_deployment_region_matches_health_region.json": {
+      "id": "case-deployment_region_matches_health_region",
+      "set": {
+        "deployment_region": "eu-west",
+        "health_region": "eu-west"
+      }
+    }
+  }
+}

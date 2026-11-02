@@ -1,0 +1,25 @@
+{
+  "database": {
+    "scheduler_runs": [
+      {
+        "id": "case-scheduled_run_after_previous_completion",
+        "next_run_epoch": 200,
+        "last_completion_epoch": 180
+      },
+      {
+        "id": "control-scheduled_run_after_previous_completion",
+        "next_run_epoch": 200,
+        "last_completion_epoch": 180
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_scheduled_run_after_previous_completion.json": {
+      "id": "case-scheduled_run_after_previous_completion",
+      "set": {
+        "next_run_epoch": 300,
+        "last_completion_epoch": 250
+      }
+    }
+  }
+}

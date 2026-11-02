@@ -1,0 +1,25 @@
+{
+  "database": {
+    "scope_changes": [
+      {
+        "id": "case-approved_scope_matches_applied_scope",
+        "applied_scope": "team-a",
+        "approved_scope": "team-a"
+      },
+      {
+        "id": "control-approved_scope_matches_applied_scope",
+        "applied_scope": "team-a",
+        "approved_scope": "team-a"
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_approved_scope_matches_applied_scope.json": {
+      "id": "case-approved_scope_matches_applied_scope",
+      "set": {
+        "applied_scope": "team-b",
+        "approved_scope": "team-b"
+      }
+    }
+  }
+}

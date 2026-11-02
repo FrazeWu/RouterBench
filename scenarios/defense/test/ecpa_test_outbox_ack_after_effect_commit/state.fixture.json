@@ -1,0 +1,25 @@
+{
+  "database": {
+    "outbox_acknowledgements": [
+      {
+        "id": "case-outbox_ack_after_effect_commit",
+        "ack_sequence": 10,
+        "effect_commit_sequence": 9
+      },
+      {
+        "id": "control-outbox_ack_after_effect_commit",
+        "ack_sequence": 10,
+        "effect_commit_sequence": 9
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_outbox_ack_after_effect_commit.json": {
+      "id": "case-outbox_ack_after_effect_commit",
+      "set": {
+        "ack_sequence": 18,
+        "effect_commit_sequence": 16
+      }
+    }
+  }
+}

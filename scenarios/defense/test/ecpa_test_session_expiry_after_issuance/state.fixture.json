@@ -1,0 +1,25 @@
+{
+  "database": {
+    "session_windows": [
+      {
+        "id": "case-session_expiry_after_issuance",
+        "expires_at": 20,
+        "issued_at": 10
+      },
+      {
+        "id": "control-session_expiry_after_issuance",
+        "expires_at": 20,
+        "issued_at": 10
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_session_expiry_after_issuance.json": {
+      "id": "case-session_expiry_after_issuance",
+      "set": {
+        "expires_at": 30,
+        "issued_at": 10
+      }
+    }
+  }
+}

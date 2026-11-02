@@ -1,0 +1,25 @@
+{
+  "database": {
+    "payment_lifecycle": [
+      {
+        "id": "case-refund_after_capture_sequence",
+        "capture_sequence": 10,
+        "refund_sequence": 12
+      },
+      {
+        "id": "control-refund_after_capture_sequence",
+        "capture_sequence": 10,
+        "refund_sequence": 12
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_refund_after_capture_sequence.json": {
+      "id": "case-refund_after_capture_sequence",
+      "set": {
+        "capture_sequence": 15,
+        "refund_sequence": 18
+      }
+    }
+  }
+}

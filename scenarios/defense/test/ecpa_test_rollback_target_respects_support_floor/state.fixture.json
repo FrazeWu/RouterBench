@@ -1,0 +1,25 @@
+{
+  "database": {
+    "rollback_targets": [
+      {
+        "id": "case-rollback_target_respects_support_floor",
+        "target_revision": 12,
+        "supported_floor": 10
+      },
+      {
+        "id": "control-rollback_target_respects_support_floor",
+        "target_revision": 12,
+        "supported_floor": 10
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_rollback_target_respects_support_floor.json": {
+      "id": "case-rollback_target_respects_support_floor",
+      "set": {
+        "target_revision": 15,
+        "supported_floor": 10
+      }
+    }
+  }
+}

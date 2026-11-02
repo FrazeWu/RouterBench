@@ -1,0 +1,25 @@
+{
+  "database": {
+    "data_destinations": [
+      {
+        "id": "case-destination_clearance_covers_classification",
+        "destination_clearance_level": 3,
+        "data_classification_level": 2
+      },
+      {
+        "id": "control-destination_clearance_covers_classification",
+        "destination_clearance_level": 3,
+        "data_classification_level": 2
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_destination_clearance_covers_classification.json": {
+      "id": "case-destination_clearance_covers_classification",
+      "set": {
+        "destination_clearance_level": 4,
+        "data_classification_level": 4
+      }
+    }
+  }
+}

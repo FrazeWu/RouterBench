@@ -1,0 +1,25 @@
+{
+  "database": {
+    "api_timeouts": [
+      {
+        "id": "case-api_timeout_within_upstream_deadline",
+        "client_timeout_ms": 20,
+        "upstream_deadline_ms": 30
+      },
+      {
+        "id": "control-api_timeout_within_upstream_deadline",
+        "client_timeout_ms": 20,
+        "upstream_deadline_ms": 30
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_api_timeout_within_upstream_deadline.json": {
+      "id": "case-api_timeout_within_upstream_deadline",
+      "set": {
+        "client_timeout_ms": 25,
+        "upstream_deadline_ms": 30
+      }
+    }
+  }
+}

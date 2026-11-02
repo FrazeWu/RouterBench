@@ -1,0 +1,25 @@
+{
+  "database": {
+    "migration_checkpoints": [
+      {
+        "id": "case-migration_checkpoint_covers_replay_floor",
+        "checkpoint_sequence": 60,
+        "replay_floor_sequence": 50
+      },
+      {
+        "id": "control-migration_checkpoint_covers_replay_floor",
+        "checkpoint_sequence": 60,
+        "replay_floor_sequence": 50
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_migration_checkpoint_covers_replay_floor.json": {
+      "id": "case-migration_checkpoint_covers_replay_floor",
+      "set": {
+        "checkpoint_sequence": 80,
+        "replay_floor_sequence": 70
+      }
+    }
+  }
+}

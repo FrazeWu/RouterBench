@@ -193,17 +193,18 @@ def fixture_repo(root: Path) -> tuple[StudySpec, dict[str, object], dict[str, ob
     return spec, authoring, contexts
 
 
-def test_current_reviewed_underfilled_corpus_cannot_be_frozen() -> None:
+def test_underfilled_family_allocation_cannot_be_frozen() -> None:
     spec, tasks = load_corpus(ROOT, ROOT / MANIFEST)
+    underfilled = spec.model_copy(
+        update={
+            "planned_families": {
+                **spec.planned_families,
+                "test": spec.planned_families["test"] + 1,
+            }
+        }
+    )
     with pytest.raises(ValueError, match="allocation"):
-        validate_freeze_sources(ROOT, spec, tasks)
-    validate_source_reviews(ROOT, tasks, reviewer_id=spec.independent_reviewer_id)
-    assert readiness(spec, tasks)["reviewed_families"] == {
-        "train": 8,
-        "tune": 4,
-        "calibration": 4,
-        "test": 7,
-    }
+        validate_freeze_sources(ROOT, underfilled, tasks)
 
 
 @pytest.mark.parametrize(

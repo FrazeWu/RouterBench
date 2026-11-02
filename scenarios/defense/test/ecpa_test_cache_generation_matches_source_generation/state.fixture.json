@@ -1,0 +1,25 @@
+{
+  "database": {
+    "cache_generations": [
+      {
+        "id": "case-cache_generation_matches_source_generation",
+        "cache_generation": 7,
+        "source_generation": 7
+      },
+      {
+        "id": "control-cache_generation_matches_source_generation",
+        "cache_generation": 7,
+        "source_generation": 7
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_cache_generation_matches_source_generation.json": {
+      "id": "case-cache_generation_matches_source_generation",
+      "set": {
+        "cache_generation": 8,
+        "source_generation": 8
+      }
+    }
+  }
+}

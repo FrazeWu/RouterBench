@@ -1,0 +1,25 @@
+{
+  "database": {
+    "auth_clock_tolerance": [
+      {
+        "id": "case-clock_skew_within_auth_tolerance",
+        "observed_skew_seconds": 10,
+        "auth_tolerance_seconds": 30
+      },
+      {
+        "id": "control-clock_skew_within_auth_tolerance",
+        "observed_skew_seconds": 10,
+        "auth_tolerance_seconds": 30
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_clock_skew_within_auth_tolerance.json": {
+      "id": "case-clock_skew_within_auth_tolerance",
+      "set": {
+        "observed_skew_seconds": 28,
+        "auth_tolerance_seconds": 30
+      }
+    }
+  }
+}

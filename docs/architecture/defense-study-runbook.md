@@ -24,6 +24,35 @@ allocation remains short four train families and thirty-three test families;
 there is no frozen production protocol, model/adapter identity audit, or
 realized target-coverage evidence. Formal training remains blocked.
 
+## Corpus completion update, 2026-11-02
+
+The source inventory now contains 66 tasks: 16 train, 5 tune, 4 calibration
+and 41 test tasks. Its independently reviewed family allocation is exactly
+12/4/4/40. The 37 added tasks have source-bound `Codex-AI-Reviewer` records;
+their declared author is `Codex-Scenario-Author`, while the original 29 retain
+`法宗`. AI review is accepted per the user's instruction; reviewer IDs remain
+declared attestations, not human identity authentication.
+
+The test split excludes the retry-counter candidate after overlap with the
+existing retry-repair obligation, merges service and owner restore checks into
+one source-identity family, and groups seats, writer leases and worker
+concurrency under `resource_allocation_within_capacity`. The archive object
+count case is excluded after a selected legacy completeness match; digest
+equality remains a separate source-integrity family. The freeze screen contains
+one 37-task dependency-only group; its different-family review records carry
+1,332 reciprocal current-source digest references. Historical comparison is
+based on a 799-task text inventory and selected source inspection, not a
+graph-by-graph review of all legacy tasks.
+
+All 66 tasks passed the source simulator and capability-binding checks, and
+`validate_freeze_sources` accepted the family/review allocation. A tracked
+`configs/defense/study.yaml` now carries the draft recipe and outcome criteria;
+it places the Qwen3-14B task model on GPU 0 so it does not overlap the 14 GiB
+resident on GPU 1, with the smaller Qwen3-1.7B selector using GPU 1's remaining
+headroom. Formal collection and fitting remain pending the clean committed
+revision, fresh source/context audits, protocol freeze, and realized
+allow/constrain/escalate/deny target coverage.
+
 ## Boundaries and order
 
 1. Complete the task sources and genuine independent semantic/contract review.

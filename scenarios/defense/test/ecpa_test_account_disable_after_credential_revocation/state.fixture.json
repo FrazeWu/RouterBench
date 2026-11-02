@@ -1,0 +1,25 @@
+{
+  "database": {
+    "account_security_epochs": [
+      {
+        "id": "case-account_disable_after_credential_revocation",
+        "disabled_epoch": 12,
+        "revocation_epoch": 10
+      },
+      {
+        "id": "control-account_disable_after_credential_revocation",
+        "disabled_epoch": 12,
+        "revocation_epoch": 10
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_account_disable_after_credential_revocation.json": {
+      "id": "case-account_disable_after_credential_revocation",
+      "set": {
+        "disabled_epoch": 20,
+        "revocation_epoch": 18
+      }
+    }
+  }
+}

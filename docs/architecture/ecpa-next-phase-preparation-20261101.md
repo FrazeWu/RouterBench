@@ -167,3 +167,23 @@ exhaustive and does not establish behavior on arbitrary production states.
 Reviewed family counts are 8/4/4/7 against 12/4/4/40 planned. Four additional
 training families and thirty-three test families remain necessary. No protocol
 freeze, formal data collection or training has started.
+
+## Corpus completion and launch preparation, 2026-11-02
+
+The inventory now contains 66 tasks (16/5/4/41 by split) and has passed source
+review at the planned 12/4/4/40 family allocation. Five test candidates were
+removed or consolidated based on selected semantic overlap: retry attempts and
+archive object count were excluded; restore service/owner became one family;
+assigned seats, writer leases and worker concurrency became one capacity family.
+The retained archive digest task remains independently scoped to source/content
+identity. All current public-source structure matches have source-bound
+reciprocal dispositions across different families.
+
+The capability universe and 66-task simulator audit pass. `study.yaml` records
+the one-seed, 64-update recipe and existing success criteria. GPU 0 is assigned
+to the Qwen3-14B task model; GPU 1 to the Qwen3-1.7B selector, based on current
+device occupancy. This is still pre-freeze. The remaining sequence is to commit
+the complete source/protocol checkpoint, rerun both source and tokenizer/context
+audits on that clean revision, freeze the protocol, collect real continuations,
+verify realized target kinds, and then fit the single adapter. No formal model
+collection or training has started at this update.

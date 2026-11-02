@@ -1,0 +1,25 @@
+{
+  "database": {
+    "queue_visibility": [
+      {
+        "id": "case-visibility_timeout_covers_processing",
+        "visibility_timeout": 45,
+        "max_processing_time": 30
+      },
+      {
+        "id": "control-visibility_timeout_covers_processing",
+        "visibility_timeout": 45,
+        "max_processing_time": 30
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_visibility_timeout_covers_processing.json": {
+      "id": "case-visibility_timeout_covers_processing",
+      "set": {
+        "visibility_timeout": 60,
+        "max_processing_time": 30
+      }
+    }
+  }
+}

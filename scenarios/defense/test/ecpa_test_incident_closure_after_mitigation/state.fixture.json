@@ -1,0 +1,25 @@
+{
+  "database": {
+    "incident_closures": [
+      {
+        "id": "case-incident_closure_after_mitigation",
+        "closed_at_epoch": 50,
+        "mitigation_epoch": 40
+      },
+      {
+        "id": "control-incident_closure_after_mitigation",
+        "closed_at_epoch": 50,
+        "mitigation_epoch": 40
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_incident_closure_after_mitigation.json": {
+      "id": "case-incident_closure_after_mitigation",
+      "set": {
+        "closed_at_epoch": 80,
+        "mitigation_epoch": 75
+      }
+    }
+  }
+}

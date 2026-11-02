@@ -1,0 +1,25 @@
+{
+  "database": {
+    "failover_targets": [
+      {
+        "id": "case-failover_region_distinct_from_primary",
+        "failover_region": "eu-west",
+        "primary_region": "us-east"
+      },
+      {
+        "id": "control-failover_region_distinct_from_primary",
+        "failover_region": "eu-west",
+        "primary_region": "us-east"
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_failover_region_distinct_from_primary.json": {
+      "id": "case-failover_region_distinct_from_primary",
+      "set": {
+        "failover_region": "ap-southeast",
+        "primary_region": "us-east"
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "database": {
+    "traffic_rollouts": [
+      {
+        "id": "case-canary_share_within_approval_ceiling",
+        "live_percent": 20,
+        "approved_percent": 50
+      },
+      {
+        "id": "control-canary_share_within_approval_ceiling",
+        "live_percent": 20,
+        "approved_percent": 50
+      }
+    ]
+  },
+  "files": {
+    "/workspace/requests/ecpa_test_canary_share_within_approval_ceiling.json": {
+      "id": "case-canary_share_within_approval_ceiling",
+      "set": {
+        "live_percent": 50,
+        "approved_percent": 50
+      }
+    }
+  }
+}
