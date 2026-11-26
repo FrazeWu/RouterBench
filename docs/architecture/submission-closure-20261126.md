@@ -133,3 +133,82 @@ units. Formal testing has 40 pairs, two presentations and three models, totaling
 query. Analysis retains joint K/L/R/J counts, uses all four L controls for L
 passing, and reports undefined estimates for empty conditional denominators.
 Repeated pairs and presentations remain within their 20 workflow clusters.
+
+## ECPA supplements and provenance bridge
+
+E4 executes PublicSearch once over each original tune, calibration and test
+schedule (20, 16 and 164 episodes). Its public completion-witness search uses the
+existing fixed runtime search budget. It is a supplementary baseline and never
+replaces the original tune-selected primary comparator. The recorded comparator
+is path_rule. E5 executes exactly the 164 test cases with the fitted seed-29
+selector, removing receipts only from a deep copy supplied to that selector.
+Current facts, menu, budget and full trusted runtime history remain available.
+The distribution shift and residual history information in facts limit the
+interpretation of this information-removal diagnostic.
+
+E6 has exactly two separately executed conditions. A fixed task/step/menu hash
+seeded with 20261116 permutes each actual legal menu and assigns display IDs;
+the trusted reverse map restores the selected native ID. This transformation
+also applies to the two symbolic policies, including native logical deny
+fallbacks. The other condition uses the 41 fixed manually composed public task
+paraphrases and rewritten policy descriptions in wording-paraphrases.yaml.
+Every machine-interpreted contract, grant, graph, goal, effect, primitive argument,
+private outcome, fixture and relay campaign remains identical. The three arms
+are the original fitted selector, the original tune comparator and PublicSearch.
+Each condition therefore has 3 * 41 * 2 * 2 = 492 episodes. No combined condition,
+new training, adaptive variant choice or additional fitting is performed.
+
+The supplements validate the entire native parent training/tune/calibration/test
+chain, check that all native Python kernels are byte-identical to the parent,
+and validate the adapter using the original training protocol ID. New schedule
+and execution identities are stored separately. No new arm or transformed task
+is inserted into the old frozen study. All supplemental outcomes bind the new
+source revision, parent protocol, original task source and transformed public
+digest. Short compact inference runs on GPU 0 with the existing 2-second gap;
+task inference uses GPU 1 and its 60-to-55 C cooling amendment. Both cards retain
+250 W and Default compute mode. Shared GPU 0 prevents isolated latency claims.
+
+## Queue, failures, and fixed analysis
+
+The global freeze is created only from a committed clean revision and binds all
+tracked source bytes, the three complete weight snapshots, parent phase hashes,
+all case inventories, schedules and transformation sources. Engineering startup
+and JSON probes use no benchmark cases and are reported separately. The queue
+has exactly 17 jobs and executes E9, three E1 jobs, three E2 development jobs,
+three E2 test jobs, dynamic B--E, E4 tune/calibration/test, E5, and the two E6
+conditions. E2 development is an interface check, with no outcome-based test
+selection or tuning. A reuses the identical 480 Qwen3-14B E1 attempts.
+
+Each job has at most one infrastructure recovery under a separate attempt
+identity with the same configuration. Both attempts and all failed call costs
+are retained; model invalid outputs and refusals never trigger retries. A host
+interruption retains one conservative full-context in-flight token allowance,
+marks the interrupted attempt incomplete, and permits only the single fixed
+recovery. An exhausted or non-infrastructure abort becomes unavailable; the
+queue continues to the remaining independent jobs. Atomic per-unit records and
+2-second GPU telemetry journals preserve completed observations. A supervisor
+file lock prevents duplicate queues. It only stops an owned server when PID,
+process start ticks, process group and host boot identity all match.
+
+E7 validates all sealed artifact hashes and exact denominators before analysis.
+It keeps incomplete attempts out of valid formal pools and records backend
+failures in the full denominator with an explicit validity flag. E1 reports all
+optima as primary, Pareto status secondarily, and the fixed 3-of-5 case rule.
+E2 computes K/L/R/J joint counts, requiring all four L answers and both R labels,
+and the recognition/planning gaps with their conditioning denominators. A zero
+denominator is undefined. Bootstrap uses 10,000 draws with seed 29, resampling
+whole families (whole cases for E1) including their repeated presentations.
+Equal-cluster-weight sensitivity accompanies the retained unit-weight estimate.
+Supplementary paired changes use the original corresponding fixed policy;
+PublicSearch's stability reference is the unperturbed E4 test. LoRA comparisons
+within each E6 condition are descriptive. No supplementary effect replaces the
+original E3 efficacy rule, including its zero-width interval restriction.
+
+Reports preserve original collection/fitting costs, startup, every attempted
+phase's device occupancy, requests, charged tokens, temperatures and memory,
+public-search expansion counts and selector CPU/wall time. They enumerate all
+failures and pick the lexically first recorded case per failure/success category
+for representative examples. Original E3 reboot limitations and conservative
+charges remain visible. Models, source, adapter parent, protocol, result hashes
+and reproduction commands are indexed together. Historical v13 results retain
+separate protocol labels.

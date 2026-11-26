@@ -92,6 +92,7 @@ class ModelServer:
 
     def __enter__(self) -> ModelServer:
         with socket.socket() as probe:
+            probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             probe.bind(("127.0.0.1", self.port))
         self.directory.mkdir(parents=True, exist_ok=True)
         command = [
@@ -136,6 +137,10 @@ class ModelServer:
                     "pid": self.process.pid,
                     "gpu": self.gpu,
                     "started_unix": time.time(),
+                    "host_boot_id": Path("/proc/sys/kernel/random/boot_id").read_text().strip(),
+                    "process_start_ticks": Path(f"/proc/{self.process.pid}/stat")
+                    .read_text()
+                    .split()[21],
                 },
             )
             deadline = time.monotonic() + 600
