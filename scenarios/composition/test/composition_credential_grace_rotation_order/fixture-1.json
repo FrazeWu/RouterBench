@@ -1,0 +1,35 @@
+{
+  "identities": {
+    "workflow-credential_grace_rotation": {
+      "current_identity_seen": true,
+      "grace_started": false,
+      "replacement_confirmed": false,
+      "previous_identity_retired": false,
+      "workflow_applied": false,
+      "setting_version": 1
+    }
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifacts": {
+    "report-credential_grace_rotation": {
+      "aggregate": {
+        "count": 23
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_1"
+    }
+  },
+  "artifact_field_labels": {
+    "report-credential_grace_rotation": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

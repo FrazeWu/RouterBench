@@ -1,0 +1,37 @@
+{
+  "database": {
+    "workflow-settlement_conservation": [
+      {
+        "item": "workflow",
+        "debit_evidence": true,
+        "credit_evidence": true,
+        "conservation_checked": false,
+        "workflow_applied": false,
+        "setting_version": 1
+      }
+    ]
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifacts": {
+    "report-settlement_conservation": {
+      "aggregate": {
+        "count": 23
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_1"
+    }
+  },
+  "artifact_field_labels": {
+    "report-settlement_conservation": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

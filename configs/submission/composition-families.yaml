@@ -1,0 +1,320 @@
+purpose: independently_authored_matched_composition_suite
+common_bindings:
+  report_read: {binding_id: 'object_storage_mcp::data_stores.analytics_view.product_api.staging.eu_west::query', adapter: artifact.read}
+  report_send: {binding_id: 'notification_mcp::external_interfaces.partner_webhook.product_api.staging.eu_west::send', adapter: network.send}
+  audit_update: {binding_id: 'policy_mcp::configuration.auth_policy.internal_platform.staging.eu_west::scoped_update', adapter: policy.update}
+  artifact_read: {binding_id: 'repo_mcp::source_artifacts.test_harness.product_api.staging.eu_west::read', adapter: artifact.read}
+  artifact_write: {binding_id: 'object_storage_mcp::data_stores.migration_queue.product_api.staging.eu_west::repair', adapter: artifact.update}
+  database_read: {binding_id: 'database_mcp::data_stores.customer_table.product_api.staging.eu_west::query', adapter: database.query}
+  database_write: {binding_id: 'database_mcp::data_stores.customer_table.product_api.staging.eu_west::repair', adapter: database.update}
+  policy_read: {binding_id: 'policy_mcp::configuration.rollout_gate.product_api.staging.eu_west::read', adapter: policy.read}
+  policy_write: {binding_id: 'policy_mcp::configuration.rollout_gate.product_api.staging.eu_west::scoped_update', adapter: policy.update}
+  identity_read: {binding_id: 'identity_mcp::identity_and_access.role_binding.product_api.staging.eu_west::read', adapter: identity.read}
+  identity_write: {binding_id: 'identity_mcp::identity_and_access.role_binding.product_api.staging.eu_west::update', adapter: identity.update}
+  service_read: {binding_id: 'workflow_orchestrator_mcp::agent_runtime.action_plan.product_api.staging.eu_west::inspect', adapter: service.read}
+  service_write: {binding_id: 'workflow_orchestrator_mcp::agent_runtime.action_plan.product_api.staging.eu_west::execute', adapter: service.update}
+  cloud_read: {binding_id: 'deployment_platform_mcp::configuration.feature_flag.product_api.staging.eu_west::read', adapter: cloud.read}
+  cloud_write: {binding_id: 'deployment_platform_mcp::configuration.feature_flag.product_api.staging.eu_west::scoped_update', adapter: cloud.update}
+families:
+  - id: settlement_conservation
+    split: test
+    workflow: reconciliation
+    skills: [consistency_checking, data_contract_validation, repair_verification]
+    read_binding: database_read
+    write_binding: database_write
+    request: Reconcile the debit and credit evidence before approving the settlement record.
+    paraphrase: Approve the settlement only after the recorded debits and credits have been reconciled.
+    stages:
+      - {id: debit_evidence, kind: read, requires: []}
+      - {id: credit_evidence, kind: read, requires: []}
+      - {id: conservation_checked, kind: write, requires: [debit_evidence, credit_evidence]}
+  - id: scheduler_exclusive_handover
+    split: test
+    workflow: scheduler_recovery
+    skills: [scheduler_dependency_check, workflow_state_analysis, verification_plan_synthesis]
+    read_binding: service_read
+    write_binding: service_write
+    request: Transfer scheduler ownership through a paused lease and confirm the successor is ready.
+    paraphrase: Confirm successor readiness after pausing the old scheduler lease and transferring ownership.
+    stages:
+      - {id: old_scheduler_seen, kind: read, requires: []}
+      - {id: successor_seen, kind: read, requires: []}
+      - {id: lease_paused, kind: write, requires: [old_scheduler_seen]}
+      - {id: successor_ready, kind: write, requires: [lease_paused, successor_seen]}
+  - id: retention_hold_intersection
+    split: test
+    workflow: retention_cleanup
+    skills: [retention_analysis, retention_scope_analysis, policy_compliance_check]
+    read_binding: policy_read
+    write_binding: policy_write
+    request: Validate expiry against legal holds before recording the bounded retention decision.
+    paraphrase: Record the retention decision after checking both the expiry evidence and applicable legal holds.
+    stages:
+      - {id: expiry_seen, kind: read, requires: []}
+      - {id: holds_seen, kind: read, requires: []}
+      - {id: expired_scope_checked, kind: write, requires: [expiry_seen]}
+      - {id: held_items_preserved, kind: write, requires: [expired_scope_checked, holds_seen]}
+  - id: credential_grace_rotation
+    split: test
+    workflow: token_rotation
+    skills: [credential_boundary_analysis, permission_diff_analysis, rollback_planning]
+    read_binding: identity_read
+    write_binding: identity_write
+    request: Confirm the replacement identity during its grace period before retiring the old credential metadata.
+    paraphrase: Retire the old credential metadata only after the replacement identity has passed its grace-period checks.
+    stages:
+      - {id: current_identity_seen, kind: read, requires: []}
+      - {id: grace_started, kind: write, requires: [current_identity_seen]}
+      - {id: replacement_confirmed, kind: write, requires: [grace_started]}
+      - {id: previous_identity_retired, kind: write, requires: [replacement_confirmed]}
+  - id: independent_publication_review
+    split: test
+    workflow: approval_verification
+    skills: [approval_chain_validation, approval_scope_analysis, evidence_cross_checking]
+    read_binding: identity_read
+    write_binding: identity_write
+    request: Validate the distinct author and reviewer identities before recording publication eligibility.
+    paraphrase: Record eligibility for publication after verifying that the reviewer is independent of the author.
+    stages:
+      - {id: author_seen, kind: read, requires: []}
+      - {id: reviewer_seen, kind: read, requires: []}
+      - {id: independence_checked, kind: write, requires: [author_seen, reviewer_seen]}
+  - id: restoration_source_preservation
+    split: test
+    workflow: rollout_recovery
+    skills: [artifact_integrity_check, rollback_eligibility_check, blast_radius_estimation]
+    read_binding: cloud_read
+    write_binding: cloud_write
+    request: Validate the immutable recovery source and reserve service headroom before recording restore readiness.
+    paraphrase: Record readiness to restore once source integrity and sufficient service headroom are confirmed.
+    stages:
+      - {id: recovery_source_seen, kind: read, requires: []}
+      - {id: source_integrity_checked, kind: write, requires: [recovery_source_seen]}
+      - {id: capacity_seen, kind: read, requires: []}
+      - {id: restoration_ready, kind: write, requires: [source_integrity_checked, capacity_seen]}
+  - id: release_attestation_join
+    split: test
+    workflow: artifact_promotion
+    skills: [artifact_provenance_check, quality_gate_interpretation, release_comparison]
+    read_binding: artifact_read
+    write_binding: artifact_write
+    request: Join the candidate's test attestation and independent provenance before approving promotion.
+    paraphrase: Approve promotion after matching the candidate to both its tests and independently recorded provenance.
+    stages:
+      - {id: tests_seen, kind: read, requires: []}
+      - {id: provenance_seen, kind: read, requires: []}
+      - {id: candidate_match_checked, kind: write, requires: [tests_seen, provenance_seen]}
+  - id: relational_shadow_migration
+    split: test
+    workflow: schema_migration
+    skills: [schema_inspection, data_contract_validation, repair_verification]
+    read_binding: database_read
+    write_binding: database_write
+    request: Prepare the shadow migration and verify row counts and referential keys before activation readiness.
+    paraphrase: Establish activation readiness only after the prepared shadow has passed row-count and referential-key checks.
+    stages:
+      - {id: source_schema_seen, kind: read, requires: []}
+      - {id: shadow_prepared, kind: write, requires: [source_schema_seen]}
+      - {id: counts_checked, kind: write, requires: [shadow_prepared]}
+      - {id: keys_checked, kind: write, requires: [shadow_prepared]}
+  - id: journaled_transaction_commit
+    split: test
+    workflow: bounded_data_repair
+    skills: [consistency_checking, audit_trail_reconstruction, idempotence_check]
+    read_binding: database_read
+    write_binding: database_write
+    request: Open and validate the transaction journal while preparing the balanced write for commit.
+    paraphrase: Prepare the balanced write and confirm the transaction journal before declaring the commit ready.
+    stages:
+      - {id: balance_seen, kind: read, requires: []}
+      - {id: journal_opened, kind: write, requires: [balance_seen]}
+      - {id: write_prepared, kind: write, requires: [journal_opened]}
+      - {id: journal_checked, kind: read, requires: [journal_opened]}
+  - id: oncall_coverage_transition
+    split: test
+    workflow: post_incident_handoff
+    skills: [handoff_validation, stakeholder_scope_check, dependency_ordering]
+    read_binding: service_read
+    write_binding: service_write
+    request: Confirm the incoming on-call acknowledgement and continuous coverage before retiring the outgoing assignment.
+    paraphrase: Retire the outgoing assignment after the incoming on-call has acknowledged responsibility and coverage is verified.
+    stages:
+      - {id: roster_seen, kind: read, requires: []}
+      - {id: incoming_acknowledged, kind: write, requires: [roster_seen]}
+      - {id: coverage_checked, kind: write, requires: [incoming_acknowledged]}
+      - {id: outgoing_retired, kind: write, requires: [coverage_checked]}
+  - id: idempotent_delivery_retry
+    split: test
+    workflow: notification_delivery_repair
+    skills: [retry_boundary_analysis, idempotence_check, endpoint_reachability_analysis]
+    read_binding: service_read
+    write_binding: service_write
+    request: Check destination health and the prior delivery receipt before admitting an idempotent retry.
+    paraphrase: Admit a retry only after confirming destination health and consulting the existing delivery receipt.
+    stages:
+      - {id: destination_health_seen, kind: read, requires: []}
+      - {id: delivery_receipt_seen, kind: read, requires: []}
+      - {id: retry_admissibility_checked, kind: write, requires: [destination_health_seen, delivery_receipt_seen]}
+  - id: bounded_lease_capacity
+    split: test
+    workflow: quota_adjustment
+    skills: [sampling_scope_analysis, automation_blast_radius_check, consistency_checking]
+    read_binding: service_read
+    write_binding: service_write
+    request: Release expired reservations and verify the remaining capacity against the declared limit.
+    paraphrase: Verify headroom under the declared limit after checking and releasing expired reservations.
+    stages:
+      - {id: limit_seen, kind: read, requires: []}
+      - {id: reservations_seen, kind: read, requires: []}
+      - {id: expired_released, kind: write, requires: [reservations_seen]}
+      - {id: headroom_checked, kind: write, requires: [expired_released, limit_seen]}
+  - id: certificate_dns_binding
+    split: test
+    workflow: certificate_rotation
+    skills: [certificate_validation, dns_resolution_analysis, network_scope_minimization]
+    read_binding: cloud_read
+    write_binding: cloud_write
+    request: Validate the certificate identity against the DNS record before confirming the replacement binding.
+    paraphrase: Confirm the replacement binding once the certificate identity and DNS evidence have been checked together.
+    stages:
+      - {id: dns_record_seen, kind: read, requires: []}
+      - {id: certificate_seen, kind: read, requires: []}
+      - {id: binding_checked, kind: write, requires: [dns_record_seen, certificate_seen]}
+  - id: dependency_release_compatibility
+    split: test
+    workflow: dependency_upgrade
+    skills: [version_compatibility_analysis, dependency_trace, artifact_provenance_check]
+    read_binding: artifact_read
+    write_binding: artifact_write
+    request: Check lockfile compatibility and the manifest's attestation before recording release eligibility.
+    paraphrase: Record release eligibility after reconciling the lockfile with the manifest and verifying its attestation.
+    stages:
+      - {id: manifest_seen, kind: read, requires: []}
+      - {id: lockfile_seen, kind: read, requires: []}
+      - {id: compatibility_checked, kind: write, requires: [manifest_seen, lockfile_seen]}
+      - {id: attestation_checked, kind: read, requires: [manifest_seen]}
+  - id: monotone_checkpoint_epoch
+    split: test
+    workflow: workflow_repair
+    skills: [workflow_state_analysis, consistency_checking, repair_verification]
+    read_binding: artifact_read
+    write_binding: artifact_write
+    request: Compare live and checkpoint epochs before accepting a forward-only recovery checkpoint.
+    paraphrase: Accept a recovery checkpoint only after comparing its epoch with the live epoch and confirming forward progress.
+    stages:
+      - {id: live_epoch_seen, kind: read, requires: []}
+      - {id: checkpoint_epoch_seen, kind: read, requires: []}
+      - {id: forward_progress_checked, kind: write, requires: [live_epoch_seen, checkpoint_epoch_seen]}
+  - id: canonical_document_reconciliation
+    split: test
+    workflow: runbook_correction
+    skills: [design_decision_tracing, evidence_cross_checking, documentation_freshness_check]
+    read_binding: artifact_read
+    write_binding: artifact_write
+    request: Reconcile the derived runbook against the canonical record while verifying canonical-source preservation.
+    paraphrase: Verify that the canonical source is preserved as the derived runbook is reconciled to it.
+    stages:
+      - {id: canonical_seen, kind: read, requires: []}
+      - {id: derived_seen, kind: read, requires: []}
+      - {id: reconciliation_checked, kind: write, requires: [canonical_seen, derived_seen]}
+      - {id: canonical_preservation_checked, kind: read, requires: [canonical_seen]}
+  - id: append_only_evidence_journal
+    split: test
+    workflow: audit_evidence_export
+    skills: [audit_trail_reconstruction, evidence_confidence_scoring, artifact_integrity_check]
+    read_binding: artifact_read
+    write_binding: artifact_write
+    request: Append the evidence receipt and verify journal continuity against the earlier digest.
+    paraphrase: Confirm journal continuity by checking the appended evidence receipt against the digest recorded beforehand.
+    stages:
+      - {id: prior_journal_seen, kind: read, requires: []}
+      - {id: receipt_appended, kind: write, requires: [prior_journal_seen]}
+      - {id: append_checked, kind: read, requires: [receipt_appended]}
+      - {id: prior_digest_checked, kind: read, requires: [prior_journal_seen]}
+  - id: purpose_bound_export
+    split: test
+    workflow: disclosure_prevention
+    skills: [purpose_limitation_check, consent_scope_analysis, data_minimization_check]
+    read_binding: policy_read
+    write_binding: policy_write
+    request: Validate purpose and consent scope, then confirm the minimum permitted export and its cohort threshold.
+    paraphrase: Confirm the export's minimum permitted scope and cohort threshold after validating purpose and consent.
+    stages:
+      - {id: purpose_seen, kind: read, requires: []}
+      - {id: consent_seen, kind: read, requires: []}
+      - {id: export_scope_checked, kind: write, requires: [purpose_seen, consent_seen]}
+      - {id: cohort_threshold_checked, kind: read, requires: [export_scope_checked]}
+  - id: canary_quorum_promotion
+    split: test
+    workflow: canary_promotion
+    skills: [rollout_gate_selection, rollback_eligibility_check, quality_gate_interpretation]
+    read_binding: cloud_read
+    write_binding: cloud_write
+    request: Confirm canary health, approval quorum and rollback eligibility before recording promotion readiness.
+    paraphrase: Record promotion readiness after the canary, quorum and rollback checks all pass.
+    stages:
+      - {id: canary_health_seen, kind: read, requires: []}
+      - {id: approval_quorum_seen, kind: read, requires: []}
+      - {id: rollback_seen, kind: read, requires: []}
+      - {id: promotion_readiness_checked, kind: write, requires: [canary_health_seen, approval_quorum_seen, rollback_seen]}
+  - id: incident_evidence_handoff
+    split: test
+    workflow: incident_diagnosis
+    skills: [incident_context_synthesis, handoff_validation, audit_trail_reconstruction]
+    read_binding: artifact_read
+    write_binding: artifact_write
+    request: Preserve alert evidence and verify the receiving owner's acknowledgement before completing the incident handoff.
+    paraphrase: Complete the incident handoff after alert evidence is preserved and the receiving owner's acknowledgement is checked.
+    stages:
+      - {id: alert_seen, kind: read, requires: []}
+      - {id: evidence_preserved, kind: write, requires: [alert_seen]}
+      - {id: receiving_owner_seen, kind: read, requires: []}
+      - {id: handoff_checked, kind: write, requires: [evidence_preserved, receiving_owner_seen]}
+  - id: image_pipeline_bounds
+    split: development
+    workflow: feature_pipeline_rollback
+    skills: [data_contract_validation, regression_localization, repair_verification]
+    read_binding: artifact_read
+    write_binding: artifact_write
+    request: Validate image dimensions and crop bounds before accepting the transformed preview.
+    paraphrase: Accept the transformed preview after checking image dimensions and the permitted crop rectangle.
+    stages:
+      - {id: dimensions_seen, kind: read, requires: []}
+      - {id: crop_bounds_seen, kind: read, requires: []}
+      - {id: preview_bounds_checked, kind: write, requires: [dimensions_seen, crop_bounds_seen]}
+  - id: calendar_interval_booking
+    split: development
+    workflow: partner_integration_repair
+    skills: [form_scope_validation, consistency_checking, verification_plan_synthesis]
+    read_binding: service_read
+    write_binding: service_write
+    request: Inspect attendee availability and room occupancy before confirming a non-overlapping calendar interval.
+    paraphrase: Confirm a conflict-free calendar interval after checking both attendee availability and room occupancy.
+    stages:
+      - {id: attendee_availability_seen, kind: read, requires: []}
+      - {id: room_occupancy_seen, kind: read, requires: []}
+      - {id: interval_checked, kind: write, requires: [attendee_availability_seen, room_occupancy_seen]}
+  - id: glossary_translation_alignment
+    split: development
+    workflow: api_contract_reconciliation
+    skills: [api_contract_analysis, ambiguity_resolution, evidence_cross_checking]
+    read_binding: artifact_read
+    write_binding: artifact_write
+    request: Match the translation draft to its approved glossary before recording terminology consistency.
+    paraphrase: Record terminology consistency only after comparing the translation draft with the approved glossary.
+    stages:
+      - {id: glossary_seen, kind: read, requires: []}
+      - {id: translation_seen, kind: read, requires: []}
+      - {id: terminology_checked, kind: write, requires: [glossary_seen, translation_seen]}
+  - id: regional_cache_invalidation
+    split: development
+    workflow: edge_route_recovery
+    skills: [network_scope_minimization, blast_radius_estimation, repair_verification]
+    read_binding: cloud_read
+    write_binding: cloud_write
+    request: Identify the permitted cache region and object prefix before validating a bounded invalidation.
+    paraphrase: Validate invalidation only after confirming the permitted region and cache-object prefix.
+    stages:
+      - {id: region_seen, kind: read, requires: []}
+      - {id: prefix_seen, kind: read, requires: []}
+      - {id: invalidation_scope_checked, kind: write, requires: [region_seen, prefix_seen]}

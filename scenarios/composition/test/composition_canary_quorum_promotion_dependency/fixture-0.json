@@ -1,0 +1,35 @@
+{
+  "cloud": {
+    "workflow-canary_quorum_promotion": {
+      "canary_health_seen": true,
+      "approval_quorum_seen": true,
+      "rollback_seen": true,
+      "promotion_readiness_checked": false,
+      "workflow_applied": false,
+      "setting_version": 1
+    }
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifacts": {
+    "report-canary_quorum_promotion": {
+      "aggregate": {
+        "count": 17
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_0"
+    }
+  },
+  "artifact_field_labels": {
+    "report-canary_quorum_promotion": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

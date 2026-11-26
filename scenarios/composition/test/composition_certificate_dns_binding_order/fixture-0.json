@@ -1,0 +1,34 @@
+{
+  "cloud": {
+    "workflow-certificate_dns_binding": {
+      "dns_record_seen": true,
+      "certificate_seen": true,
+      "binding_checked": false,
+      "workflow_applied": false,
+      "setting_version": 1
+    }
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifacts": {
+    "report-certificate_dns_binding": {
+      "aggregate": {
+        "count": 17
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_0"
+    }
+  },
+  "artifact_field_labels": {
+    "report-certificate_dns_binding": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

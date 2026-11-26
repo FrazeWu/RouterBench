@@ -1,0 +1,32 @@
+{
+  "artifacts": {
+    "workflow-image_pipeline_bounds": {
+      "dimensions_seen": true,
+      "crop_bounds_seen": true,
+      "preview_bounds_checked": false,
+      "workflow_applied": false,
+      "setting_version": 1
+    },
+    "report-image_pipeline_bounds": {
+      "aggregate": {
+        "count": 23
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_1"
+    }
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifact_field_labels": {
+    "report-image_pipeline_bounds": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "artifacts": {
+    "workflow-canonical_document_reconciliation": {
+      "canonical_seen": true,
+      "derived_seen": true,
+      "reconciliation_checked": false,
+      "canonical_preservation_checked": true,
+      "workflow_applied": false,
+      "setting_version": 1
+    },
+    "report-canonical_document_reconciliation": {
+      "aggregate": {
+        "count": 17
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_0"
+    }
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifact_field_labels": {
+    "report-canonical_document_reconciliation": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

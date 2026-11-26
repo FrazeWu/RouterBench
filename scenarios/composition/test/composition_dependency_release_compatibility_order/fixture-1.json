@@ -1,0 +1,33 @@
+{
+  "artifacts": {
+    "workflow-dependency_release_compatibility": {
+      "manifest_seen": true,
+      "lockfile_seen": true,
+      "compatibility_checked": false,
+      "attestation_checked": true,
+      "workflow_applied": false,
+      "setting_version": 1
+    },
+    "report-dependency_release_compatibility": {
+      "aggregate": {
+        "count": 23
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_1"
+    }
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifact_field_labels": {
+    "report-dependency_release_compatibility": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

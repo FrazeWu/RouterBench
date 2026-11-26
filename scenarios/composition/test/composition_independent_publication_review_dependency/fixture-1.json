@@ -1,0 +1,34 @@
+{
+  "identities": {
+    "workflow-independent_publication_review": {
+      "author_seen": true,
+      "reviewer_seen": true,
+      "independence_checked": false,
+      "workflow_applied": false,
+      "setting_version": 1
+    }
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifacts": {
+    "report-independent_publication_review": {
+      "aggregate": {
+        "count": 23
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_1"
+    }
+  },
+  "artifact_field_labels": {
+    "report-independent_publication_review": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

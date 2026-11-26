@@ -1,0 +1,35 @@
+{
+  "cloud": {
+    "workflow-restoration_source_preservation": {
+      "recovery_source_seen": true,
+      "source_integrity_checked": false,
+      "capacity_seen": true,
+      "restoration_ready": false,
+      "workflow_applied": false,
+      "setting_version": 1
+    }
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifacts": {
+    "report-restoration_source_preservation": {
+      "aggregate": {
+        "count": 17
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_0"
+    }
+  },
+  "artifact_field_labels": {
+    "report-restoration_source_preservation": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "artifacts": {
+    "workflow-incident_evidence_handoff": {
+      "alert_seen": true,
+      "evidence_preserved": false,
+      "receiving_owner_seen": true,
+      "handoff_checked": false,
+      "workflow_applied": false,
+      "setting_version": 1
+    },
+    "report-incident_evidence_handoff": {
+      "aggregate": {
+        "count": 17
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_0"
+    }
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifact_field_labels": {
+    "report-incident_evidence_handoff": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

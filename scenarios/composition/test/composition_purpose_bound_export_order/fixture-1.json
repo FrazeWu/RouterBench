@@ -1,0 +1,33 @@
+{
+  "policies": {
+    "workflow-purpose_bound_export": {
+      "purpose_seen": true,
+      "consent_seen": true,
+      "export_scope_checked": false,
+      "cohort_threshold_checked": true,
+      "workflow_applied": false,
+      "setting_version": 1
+    },
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifacts": {
+    "report-purpose_bound_export": {
+      "aggregate": {
+        "count": 23
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_1"
+    }
+  },
+  "artifact_field_labels": {
+    "report-purpose_bound_export": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

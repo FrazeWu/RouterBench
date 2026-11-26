@@ -1,0 +1,38 @@
+{
+  "database": {
+    "workflow-journaled_transaction_commit": [
+      {
+        "item": "workflow",
+        "balance_seen": true,
+        "journal_opened": false,
+        "write_prepared": false,
+        "journal_checked": true,
+        "workflow_applied": false,
+        "setting_version": 1
+      }
+    ]
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifacts": {
+    "report-journaled_transaction_commit": {
+      "aggregate": {
+        "count": 23
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_1"
+    }
+  },
+  "artifact_field_labels": {
+    "report-journaled_transaction_commit": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

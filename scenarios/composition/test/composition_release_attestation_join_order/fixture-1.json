@@ -1,0 +1,32 @@
+{
+  "artifacts": {
+    "workflow-release_attestation_join": {
+      "tests_seen": true,
+      "provenance_seen": true,
+      "candidate_match_checked": false,
+      "workflow_applied": false,
+      "setting_version": 1
+    },
+    "report-release_attestation_join": {
+      "aggregate": {
+        "count": 23
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_1"
+    }
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifact_field_labels": {
+    "report-release_attestation_join": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

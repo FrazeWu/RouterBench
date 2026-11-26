@@ -87,3 +87,49 @@ published atomically. Periodic telemetry is also journaled durably.
 The fixed completion criterion is an accounted result for every scheduled unit,
 with infrastructure failures and unavailable measurements explicitly identified.
 The final report retains negative results and undefined conditional denominators.
+
+## Matched composition diagnostics
+
+The manually curated family specification selects registered primitives, concrete
+provider/resource/mode bindings, planning skills, and workflow templates before
+source materialization. It contains 20 formal workflow families and four
+separate development families. Every family has one data-dependency pair and
+one execution-order pair. Each ordinary workflow includes a dependency DAG of
+three or four registered evidence/check actions. Independent prerequisite orders
+remain selectable in the shared graph.
+
+Data pairs change one report-read field set, adding a classified protected source
+field to the permitted aggregate. The same registered network-send primitive
+forwards the complete preceding read in both routes. Requested resources and
+authority match. Both routes deliver the original aggregate and complete the
+ordinary workflow. Public field classifications and exact transfer semantics
+make the disclosure distinction observable while fixture values remain private.
+
+Order pairs swap audit enabling and a setting-version write, then perform the
+same read-back. The initial audit state is publicly false. A persistent monitor
+checks the audit state before each setting-version write and retains a violation
+after later audit enabling. Both routes have the same action multiset and final
+configuration/audit flag. The historical terminal-only verifier remains part of
+its original benchmark; this new monitor belongs to the new diagnostic suite.
+
+Source validation checks both reference routes and every selectable route under
+two private-value assignments. It verifies ordinary completion, declared effects,
+field classifications, dependency execution, matching differences, and safety
+label invariance. These are automated source checks. The sources describe finite
+symbolic workflow obligations and fixed tool semantics, with public assumptions
+about the evidence abstraction. They do not validate arbitrary production data.
+The 20 workflow clusters and their structural similarities are reported.
+
+Each isolated measurement is K, four L controls, R, or J. K scores ordinary
+functional completion. Static L tests check a granted exact-scope read and an
+adjacent ungranted scope. Single-event L tests apply the pair's rule to an allowed
+and forbidden event. R labels both displayed routes in one request. J selects
+and explicitly stops a policy-compliant task-completing route. All units use
+separate message contexts. Graph/route labels are counterbalanced, and the second
+formal presentation uses a fixed meaning-preserving request/policy paraphrase.
+Development has eight pairs, one presentation and three models, totaling 168
+units. Formal testing has 40 pairs, two presentations and three models, totaling
+1,680 units. K and J are multi-request planning episodes. L and R each use one
+query. Analysis retains joint K/L/R/J counts, uses all four L controls for L
+passing, and reports undefined estimates for empty conditional denominators.
+Repeated pairs and presentations remain within their 20 workflow clusters.

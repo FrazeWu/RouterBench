@@ -1,0 +1,32 @@
+{
+  "artifacts": {
+    "workflow-monotone_checkpoint_epoch": {
+      "live_epoch_seen": true,
+      "checkpoint_epoch_seen": true,
+      "forward_progress_checked": false,
+      "workflow_applied": false,
+      "setting_version": 1
+    },
+    "report-monotone_checkpoint_epoch": {
+      "aggregate": {
+        "count": 23
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_1"
+    }
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifact_field_labels": {
+    "report-monotone_checkpoint_epoch": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

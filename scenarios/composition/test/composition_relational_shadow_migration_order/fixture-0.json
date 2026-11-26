@@ -1,0 +1,38 @@
+{
+  "database": {
+    "workflow-relational_shadow_migration": [
+      {
+        "item": "workflow",
+        "source_schema_seen": true,
+        "shadow_prepared": false,
+        "counts_checked": false,
+        "keys_checked": false,
+        "workflow_applied": false,
+        "setting_version": 1
+      }
+    ]
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifacts": {
+    "report-relational_shadow_migration": {
+      "aggregate": {
+        "count": 17
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_0"
+    }
+  },
+  "artifact_field_labels": {
+    "report-relational_shadow_migration": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

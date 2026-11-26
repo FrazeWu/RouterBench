@@ -1,0 +1,35 @@
+{
+  "services": {
+    "workflow-scheduler_exclusive_handover": {
+      "old_scheduler_seen": true,
+      "successor_seen": true,
+      "lease_paused": false,
+      "successor_ready": false,
+      "workflow_applied": false,
+      "setting_version": 1
+    }
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifacts": {
+    "report-scheduler_exclusive_handover": {
+      "aggregate": {
+        "count": 17
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_0"
+    }
+  },
+  "artifact_field_labels": {
+    "report-scheduler_exclusive_handover": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}

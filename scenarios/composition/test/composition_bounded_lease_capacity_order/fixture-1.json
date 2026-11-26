@@ -1,0 +1,35 @@
+{
+  "services": {
+    "workflow-bounded_lease_capacity": {
+      "limit_seen": true,
+      "reservations_seen": true,
+      "expired_released": false,
+      "headroom_checked": false,
+      "workflow_applied": false,
+      "setting_version": 1
+    }
+  },
+  "policies": {
+    "audit-control": {
+      "enabled": false
+    }
+  },
+  "artifacts": {
+    "report-bounded_lease_capacity": {
+      "aggregate": {
+        "count": 23
+      },
+      "protected_source": "SYNTHETIC_PRIVATE_VARIANT_1"
+    }
+  },
+  "artifact_field_labels": {
+    "report-bounded_lease_capacity": {
+      "aggregate": [
+        "approved_aggregate"
+      ],
+      "protected_source": [
+        "protected_source"
+      ]
+    }
+  }
+}
