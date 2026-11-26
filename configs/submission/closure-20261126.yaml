@@ -1,0 +1,84 @@
+plan: submission-closure-20261117-v2
+parent_evaluator_revision: 230a11174cef12b6046fc07a3193866d2bb022e2
+parent_ecpa_protocol: ecpa-781a9290088e9875b825baf82d9f99a9f915de2c45fb3d7de7f7c705093e5c60
+models:
+  qwen3-14b:
+    path: /home/dasp/models/Qwen3-14B-aria
+    served_name: RouteBench/Qwen3-14B
+  qwen3-1.7b:
+    path: /home/dasp/models/Qwen3-1.7B
+    served_name: RouteBench/Qwen3-1.7B
+  qwen2.5-7b:
+    path: /home/dasp/models/Qwen2.5-7B-Instruct
+    served_name: RouteBench/Qwen2.5-7B-Instruct
+    repository: Qwen/Qwen2.5-7B-Instruct
+    revision: a09a35458c702b33eeacc393d103063234e8bc28
+seeds: [1701, 1702, 1703, 1704, 1705]
+graph_generation:
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 2048
+  context_window: 32768
+  disable_thinking: true
+resources:
+  task_gpu: 1
+  selector_gpu: 0
+  power_limit_watts: 250
+  compute_mode: Default
+  maximum_celsius: 85
+  graph_gap_seconds: 0.25
+  graph_cooling_pause_celsius: 70
+  graph_cooling_resume_celsius: 60
+  maximum_cooling_wait_seconds: 300
+  ecpa_gap_seconds: 2
+  ecpa_cooling_by_gpu:
+    '0': {pause_celsius: 73, resume_celsius: 71}
+    '1': {pause_celsius: 60, resume_celsius: 55}
+graph:
+  inventory_cases: 776
+  primary_metric: public_lexicographic_optimal_path_success
+  equal_optima: all_receive_credit
+  minimum_seed_successes: 3
+  interface: explicit_stop_continue_v1
+  optimum_solver: z3_bounded_topology_and_independent_public_score
+  solver_timeout_milliseconds: 30000
+  maximum_paths: 100000
+  legacy_results: separate
+next_hop:
+  scenarios: 96
+  structural_selection_seed: 20261117
+  cases_per_effect_length_cell: 4
+  preferred_wide_cases_per_cell: 2
+  variants: [A, B, C, D, E]
+  top_k: 2
+  initial_search_expansions_per_candidate: 32
+  expanded_search_expansions_per_candidate: 128
+  maximum_search_budget_expansions: 1
+  maximum_width_expansions: 1
+  dynamic_boundary_ties: retain_all
+  local_view_radius: 2
+  reuse_A_from_E1: true
+composition:
+  development_families: 4
+  test_families: 20
+  pairs_per_family: 2
+  development_presentations: 1
+  test_presentations: 2
+  local_controls: 4
+  unit_order: [K, L_allow, L_deny, L_event_allow, L_event_deny, R, J]
+  contexts: isolated_per_unit
+  resampling_cluster: workflow_family
+supplement:
+  public_search_episodes: {tune: 20, calibration: 16, test: 164}
+  no_receipts_test_episodes: 164
+  robustness_conditions: [menu_permutation, wording_paraphrase]
+  robustness_arms: [compact_lora_seed_29, original_tune_comparator, public_search]
+  robustness_episodes: 984
+  transformation_seed: 20261116
+  additional_training_fits: 0
+analysis:
+  bootstrap_replicates: 10000
+  bootstrap_seed: 29
+  missing_conditioning_denominator: undefined
+  failures_retained: true
+infrastructure_recoveries_per_phase: 1
