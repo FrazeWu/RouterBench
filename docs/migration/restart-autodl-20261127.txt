@@ -1,0 +1,43 @@
+请在这台新服务器接手 RouteBench，完成固定投稿实验。用户要求直接做完，不要逐项询问，不要继续修旧服务器，不要扩展研究范围。
+
+一、获取全部交接材料
+仓库：https://github.com/FrazeWu/RouterBench
+代码分支：codex/server-handoff-20261127
+归档 Release：routebench-handoff-20261127
+先 clone 这个分支，再用 gh release download routebench-handoff-20261127 --repo FrazeWu/RouterBench 下载所有附件；公开附件也可直接下载。读取 docs/migration/HANDOFF-20261127.md、docs/migration/autodl-capacity-20261127.md 和附件 HANDOFF-MANIFEST.json。逐一核验 SHA256SUMS；workspace.tar.zst 如果被分片，先按 part-000、001 顺序合并，再解压。不要执行归档里的旧 systemd 服务；旧服务已停用。
+
+日志归档含原工作区的所有可导出代码/日志/实验记录，保留失败身份及中断状态；.git 对象历史另在 source-history.bundle，repositories.json 记录每个检出的原路径/HEAD。虚拟环境、缓存、外部数据集和基础模型权重未上传；LoRA adapter、数据采集、tune/calibration/test、冻结清单和 model-manifest.json 均保留。credential-redactions.json、exclusions.json 是导出边界，请先读。归档中旧 status=running 仅是停止前快照，以 migration-stop-20261127.json 为准。
+
+二、范围与可信来源
+原计划：artifacts/private/submission-plan-20261117/plan.md，继承 ../submission-plan-20261116/plan.md。
+原 ECPA 源码：230a11174cef12b6046fc07a3193866d2bb022e2。
+补充实验冻结源码：cf74b3de98076e746c4001c202763cd6a05aff02。
+原 ECPA 协议：ecpa-781a9290088e9875b825baf82d9f99a9f915de2c45fb3d7de7f7c705093e5c60。
+补充协议：submission-closure-e138bf55014abe801620d417275271ca0e77e78d5261c3f123f8874d58acdd64。
+模型只用 Qwen3-14B、Qwen3-1.7B、Qwen2.5-7B-Instruct。精确仓库版本、文件哈希、配置以附件 model-manifest.json / model-configs.tar.gz 为准，不能凭模型名称换快照。
+原 ECPA 已完成：采集128组，Qwen3-1.7B LoRA seed29单次64 updates，tune100、calibration80、test820。先核验 test-recovery-20261126-r4/independent-validation.json、原始完成阶段和适配器哈希。只复用这一次适配器，不重采集、不重训、不另选 checkpoint/seed。旧测试有4个损坏调用文件和2个中断调用的保守计费，部分旧遥测缺失，必须保留说明。默认复用这批已完整验证的 E3，不额外重跑1000个 episode；若用户明确另行要求 E3 重跑，另立协议，仍复用原适配器。
+
+三、从零执行新的补充批次
+保留旧机器全部记录，只做历史/诊断参考；新批次不混入旧机器不完整、过热或汇总失败的结果。
+1. E9：776案例独立最优性/可达性复核，CPU任务。
+2. E1：776案例 × 5展示种子1701..1705 × 3模型，11640次规划尝试；显式STOP/CONTINUE，所有公开字典序同分最优均给分。
+3. E2：4开发族8对，168开发测项；20测试族40对，1680正式测项（480规划episode+1200单轮查询）。K、四项全对的L、两条路线全对的R、J，上下文隔离，按20工作流族聚类；条件分母为零记未定义。只使用已手工选定注册 binding/skills/workflow 的48对来源，不按结果改题。
+4. 动态下一跳：固定96案例 × 5展示 × A/B/C/D/E。A仅在新批次 E1 的协议/输入/种子/模型完全相同时复用480次，额外跑B..E共1920次；复用不成立必须明确记录后另冻完整2400矩阵，不能悄悄漏掉A。原完整图最优为评分参考；报告安全/最优路线保留率、候选宽度、展开、tokens、延迟。
+5. E4 PublicSearch：tune20 + calibration16 + test164 =200 episode。是补充基线，不能替换原tune选出的path_rule主要比较器。
+6. E5：只去掉LoRA选择器输入的receipts，共164测试episode；保留可信运行时完整历史，不新训练。
+7. E6：菜单重排/展示ID重编码、固定语义保持改写两条件分开执行；LoRA、原主要比较器、PublicSearch三臂，共984 episode。使用固定seed20261116和原41个改写，不按结果生成变体。
+8. E7：统一分母、族聚类区间、成本、全部失败、来源/模型/协议哈希索引、复现命令和表图。不同单位不要加成一个“样本数”。
+
+四、先完成迁移工程，再技术冻结
+不要直接运行旧的17任务队列。原入口有已知缺陷：run_submission_graph.py用目录名代替registered scenario_id构建汇总；分析复用A也有同类ID风险。新服务器请在打开任何新正式结果之前统一修复并测试精确案例/种子/变体覆盖、重复/缺失检查、汇总、A复用、停止与恢复。已有 control/reconcile.py 是保留失败身份的离线诊断，不会把旧 aborted 阶段变成有效完成。
+旧机器重启后还出现nvidia-smi返回码9、ThermalLimit；E2/E4等0测项快失败不能算执行过。它们不应成为新硬件的默认参数。
+新机器路径、GPU索引、卡数、端口、驱动、库版本都需要新的执行绑定和manifest。原代码多处硬编码GPU1/task、cuda:0/selector和两卡遥测。单A800/48GB方案须把图阶段和ECPA阶段适配到同一物理GPU并为vLLM与选择器分配显存；两卡方案也须显式参数化端口/索引。仅在冻结前决定并行分片，完整记录所有固定单位和种子，不能看正式结果后调整。
+基础权重按model-manifest精确文件清单下载、核验，再覆盖归档的原配置文件；不修改原模型字节来绕过fingerprint。父协议严格比较绝对路径。优先将归档workspace实际解压到原绝对目录 /home/dasp/projects/RouteBench（不要用父源码目录的符号链接替代，否则resolve后路径变化仍可能不匹配），基础模型可放数据盘并保持 /home/dasp/models 下兼容入口。运行 ops/migration-20261127/restore_repositories.py --workspace /home/dasp/projects/RouteBench --bundle 下载位置/source-history.bundle --map 下载位置/repository-history-map.json 恢复原Git身份；该工具只建立Git索引，不改工作文件。若原路径不可恢复，必须实现显式、可审计的跨主机来源桥；不能通过删除校验、伪造原训练协议、把新臂加入旧清单来绕过校验。必要时用source-history.bundle恢复原独立检出，并用repositories.json核对HEAD。
+原环境Python3.12.12、Torch2.13.0+cu130、Transformers5.19.0、vLLM0.32.0、PEFT0.21.2、NumPy2.3.5、Z3 4.15.4.0、httpx0.28.1、pydantic2.13.4，完整版本在ops/migration-20261127/runtime-observed.txt。按新驱动兼容性选择环境，记录实际版本；工程smoke不得使用正式案例来选模型/参数。localhost请求trust_env=False，避免代理变量把本机模型请求送到代理。
+保持FP16/BF16方案，不为塞进24GB显存私自换量化模型、缩短32K上下文或换模型。保留每次请求的种子/预算/失败，不能重试无效输出来挑答案。租赁GPU保持厂商默认功率和工作模式，不施加旧机器250W上限，不取消安全停止来换结果；按新硬件事先冻结合理冷却绑定。不能影响其他用户进程。
+
+五、执行与交付
+先 git status --short，保留论文和所有用户变更；隔离检出，新实现按AGENTS.md分组本地提交，相关单测/静态检查通过后确保源码干净。冻结全套补充协议/硬件绑定/完整矩阵，开始正式运行；不改写任何旧协议/失败结果，不reset --hard，不clean，不force push。
+按原固定顺序执行。使用持久会话/守护进程，单元结果原子写入并fsync；重启后核验已有记录和计费，不把重复模型输出当独立样本。每阶段最多一次预先规定的基础设施恢复；失败/预算/拒绝/无效输出都保留。新批次结束给出有效结果或明确不可用说明，不以显著性为完成条件。
+代码、配置、文档进入Git；运行日志仍在忽略的artifacts目录，通过GitHub Release附件归档，不强行add运行产物。不得上传凭据。最后核验上传附件哈希，交付所有实验的完成/失败清单、主结果、局限、GPU小时/费用和一键复现说明。
+请自主完成以上已授权工作，不逐项确认，不新增训练、不扩展样本/模型/攻击/实验矩阵；如真正遇到账号认证或硬件不可用等外部阻塞，明确记录并继续能独立完成的部分。

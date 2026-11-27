@@ -1,0 +1,8 @@
+{
+  "protocol_id": "submission-closure-e138bf55014abe801620d417275271ca0e77e78d5261c3f123f8874d58acdd64",
+  "source_revision": "cf74b3de98076e746c4001c202763cd6a05aff02",
+  "manifest_sha256": "883aab4424f8fd1946a3de03df3c306672644264c70bb03fa0d0bb37c6b5553a",
+  "runtime": "../ecpa-final-230a11174cef/runtime-env/bin/python",
+  "matrix_jobs": 17,
+  "new_model_experiments": 0
+}

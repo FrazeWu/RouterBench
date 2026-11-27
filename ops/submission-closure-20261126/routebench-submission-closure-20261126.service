@@ -1,0 +1,18 @@
+[Unit]
+Description=Finish the frozen RouteBench submission experiment matrix
+StartLimitIntervalSec=3600
+StartLimitBurst=3
+
+[Service]
+Type=simple
+WorkingDirectory=/home/dasp/projects/RouteBench/artifacts/private/submission-closure-20261126/control
+ExecCondition=/usr/bin/test ! -f /home/dasp/projects/RouteBench/artifacts/private/submission-closure-20261126/delivery/delivery-result.json
+ExecStart=/home/dasp/projects/RouteBench/.venv/bin/python /home/dasp/projects/RouteBench/artifacts/private/submission-closure-20261126/control/finish.py
+Restart=on-failure
+RestartSec=30
+TimeoutStopSec=60
+StandardOutput=append:/home/dasp/projects/RouteBench/artifacts/private/submission-closure-20261126/delivery-controller.log
+StandardError=append:/home/dasp/projects/RouteBench/artifacts/private/submission-closure-20261126/delivery-controller.log
+
+[Install]
+WantedBy=default.target

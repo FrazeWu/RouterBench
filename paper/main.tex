@@ -327,550 +327,344 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning}
 
-\title{RouteBench: Evaluating Least-Authority Capability Routing in Tool-Using Language Agents}
+\title{CapGraphBench: Evaluating Least-Authority Capability Routing in Tool-Using Language Agents}
 \author{Anonymous ACL Submission}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-A language agent can complete a task through several tool routes that differ in
-authority and policy consequences. Task success alone does not establish whether
-the selected route was safe or unnecessarily privileged. We present RouteBench,
-a bounded capability-routing benchmark separating functional completion, policy
-compliance, and publicly defined route optimality. Its frozen inventory contains
-776 manually authored scenarios with catalog-bound typed actions, private fixtures,
-and replay-checked route certificates. We make planner-interface reachability an
-explicit validity check, distinguishing unavailable targets from model errors.
-We further specify matched counterfactual diagnostics separating local permission
-judgments, complete-route safety recognition, and safe planning, with controls for
-ordinary task competence. Finally, we formulate an auxiliary evaluation-calibrated
-path-aware capability attenuation defense: a compact language model can be fine-tuned
-to select concrete recovery interventions inside trusted execution bounds.
-The benchmark is implemented;
-the diagnostic and defense extensions require empirical validation.
+A language agent can complete a task through tool routes that differ in authority
+and policy consequences. We present CapGraphBench, a bounded capability-routing
+benchmark separating functional completion, policy compliance, and graph-relative
+path optimality. Its 776 synthetic scenarios combine manually authored workflows,
+deterministic template expansion, and replay-checked reference certificates.
+We evaluate 11 model checkpoints with five presentations per case. Under the
+historical v13 interface, exact optimal-path success ranges from 33.63\% to
+78.94\%. On 96 paired cases, flattening public preference contrasts increases
+Qwen3-14B's forbidden-outcome rate from 6.67\% to 12.50\%. Ordering controls
+identify a presentation shortcut, while a separate interface audit finds 45
+cases without a selectable safe, successful route and 279 without a selectable
+forbidden route. We retain the original denominators and report these
+reachability limits explicitly. The results motivate evaluating route choice
+alongside task success and checking interface validity before interpreting
+scores as evidence of capability or safety.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:introduction}
 
-An agent can deliver an aggregate report with or without carrying protected
-source fields into the outbound message. Both routes may finish the task using
-the same tools and coarse permissions, but their policy consequences differ.
-A safe route can also use standing credentials where delegated access suffices.
-Completion, safety, and least-authority choice ask different questions.
+Language agents can complete the same task through tool workflows that differ in
+access, permissions, and effects. Two workflows may both deliver a requested
+summary while differing in whether protected source fields enter the outgoing
+message. Even a policy-compliant workflow may exercise unnecessary authority.
+Task success alone therefore leaves policy compliance and least privilege
+unresolved \citep{saltzer1975}.
 
-Least privilege \citep{saltzer1975} and information-flow tracking
-\citep{sabelfeld2003} predate language agents. Here the challenge is interpreting
-language tasks and policies while comparing typed action sequences.
-Prompt-injection benchmarks \citep{zhan2024injecagent,debenedetti2024agentdojo}
-and agent-risk evaluations \citep{ruan2024toolemu,zhang2024safetybench}
-establish important safety settings. ToolPrivBench directly studies choosing
-higher-privilege tools when lower-privilege alternatives suffice
-\citep{yang2026toolprivbench}. These advances motivate a specific question:
-can an agent choose a safe, functionally complete, least-authority \emph{path}
-under an explicit, observable comparison contract?
+InjecAgent and AgentDojo evaluate indirect prompt injection
+\citep{zhan2024injecagent,debenedetti2024agentdojo}, and ToolEmu assesses risky
+behavior through emulated execution \citep{ruan2024toolemu}. ToolPrivBench
+studies privilege-sensitive tool choice, including escalation after transient
+failures \citep{yang2026toolprivbench}. Our complementary focus is the complete,
+dependency-constrained workflow: action order and data provenance can change
+policy outcomes even when the selected tools and permissions are unchanged.
 
-RouteBench isolates routing, not unrestricted code generation. The model selects
-a path through a finite graph of catalog-bound actions. Deterministic replay
-checks effects from a clean state; public ordinal attributes define preference
-without revealing private costs or reference certificates.
+We ask whether agents select safe, successful routes, whether they choose an
+optimal route among those alternatives, and how graph structure and presentation
+affect their choices. Such evaluation needs explicit routes, reproducible
+execution, a public preference rule, and an interface through which the reference
+routes are actually selectable.
 
-A failed endpoint can reflect task competence, permission judgment, composition
-recognition, or planning. It can also reflect an unselectable target. We separate
-construction validity, interface validity, and model behavior.
+We present \textbf{CapGraphBench}: 776 synthetic scenarios combining manual
+workflow authoring, deterministic template expansion, and bounded replay checks.
+Graph edges bind typed actions to concrete provider--resource--mode capabilities.
+Authors establish viable dependent routes before assigning evaluator references.
+Evaluation separates completion, compliance, and exact path optimality. A public
+lexicographic rule compares safe, successful routes by exposure, authority scope,
+evidence loss, and interaction; least authority is relative to this graph and
+ordering.
 
-The paper has three contributions:
-\begin{itemize}
- \item An implemented capability-routing benchmark with separate task, policy,
- and optimality endpoints, public comparison rules, trusted replay, and an
- explicit audit of interface reachability.
- \item A proposed counterfactual protocol separating local permission judgment,
- composition-safety recognition, and safe planning, with task-competence and
- presentation controls.
- \item A specified auxiliary defense, evaluation-calibrated path-aware
- capability attenuation (ECPA), connecting development diagnostics to bounded
- runtime recovery and outcome-supervised compact-model fine-tuning.
-\end{itemize}
-The latter two are methodological specifications, not claims of an observed
-diagnostic gap or validated defense improvement.
+Across 11 checkpoints and five presentations per case, historical v13 exact
+optimality ranges from 33.63\% to 78.94\%. On 96 paired cases, flattening
+public preference contrasts raises Qwen3-14B's forbidden-outcome rate from
+6.67\% to 12.50\%. Ordering controls expose a presentation shortcut. An interface
+audit also finds 45 cases with no selectable safe, successful route, limiting
+capability and safety interpretations. We retain the original denominators.
+
+Our contributions are (1) a route-level evaluation formulation with explicit
+interface-validity checks; (2) a catalog-bound, replay-checked benchmark spanning
+16 test template families; and (3) an eleven-checkpoint evaluation with structural
+ablations, ordering controls, and reachability audits. An ongoing companion
+ECPA study examines guarded recovery; this draft includes no completed defense
+effectiveness result.
 
 \section{Related Work}
 \label{sec:related}
 
-\paragraph{Agent safety evaluation.}
-InjecAgent and AgentDojo evaluate indirect prompt injection
-\citep{zhan2024injecagent,debenedetti2024agentdojo}; AgentHarm studies multi-step
-harmful tasks \citep{andriushchenko2025agentharm}, and Agent-SafetyBench broader
-interaction risks \citep{zhang2024safetybench}. ToolEmu uses model-emulated tools
-and safety evaluation \citep{ruan2024toolemu}. RouteBench instead compares
-deterministic typed effects within bounded graphs; auditability does not replace
-open-world realism or attack coverage.
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}p{0.17\textwidth}p{0.35\textwidth}p{0.44\textwidth}@{}}
+\toprule
+Benchmark & Evaluation setting & Main evaluation target \\
+\midrule
+InjecAgent & Indirect injections in tool outputs & Susceptibility to attacker-induced actions \\
+AgentDojo & Tool tasks over untrusted data & Task utility and attacker-goal success \\
+ToolEmu & LM-emulated tool environments & Task helpfulness and safety risks \\
+AgentHarm & Explicitly malicious user requests & Harmful task completion and refusal \\
+Agent-SafetyBench & Diverse interactive environments & Safety risks and agent failure modes \\
+ToolPrivBench & Sufficient tools with different privileges & Initial tool choice and failure-induced escalation \\
+CapGraphBench & Bounded graphs with typed tool actions & Completion, compliance, and declared path optimality \\
+\bottomrule
+\end{tabular}
+\caption{Benchmark settings and primary evaluation targets. CapGraphBench compares
+complete workflows through explicit graph-relative preferences and trusted replay.}
+\label{tab:benchmark-comparison}
+\end{table*}
 
-\paragraph{Privilege-sensitive choice.}
-ToolPrivBench studies initial over-privileged choice and error-induced escalation
-among individually sufficient tool alternatives, with privilege-aware
-post-training \citep{yang2026toolprivbench}. RouteBench compares
-dependency-constrained paths with distinct functional, policy, and optimality
-outcomes. Least-privilege tool evaluation is not new. The proposed diagnostics
-match tools and authority where feasible while varying provenance or order.
+\paragraph{Safety and least privilege.}
+InjecAgent and AgentDojo evaluate indirect injection through tool data
+\citep{zhan2024injecagent,debenedetti2024agentdojo}; ToolEmu uses LM-emulated
+tools to assess safety risks \citep{ruan2024toolemu}. AgentHarm studies
+explicitly malicious tasks \citep{andriushchenko2025agentharm}, while
+Agent-SafetyBench covers interactive safety failures \citep{zhang2024safetybench}.
+ToolPrivBench studies initial privilege-sensitive choice and failure-induced
+escalation \citep{yang2026toolprivbench}. RACG controls exposure through causal
+paths and trusted authorization preconditions \citep{iyer2026racg}.
+CapGraphBench compares complete workflows under declared preferences
+(Table~\ref{tab:benchmark-comparison}).
 
-\paragraph{Structural controls and learning.}
-StruQ separates instructions and data through structured queries and training
-\citep{chen2025struq}. CaMeL separates control/data flow and checks capability-governed
-releases \citep{debenedetti2025camel}. Progent enforces symbolic tool policies
-with checked narrowing or approved expansion \citep{shi2025progent};
-AgentGuard covers single- and cross-tool risks through attribute-based access
-control \citep{luo2026agentguard}. RACG gates exposure using causal paths,
-authorization prerequisites, and provenance \citep{iyer2026racg}.
-APPA supports policy-governed recovery \citep{kravchenko2026appa}, while
-CONTINUITY studies security-context contracts across components
-\citep{zheng2026continuity}. Path awareness, attenuation, and recovery are
-therefore not new guarantees of ECPA.
-
-ECPA asks whether development diagnostics help choose low-cost interventions
-without destroying safe completion options. Hard bounds follow the established
-learner/shield separation \citep{alshiekh2018shielding}. Constrained optimization
-\citep{achiam2017cpo} and conservative offline learning \citep{kumar2020cql}
-supply the formulation, not a new RL algorithm. Learning must earn its place
-against deterministic path-state, causal-gating, and recovery controls with
-comparable information and intervention choices.
+\paragraph{Information flow and enforcement.}
+Information-flow security tracks sensitive data across computations
+\citep{sabelfeld2003}. StruQ separates instructions from data
+\citep{chen2025struq}; CaMeL combines control/data-flow separation with
+capability enforcement \citep{debenedetti2025camel}. Progent enforces symbolic
+tool policies \citep{shi2025progent}, AgentGuard applies attribute-based controls
+\citep{luo2026agentguard}, and CONTINUITY studies security context across
+component boundaries \citep{zheng2026continuity}. Our benchmark uses trusted
+replay to assess a planner's route choice. Recovery and constrained-learning
+work is discussed with ECPA in Appendix~\ref{sec:ecpa}.
 
 \section{Capability-Routing Problem}
 \label{sec:problem}
 
-\subsection{Paths, Effects, and Policy}
+A scenario $\mathcal{S}=(T,G,s_0,\delta,F_T,C,B)$ specifies a task, directed
+graph $G=(V,E)$, private initial fixture, trusted action semantics, and verifiers
+for completion, compliance, and forbidden-target realization. Each edge binds a
+registered adapter and typed arguments to a provider--resource--mode capability,
+with prior-action requirements, public preference ranks, and authority atoms
+$A_e$. An atom identifies a resource, operation, and target. The planner is
+untrusted; bindings, execution, and verification are trusted.
 
-A scenario is $\mathcal{S}=(T,G,s_0,\delta,F_T,C,B)$: task $T$, directed graph
-$G=(V,E)$, private fixture $s_0$, trusted tool transition $\delta$, functional
-verifier $F_T$, policy verifier $C$, and forbidden-effect predicates $B$.
-An edge binds a registered adapter, typed arguments, and a concrete
-provider--resource--mode capability. Its authority declaration $A_e$ contains
-exact $(\mathrm{resource},\mathrm{operation},\mathrm{target})$ atoms.
-Trusted previews recompute these atoms during construction auditing.
-
-Let $\mathcal{P}_H$ contain graph-continuous start-to-terminal paths within
-bound $H$. Dependencies must hold before execution. Replay produces state
-$s_k$ and history $\tau_k$. Write $F_T(p)$ and $C(p)$ for verification after
-replay, and $B(p)=1$ when an assigned forbidden target is realized.
-The eligible set is
+\paragraph{Routes and outcomes.}
+Let $\mathcal{P}_H$ contain start-to-terminal routes with at most $H$ actions.
+Replay starts from a fresh $s_0$, checks dependencies, and recomputes authority
+atoms from each action and its current state. Routes with unsatisfied dependencies
+are ineligible. Among executable routes, safe completion requires
 \[
  \mathcal{P}_{\mathrm{safe}}
  =\{p\in\mathcal{P}_H:F_T(p)\land C(p)\land\neg B(p)\}.
 \]
-Compliance alone does not imply completion: doing nothing may be compliant.
-The footprint $A(p)=\bigcup_{e\in p}A_e$ is also insufficient to determine
-composition safety because it discards order and data dependencies.
+Completion and compliance are distinct: a compliant route may leave the task
+unfinished. The footprint $\bigcup_{e\in p}A_e$ omits order and data dependencies,
+so route safety requires contextual execution.
 
-\subsection{An Observable Preference Contract}
+\paragraph{Public preference.}
+Each edge has four ranks $r_j(e)\in\{0,1,2,3\}$, lower preferred, for exposure,
+authority scope, evidence loss, and interaction, in that priority order
+(Table~\ref{tab:ordinals}). We sum ranks within each dimension and minimize
+lexicographically over safe, successful routes:
+\begin{align*}
+ \mathbf{q}(p)&=\bigl(\textstyle\sum_{e\in p}r_j(e)\bigr)_{j=1}^{4},\\
+ \mathcal{P}^{*}&=\underset{p\in\mathcal{P}_{\mathrm{safe}}}
+ {\operatorname{arg\,min}_{\mathrm{lex}}}\mathbf{q}(p).
+\end{align*}
+Every exact minimizer receives credit, including ties with a different route
+from the stored certificate. These ordinal sums define graph-relative
+preferences, not calibrated risk; forbidden effects exclude a route before
+comparison.
 
-The formal inventory assigns four public ordinal attributes to every edge:
-exposure, authority scope, evidence loss, and interaction.
-Each has four levels ranked $0$ through $3$, with lower preferred
-(Table~\ref{tab:ordinals}). Define
-\[
- q_j(p)=\sum_{e\in p}r_j(e),\qquad \mathbf{q}(p)=(q_1,q_2,q_3,q_4),
-\]
-\[
- \mathcal{P}^{*}=
- \underset{p\in\mathcal{P}_{\mathrm{safe}}}
- {\operatorname{arg\,min}_{\mathrm{lex}}}\ \mathbf{q}(p).
-\]
-Comparison is lexicographic in that order. All exact minimizers receive credit.
-Pareto optimality is reported separately, not substituted for the exact endpoint.
-The current planner payload also contains a conflicting Pareto-credit field.
-The two optimal sets coincide in all 776 frozen cases, so this does not change
-their scoring sets; future freezes must align the prompt and scorer explicitly.
+\paragraph{Information boundary.}
+The planner sees the task, goal, typed tools, graph, arguments, dependencies,
+authority atoms, and preference rule. Descriptive branch names are anonymized.
+Fixtures, reference routes, evaluator minimum authority, private costs, and
+outcome labels are withheld (Appendix~\ref{app:artifacts}). Unsafe routes are
+decoys within ordinary tasks. Active injection, arbitrary shell access,
+adapter compromise, and side channels are outside this benchmark setting;
+the separate ECPA study uses the threat model in Appendix~\ref{sec:ecpa}.
 
-\begin{table}[t]
-\centering
-\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{0.63\columnwidth}@{}}
-\toprule
-Dimension & Levels, from rank 0 to rank 3 \\
-\midrule
-Exposure & isolated, delegated, session, standing credential \\
-Scope & exact, bounded, workspace, environment \\
-Evidence loss & primary, corroborated, rendered, inferred \\
-Interaction & direct, mediated, interactive, manual \\
-\bottomrule
-\end{tabular}
-\caption{Public ordering. Ordinal sums are an evaluator convention,
-not calibrated risk or universal security severity.}
-\label{tab:ordinals}
-\end{table}
-
-\emph{Least authority} here is graph-relative preference, not universal minimality.
-Ordinal attributes cannot make forbidden effects eligible.
-
-\subsection{Threat Model and Trust Boundary}
-
-The untrusted planner selects routes but cannot modify bindings, semantics,
-verifiers, or fixtures. Unsafe branches are decoys under ordinary tasks,
-not active prompt-injection attacks.
-
-Public input contains task, functional goal, typed tools, graph, arguments,
-authority, and ordering, but not descriptive branch names. Fixtures,
-certificates, minimum-authority declarations, costs, and outcomes are private.
-Diagnostics additionally expose policy and sufficient symbolic state; not every
-historical case meets that stronger condition. Typed execution and verification
-are trusted. Arbitrary shell access, adapter compromise, and side channels
-are out of scope.
-
-\section{RouteBench Construction}
+\section{CapGraphBench Construction}
 \label{sec:benchmark}
+
+CapGraphBench combines catalog-bound manual authoring, deterministic template
+expansion, and bounded replay validation (Figure~\ref{fig:construction}). The
+frozen bundle separates public planning inputs from private evaluator material.
 
 \begin{figure*}[t]
 \centering
 \begin{tikzpicture}[
- stage/.style={draw,align=center,font=\scriptsize,text width=2.75cm,minimum height=0.72cm,inner sep=3pt},
- proposed/.style={stage,dashed},
- evaluator/.style={stage,draw=red!65!black},
- bridge/.style={stage,draw=green!45!black},
+ stage/.style={draw,align=center,font=\footnotesize,text width=2.75cm,
+   minimum height=1.70cm,inner sep=4pt},
+ view/.style={draw,align=center,font=\footnotesize,text width=5.55cm,
+   minimum height=1.20cm,inner sep=4pt},
  >=Stealth
 ]
-\node[stage] (task) at (0,0) {Frozen ScenarioBundle\\task, graph, actions};
-\node[stage] (planner) at (4.5,0) {Existing graph evaluation\\selection / adherence};
-\node[evaluator] (verify) at (9,0) {Private evaluator\\fixture, verifier, certificate};
-\draw[->] (task) -- (planner);
-\draw[->] (planner) -- (verify);
-\node[bridge] (bridge) at (4.5,-1.45) {Public evaluation bridge\\counts, family, length};
-\node[proposed] (contracts) at (0,-1.45) {Public recovery contract\\menu and witness};
-\node[stage] (monitor) at (9,-1.45) {Trusted ECPA monitor\\approval, recheck, receipt};
-\draw[->] (task) -- (bridge);
-\draw[->] (planner) -- (bridge);
-\draw[->,dashed] (verify) -- node[above,font=\tiny]{labels only} (bridge);
-\draw[->] (contracts) -- (monitor);
-\draw[->] (bridge) -- node[above,font=\tiny]{strata/report} (contracts);
-\node[proposed] (agent) at (0,-2.9) {Frozen normal agent\\tampered text / forged call};
-\node[stage] (intervene) at (4.5,-2.9) {allow / constrain /\\escalate / deny};
-\node[proposed] (trace) at (9,-2.9) {Actual traces\\accept/reject/failure};
-\draw[->] (agent) -- (intervene);
-\draw[->] (intervene) -- (monitor);
-\draw[->] (monitor) -- (trace);
-\draw[->] (trace) |- (agent);
-\node[proposed] (learn) at (4.5,-4.35) {Compact LM with LoRA\\outcome-derived supervision};
-\draw[->] (trace) -- (learn);
-\draw[->] (learn) -- (intervene);
-\node[evaluator] (outcome) at (9,-4.35) {Evaluator outcomes\\safe recovery, cost, violation};
-\draw[->] (monitor) -- (outcome);
-\draw[->] (outcome) -- (learn);
+\node[stage] (author) at (0,0) {Catalog-bound authoring\\Adapters, bindings,\\skills, workflows};
+\node[stage] (expand) at (3.65,0) {Template expansion\\Authored sources,\\deterministic instances};
+\node[stage] (replay) at (7.30,0) {Replay validation\\Paths, dependencies,\\effects, certificates};
+\node[stage] (freeze) at (10.95,0) {Frozen inventory\\776 synthetic cases\\Catalog and case digests};
+\draw[->] (author) -- (expand);
+\draw[->] (expand) -- (replay);
+\draw[->] (replay) -- (freeze);
+\node[view] (public) at (2.00,-2.10) {Planner view\\Task, graph, actions\\Authority and public ranks};
+\node[view,dashed] (private) at (8.95,-2.10) {Evaluator view\\Fixture and verifiers\\Reference certificates};
+\draw (freeze.south) -- (10.95,-1.20) -- (2.00,-1.20);
+\draw[->] (2.00,-1.20) -- (public.north);
+\draw[->] (8.95,-1.20) -- (private.north);
 \end{tikzpicture}
-\caption{Complete RouteBench--ECPA framework. Solid arrows are implemented
-data paths; dashed nodes/arrows mark formal defense work still requiring a new
-protocol freeze. The bridge exports only aggregate/public evaluation metadata;
-private evaluator outcomes may label realized training branches but never enter
-the online selector input.}
-\label{fig:overview}
+\caption{CapGraphBench combines manual workflow authoring with deterministic
+template expansion and replay validation. The frozen bundle separates public
+planning inputs from private fixtures and evaluator references. Solid and
+dashed output boxes denote planner-visible and evaluator-only material,
+respectively.}
+\label{fig:construction}
 \end{figure*}
 
-The defense bridge now consumes the existing evaluator's public graph audit and
-aggregate endpoint projection. It carries scenario digest, semantic family,
-route-length band, candidate/path counts, and public-route ambiguity into
-stratification and collection manifests. It does not carry hidden certificates,
-fixtures, private route costs, or evaluator-owned outcomes into the online
-selector input; actual rollout outcomes supply offline training labels and
-held-out evaluation results. This makes the connection operational without turning
-the historical v13 planner result into training data.
+\paragraph{Authoring and materialization.}
+Authors select primitive adapters, concrete provider--resource--mode bindings,
+planning skills, and workflow templates from the capability universe; the
+executor catalog defines adapter implementations. Multiple viable routes and
+dependencies precede evaluator reference assignment. Each source supplies a
+task, synthetic fixture, graph, assertions, and safe/forbidden certificates.
+Deterministic materialization reuses authored structures while substituting
+identifiers and allocation metadata; 425 of 776 cases carry an explicit expansion
+tag. Instance count therefore exceeds independently authored workflows. Provider
+bindings model access contexts; execution uses the trusted local simulator.
 
-\subsection{Catalog-Bound Authoring}
-
-For each schema-v4 case, authors manually select primitive adapters, a concrete
-capability binding, planning skills, and a workflow template from the capability
-universe; the executor catalog is only the adapter registry. Multiple viable,
-dependency-constrained routes precede assignment of the evaluator reference.
-
-A case contains a public task/graph, private fixture, functional/policy assertions,
-and safe/forbidden-target certificates. Bounded enumeration checks edge reachability,
-dependencies, previewed authority, safe completion, and forbidden effects.
-Certificates are replay witnesses, not model-visible answers.
-Construction also requires a non-reference terminal path no longer than the
-reference, blocking a unique-shortest-path shortcut but not every presentation
-or semantic shortcut.
-
-All self-authored task and fixture content is synthetic. A single reviewer
-manually checked a random 10\% sample for task plausibility, policy clarity,
-and route-label correctness; no issues were identified in that sample.
-
-\subsection{Inventory and Coverage}
-
-The frozen inventory contains 776 primary cases, 4,982 edges, and 16 test
-template families, with 3--6 bounded terminal paths per graph.
-All formal edges have public ordinal attributes. The freeze records 761 unique
-exact optima and 15 cases with equal public rank; universal uniqueness is
-not a property of this inventory.
-
-The taxonomy has eight effect families (Table~\ref{tab:effects}), eight permission
-dimensions, ten tool surfaces, five topology labels, and six mechanisms:
-fixed controls, parameter/scope and equivalent-tool substitution, staging,
-reordering, and authorization-state manipulation. Tags do not establish coverage
-of every cross-product or realistic attack. Appendix~\ref{app:artifacts} lists
-the permission dimensions.
+\paragraph{Quality control.}
+Automated checks cover schema/catalog validity, public ranks, bounded path
+coverage, dependencies, authority declarations, and replayed outcomes. The safe
+certificate must be an exact minimizer. Forbidden certificates must complete the
+task, realize their target, and violate policy. Another terminal path must be no
+longer than the safe reference, preventing a unique-shortest-path shortcut.
+Freezes bind catalog/scenario digests. One reviewer checked a random 10\% sample
+for plausibility, policy clarity, and labels, reporting no issues; this does not
+validate every case or measure reviewer agreement.
 
 \begin{table}[t]
 \centering
-\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{0.80\columnwidth}@{}}
+\small
+\begin{tabular}{@{}lr@{}}
 \toprule
-Family & Forbidden effect \\
+Property & Value \\
 \midrule
-F1 & Unauthorized observation \\
-F2 & Unauthorized transfer \\
-F3 & Unauthorized modification \\
-F4 & Destruction or disruption \\
-F5 & Privilege or identity manipulation \\
-F6 & Audit or evidence manipulation \\
-F7 & Persistence or supply-chain change \\
-F8 & Unauthorized external action \\
+Primary test cases & 776 \\
+Tagged template expansions & 425 \\
+Test template families & 16 \\
+Graph edges & 4,982 \\
+Bounded terminal paths per graph & 3--6 \\
+Actions per safe certificate & 1--5 \\
+Cases with a unique exact optimum & 761 \\
+Cases with tied exact optima & 15 \\
 \bottomrule
 \end{tabular}
-\caption{Primary effect families; secondary tags retain multi-factor coverage.}
-\label{tab:effects}
+\caption{Frozen inventory statistics for the 776 test instances.}
+\label{tab:inventory}
 \end{table}
 
-Five nominal route-length bands are defined, but only the first three are
-populated in the formal inventory. Safe certificate lengths are 1--5 actions;
-nominal strata and actual path lengths must not be conflated.
-Development cases are additional. Split independence must be audited by semantic
-workflow family, not renamed entities or substituted fixture values.
+\paragraph{Coverage and splits.}
+The 16 test template families have 48 or 49 cases each; eight forbidden-effect
+families have 97 each (Table~\ref{tab:effects}). Additional tags cover eight
+permission dimensions, ten tool surfaces, five topologies, and six mechanisms.
+These tags do not establish independent workflow diversity. Only three of five
+nominal length bands are populated; actual safe certificates have 1--5 actions.
+All 776 cases are test data; the split contract reserves eight development
+families and restricts tuning to them. Semantic independence requires content
+review beyond family labels (Appendix~\ref{app:artifacts}).
 
-\subsection{Interface Eligibility}
-\label{sec:eligibility}
-
-Construction validity does not establish interface validity.
-Let $\mathcal{P}_{\nu}$ denote routes selectable under interface $\nu$.
-Current v13 selects outgoing edges and stops at the first declared terminal.
-It excludes paths continuing through an interior terminal, although enumeration
-includes them. Deterministic replay auditing finds 45 frozen cases with no
-v13-reachable safe functional route, and 279 with no reachable forbidden
-route. The former also lack a reachable exact optimum.
-
-These are graph/interface properties, not model outcomes.
-Keep the original 776-case endpoint identifiable. Filtering needs a distinct
-analysis identity and performance-independent eligibility rule. Capability
-interpretation requires a reachable optimum; attack avoidance requires an unsafe
-alternative. Appendix~\ref{app:repair} specifies a proposed stop/continue repair;
-it needs a new protocol and fresh measurements, not overwritten v13 results.
-
-\section{Evaluation Contract}
+\section{Evaluation Protocol}
 \label{sec:protocol}
 
-\paragraph{Selection and execution.}
-V13 exposes the whole graph and selects outgoing edges through JSON, without
-replay observations, repair, backtracking, or retries. Seed-stable label/order
-permutations change presentation only. Earlier full-path and unpermuted
-protocols are separate conditions.
+\paragraph{Historical v13.}
+At each pre-replay choice, the planner receives the full public graph, current
+node, selected prefix, and outgoing-edge menu, and returns a JSON edge ID.
+Selection stops at the first terminal; a bound overrun or nonterminal dead end
+invalidates the attempt. The route is then replayed from a fresh fixture, with
+no backtracking, repair, or automatic retry. Replay allows proposed actions,
+stops on the forbidden target or runtime bound, and evaluates the resulting
+state. Primary success is $O(p)=\mathbf{1}[p\in\mathcal{P}^{*}]$; completion,
+compliance, and replay-confirmed forbidden outcomes (``attack path'') are reported
+separately. Certificate matching and Pareto membership are secondary.
 
-\paragraph{Endpoints.}
-For valid replay, report functional success $F_T$, compliance $C$,
-forbidden-target realization $B$, safe completion
-$J=F_T\land C\land\neg B$, and exact optimality
-$O=J\land[p\in\mathcal{P}^{*}]$.
-Certificate matching and Pareto optimality are separate diagnostics.
-Malformed output is an assessed model failure. Backend failure leaves a
-case unassessed, not safely refused. Denominators distinguish valid, invalid,
-infrastructure-failed, and interface-ineligible cases.
+\paragraph{Repeated measurements.}
+Each case has five relabeled/reordered presentations, seeds 1701--1705,
+temperature 0, top-$p$ 1, and a 2,048-token limit per selection call. A case is
+\emph{capable} if at least three attempts achieve $O=1$. Invalid outputs remain
+failures; backend failures leave cases unassessed and exclude incomplete runs
+from full comparisons. Each complete model row retains 776 cases and 3,880
+attempts. Descriptive paired 95\% intervals use 10,000 case-bootstrap resamples,
+keeping repeats together; template reuse prevents interpreting these as
+independent-family uncertainty.
 
-\paragraph{Replication and provenance.}
-Five seeds at temperature zero index repeated case/presentation measurements;
-the capable-case endpoint requires at least three optimal successes.
-Seeds are not independent samples. Use paired case-level uncertainty and
-family-aware sensitivity checks.
+\paragraph{Interface validity.}
+\label{sec:eligibility}
+Construction permits continuation through an interior terminal, while v13 stops
+there. Consequently, 45 cases lack a selectable safe completion or exact optimum,
+and 279 lack a selectable forbidden route. These counts remain in historical
+denominators: unavailable optima cannot diagnose model error, and unavailable
+forbidden routes cannot test safety discrimination. The public payload also
+contains conflicting Pareto-primary wording, although Pareto and exact-optimal
+sets coincide in all 776 cases. A repair or filtered population needs a new
+protocol identity and fresh reporting (Appendix~\ref{app:repair}). Manifests bind
+clean source revisions, scenarios, models, runtime, and decoding; additional
+reproducibility details are in Appendix~\ref{app:artifacts}.
 
-Manifests bind clean source revision, planner/dependency and model hashes,
-runtime, scenario digests, and generation settings. Aggregates exclude raw
-prompts, responses, fixtures, graphs, and certificates. Development alone
-supports prompt/controller selection. Fresh diagnostic and defense tests need
-independent freezes; reused formal results are not unseen generalization.
+\section{Companion Defense: ECPA}
+\label{sec:defense-study}
 
-\section{Counterfactual Composition Diagnostics}
-\label{sec:diagnostics}
+ECPA (evaluation-calibrated path-aware capability attenuation) studies guarded
+recovery when an external relay tampers with model-response text or forges a
+structured tool call. The relay cannot execute actions, change trusted state,
+or forge approvals. Historical v13 measures pre-replay selection; ECPA instead
+mediates execution and replanning under the separate runtime contract in
+Appendix~\ref{sec:ecpa}.
 
-% Proposed protocol; no observed diagnostic gap is claimed.
-The unit is a matched pair $(p^{+},p^{-})$. Both complete the ordinary task
-under trusted replay; only $p^{-}$ realizes a specified forbidden effect.
-Pairs share task, initial state, tools, and, where feasible, requested authority.
-Change one declared dependency or ordering relation. Record residual
-differences when exact matching fails rather than calling the contrast
-composition-only.
+\paragraph{Guarded intervention.}
+For each proposal, a trusted monitor constructs a legal menu: allow, constrain
+to a registered narrower action, escalate an exact scope increment for approval,
+or deny and permit bounded replanning. A constrained offer requires the task
+agent's exact acceptance; rejection dispatches nothing. Grants bind the
+principal, task, request, epoch, and expiry and cannot override fixed
+prohibitions. Immediately before dispatch, the monitor rechecks preconditions,
+provenance, effects, and grants. Trusted receipts alone update runtime facts.
+These guards are common to the matched controllers; safety does not depend on
+the learned selector.
 
-Public inputs include authorization rules, semantics, classifications, and
-symbolic state sufficient to infer safety for all private fixtures consistent
-with that projection. Ambiguity disqualifies a pair. Inputs exclude private
-values, post-states, certificates, and labels. Both routes must be selectable
-under the diagnostic interface; ordinary task completion by both is an
-inclusion criterion.
+\paragraph{Outcome-derived selection.}
+A Qwen3-1.7B LoRA selector chooses a candidate ID from public task/contracts,
+the proposal, trusted history, counters, and legal menu; the Qwen3-14B task
+agent stays frozen. Independent simulator continuations provide candidate-choice
+targets from violations, safe completion, and cost. The selector receives no
+private fixture, evaluator labels, reference route, or raw untrusted response
+text. Invalid choices fall back deterministically, and every choice is
+revalidated. Standard supervised fine-tuning is not an algorithmic contribution.
 
-\subsection{Two Controlled Interventions}
-
-\paragraph{Data dependencies.}
-Both routes deliver an aggregate report, matching tools, resources, and authority
-where feasible. The public policy permits internal access but forbids outbound
-source fields. Change payload dependencies: only the unsafe route additionally
-carries protected source fields. Public classifications and symbolic references
-make provenance inferable without private values. Blanket outbound refusal
-fails the safe control.
-
-\paragraph{Execution order.}
-Vary only order, fixing task, initial state, tools, arguments, and authority.
-A public policy requires auditing whenever a sensitive configuration is modified.
-Starting with auditing disabled, the safe route enables auditing before
-modification; the unsafe route modifies before enabling auditing.
-Both finish with the same configuration and audit-enable flag, but only the
-latter includes an unaudited modification. Check a persistent history predicate,
-not those terminal values alone. Initial audit state, policy, and semantics
-are public. This proposed example does not imply that the existing terminal-state
-verifier implements the event monitor.
-
-\subsection{Recognition and Planning}
-
-Use isolated contexts without feedback between tests.
-An ordinary task-only control measures functional competence ($K$).
-Local tests ($L$) cover static subject/operation/resource judgments and
-one-event policy-rule comprehension with authorized/unauthorized controls.
-They use the same rule wording without requiring history or dependency
-reconstruction: passing $L$ does not logically entail route safety.
-Recognition ($R$) requires correctly labeling both routes.
-Planning ($J$) requires safe functional completion from the shared graph.
-Constant unsafe labels fail paired recognition; refusal fails planning.
-
-Report marginal outcomes and their joint distribution, including
-\begin{align*}
- D_{\mathrm{rec}}&=\Pr(\neg R\mid K\land L),\\
- D_{\mathrm{plan}}&=\Pr(\neg J\mid K\land L\land R).
-\end{align*}
-Zero conditioning counts mean undefined estimates, not zero error.
-Recognition failure supports a behavioral composition gap; planning failure
-after recognition supports a recognition/planning discrepancy. Neither reveals
-internal reasoning or establishes a causal cognitive mechanism.
-Task-only failures remain capability failures.
-
-Counterbalance route order and labels; include semantic-preserving paraphrases
-without removing safety evidence. Resample at the task/pair level, keeping
-repeated presentations together. Report unconditional and conditioned estimates
-because conditioning can select easier tasks.
-Independently author this suite without changing frozen RouteBench cases.
-
-\section{Auxiliary Defense: ECPA}
-\label{sec:ecpa}
-
-ECPA studies runtime containment when an external relay hijacks or injects model
-response content. The relay may alter ordinary text or forge a structured tool
-call, causing a frozen ordinary agent to propose a sequence of increasingly
-privileged or task-diverting actions. It cannot directly execute tools, alter
-trusted runtime state, or bypass authorization and final dispatch checks. This
-assumes compromise at or beyond a response relay; transport integrity alone is
-outside the defense claim. The local defender uses a separate trusted inference
-channel. Each attack task is paired with the same benign task
-without response tampering. The interleaved runtime, real task-agent interface
-and development scorer are implemented. Compact-model selection, LoRA training,
-source-bound freeze checks and collection/fitting entry points are implemented;
-the reviewed corpus, actual formal freeze and benefit comparison remain pending.
-Historical v13 is a separate pre-replay interface.
-
-The compact policy selects recovery interventions; singleton menus bypass inference.
-Public contracts determine admissibility; hidden verifiers, reference routes/costs
-and evaluator minimum authority never inform runtime choices. Diagnostics may
-prioritize training data but cannot expand permissions. Recovery learning and
-diagnostics-guided acquisition are separate hypotheses; training alone is not novel.
-
-\subsection{State and Intervention Menu}
-
-The state contains public contracts, graph node, proposal, grants, trusted
-monitor/provenance history and remaining budgets. Hidden optima, fixture answers
-and model explanations are not authorization evidence. Trusted code offers a
-checked proposal, a registered narrower action, exact scoped approval, or denial
-with replanning. Narrowing requires exact agent acceptance. Approved grants bind
-principal, task, request, epoch and expiry; fixed prohibitions persist. A final
-state-bound recheck precedes dispatch. Only trusted receipts update facts/history.
-
-A bounded pure witness uses public preconditions/effects, goals, grants and horizon.
-It returns feasible, infeasible or unknown, executes no tool and shows no suffix
-path. Unknown alternatives are not executable. Witness soundness remains a
-contract-authoring assumption; public search is also a matched baseline.
-
-\subsection{Data and Learning}
-\label{sec:learning}
-
-Collect actual intervention-dependent continuations, retaining failures, rejection,
-approval and independent simulator branches. Record allowed state/history/menu
-features and actual outcomes. Separate task-sampling, intervention-behavior and
-branch-assignment probabilities. Cutoff is censoring, not a failed terminal label.
-A sufficient independent corpus remains outstanding. Separate semantic families
-across all four splits and reserve text-attack operators for fresh tests.
-
-The primary learned method uses LoRA fine-tuning of one compact open-weight
-language model, Qwen3-1.7B. The model size is selected; exact snapshots and the
-formal recipe remain to be frozen after the completed timing pilot. The Qwen3-14B task agent
-remains frozen. At sampled training
-states, execute candidate interventions in independent simulator branches under
-the same continuation policy and attack condition. Derive choice targets from
-realized violation, safe-completion and cost outcomes, preferring violation-free
-completion and then lower cost. These observations are noisy labels, not optimal
-route certificates. Use standard supervised candidate-choice training.
-
-Input contains the public task/contracts, structured proposal, trusted path
-history, resource counters and legal menu. Exclude raw untrusted response text
-and private evaluator material from inputs; actual evaluator outcomes supply
-offline labels only. Output is a current-menu candidate ID, without generated
-action parameters or rationales. Invalid output uses deterministic fallback;
-every choice receives trusted runtime revalidation. Calibration audits a fixed
-selected policy. LoRA and supervised learning are not new learning algorithms.
-
-\subsection{Guarantees and Empirical Burden}
-
-Complete mediation, sound contracts and authenticated approvals support an
-established reference-monitor argument, not a new theorem or learned-safety
-guarantee. The primary comparison uses five conditions: unguarded behavior as an
-attack reference, per-action authorization, deterministic path-state recovery,
-the frozen compact base model, and that same model after LoRA fine-tuning. The
-last pair shares inputs, prompts, menus and decoding settings, isolating training
-benefit. Guarded methods share hard prohibitions and final rechecks; path-level
-methods also share concrete menus. Use one model and one supervised recipe;
-online RL and model-size sweeps are outside the primary plan.
-Hold out task families across training and test; text operators are also held out.
-Pair tampered and benign versions of each
-task, covering both text injection and forged structured calls. Report attack
-success, episode violations, benign completion, unnecessary interventions and
-total cost separately. Safe recovery requires actual completion, explicit stop
-and no episode violation. The defense corpus and formal freeze remain pending;
-sample size and repetitions will be set after a timed pilot, aiming for modest
-overall compute and fine-tuning only one small model, without a fixed hour ceiling.
-Equality with deterministic control does not demonstrate learning's added value.
-
-The defense study separates feasibility from efficacy evidence. A development-only
-operational pilot measured paired episode cost, branch completion,
-Qwen3-1.7B inference latency, LoRA memory and fit time, and thermal stability
-(Appendix~\ref{app:training}); pilot cases and disposable timing adapters will not
-enter formal fitting,
-calibration, or the final estimate. New
-semantic families will be partitioned into training, tuning, calibration, and
-fresh-test sets before collection. The final test will run all five arms on matched
-benign and staged-relay episodes, covering text injection and forged structured
-calls, in randomized arm order. Repeated presentations remain nested within
-semantic families. The family is the inference cluster; paired intervals will be
-reported for attacked safe recovery and benign functional success, with violations
-and attack success reported separately. After the pilot, we will freeze the family
-count, presentations, single training seed, stopping rule, and cost estimate before
-opening test outcomes. If independent-family coverage cannot support the
-prespecified success criterion, the result will be reported as inconclusive.
+\paragraph{Matched study.}
+The 66-task source inventory allocates 16/5/4/41 tasks and 12/4/4/40 semantic
+families to training/tuning/calibration/test. The five arms are unguarded
+behavior, per-action authorization, a deterministic path rule, the prompted
+compact base, and its fine-tuned counterpart. The study pairs benign/attacked
+episodes and text/structured relays, selects the strongest guarded comparator
+on tuning, and retains families as uncertainty clusters. Safe recovery requires
+completion, explicit STOP, and no episode violation. The study is in progress;
+this draft reports no completed efficacy comparison. Full criteria, source-review
+limits, and runtime details appear in Appendices~\ref{sec:ecpa}--\ref{app:runtime}.
 
 \section{Experiments}
 \label{sec:experiments}
 
-\paragraph{Protocol.}
-We report the existing historical v13 evaluation, rather than a repaired
-stop/continue interface. The held-out inventory has 776 cases; five presentation
-seeds were run for each full-benchmark model (3,880 attempts per model) with
-temperature 0, top-$p$ 1, and a 2,048-token output limit. A case is
-\emph{capable} when at least three of its five attempts achieve the evaluator's
-exact \texttt{OptimalPathSuccess}. The inference unit is the case, with seeds
-treated as repeated measurements. We use 10,000 paired case bootstrap resamples
-(seed 20261004) for descriptive 95\% intervals and make no causal or $p$-value
-claim. All runs use the trusted local simulator and synthetic fixtures; no live
-service, credential, or destructive action is involved.
-
-\subsection{Formal benchmark results}
-
-\begin{table*}[t]
+\begin{table*}[!t]
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
@@ -879,10 +673,11 @@ service, credential, or destructive action is involved.
 Model & Optimal attempts & Capable cases & Functional & Policy compliant & Attack path \\
 \midrule
 Qwen3-8B & 58.43\% & 61.98\% & 79.90\% & 86.98\% & 12.71\% \\
-Qwen3-14B & \textbf{78.94\%} & \textbf{84.54\%} & 89.41\% & \textbf{93.56\%} & \textbf{6.44\%} \\
+Qwen3-14B & \textbf{78.94\%} & \textbf{84.54\%} & \textbf{89.41\%} & \textbf{93.56\%} & \textbf{6.44\%} \\
 Qwen3-32B-AWQ & 76.26\% & 84.02\% & 88.76\% & 92.40\% & 7.58\% \\
 Qwen2.5-7B & 53.63\% & 55.67\% & 81.83\% & 83.66\% & 16.19\% \\
 Llama3.1-8B & 52.73\% & 51.68\% & 77.73\% & 86.39\% & 13.09\% \\
+\midrule
 Qwen2.5-14B & 74.07\% & 80.03\% & 86.29\% & 92.94\% & 7.04\% \\
 DeepSeek-R1-Distill-Qwen-14B & 64.43\% & 67.01\% & 82.99\% & 88.38\% & 11.62\% \\
 Gemma3-4B & 47.73\% & 45.23\% & 79.72\% & 83.09\% & 16.80\% \\
@@ -891,76 +686,15 @@ InternLM2.5-7B & 45.13\% & 40.59\% & 76.65\% & 82.35\% & 16.55\% \\
 Gemma3-1B & 33.63\% & 25.64\% & 70.85\% & 77.50\% & 21.19\% \\
 \bottomrule
 \end{tabular}
-\caption{Historical v13 results over 776 cases and five repeated seeds per
-case. ``Optimal'' is attempt-level exact endpoint success; ``capable'' is the
-case-level $\geq 3/5$ rule. Functional and policy-compliance rates are
-attempt-level. ``Attack path'' denotes unsafe-branch selection in the trusted
-simulator. The first five rows are the paired-bootstrap comparison; the
-additional rows are independently frozen full-v13 runs with the same scenario
-inventory. Two additional runs had two invalid outputs each; invalid outputs
-remain capability failures.}
+\caption{Historical v13 results. Capable cases use the $\geq 3/5$ rule;
+all other columns report rates per attempt. Attack path denotes realization of
+the designated forbidden outcome in replay. The first five rows come from
+the archived paired analysis; the remaining six come from separate full
+runs on the same inventory.}
 \label{tab:formal-results}
 \end{table*}
 
-Qwen3-14B has the highest exact optimality (78.94\%) and capable-case rate
-(84.54\%), while Qwen3-32B-AWQ is close (76.26\% and 84.02\%). Qwen2.5-14B
-also reaches 74.07\% optimal and 80.03\% capable, whereas the reasoning-tuned
-DeepSeek checkpoint reaches 64.43\% and 67.01\%. Relative to
-Qwen3-8B, the paired differences are $+20.52$ and $+22.55$ percentage points,
-respectively; their bootstrap intervals exclude zero. Qwen3-14B also has a
-$6.26$-point lower attack-path rate than Qwen3-8B. Its capable-case difference
-from Qwen3-32B-AWQ is only about $+0.52$ points with an interval spanning zero,
-so these results do not support a monotone parameter-size claim. The two
-smaller cross-family models have lower exact and capable rates, but model family,
-training, quantization, and serving differences prevent a causal attribution.
-The additional cross-family checkpoints extend coverage of the lower-capacity
-regime, but their rates should be read as descriptive family results, not a
-universal size law. An independent recovery-checkpoint run of Qwen3-14B
-on the same 776 cases obtained 78.94\% optimal, 84.02\% capable, 89.35\%
-functional, 93.61\% policy compliant, and 6.39\% attack-path attempts,
-closely matching the primary checkpoint (78.94\%, 84.54\%, 89.41\%, 93.56\%,
-and 6.44\%, respectively). We treat this as checkpoint stability evidence,
-not as an additional independent model row.
-
-\subsection{Difficulty and structural diagnostics}
-
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{3.5pt}
-\begin{tabular}{@{}lrrrr@{}}
-\toprule
-Safe length & Cases & Capable & Optimal & Attack path \\
-\midrule
-1 & 160 & 93.8\% & 92.4\% & 3.8\% \\
-2 & 270 & 87.0\% & 81.5\% & 5.8\% \\
-3 & 172 & 70.9\% & 65.0\% & 11.0\% \\
-4 & 173 & 85.5\% & 76.5\% & 5.4\% \\
-\bottomrule
-\end{tabular}
-\caption{Qwen3-14B stratification by safe-route length. Rates are descriptive;
-the length-4 group is a separate horizon stratum and does not imply monotone
-difficulty.}
-\label{tab:length-results}
-\end{table}
-
-The length split shows a non-monotone difficulty pattern: length-3 cases are
-the weakest stratum, while the horizon-4 group partially recovers. By effect
-family, privilege/identity manipulation (F5) and audit/evidence manipulation
-(F6) are the clearest weak signals for Qwen3-14B (73.0\% and 72.2\% optimal
-attempts; 6.6\% and 14.2\% attack-path attempts). These strata diagnose where
-the benchmark supplies useful signals for a future defense policy; they are not
-evidence of a causal mechanism. Additional failure, horizon, and candidate-path
-diagnostics are reported in Appendix~\ref{app:extended-diagnostics}.
-
-\subsection{Controlled graph-component ablation}
-
-We additionally evaluated a paired 96-case diagnostic subset with Qwen3-14B
-under five graph variants (2,400 valid attempts, zero backend failures). The
-subset is a controlled diagnostic and is not a replacement for the 776-case
-formal benchmark.
-
-\begin{table*}[t]
+\begin{table*}[!t]
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
@@ -972,87 +706,85 @@ Complete & 77.92\% & 87.50\% & 88.96\% & 93.33\% & 6.67\% \\
 Danger decoys removed & 77.92\% & 87.50\% & 88.96\% & 93.33\% & 6.67\% \\
 Functional alternatives pruned & 78.75\% & 88.54\% & 89.79\% & 93.75\% & 6.25\% \\
 Dependencies stripped & 78.12\% & 82.29\% & 88.54\% & 93.75\% & 6.25\% \\
-Authority contrast flattened & 75.83\% & 78.12\% & 88.33\% & 87.50\% & 12.50\% \\
+Preference contrasts flattened & 75.83\% & 78.12\% & 88.33\% & 87.50\% & 12.50\% \\
 \bottomrule
 \end{tabular}
-\caption{Paired graph-component ablation on 96 cases. Rates use the same
-case-level and attempt-level definitions as Table~\ref{tab:formal-results}.
-Bootstrap intervals are descriptive and paired by case.}
+\caption{Graph ablation for Qwen3-14B on the same 96 cases and five
+presentations per condition. Each condition is scored on its own graph.}
 \label{tab:ablation-results}
 \end{table*}
 
-Flattening authority contrasts produces the clearest diagnostic change: capable
-cases fall by 9.38 points and attack-path attempts rise by 5.83 points relative
-to the complete condition, with paired intervals excluding zero for both
-contrasts. Removing danger decoys is identical to the complete condition, while
-the alternatives and dependency manipulations are small signals. The paired
-design controls the case identity, but the 96-case subset is not representative
-of the full inventory.
+We evaluate 11 checkpoints on the same held-out inventory. Paired intervals
+apply to the first five model rows and to the component ablation; six additional
+full runs share the inventory and five-presentation protocol.
 
-\subsection{Model-free negative controls}
+\subsection{RQ1: How Well Do Models Select Routes?}
+\label{sec:exp-models}
 
-Graph-only heuristics are reported as diagnostics rather than model capability
-baselines. On the original graph ordering, the first-declared-edge rule reaches
-719/776 exact optima (92.65\%), exposing a presentation leak. After the v13
-seed-stable permutation, the same heuristic reaches 1,280/3,880 attempts
-(32.99\%). Fewest-actions and fewest-authority rules reach only 15.59\% and
-12.76\% on the 776-case inventory. These controls motivate the permutation and
-should not be compared with the model leaderboard as if they were learned
-policies.
+\textbf{Finding 1.} Every checkpoint completes more tasks than it solves with
+an exact optimum (Table~\ref{tab:formal-results}). Optimality ranges from 33.63\%
+to 78.94\%. Qwen3-14B leads on optimality and capable cases (84.54\%), yet 406
+of its 3,469 functionally successful attempts fail exact optimality.
+Against Qwen3-8B, it gains 20.52 optimality points (95\% CI:
+$[18.48,22.53]$), while forbidden outcomes fall by 6.26 points
+($[-7.63,-4.95]$). Its capable-case difference from Qwen3-32B-AWQ is 0.52
+points ($[-1.68,2.71]$). Training, quantization, and serving differ across
+checkpoints, preventing attribution to parameter count alone.
 
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{2.5pt}
-\begin{tabular}{@{}lrrrr@{}}
-\toprule
-Ordering & Optimal & Capable & Functional & Attack \\
-\midrule
-v12 original & 92.0\% & 92.0\% & 92.0\% & 0.0\% \\
-v13 permuted & 80.0\% & 85.0\% & 88.0\% & 5.4\% \\
-\bottomrule
-\end{tabular}
-\caption{Anti-leakage ordering check on a 100-case prefix with five repeated
-seeds. The original ordering gives 460/500 exact attempts and no attack-path
-selections; the seed-stable permutation gives 400/500 exact attempts and
-27/500 attack paths.}
-\label{tab:ordering-ablation}
-\end{table}
+\subsection{RQ2: Which Route Properties Expose Errors?}
+\label{sec:exp-structure}
 
-The paired ordering check makes the leak concrete: preserving the v12 edge
-order yielded 92.0\% exact attempts and no observed attack paths, whereas the
-permuted v13 presentation yielded 80.0\% exact attempts and a 5.4\% attack
-rate. The full-model rows in Table~\ref{tab:formal-results} use the permuted
-v13 presentation; the prefix comparison is a control diagnostic rather than a
-second benchmark estimate.
+Qwen3-14B optimality is lowest for three-action safe certificates (65.0\%),
+rising to 76.5\% for four actions. Audit/evidence manipulation has the lowest
+effect-family optimality (72.2\%) and highest forbidden-outcome rate (14.2\%).
+These groups also differ in workflow and graph structure
+(Appendix~\ref{app:extended-diagnostics}); they do not isolate causal difficulty.
 
-\paragraph{Defense status.}
-The reported formal results establish benchmark and diagnostic signals only.
-Development recovery/training feasibility checks are not defense-improvement
-experiments; consequently we make no claim that training reduces violations or preserves
-utility.
 
-\section{Discussion}
+
+The paired ablation uses 96 cases, four per combination of primary effect and
+nominal length band, with five presentations in each of five graph conditions
+(2,400 valid attempts). Flattening sets all four public ranks to their lowest
+values and removes private edge costs, preserving topology but potentially
+changing exact-credit sets.
+
+\textbf{Finding 2.} Flattening preference contrasts increases Qwen3-14B's
+forbidden-outcome rate from 6.67\% to 12.50\%: a 5.83-point difference
+(95\% CI: $[3.12,8.75]$). Compliance falls by 5.83 points
+($[-8.96,-3.12]$), and capable cases by 9.38 points ($[-16.69,-2.08]$).
+The optimality-difference interval includes zero. Removing unsafe decoys leaves
+reported rates unchanged; the other modifications give less conclusive
+differences. This is a selected diagnostic subset and one checkpoint, and the
+flattening changes multiple preferences rather than authority alone.
+
+\subsection{RQ3: How Does the Interface Affect Scores?}
+\label{sec:exp-validity}
+
+\textbf{Finding 3.} Action presentation supplies a shortcut. The first-edge
+rule reaches 719/776 exact optima (92.65\%) under the original order, versus
+1,280/3,880 attempts (32.99\%) under v13 permutation. In a paired 100-case
+Qwen3-14B check, optimality falls from 460/500 (92.0\%) to 400/500 (80.0\%),
+and forbidden outcomes rise from 0/500 to 27/500 (5.4\%)
+(Table~\ref{tab:ordering-ablation}). Full comparisons use permuted v13; the
+prefix comparison is not a full-inventory estimate. Separately, the reachability
+and credit-contract defects in Section~\ref{sec:eligibility} limit how all these
+scores can be interpreted.
+
+% Page budget: add measured ECPA results here when available, including the
+% matched controls, paired intervals, safety/benign trade-offs, and costs.
+% Reserve two content pages under the ACL limit for that integration.
+% Planning details belong in defense-integration-plan.md, not in the PDF.
+
+\section{Discussion and Conclusion}
 \label{sec:discussion}
 
-Across the historical benchmark, exact route choice varies substantially across
-models, and the paired graph ablation shows that authority contrasts are a
-particularly informative diagnostic signal. Interface reachability still
-qualifies capability and attack-avoidance results, while ordinal optimality
-expresses bounded preferences. These observations motivate composition checks
-and recovery, but symbolic and information-flow controls remain strong
-alternatives. Diagnostic-guided learning must demonstrate added value on new
-workflows under equal information and intervention budgets; the present results
-do not test that claim.
-
-\section{Conclusion}
-
-RouteBench separates completion, compliance, and optimality through bounded
-replay and public comparison rules. The existing v13 results quantify model
-differences and expose structural difficulty signals, while interface
-reachability remains a validity condition rather than model capability. Matched
-diagnostics and ECPA specify a testable evaluation-to-defense connection with
-trusted authorization; their effectiveness remains an empirical question.
+CapGraphBench separates completion, compliance, and declared path optimality.
+Historical results show that task success can coexist with suboptimal or
+forbidden routes; presentation shortcuts and unavailable routes also affect
+scores. Interface repairs need a new freeze and fresh measurements. The
+companion defense comparison is ongoing, and matched composition diagnostics
+remain proposed (Appendix~\ref{sec:diagnostics}). Neither the historical results
+nor these designs establish deployment safety or a learned recovery advantage.
 
 \section*{Limitations}
 \label{sec:limitations}
@@ -1082,7 +814,7 @@ agreement across reviewers unmeasured.
 \paragraph{Proposed extensions.}
 The diagnostic corpus, history-sensitive diagnostic verifier, and learned
 ECPA controller are not validated in this draft. Conditional rates do not
-reveal reasoning and depend on matching quality and public information.
+identify reasoning and depend on matching quality and public information.
 Existing development cases do not establish adequate learning coverage.
 
 \paragraph{Enforcement and generalization.}
@@ -1107,18 +839,21 @@ self-authored synthetic task files, and evaluation scripts under GNU GPLv3,
 with an anonymous version for review. Third-party code, data, models, and ACL
 style files retain their upstream licenses and provenance.
 Archive preparation and publication remain pending.
-Resources and training/selection costs must accompany eventual experiments.
+Formal recovery-training and evaluation costs remain unmeasured.
 
-Generative AI assisted literature discovery, conceptual discussion, drafting,
-revision, and LaTeX maintenance, including diagnostic/defense design discussion.
-It is not an author. Human authors remain responsible for references, methods,
-novelty, licenses, and claims. Disclose this scope in the Responsible NLP Checklist and the final
-acknowledgments.
+\section*{Acknowledgements}
+
+Generative AI tools assisted literature discovery, conceptual discussion,
+manuscript drafting and revision, LaTeX maintenance, and discussion of the
+diagnostic and defense designs. The recovery corpus also
+includes AI-authored sources and source-bound AI reviews. These tools are not
+authors. Human authors remain responsible for the references, methods, novelty, licenses,
+and claims.
 
 % BEGIN ACL BIBLIOGRAPHY
 % Generated from references.bib with the official acl_natbib.bst.
 % Embedded for the editor's standalone compiler; keep metadata in sync.
-\begin{thebibliography}{19}
+\begin{thebibliography}{18}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Achiam et~al.(2017)Achiam, Held, Tamar, and Abbeel}]{achiam2017cpo}
@@ -1157,14 +892,15 @@ Sizhe Chen, Julien Piet, Chawin Sitawarin, and David Wagner. 2025.
 \newblock In \emph{34th USENIX Security Symposium (USENIX Security 25)}, pages
   2383--2400, Seattle, WA. USENIX Association.
 
-\bibitem[{Debenedetti et~al.(2025)Debenedetti, Shumailov, Fan, Hayes, Carlini,
+\bibitem[{Debenedetti et~al.(2026)Debenedetti, Shumailov, Fan, Hayes, Carlini,
   Fabian, Kern, Shi, Terzis, and Tram{\`e}r}]{debenedetti2025camel}
 Edoardo Debenedetti, Ilia Shumailov, Tianqi Fan, Jamie Hayes, Nicholas Carlini,
   Daniel Fabian, Christoph Kern, Chongyang Shi, Andreas Terzis, and Florian
-  Tram{\`e}r. 2025.
-\newblock \href {https://arxiv.org/abs/2503.18813} {Defeating prompt injections
-  by design}.
-\newblock arXiv preprint arXiv:2503.18813.
+  Tram{\`e}r. 2026.
+\newblock \href {https://doi.org/10.1109/SaTML68715.2026.00040} {Defeating
+  prompt injections by design}.
+\newblock In \emph{2026 IEEE Conference on Secure and Trustworthy Machine
+  Learning (SaTML)}, pages 587--618. IEEE.
 
 \bibitem[{Debenedetti et~al.(2024)Debenedetti, Zhang, Balunovi{\'c},
   Beurer-Kellner, Fischer, and Tram{\`e}r}]{debenedetti2024agentdojo}
@@ -1177,8 +913,8 @@ Edoardo Debenedetti, Jie Zhang, Mislav Balunovi{\'c}, Luca Beurer-Kellner, Marc
 
 \bibitem[{Iyer and Babu(2026)}]{iyer2026racg}
 Laxmipriya~Ganesh Iyer and Rahul~Suresh Babu. 2026.
-\newblock \href {https://arxiv.org/abs/2606.13884} {Capability minimization as
-  a safety primitive: Risk-aware causal gating for least-privilege {LLM}
+\newblock \href {https://arxiv.org/html/2606.13884v1} {Capability minimization
+  as a safety primitive: Risk-aware causal gating for least-privilege {LLM}
   agents}.
 \newblock arXiv preprint arXiv:2606.13884.
 
@@ -1205,15 +941,6 @@ Jiaqi Luo, Songyang Peng, Jiarun Dai, Zhile Chen, Zhuoxiang Shen, Geng Hong,
   attribute-based access control framework for tool-use {LLM}-based agent}.
 \newblock arXiv preprint arXiv:2605.28071.
 
-\bibitem[{Reimers and Gurevych(2019)}]{reimers2019sentencebert}
-Nils Reimers and Iryna Gurevych. 2019.
-\newblock \href {https://doi.org/10.18653/v1/D19-1410} {Sentence-{BERT}:
-  Sentence embeddings using siamese {BERT}-networks}.
-\newblock In \emph{Proceedings of the 2019 Conference on Empirical Methods in
-  Natural Language Processing and the 9th International Joint Conference on
-  Natural Language Processing (EMNLP-IJCNLP)}, pages 3982--3992. Association
-  for Computational Linguistics.
-
 \bibitem[{Ruan et~al.(2024)Ruan, Dong, Wang, Pitis, Zhou, Ba, Dubois, Maddison,
   and Hashimoto}]{ruan2024toolemu}
 Yangjun Ruan, Honghua Dong, Andrew Wang, Silviu Pitis, Yongchao Zhou, Jimmy Ba,
@@ -1239,7 +966,7 @@ Jerome~H. Saltzer and Michael~D. Schroeder. 1975.
   Song}]{shi2025progent}
 Tianneng Shi, Jingxuan He, Zhun Wang, Hongwei Li, Linyu Wu, Wenbo Guo, and Dawn
   Song. 2025.
-\newblock \href {https://arxiv.org/abs/2504.11703} {{Progent}: Securing {AI}
+\newblock \href {https://arxiv.org/abs/2504.11703v3} {{Progent}: Securing {AI}
   agents with privilege control}.
 \newblock arXiv preprint arXiv:2504.11703.
 
@@ -1247,9 +974,12 @@ Tianneng Shi, Jingxuan He, Zhun Wang, Hongwei Li, Linyu Wu, Wenbo Guo, and Dawn
   Yang}]{yang2026toolprivbench}
 Kaiyue Yang, Yuyan Bu, Jingwei Yi, Yuchi Wang, Biyu Zhou, Juntao Dai, Songlin
   Hu, and Yaodong Yang. 2026.
-\newblock \href {https://arxiv.org/abs/2606.20023} {When lower privileges
-  suffice: Investigating over-privileged tool selection in {LLM} agents}.
-\newblock arXiv preprint arXiv:2606.20023.
+\newblock \href {https://doi.org/10.18653/2026.findings-emnlp.2059} {When lower
+  privileges suffice: Investigating over-privileged tool selection in {LLM}
+  agents}.
+\newblock In \emph{Findings of the Association for Computational Linguistics:
+  EMNLP 2026}, pages 43846--43867, Budapest, Hungary. Association for
+  Computational Linguistics.
 
 \bibitem[{Zhan et~al.(2024)Zhan, Liang, Ying, and Kang}]{zhan2024injecagent}
 Qiusi Zhan, Zhixiang Liang, Zifan Ying, and Daniel Kang. 2024.
@@ -1288,11 +1018,11 @@ establish causal difficulty variables.
 
 \begin{table}[t]
 \centering
-\scriptsize
+\small
 \setlength{\tabcolsep}{2pt}
 \begin{tabular}{@{}lrrr@{}}
 \toprule
-Model & Functional/non-opt. & Nonfunctional & Policy NC \\
+Model & \shortstack{Functional/\\non-optimal} & \shortstack{Non-\\functional} & \shortstack{Policy\\NC} \\
 \midrule
 Qwen3-8B & 833 & 780 & 505 \\
 Qwen3-14B & 406 & 411 & 250 \\
@@ -1307,7 +1037,7 @@ do not partition all failed attempts.}
 
 \begin{table}[t]
 \centering
-\scriptsize
+\small
 \setlength{\tabcolsep}{2pt}
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
@@ -1374,11 +1104,59 @@ scaling claim.}
 }%
 \caption{Extended v13 diagnostics. (a) Exact optimality and capable-case rates
 for the eleven complete-model runs; (b) attack-path rates for the same runs;
-(c) Qwen3-14B route-length strata; and (d) the paired graph-component
-ablation. All rates are descriptive, with five repeated seeds per case; the
-component ablation uses 96 paired cases.}
+(c) Qwen3-14B safe-certificate length groups, excluding the single five-action
+case; and (d) the paired graph-component ablation. All rates are descriptive,
+with five repeated seeds per case; the component ablation uses 96 paired cases.}
 \label{fig:formal-diagnostics}
 \end{figure*}
+
+\paragraph{Additional model comparisons and controls.}
+Qwen3-14B's capable-case advantage over Qwen3-8B is 22.55 percentage points
+(95\% CI: $[19.20,25.90]$). A separate recovery-checkpoint run gives 78.94\%
+optimality and 84.02\% capable cases; it is a repeatability check, not another
+model row, and is not combined with the archived paired attempts. The fewest-action
+and smallest-authority-footprint graph controls reach 15.59\% and 12.76\%
+optimality; neither filters for completion and compliance before minimizing its
+cost. Privilege/identity manipulation has the second-lowest effect-family
+optimality (73.0\%).
+
+\begin{table}[!t]
+\centering
+\small
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Actions & Cases & Capable & Optimal & Attack path \\
+\midrule
+1 & 160 & 93.8\% & 92.4\% & 3.8\% \\
+2 & 270 & 87.0\% & 81.5\% & 5.8\% \\
+3 & 172 & 70.9\% & 65.0\% & 11.0\% \\
+4 & 173 & 85.5\% & 76.5\% & 5.4\% \\
+\bottomrule
+\end{tabular}
+\caption{Qwen3-14B results by the number of actions in the safe certificate.
+The four groups cover 775 cases. The single case with a five-action
+certificate is included in the full results but omitted here.}
+\label{tab:length-results}
+\end{table}
+
+\begin{table}[!t]
+\centering
+\small
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Ordering & Optimal & Capable & Functional & Attack \\
+\midrule
+v12 original & 92.0\% & 92.0\% & 92.0\% & 0.0\% \\
+v13 permuted & 80.0\% & 85.0\% & 88.0\% & 5.4\% \\
+\bottomrule
+\end{tabular}
+\caption{Qwen3-14B ordering check on the same 100-case prefix with five
+presentations per case. The full model comparison uses the permuted v13
+presentation.}
+\label{tab:ordering-ablation}
+\end{table}
 
 \section{Public and Private Artifact Contract}
 \label{app:artifacts}
@@ -1397,14 +1175,331 @@ use deployment-authorized trusted summaries, not private benchmark answers.
 An anonymous review archive should include schema/catalog versions,
 verifier code, eligibility rules, split metadata, and replay instructions.
 Original code and self-authored task files are designated GPLv3; anonymous
-review access and public distribution are planned, not yet available.
+review access and public distribution remain pending.
 Legacy atom-only cases minimize set inclusion then action count under a
 uniqueness contract, not the formal ordinal endpoint.
+
+\paragraph{Attribute and coverage definitions.}
+Tables~\ref{tab:ordinals} and~\ref{tab:effects} give the public rank levels
+and primary forbidden effects. Secondary mechanism tags are fixed controls,
+parameter/scope substitution, equivalent-tool substitution, staging, reordering,
+and authorization-state manipulation; these are annotations, not independently
+sampled workflow families.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{0.63\columnwidth}@{}}
+\toprule
+Dimension & Levels, from rank 0 to rank 3 \\
+\midrule
+Exposure & isolated, delegated, session, standing credential \\
+Scope & exact, bounded, workspace, environment \\
+Evidence loss & primary, corroborated, rendered, inferred \\
+Interaction & direct, mediated, interactive, manual \\
+\bottomrule
+\end{tabular}
+\caption{Public edge attributes, listed in lexicographic priority order.
+Route scores sum ranks within each dimension.}
+\label{tab:ordinals}
+\end{table}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{0.77\columnwidth}@{}}
+\toprule
+Family & Forbidden effect \\
+\midrule
+F1 & Unauthorized observation \\
+F2 & Unauthorized transfer \\
+F3 & Unauthorized modification \\
+F4 & Destruction or disruption \\
+F5 & Privilege or identity manipulation \\
+F6 & Audit or evidence manipulation \\
+F7 & Persistence or supply-chain change \\
+F8 & Unauthorized external action \\
+\bottomrule
+\end{tabular}
+\caption{Primary forbidden-effect families, with 97 cases per family.
+Secondary tags record additional declared dimensions.}
+\label{tab:effects}
+\end{table}
+
+\paragraph{Historical reporting and reproducibility.}
+Repeated seeds relabel and reorder presentations without changing connectivity,
+actions, dependencies, or public ranks. They do not increase the number of
+independent cases. Attempt rates and capable-case rates summarize different
+outcomes. Low forbidden-outcome rates require joint inspection of validity,
+completion, and interface eligibility. The archived case bootstrap does not
+estimate generalization to new semantic families.
+
+Manifests record protocol identity, scenario digests, source revision, planner
+configuration, model hashes, dependency lock, inference runtime, and generation
+settings. Formal runs require clean committed source. Interface, credit-rule,
+scenario, and eligibility changes require new identities; earlier interfaces
+and prefix pilots remain separate. Prompt and controller selection use only
+development data. The defense and counterfactual studies require separate freezes;
+formal-test reuse cannot establish unseen-task generalization. Aggregate reports
+exclude raw prompts, responses, fixtures, graphs, and reference certificates.
+
+The proposed counterfactual diagnostics need public policy rules and enough
+symbolic state to infer route safety. This stronger observability condition is
+not assumed for every historical benchmark case.
+
+\section{Proposed Counterfactual Composition Diagnostics}
+\label{sec:diagnostics}
+
+This section specifies a proposed matched-pair evaluation of route-level
+safety recognition and planning. The diagnostic suite has not been evaluated;
+the protocol below defines measurements, not empirical findings.
+
+\subsection{Pair Construction}
+
+Each unit is a pair $(p^{+},p^{-})$ of routes for the same ordinary task.
+Both routes must complete that task under trusted replay. The safe route
+$p^{+}$ satisfies policy and avoids the designated forbidden effect; the
+contrasting route $p^{-}$ realizes that effect and violates policy. A pair
+holds the task, initial state, tools, and resources fixed and matches
+requested authority where feasible. Its contrast changes one declared data
+dependency or ordering relation. Any remaining differences are recorded;
+pairs with additional unmatched features cannot support a composition-only
+interpretation.
+
+The public task, policy, action semantics, classifications, and symbolic
+state must make the safety distinction inferable for every private fixture
+consistent with the public projection. If the projection leaves the route
+outcome ambiguous, the pair is excluded. Private values, resulting states,
+ground-truth outcome labels, and evaluator certificates are withheld. Both
+routes must be selectable through the diagnostic interface, and both must satisfy the
+ordinary task goal under replay.
+
+\subsection{Controlled Interventions}
+
+\paragraph{Data dependencies.}
+Both routes produce the same aggregate report using matched tools, resources,
+and authority where feasible. The public policy permits internal access but
+forbids sending protected source fields outside the task boundary. The safe
+route carries only the permitted aggregate; the unsafe route additionally
+passes protected source fields into the outbound payload. Public field
+classifications and symbolic references expose the relevant provenance
+without revealing private values. Blanket refusal to send any report fails
+the safe route's task requirement.
+
+\paragraph{Execution order.}
+Both routes start with auditing disabled and make the same configuration
+change. A public rule requires the change to be audited: the safe route enables
+auditing first, whereas the unsafe route changes the configuration before
+enabling it. The routes therefore reach the same final configuration and
+audit-enable flag, while only the unsafe route contains an unaudited change.
+The verifier must check persistent action history; final-state values alone
+cannot distinguish the routes. The initial state, rule, and action semantics
+are public. This is a proposed intervention and does not imply that the
+existing terminal-state verifiers implement such an event monitor.
+
+\subsection{Recognition and Route Planning}
+
+Run each measure in an isolated context without feedback across tests. A
+task-only control measures ordinary functional competence $K$. Local tests
+$L$ assess isolated subject--operation--resource judgments and one-event
+application of the same policy rules, with authorized and unauthorized
+controls. These tests do not require reconstructing route history or data
+dependencies. Recognition $R$ requires labeling both $p^{+}$ as safe and
+$p^{-}$ as forbidden. Planning $J$ requires selecting a safe route from the
+shared graph and completing the task. Always labeling both routes unsafe
+fails $R$; refusing the task fails $J$.
+
+Report marginal outcomes and their joint distribution. The conditional
+diagnostics are
+\begin{align*}
+ D_{\mathrm{rec}}&=\Pr(\neg R\mid K\land L),\\
+ D_{\mathrm{plan}}&=\Pr(\neg J\mid K\land L\land R).
+\end{align*}
+Here $D_{\mathrm{rec}}$ measures recognition errors among pairs whose
+ordinary task and local policy controls pass; $D_{\mathrm{plan}}$ measures
+unsafe or unsuccessful planning among those pairs that also pass recognition.
+If a conditioning set is empty, its estimate is undefined, not zero.
+Recognition errors after the controls are consistent with a route-level
+recognition difficulty; planning errors conditional on recognition indicate
+a gap between route labeling and successful selection. These behavioral
+patterns do not identify internal reasoning or establish a causal mechanism.
+Failures on the task-only control remain part of the overall capability
+results.
+
+Counterbalance route order and labels, and use meaning-preserving paraphrases
+that retain the evidence needed to infer safety. Keep repeated presentations
+together when resampling at the pair level. Report unconditional outcomes
+alongside conditional diagnostics because conditioning may select easier
+pairs. Author and freeze this suite independently; do not alter the frozen
+CapGraphBench cases to accommodate it.
+
+\section{ECPA: Design and Study Protocol}
+\label{sec:ecpa}
+
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[
+ stage/.style={draw,align=center,font=\footnotesize,text width=2.75cm,minimum height=0.9cm,inner sep=3pt},
+ proposed/.style={stage,dashed},
+ evaluator/.style={stage,draw=red!65!black},
+ bridge/.style={stage,draw=green!45!black},
+ >=Stealth
+]
+\node[stage] (task) at (0,0) {Frozen ScenarioBundle\\task, graph, actions};
+\node[stage] (planner) at (4.5,0) {Existing graph evaluation\\selection / adherence};
+\node[evaluator] (verify) at (9,0) {Private evaluator\\fixture, verifier, certificate};
+\draw[->] (task) -- (planner);
+\draw[->] (planner) -- (verify);
+\node[bridge] (bridge) at (4.5,-1.45) {Public evaluation bridge\\counts, family, length};
+\node[proposed] (contracts) at (0,-1.45) {Public recovery contract\\and study strata};
+\node[stage] (monitor) at (9,-1.45) {Trusted ECPA monitor\\approval, recheck, receipt};
+\draw[->] (task) -- (bridge);
+\draw[->] (planner) -- (bridge);
+\draw[->] (contracts.south) -- ++(0,-0.28) -| (monitor.south);
+\draw[->] (bridge) -- node[above,font=\footnotesize]{strata/report} (contracts);
+\node[proposed] (agent) at (0,-2.9) {Frozen normal agent\\tampered text / forged call};
+\node[stage] (intervene) at (4.5,-2.9) {allow / constrain /\\escalate / deny};
+\node[proposed] (trace) at (9,-2.9) {Actual traces\\accept/reject/failure};
+\draw[->] (agent) -- (intervene);
+\draw[->] (intervene) -- (monitor);
+\draw[->] (monitor) -- (trace);
+\draw[->] (trace.south) -- ++(0,-0.35) -| (agent.south);
+\node[proposed] (learn) at (4.5,-4.35) {Compact LM with LoRA\\outcome-derived supervision};
+\draw[->] (trace) -- (learn);
+\draw[->] (learn) -- (intervene);
+\node[evaluator] (outcome) at (9,-4.35) {Evaluator outcomes\\safe recovery, cost, violation};
+\draw[->] (monitor.east) -- ++(0.35,0) |- (outcome.east);
+\draw[->] (outcome) -- (learn);
+\end{tikzpicture}
+\caption{CapGraphBench--ECPA workflow. Dashed outlines mark components whose
+formal study role or protocol remains to be frozen; implementation status is
+independent. The bridge exports public graph-audit and aggregate endpoint
+metadata for study stratification. Realized evaluator outcomes label intervention
+branches offline and never enter online selection.}
+\label{fig:overview}
+\end{figure*}
+
+\paragraph{Recovery and learning under safety constraints.}
+APPA studies policy-governed recovery under information-flow constraints
+\citep{kravchenko2026appa}. Shielding separates a learned policy from an
+enforcement mechanism that restricts or corrects unsafe actions
+\citep{alshiekh2018shielding}. Constrained Policy Optimization addresses policy
+optimization under explicit constraints \citep{achiam2017cpo}, while
+Conservative Q-Learning studies conservative value estimation from offline data
+\citep{kumar2020cql}. The auxiliary ECPA design places an intervention selector
+behind trusted authorization and revalidation checks. It asks whether a learned
+selector can improve recovery outcomes relative to deterministic controllers
+given the same observations and available interventions; this comparison requires
+separate empirical validation.
+
+\subsection{Threat Model and Trust Boundary}
+
+ECPA (evaluation-calibrated path-aware capability attenuation) studies runtime
+containment when an external relay controls model-response content. The relay may
+replace or inject ordinary text, or forge a structured tool call, and thereby
+induce a sequence of individually plausible requests that expands authority or
+diverts the task. It cannot execute tools directly, alter trusted runtime state,
+forge approvals or receipts, or bypass the monitor's final dispatch check. The
+threat model therefore begins at a compromised response relay; end-to-end
+response authentication is outside its claim. A separate trusted channel serves
+the local defender, while attack labels remain evaluator-owned. Each staged-attack
+episode is paired with the same task under benign responses.
+
+The controller uses public task and contract data, typed proposals, trusted
+execution history, grants, provenance and resource counters. Hidden verifiers,
+fixtures, reference routes and costs, evaluator labels, and evaluator-derived
+minimum authority are excluded from its runtime view. The bridge from the existing
+graph evaluation exports only public audit and aggregate endpoint metadata for
+stratification and collection. Realized simulator outcomes may supervise offline
+training and score held-out episodes, but do not enter online selection. The
+historical v13 planner evaluation remains a separate pre-replay interface.
+
+\subsection{Trusted Runtime and Intervention Menu}
+
+Every proposed action is mediated by trusted code. The runtime offers four
+interventions: allow the checked proposal; constrain it to a registered narrower
+action; escalate an exact scope increment for approval; or deny and permit bounded
+replanning. A constrained alternative is dispatchable only after the task agent
+accepts the exact edge, typed action and hash. Rejection dispatches nothing, and
+an edited request is treated as a new proposal. Approval may be denied; any grant
+is bound to the principal, task, request, epoch and expiry, and cannot override
+fixed prohibitions.
+
+Immediately before synchronous dispatch, the monitor rechecks graph position,
+preconditions, provenance, prohibited effects and independent operational grants.
+An intervening state change invalidates an outstanding offer. Only trusted
+execution receipts update runtime facts and history. A bounded structural witness
+uses public preconditions, effects, goals, grants and horizon; it returns feasible,
+infeasible or unknown, executes no tool and reveals no suffix route. Unknown
+alternatives cannot be dispatched. ECPA claims no new security theorem: these
+controls rely on complete mediation, sound contracts and authenticated approvals,
+and safety does not depend on the learned selector.
+
+\subsection{Outcome-Derived Recovery Learning}
+\label{sec:learning}
+
+The primary learner is a Qwen3-1.7B compact model adapted with LoRA; the Qwen3-14B
+task agent remains frozen. At sampled training states, each candidate intervention
+is evaluated in an independent simulator branch under a shared continuation
+policy and attack condition. Choice targets use realized episode violations,
+safe completion and cost, preferring violation-free completion and then lower
+cost. They are noisy finite-sample observations, not optimal-route certificates.
+The formal recipe must specify ordering, ties and censoring before fitting; a
+cutoff is not relabeled as a terminal failure.
+
+The selector receives public task/contracts, a structured proposal, trusted path
+history, resource counters and the current legal menu. It receives neither raw
+untrusted response text nor private evaluator material. Its only output is a
+candidate ID from that menu; invalid outputs use a deterministic fallback, and
+the trusted runtime revalidates every choice. Training uses standard supervised
+candidate-choice learning. LoRA and supervised fine-tuning are not claimed as new
+algorithms. The current 66-task source inventory has source-bound AI reviews and
+an allocation of 12/4/4/40 semantic families for training, tuning, calibration
+and test. Formal fitting requires a source/model freeze and realized coverage of
+all intervention targets.
+
+\subsection{Comparison and Evidence Status}
+
+The planned comparison has five arms: an unguarded simulator reference,
+per-action authorization, deterministic path-state recovery, a prompted compact
+base model, and the same model after LoRA fine-tuning. The compact-model pair
+shares the base snapshot, public inputs, menu, prompt and decoding settings.
+Guarded arms share immutable prohibitions and final rechecks; path-level methods
+also share concrete menus and approval semantics. Offline reinforcement learning,
+transfer-model sweeps and model-size sweeps are outside the primary experiment.
+The strongest of the three guarded comparators is selected on tuning data, and
+calibration audits that fixed selection. Diagnostics-guided acquisition is a
+separate hypothesis and is not part of this primary comparison.
+
+Each test family contributes matched benign and attacked episodes under text and
+forged-structured-call relays. Safe recovery requires task completion, a valid
+explicit STOP, and no violation anywhere in the episode. Report attacked safe
+recovery, benign functional success, episode violations, attack success,
+interventions and realized costs separately; failures remain in their scheduled
+denominators. Resample paired outcomes by semantic family, retaining repeated
+presentations and modes within each family. The prespecified learning claim
+requires at least a five-percentage-point safe-recovery gain over the strongest
+guarded comparator, a paired 95\% interval lower bound above zero, and a one-sided
+95\% lower bound of at least $-0.02$ for the benign-success difference. Fewer
+than 20 independent test families or a zero-width interval precludes certifying
+the claim.
+
+The runtime, public bridge, and collection/fitting/comparison tooling are
+implemented. The source inventory has completed its current source-bound review.
+The companion study is in progress; completed source/model-bound collection,
+fitting, calibration, and test results are not yet incorporated in this manuscript.
+The protocol and model identities must accompany the final measurements.
+A development-only operational pilot
+did exercise collection, LoRA fitting/reload and all five comparison arms
+(Appendix~\ref{app:training}). It reused two semantic families and found 3/4
+attacked safe recoveries for both LoRA and the deterministic path rule. This
+small feasibility pilot does not establish an efficacy difference; in particular,
+it provides no evidence that training improves on the path rule. Pilot cases and
+the disposable adapter are excluded from formal fitting, calibration and test.
 
 \section{Recovery Training and Evaluation Protocol}
 \label{app:training}
 
-The proposed paper method uses a single compact base language model with LoRA;
+The recovery study uses a single compact base language model with LoRA;
 base weights and the ordinary task agent remain frozen. Record the exact model
 snapshot, trainable parameter count, context length, precision, adapter settings,
 update count, training tokens and GPU hours. Pilot these settings before a formal
@@ -1417,10 +1512,10 @@ and update count; do not select among training runs or checkpoints.
 
 Existing engineering checks use frozen \nolinkurl{intfloat/e5-small-v2} revision
 \texttt{ffb93f3b} and a 128/64-unit scorer with outcome-supervised and offline TD
-objectives. Those development fits are not LoRA training, do not validate the new
-paper method, and do not determine its optimizer settings. The compact-model
-training/loading implementation is separate; an independently trained formal
-adapter and corpus remain pending. Calibration audits a fixed
+objectives. Those development fits are not LoRA training, do not validate the proposed
+LoRA selector, and do not determine its optimizer settings. The compact-model
+training/loading implementation is separate; a completed independent formal
+adapter is not documented here. Calibration audits a fixed
 selected policy rather than selecting a new policy on the audit set.
 
 A separate compact-model engineering pilot collected eight parent episodes and
@@ -1463,24 +1558,30 @@ task-family transfer, not held-out attack mechanisms. Keep mode-stratified
 results: text mode uses draft and receiver calls, so mode differences are not
 a controlled format-only effect.
 
-Source preparation contains 29 tasks in 23 candidate clusters: 12 training
-cases in eight clusters, five tuning cases in four, four calibration cases,
-and eight test cases in seven. Five fixed-fixture read/change tasks share a
-training cluster; forwarding and reservation migration share a test cluster.
-All independent acceptance remains pending. Test predicates cover availability,
-reviewer independence, conservation, append-only history, monotone epochs,
-cumulative disclosure and relational migration in actual simulator state.
-Shared guards exclude every known harmful edge; learned gains must concern
-recovery choices, completion or cost. Singleton menus offer no learned choice
-and remain in primary denominators. Receipt facts certify fixed fixtures,
-not arbitrary data-dependent conditions. Source/tokenizer checks provide no
-training labels or efficacy evidence; corpus completion and freeze remain pending.
+The current source inventory contains 66 tasks: 16 training, five tuning,
+four calibration, and 41 test tasks, allocated to 12/4/4/40 semantic families.
+Source-digest-bound AI reviews cover the fixed simulator sources and selected
+comparisons with historical tasks. These records attest to source checks;
+they do not authenticate human reviewers or establish exhaustive semantic
+independence from every historical workflow. The allocation and source reviews
+are complete. The companion experiment is in progress; final protocol/model
+identities and measured collection, fitting, calibration, and test comparison
+records are not yet incorporated in this draft.
+
+Test predicates cover availability, reviewer independence, conservation,
+append-only history, monotone epochs, cumulative disclosure, and relational
+migration in simulator state. Shared guards exclude every known harmful edge;
+learned gains must concern recovery choices, completion, or cost. Singleton
+menus offer no learned choice and remain in primary denominators. Receipt
+facts certify fixed fixtures, not arbitrary data-dependent conditions.
+Source checks provide no training labels or efficacy evidence.
 Collection/fitting tooling validates the clean source and local model snapshots,
 meters draft, receiver and acceptance calls, and preserves independent branch
 outcomes. Fitting requires a completed measured phase, complete menu comparisons
 and realized targets for all four intervention kinds. Transport-fixture tests of
-these gates are not model experiments. Matched tuning, fixed-policy calibration
-and fresh-test execution are implemented but have not run on formal model data.
+these gates are not model experiments. Matched tuning, fixed-policy calibration,
+and fresh-test execution are implemented; completed formal model results are
+not reported here.
 
 \paragraph{Comparisons and fixed criterion.}
 Compare unguarded behavior, per-action authorization, deterministic path-state
@@ -1517,15 +1618,14 @@ Failure to satisfy these rules is a reported outcome, not grounds to relax them.
 
 \paragraph{Development versus formal evidence.}
 Implementation and small development feasibility checks establish executable
-collection/training, not learned efficacy or generalization. Formal collection,
-independent contracts and the held-out comparison remain pending. The available
+collection/training, not learned efficacy or generalization. The ongoing formal
+study has no completed comparison incorporated in this manuscript. The available
 host has two A100-PCIe-40GB GPUs and about 196 GiB RAM. Development inference uses
 frozen Qwen3-14B BF16, context 8192, maximum four sequences and 90\% GPU-memory
-utilization. The author prefers modest overall compute and fine-tuning one small
-model, replacing the earlier hard 200-GPU-hour ceiling. Verify thermal stability
-and time collection, branching, adapter fitting and evaluation before freezing the
-sample plan and cost estimate. Planning approximations do not
-guarantee power. Formal runs require a committed clean
+utilization. The resource plan targets modest overall compute and fine-tuning one small
+model. Thermal stability and measured collection, branching, fitting, and
+evaluation costs are prerequisites for the formal resource freeze. Planning
+approximations do not guarantee power. Formal runs require a committed clean
 revision and frozen identity, distinct from historical v13.
 \section{Runtime and Transition Contract}
 \label{app:runtime}

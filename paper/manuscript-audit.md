@@ -1,11 +1,22 @@
-# RouteBench Manuscript Audit
+# CapGraphBench Manuscript Audit
 
-Date: 2026-10-22. This is a working-paper audit, not a submission-readiness claim.
-Current scope includes the author-confirmed recovery design, implementation and
-development feasibility measurements. Formal experiments await independent corpus
-review, completed test sources, model/protocol freeze and a clean committed revision.
-The author chose a moderate study without a hard GPU-hour cap; retain the original
-success margins. Historical benchmark results and frozen scenarios remain unchanged. Earlier writing-only scope entries are historical.
+Date: 2026-11-23. This audit distinguishes manuscript formatting from empirical
+and administrative submission readiness. The ACL revision makes the benchmark,
+construction pipeline, evaluation contract, and historical measurements the main
+paper. The latest layout also includes a main-text ECPA method section and reserves
+two content pages for the ongoing defense comparison. Composition diagnostics
+remain proposed; no completed defense effectiveness result is included.
+
+The recovery inventory now has 66 source-reviewed tasks and 12/4/4/40 semantic
+families for training/tuning/calibration/test. These are source-bound AI reviews,
+not authenticated human review or exhaustive independence validation. On
+2026-11-23, the author reported that the defense experiment is in progress.
+Completed source/model-bound results have not yet been integrated; older status
+documents do not establish its present execution phase. Historical benchmark
+results and frozen scenarios are unchanged.
+
+Earlier scope and design entries below record their original dates; current
+manuscript and submission status are given in the ACL gates and completion audit.
 
 ## Author-Confirmed Recovery Design (2026-10-21)
 
@@ -68,19 +79,22 @@ This supersedes the older CQL-only/violation-superiority plan below.
 
 - `main.tex` remains the document in the current editor.
 - The official `acl.sty` is embedded unchanged for single-file compilation.
-- `references.bib` holds 19 citation records; the official ACL-formatted
-  bibliography is embedded in `main.tex`. Future citation changes must update
-  both representations.
+- `references.bib` holds 19 verified metadata records. Eighteen are cited and
+  appear in the official ACL-formatted bibliography embedded in `main.tex`;
+  the unused Sentence-BERT record remains in the database. Future citation
+  changes must update both representations.
 - Abstract, introduction, related work, formal problem, benchmark construction,
-  evaluation contract, diagnostic design, auxiliary defense, discussion,
-  conclusion, limitations, ethics, and implementation appendices are written.
+  evaluation contract, experiments, discussion/conclusion, limitations, ethics,
+  and AI-use acknowledgements are written. ECPA has a concise main method
+  section; its full design/protocol and proposed diagnostics remain in appendices.
 - The experiments section now reports existing formal v13, difficulty-stratified,
   component-ablation, model-free baseline, ordering anti-leakage, and checkpoint
-  stability artifacts. No new run was started.
+  stability artifacts. No run was started or altered by this writing revision.
 - The benchmark, interleaved recovery runtime, real JSON-agent adapter, actual rollout
   traces, supervised candidate scorer and multi-step TD scorer are implemented.
-  Counterfactual diagnostics, sufficient independent training data, formal adaptive
-  attacks, calibration and learned-benefit results remain unvalidated.
+  Counterfactual diagnostics, actual training outcomes, formal adaptive attacks,
+  calibration, and learned-benefit results remain unvalidated. The 66-task source
+  inventory has completed source-bound AI reviews; this does not supply model data.
 - ECPA needs a separately frozen interleaved execution/replanning protocol;
   v13's pre-replay route selection is not itself the proposed RL environment.
 - The runtime/transition appendix specifies stateless planner calls, accepted
@@ -95,10 +109,12 @@ This supersedes the older CQL-only/violation-superiority plan below.
 
 ## Implementation Alignment
 
-The benchmark source revision inspected is
-`d09969477826a8913905613a76199eeb0a37fee5`. The paper worktree is modified;
-this is not a clean formal-evaluation checkpoint. Existing user changes to
-`main.tex` were preserved. No new formal experiment was started.
+The benchmark source revision recorded by the earlier implementation audit is
+`d09969477826a8913905613a76199eeb0a37fee5`. At final manuscript review, the
+checkout HEAD is `230a11174cef12b6046fc07a3193866d2bb022e2` and the paper
+worktree is modified; neither identifies a new clean formal-evaluation
+checkpoint. Existing user changes to `main.tex`, `references.bib`, and this
+audit were preserved. No new formal experiment was started.
 
 | Statement | Authority / qualification |
 | --- | --- |
@@ -157,6 +173,37 @@ experiments. Result tables and machine-readable CSV inputs are present under
 and `formal_diagnostics.pdf` visualizes the model, route-length, and component
 ablation results. The plotting source uses Python/matplotlib; vector, raster,
 alignment, text-size, and collision checks pass.
+
+## Experiments Revision (2026-11-20)
+
+The experiment narrative now follows three questions: model route selection,
+route properties associated with errors, and interface/presentation validity.
+This is a writing revision; no model evaluation, frozen scenario, or historical
+result was changed.
+
+- The main table retains the archived paired Qwen3 results: 58.43% / 61.98%
+  optimal/capable for 8B and 78.94% / 84.54% for 14B. These match
+  `formal-v13-multifamily-paired-bootstrap-20261005.md` and its archived
+  per-attempt sources.
+- `formal-v13-current-analysis.md` describes a different pair of recovery
+  summaries (58.56% / 61.34% and 78.92% / 83.89%). That report explicitly
+  lacks the corresponding case-level records. Its aggregates must not be
+  combined with the archived paired intervals. The separate October 8
+  Qwen3-14B recovery report cited above yields 78.94% / 84.02% and remains a
+  repeatability check, not another model row.
+- The safe-certificate length table has 775 cases because the source report
+  omits the single five-action case from its displayed rate groups. The
+  manuscript now states the omission in the table and figure captions.
+  Full-benchmark denominators remain 776 cases and 3,880 attempts.
+- The flattened ablation changes all four public preference attributes and
+  removes private edge costs. It is not an isolated authority-scope
+  manipulation; exact credit is recomputed on each graph and can change.
+  The narrative therefore emphasizes the observed forbidden outcomes and
+  reports the paired compliance/capable intervals with subset limitations.
+- The first-edge and ordering checks remain presentation diagnostics.
+  Reachability counts (45 cases with no selectable safe completion/optimum,
+  279 with no selectable forbidden route) remain explicit limits on model
+  interpretation. No formal ECPA efficacy result is claimed.
 
 ## Interface Validity Finding
 
@@ -260,6 +307,15 @@ This was a targeted related-work search, not an exhaustive systematic review.
 Primary metadata and relevant claims were checked during this writing session.
 Human author verification remains required.
 
+A fresh-context independent verification on 2026-11-23 confirmed all 19 database
+records against primary records and checked the related-work claims. The 18
+active citations exactly match an official `acl_natbib.bst` regeneration of
+the embedded bibliography. Sentence-BERT is not cited in the present paper.
+ToolPrivBench's published record is
+https://aclanthology.org/2026.findings-emnlp.2059/; CaMeL's verified refereed
+record is SaTML 2026, pages 587--618, DOI `10.1109/SaTML68715.2026.00040`.
+The table below retains the retrieval depth of the earlier targeted search.
+
 | Work | Primary record / depth used |
 | --- | --- |
 | Saltzer and Schroeder | Crossref DOI `10.1109/PROC.1975.9939`; metadata |
@@ -317,39 +373,81 @@ and rendered pages. Local build products and visual-review images are ignored
 runtime outputs, not benchmark source. The editor's built-in compile must be
 reported separately: a pending request is not a successful compilation.
 
-Checks completed for the current source:
+Checks completed for the 2026-11-23 defense-space revision:
 
-- Tectonic 0.17.0 compiled the same main document and generated `paper/main.pdf`;
-  the current recheck completed on 2026-10-21.
-- Main text through the conclusion occupies eight pages after integrating the
-  existing results; the complete draft is thirteen pages including references
-  and appendices. The eight-page ACL content budget is currently met.
-- The abstract contains 135 whitespace-delimited words.
-- All 19 cited keys have metadata and embedded entries. The embedded
-  bibliography matches the official BST-generated `main.bbl`; labels are unique.
-- The embedded ACL style is byte-identical to the sibling official `acl.sty`.
-- No unresolved citations/references or overfull boxes remain. All PDF fonts
-  are embedded. Rendered pages were visually inspected.
-- A local single-file TeX check hid sibling style, bibliography, BST, BBL, AUX,
-  and OUT inputs. The first-pass log confirmed creation of `./acl.sty` from the
-  embedded block; the converged check succeeded without unresolved references.
-  It generated only ignored XDV/log outputs, not another PDF or document.
-- The editor's built-in compilation succeeded on 2026-10-09 with `kind: success`.
-  That response predates the current source; the current source is instead
-  confirmed by the local Tectonic compilation above.
-- All thirteen current PDF pages were rendered and inspected as a contact sheet;
-  ethics, extended-diagnostics, figure, and training/criterion pages were also
-  inspected at full page size.
-- The Python diagnostic figure passed static preflight, the Matplotlib panel
-  alignment gate, the 5-point PDF glyph audit, and the rendered collision audit.
-- `git diff --check` passes. Historical frozen scenarios and results were not
-  modified. The interleaved recovery implementation and manuscript belong to
-  the same local checkpoint; its exact revision is recorded separately in the
-  ignored development provenance. No formal experiment checkpoint is asserted.
+- Section 8, Discussion and Conclusion, ends on PDF page 6. The complete PDF
+  has 16 pages. All main floats are on pages 3 and 5, before the conclusion;
+  counting only the conclusion page without the floats would be insufficient.
+- Limitations starts after the conclusion on page 6. It and the subsequent
+  ethics, AI-only acknowledgements, references, and appendices are excluded
+  from the ACL content limit. No manual page break forces a new page.
+- The current content uses six of the eight allowed pages, leaving two content
+  pages for the ongoing defense experiment. There are no inserted blank pages.
+  `defense-integration-plan.md` records the final allocation and result material.
+- The ECPA method is now Section 6 of the main paper. Its threat model, guarded
+  interventions, learner, information boundary, and matched-study design remain
+  visible while the full protocol stays in Appendices D--F. The author reports
+  ongoing experiments; no completed efficacy result is incorporated.
+- The 147-word abstract is unchanged. The benchmark problem, construction/QC,
+  public ordering, historical metrics, overall model table, key ablation, and
+  interface-validity limitations remain in the main text. Four supporting tables
+  move to the appendices without changing any values or captions.
+- Anonymous AI disclosure covers writing/design assistance and AI-authored/reviewed
+  recovery sources. The Responsible NLP form still needs the matching disclosure.
+- The official ACL style, fonts, margins, and spacing are unchanged. Successful
+  local and built-in compilation and rendering checks are recorded below.
+- Historical denominators, 45 unavailable safe/optimal cases, 279 cases without a
+  selectable forbidden route, and the conflicting Pareto-credit wording remain
+  explicit. This writing revision neither repairs the protocol nor changes results.
+- Starting sources/PDF are preserved in
+  `/tmp/capgraphbench-reserve-20261123/before/`; previous audit backups remain
+  in `/tmp/capgraphbench-acl-fix-20261123/`. Existing user edits are preserved.
 
-The cached `lineno.sty` emits a UTF-8 comment warning, and narrow columns have
-underfull-box warnings. These did not produce visible glyph or layout defects;
-the official ACL style was not altered to suppress them.
+### Revision blueprint and evidence boundary
+
+| Main section | Purpose | Evidence | Boundary |
+| --- | --- | --- | --- |
+| 1 Introduction | Route-level evaluation gap and observed findings | Existing manuscript and archived aggregates listed above; author reports ongoing defense study | No new efficacy or priority claim |
+| 2 Related Work | Benchmark and security positioning | Existing bibliography plus independent retrieval in this revision | No performance numbers attributed to prior work |
+| 3 Problem | Replay eligibility, ordinal objective, public/private inputs | Existing formal definitions and historical contract audit | Graph-relative ordering; no calibrated-risk guarantee |
+| 4 Construction | Manual authoring, materialization, QC and coverage | Frozen inventory, author account and replay audit | Tags are not independent workflow diversity |
+| 5 Protocol | Reproduce historical v13 and its limitations | Archived protocol and manifests | No repaired-interface result |
+| 6 ECPA | Compact companion method and matched-study design | Existing source/protocol materials; author reports experiment in progress | No completed efficacy result incorporated |
+| 7 Experiments | Model comparison, structural ablation, validity controls | Existing frozen reports and tables | Historical interface; descriptive uncertainty; two pages reserved for defense |
+| 8 Discussion/Conclusion | Interpret the measured benchmark and future questions | The same results and explicitly proposed appendices | No learned-defense benefit established |
+
+The original manuscript/data and checked-in source-status reports are L1 evidence
+for the above edits. They support the reported designs, counts, and historical
+outcomes; they do not support deployment safety, general language competence,
+a fresh protocol, or a completed recovery experiment. Official ARR/ACLPUB pages
+support formatting and process requirements, not acceptance or author compliance.
+
+### Final verification record: defense-space revision (2026-11-23)
+
+- Final saved source compiled successfully with Tectonic and the desktop editor;
+  the latter returned `kind: success`. The PDF has 16 A4 pages, with all main
+  floats before the page-6 conclusion and no content beyond the six-page budget.
+- All fonts are embedded; there are no Type 3 fonts or font-type mismatch warnings.
+  References/citations resolve, labels are unique, and there are no overfull boxes,
+  missing characters, or compiler errors. Existing `lineno.sty` UTF-8 comment and
+  underfull-box notices remain. Rendered pages show no clipping or overlap.
+- The embedded official ACL style is byte-identical to `acl.sty`. All 18 cited
+  records still match the 18 embedded entries; the 19-record bibliography is
+  byte-identical to the starting backup. Prior independent verification applies
+  to the retained citation claims; this layout revision adds no references.
+- All eight original main tables are byte-identical, including captions: four
+  remain in the main text and four move to the supporting appendices. All twelve
+  table blocks in the document are preserved. No CSV, benchmark source, scenario,
+  historical result, or experiment process was changed by this writing revision.
+- The diagnostic chart and ECPA diagram retain the earlier checked typography.
+  The current PDF was rendered for visual review, including the new main-method
+  and result-table placement. Final mechanical records and renders are under
+  `/tmp/capgraphbench-reserve-20261123/`.
+- PDF copies: `paper/main.pdf`, `output/pdf/CapGraphBench-ACL-review.pdf`, and
+  `output/pdf/CapGraphBench-ACL-defense-space.pdf`. Generated outputs stay ignored.
+- Final `main.tex` SHA-256: `920e8ea9ee799e37a2de5f1fbe98eb17936b1cf32975d585e369173454a7c24a`.
+  Existing user changes remain uncommitted. Compilation/layout success does not
+  establish experiment success, protocol repair, or full submission readiness.
 
 ## Remaining Submission Gates
 
@@ -359,11 +457,13 @@ the official ACL style was not altered to suppress them.
    the historical v13 results are no longer sufficient. The current defense
    evidence remains absent; a specification cannot be presented as completed RL
    validation.
-3. Test trained safe-recovery gains against strong matched-information controls.
-   Test diagnostic acquisition separately under equal total acquisition budgets.
-   Neither benefit can be presumed; remove unsupported novelty claims after failure.
-4. Confirm split independence, authoring neutrality, executable fixture
-   semantics, training support, calibration sampling assumptions, and compute.
+3. Integrate the ongoing defense study only from completed, source/model-bound
+   results, retaining matched-information controls and the fixed success criteria.
+   Composition diagnostics and acquisition comparisons remain separate proposed
+   work. No effectiveness claim is supplied by the current method description.
+4. Confirm benchmark split independence, authoring neutrality, and executable
+   fixture semantics. Before any future recovery experiment, also confirm
+   training support, calibration sampling assumptions, and compute.
 5. Verify every citation and substantive AI-assisted claim with the human
    authors; disclose assistance in the Responsible NLP Checklist and final
    acknowledgments. No author approval is presumed.
@@ -379,40 +479,43 @@ the official ACL style was not altered to suppress them.
 The non-experimental text can be complete while the submission is not ready.
 Missing evidence and author checks cannot be fixed by stronger prose.
 
-## Completion Audit of the Full Goal
+## Current Completion Audit (2026-11-23)
 
-The objective remains completion of the manuscript to submission requirements,
-not merely producing a plausible-looking PDF. Existing aggregate results are now
-integrated, but the repaired protocol and defense evaluation remain future work.
-Neither the source changes nor the local PDF proves full submission readiness.
+The objective remains completion of the manuscript to submission requirements.
+Existing benchmark aggregates are integrated; the defense experiment is ongoing,
+and its completed results have not yet been incorporated. The historical interface
+defects remain disclosed. The local PDF does not prove full submission readiness.
 
 | Requirement | Current evidence | Status |
 | --- | --- | --- |
-| Complete non-experimental sections | Abstract through conclusion, limitations, ethics, bibliography, and five appendices in `main.tex` | Written and locally checked |
-| Keep RouteBench primary; defense auxiliary | Title, contribution list, implemented/proposed overview, ECPA section | Verified in source |
+| Complete non-experimental sections | Abstract through conclusion, limitations, ethics, bibliography, and seven appendices in `main.tex` | Written and locally checked |
+| Keep CapGraphBench primary; include companion defense | Benchmark title/contributions; ECPA main method; proposed diagnostics in appendix | Verified in source |
 | No invented experiments or improvements | Existing results cite frozen artifacts; RL/ECPA results remain explicitly absent | Verified in source |
 | Match implemented benchmark semantics | Freeze metadata, replay/selection source, both structural audits | Verified with disclosed defects |
 | Valid planner/scorer contract | Interior-terminal mismatch; conflicting credit field; proposed repair only | Not fully achieved |
-| Distinct diagnostic and defense mechanisms | Public contracts/guards, actual recovery collection, supervised outcomes and multi-step offline TD | Runtime/learning implemented; independent corpus and efficacy pending |
+| Distinct diagnostic and defense mechanisms | ECPA main method; full contracts and diagnostic design in appendices | Defense experiment ongoing per author; completed efficacy results not incorporated |
 | Reproducible runtime assumptions | Stateless planner and receipt state, registered variants, approval epochs, actual rollout logging, stop/continue contract | Specified in appendices |
-| ACL review formatting | Official unchanged style, A4, two columns, embedded fonts; eight content pages; 135-word abstract | Local checks pass |
-| References and cross-references resolve | 19 metadata/citation entries, unique labels, no unresolved references | Mechanical checks pass |
-| PDF layout | Thirteen rendered pages inspected; no overfull boxes or overlap found | Local checks pass |
-| Built-in compiler | A 2026-10-09 success predates current source; current local Tectonic build passes | Historical editor check; current local check passes |
+| ACL review formatting | Unchanged official style; six content pages; 147-word abstract; AI-only disclosure | Two content pages reserved for defense results |
+| References and cross-references resolve | 19 verified database records; 18 cited and rendered entries; unique labels and resolved references | Mechanical and independent citation checks pass |
+| PDF layout | Sixteen-page PDF with all main tables on pages 3/5 and conclusion on page 6 | Current verification recorded in the defense-space revision |
+| Built-in compiler | Final defense-space source returned `kind: success`; local Tectonic build also passed | Verified after the final source edit |
 | Model/data/code licensing and anonymous artifact access | Original code/tasks GPLv3; synthetic provenance and anonymous/public release approved; encoder snapshot and archive pending | Partly confirmed; third-party verification and archive preparation remain |
 | Human verification and Responsible NLP attestation | Assistance disclosed; author verification not asserted complete | Requires author action |
 | Novelty/effectiveness supported rather than promised | Benchmark design described; diagnostic/defense benefit still untested | Cannot establish by prose alone |
-| Development work within confirmed scope | Real-agent smoke rollouts, independent branches and small scorer fits; formal experiments await resource cap/freeze | Authorized 2026-10-21; no efficacy claim |
+| Experiment evidence boundary | Earlier development checks retained; author reports ongoing defense experiment | No process modified and no new experiment launched in this writing revision |
 
 Author confirmations now establish the original license, release intent, synthetic
 provenance, single-reviewer sampling account, resources, and planned success margin.
 They do not establish repaired runtime code, independent author verification,
-third-party permissions, a published archive, completed profiles, an independent
-privacy review, or empirical validation. Compiler waits and metadata requests do
+third-party permissions, a published archive, completed profiles, authenticated human source review,
+or empirical validation. Compiler waits and metadata requests do
 not establish those facts either. The global goal must not be marked achieved on
 the basis of the local PDF or this checklist.
 
-## Current Defense Source Alignment (2026-10-22)
+## Historical Defense Source Alignment (2026-10-22)
+
+The inventory counts in this dated entry describe the October 22 stage. The
+66-task completion update at the top supersedes those counts.
 
 The active compact-defense plan supersedes historical tool-return and CQL-only
 entries: the attacker controls an external model-response relay; the primary
